@@ -30,7 +30,7 @@
 ## M2 bis — Vitrine web
 - [x] `export-html` : fichier HTML autonome (données, images, modèles animés intégrés)
 - [x] Recherche, filtres, tris, fiche détaillée, lien direct, clavier, mobile
-- [ ] Vue guilde : fusionner les exports de plusieurs membres dans un même fichier
+- [x] Vue guilde : fusion des vitrines / exports des membres (`guild build`, bot `/vitrine-guilde`)
 - [ ] Comparateur de deux héros / constructeur d'équipe dans la page
 
 ## M3 — Guilde

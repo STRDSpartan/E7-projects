@@ -460,6 +460,85 @@ def export_html(
     console.print("Ouvrez ce fichier dans un navigateur, ou partagez-le à votre guilde.")
 
 
+guild_app = typer.Typer(help="Vue guilde : fusionner les vitrines des membres.")
+app.add_typer(guild_app, name="guild")
+
+
+def _guild_inputs(paths: list[Path]) -> list[Path]:
+    files: list[Path] = []
+    for path in paths:
+        if path.is_dir():
+            files += sorted(p for p in path.iterdir() if p.suffix.lower() in (".html", ".json"))
+        elif path.is_file():
+            files.append(path)
+        else:
+            raise typer.BadParameter(f"Introuvable : {path}")
+    return files
+
+
+@guild_app.command("build")
+def guild_build(
+    inputs: Annotated[
+        list[Path] | None,
+        typer.Argument(help="Vitrines .html et/ou exports .json des membres (ou dossiers)"),
+    ] = None,
+    name: Annotated[str, typer.Option("--name", help="Nom de la guilde")] = "Guilde",
+    out: Annotated[
+        Path | None, typer.Option(help="Fichier produit (défaut : guilde-<nom>.html)")
+    ] = None,
+    include_me: Annotated[
+        bool, typer.Option("--include-me", help="Ajouter mon roster local")
+    ] = False,
+    anims: Annotated[
+        bool, typer.Option(help="Modèles animés (exports .json et mon roster)")
+    ] = True,
+    sync: Annotated[
+        bool, typer.Option("--sync", help="Télécharger les images manquantes (exports .json)")
+    ] = False,
+) -> None:
+    """Fusionner les vitrines des membres en UN fichier HTML de guilde (drafts, comparaisons)."""
+    import httpx
+
+    from e7showcase.assets import slugify
+    from e7showcase.render.webapp import Member, member_from_roster, read_vitrine, render_guild
+
+    store = AssetStore(data_dir() / "assets")
+    rosters: list[Roster] = []
+    members: list[Member] = []
+    for file in _guild_inputs(inputs or []):
+        try:
+            if file.suffix.lower() == ".html":
+                found = read_vitrine(file)
+                members += found
+                console.print(f"  {file.name} : {', '.join(m.player for m in found)}")
+            else:
+                roster = Roster.model_validate_json(file.read_text(encoding="utf-8"))
+                rosters.append(roster)
+                console.print(f"  {file.name} : {roster.player} ({len(roster.heroes)} héros)")
+        except Exception as exc:  # fichier d'un membre illisible : on continue sans lui
+            console.print(f"  [yellow]{file.name} ignoré : {exc}[/]")
+    if include_me:
+        rosters.append(RosterRepository().load())
+    if sync and rosters:
+        from e7showcase.sources.e7codex import sync_assets
+
+        with httpx.Client(follow_redirects=True) as client:
+            sync_assets(store, [h for r in rosters for h in r.heroes], client)
+    cache: dict[Path, str] = {}
+    members += [member_from_roster(r, store, anims, cache) for r in rosters]
+    if not members:
+        raise typer.BadParameter("Aucun membre : passez des vitrines .html ou des exports .json.")
+    target = out or Path(f"guilde-{slugify(name) or 'guilde'}.html")
+    render_guild(members, target, guild=name)
+    size = target.stat().st_size / 1_000_000
+    heroes = sum(len(m.heroes) for m in members)
+    console.print(f"[green]Vue guilde[/] → {target} ({size:.1f} Mo, {heroes} héros)")
+    if size > 10:
+        console.print(
+            "[yellow]> 10 Mo : trop lourd pour Discord sans Nitro (héberger ou --no-anims).[/]"
+        )
+
+
 @app.command()
 def export(out: Path = Path("roster-export.json")) -> None:
     """Exporter le roster (format d'échange guilde / bot Discord)."""

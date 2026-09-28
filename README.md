@@ -54,6 +54,7 @@ e7showcase share "Kise" --animated            # … publiée sur Discord (joue d
 e7showcase export-html                        # VITRINE WEB : un fichier .html à ouvrir dans un navigateur
 e7showcase export-html --fetch-anims          # … avec les modèles animés de tous les héros
 e7showcase share --html                       # envoyer ce fichier sur le salon Discord
+e7showcase guild build membres/ --name "Ma guilde" --include-me   # VUE GUILDE (fusion des membres)
 e7showcase export                             # roster JSON à partager / déposer au bot
 e7showcase assets sync                        # illustrations des héros du roster (e7codex.com, local)
 e7showcase assets sync --skins                # … et leurs skins
@@ -83,6 +84,15 @@ n'importe quel navigateur, PC ou mobile, sans connexion ni installation : grille
 héros, recherche, filtres (élément, classe, set, tag), tris (puissance, vitesse, gear score),
 fiche détaillée avec modèle animé, lien direct vers un héros (`vitrine.html#c1006`),
 navigation au clavier. Poids indicatif : ~0,1 Mo par héros + ~1 Mo par modèle animé.
+
+### Vue guilde
+Chaque membre envoie sa vitrine (`vitrine-xxx.html`) ou son export (`e7showcase export`) au
+responsable, qui lance `e7showcase guild build <fichiers ou dossier> --name "Ma guilde"`.
+Résultat : **un fichier `guilde-xxx.html`** avec trois vues — **Héros** (toutes les instances,
+avec leur propriétaire), **Par héros** (qui possède quel héros ; tableau comparatif des builds,
+triable par colonne, meilleures valeurs en vert — idéal pour les drafts GvG) et **Membres**.
+Un membre présent deux fois n'est gardé qu'une fois (version la plus récente) ; les images sont
+mutualisées ; une vue guilde peut elle-même être refusionnée. Bot : `/vitrine-guilde`.
 
 ## Documentation
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — flux de données, modules, décisions

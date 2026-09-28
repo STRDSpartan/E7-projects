@@ -28,6 +28,12 @@ d'interpolation brute), rendu JS par `textContent` uniquement (tags saisis par l
 Vérifier dans un navigateur (Playwright) : ordinateur 1280 px ET mobile 390 px, clic sur une
 tuile, flèches, Échap, filtres, lien `#<code>`, zéro erreur JS, pas de défilement horizontal.
 
+### Vue guilde
+`e7showcase guild build <.html|.json|dossier> --name X` → `render_guild` (même gabarit, activé
+dès 2 membres). Format des données v2 : `members[]`, `heroes[].member`, table `images` (ids)
+— `read_vitrine` relit aussi l'ancien format (images en ligne). Tester les 3 vues, la
+comparaison (tri par colonne, retour depuis une fiche) et le mobile (tableau défilant).
+
 ## Carte animée
 `e7showcase render "Kise" --animated` : exporte (une fois, cache `assets/anims/<code>.webp`) le
 modèle via la visionneuse d'E7 Codex (`sources/e7codex.export_animation`), puis

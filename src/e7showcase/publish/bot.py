@@ -61,6 +61,27 @@ def run() -> None:
             files = [discord.File(io.BytesIO(p.read_bytes()), filename=p.name) for p in images[:10]]
         await interaction.followup.send(f"Vitrine de **{roster.player}**", files=files)
 
+    @tree.command(
+        name="vitrine-guilde", description="Vitrine web de toute la guilde (fichier HTML)"
+    )
+    async def vitrine_guilde(interaction: discord.Interaction) -> None:
+        from e7showcase.render.webapp import member_from_roster, render_guild
+
+        await interaction.response.defer()
+        store = AssetStore(data_dir() / "assets")
+        rosters = [
+            RosterRepository(f).load() for f in sorted((data_dir() / "guild").glob("*.json"))
+        ]
+        name = interaction.guild.name if interaction.guild else "Guilde"
+        with tempfile.TemporaryDirectory() as tmp:
+            target = render_guild(
+                [member_from_roster(r, store) for r in rosters],
+                Path(tmp) / "guilde.html",
+                guild=name,
+            )
+            file = discord.File(io.BytesIO(target.read_bytes()), filename=target.name)
+        await interaction.followup.send(f"Vitrine de la guilde : {len(rosters)} membres", file=file)
+
     @tree.command(name="draft", description="Qui possède ce héros dans la guilde ?")
     async def draft(interaction: discord.Interaction, heros: str) -> None:
         lines = []
