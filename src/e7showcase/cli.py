@@ -11,6 +11,7 @@ from rich.console import Console
 from rich.table import Table
 
 from e7showcase.config import data_dir, regions, settings
+from e7showcase.models.hero import Hero
 from e7showcase.storage.repository import RosterRepository
 
 app = typer.Typer(
@@ -28,17 +29,59 @@ def main(verbose: Annotated[bool, typer.Option("--verbose", "-v")] = False) -> N
 
 @app.command()
 def scan(
+    from_dir: Annotated[
+        Path | None, typer.Option("--from-dir", help="Dossier de captures (PC ou mobile)")
+    ] = None,
     mode: Annotated[str | None, typer.Option(help="manual | assisted")] = None,
+    profile: Annotated[str | None, typer.Option(help="Profil de zones (défaut : auto)")] = None,
     max_heroes: Annotated[int | None, typer.Option("--max")] = None,
     player: Annotated[str | None, typer.Option(help="Pseudo en jeu")] = None,
 ) -> None:
-    """Scanner les héros depuis le client PC (Windows)."""
+    """Scanner les héros : client PC en direct (Windows) ou dossier de captures."""
+    from PIL import Image
+
     from e7showcase.scanner.hero_scanner import HeroScanner
-    from e7showcase.scanner.navigator import AssistedNavigator, ManualNavigator
-    from e7showcase.scanner.session import ScanSession
+    from e7showcase.vision.icons import IconClassifier, set_features
     from e7showcase.vision.ocr import get_engine
 
     cfg = settings()
+    repo = RosterRepository()
+    roster = repo.load()
+    if player:
+        roster.player = player
+    library = data_dir() / "templates" / "sets"
+    set_icons = IconClassifier.load(library, set_features)
+    ocr = get_engine(cfg["ocr"]["backend"])
+
+    def save(hero: Hero) -> None:
+        roster.upsert(hero)
+        repo.save(roster)
+        sets = ", ".join(sorted({g.set.value for g in hero.gear.values() if g.set})) or "sets ?"
+        console.print(
+            f"[green]✔[/] {hero.name} — VIT {hero.stats.spd}, {len(hero.gear)} pièces, {sets}"
+        )
+
+    if from_dir:
+        from e7showcase.scanner.batch import image_files, scan_directory
+
+        files = image_files(from_dir)
+        if not files:
+            raise typer.BadParameter(f"Aucune image dans {from_dir}")
+        with Image.open(files[0]) as first:
+            aspect = first.width / first.height
+        scanner = HeroScanner(ocr, regions(profile, aspect), cfg["game"]["lang"], set_icons)
+        result = scan_directory(scanner, from_dir, library)
+        for hero in result.heroes:
+            save(hero)
+        if result.ignored:
+            console.print(f"[yellow]{len(result.ignored)} capture(s) non reconnue(s)[/]")
+        console.print(f"{len(result.heroes)} héros scannés → {repo.path}")
+        return
+
+    from e7showcase.capture.window import find_game_window
+    from e7showcase.scanner.navigator import AssistedNavigator, ManualNavigator
+    from e7showcase.scanner.session import ScanSession
+
     mode = mode or cfg["scan"]["mode"]
     keys = {"hotkey": cfg["scan"]["hotkey"], "stop_hotkey": cfg["scan"]["stop_hotkey"]}
     navigator = (
@@ -46,22 +89,15 @@ def scan(
         if mode == "assisted"
         else ManualNavigator(**keys)
     )
-    repo = RosterRepository()
-    roster = repo.load()
-    if player:
-        roster.player = player
-
-    def on_hero(hero):  # type: ignore[no-untyped-def]
-        roster.upsert(hero)
-        repo.save(roster)
-        console.print(f"[green]✔[/] {hero.name} — VIT {hero.stats.spd}, {len(hero.gear)} pièces")
-
+    rect = find_game_window(cfg["game"]["window_title"])
+    scanner = HeroScanner(ocr, regions(profile, rect.aspect), cfg["game"]["lang"], set_icons)
     session = ScanSession(
-        HeroScanner(get_engine(cfg["ocr"]["backend"]), regions(), cfg["game"]["lang"]),
+        scanner,
         navigator,
         cfg["game"]["window_title"],
         capture_dir=data_dir() / "captures" if cfg["scan"]["save_captures"] else None,
-        on_hero=on_hero,
+        set_library=library,
+        on_hero=save,
     )
     heroes = session.run(max_heroes)
     console.print(f"{len(heroes)} héros scannés → {repo.path}")

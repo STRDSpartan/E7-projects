@@ -1,0 +1,54 @@
+{
+  "_comment": "Libellés de la ligne « élément · classe · signe » de la fiche héros.",
+  "element": {
+    "fr": {
+      "feu": "fire",
+      "glace": "ice",
+      "terre": "earth",
+      "lumiere": "light",
+      "tenebres": "dark"
+    },
+    "en": {
+      "fire": "fire",
+      "ice": "ice",
+      "earth": "earth",
+      "light": "light",
+      "dark": "dark"
+    }
+  },
+  "role": {
+    "fr": {
+      "chevalier": "knight",
+      "guerrier": "warrior",
+      "assassin": "thief",
+      "tireur": "ranger",
+      "mage": "mage",
+      "tisse-ame": "soul-weaver",
+      "tisseuse d'ame": "soul-weaver"
+    },
+    "en": {
+      "knight": "knight",
+      "warrior": "warrior",
+      "thief": "thief",
+      "ranger": "ranger",
+      "mage": "mage",
+      "soul weaver": "soul-weaver"
+    }
+  },
+  "zodiac": {
+    "fr": {
+      "belier": "aries",
+      "taureau": "taurus",
+      "gemeaux": "gemini",
+      "cancer": "cancer",
+      "lion": "leo",
+      "vierge": "virgo",
+      "balance": "libra",
+      "scorpion": "scorpio",
+      "sagittaire": "sagittarius",
+      "capricorne": "capricorn",
+      "verseau": "aquarius",
+      "poissons": "pisces"
+    }
+  }
+}

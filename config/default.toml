@@ -3,7 +3,7 @@
 [game]
 window_title = "Epic Seven"   # titre de la fenêtre du client PC (Steam / launcher Stove)
 lang = "fr"                   # langue du client : fr | en
-region_profile = "16x9"       # fichier dans config/regions/
+region_profile = "auto"       # auto = selon le format de la fenêtre/capture, sinon un fichier de config/regions/
 
 [scan]
 # manual   : l'utilisateur ouvre chaque héros et appuie sur la touche de capture (recommandé)

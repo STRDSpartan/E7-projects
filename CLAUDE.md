@@ -41,3 +41,4 @@ Voir `docs/AGENTS.md`. En bref : `e7-architect` planifie, puis `vision-ocr-engin
 - Rendu PNG : `E7_CHROMIUM_PATH` peut pointer vers un Chromium existant
   (conteneur web : `/opt/pw-browsers/chromium-*/chrome-linux/chrome`, exporté par le hook SessionStart).
 - Utiliser `E7_DATA_DIR=$(mktemp -d)` pour ne pas écraser le roster de l'utilisateur pendant les essais.
+- Mesure de précision du scan : `scripts/evaluate_captures.py` sur un dossier LOCAL de captures + `expected.json` (jamais committé).

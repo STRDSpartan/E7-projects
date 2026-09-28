@@ -20,6 +20,10 @@ class OcrLine:
 class OcrEngine(Protocol):
     def read_lines(self, image: Image.Image) -> list[OcrLine]: ...
 
+    def read_text(self, image: Image.Image) -> str:
+        """Reconnaissance d'une seule ligne (pas de détection) : rapide et précise."""
+        ...
+
 
 class RapidOcrEngine:
     def __init__(self) -> None:
@@ -30,9 +34,15 @@ class RapidOcrEngine:
     def read_lines(self, image: Image.Image) -> list[OcrLine]:
         import numpy as np
 
-        result, _ = self._ocr(np.array(for_ocr(image, threshold=None).convert("RGB")))
+        result, _ = self._ocr(np.array(image.convert("RGB")), use_cls=False)
         lines = [OcrLine(text, float(conf), float(box[0][1])) for box, text, conf in (result or [])]
         return _merge_rows(sorted(lines, key=lambda line: line.y))
+
+    def read_text(self, image: Image.Image) -> str:
+        import numpy as np
+
+        result, _ = self._ocr(np.array(image.convert("RGB")), use_det=False, use_cls=False)
+        return str(result[0][0]).strip() if result else ""
 
 
 class TesseractEngine:
@@ -45,6 +55,11 @@ class TesseractEngine:
     def read_lines(self, image: Image.Image) -> list[OcrLine]:
         text = self._tess.image_to_string(for_ocr(image), lang=self._lang, config="--psm 6")
         return [OcrLine(t, 1.0, float(i)) for i, t in enumerate(text.splitlines()) if t.strip()]
+
+    def read_text(self, image: Image.Image) -> str:
+        return str(
+            self._tess.image_to_string(for_ocr(image), lang=self._lang, config="--psm 7")
+        ).strip()
 
 
 def _merge_rows(lines: list[OcrLine], tolerance: float = 12) -> list[OcrLine]:

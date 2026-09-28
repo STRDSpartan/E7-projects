@@ -2,7 +2,8 @@
 
 - ManualNavigator  : l'utilisateur navigue lui-même dans le jeu et appuie sur une touche
                      pour chaque capture. Aucune entrée n'est envoyée au jeu.
-- AssistedNavigator: clique sur les emplacements d'équipement et la flèche « suivant ».
+- AssistedNavigator: depuis la liste des héros, ouvre « Infos de héros », revient et
+                     sélectionne le héros suivant (clics de menu uniquement).
                      Désactivé par défaut — lire docs/COMPLIANCE.md avant de l'activer.
 """
 
@@ -16,16 +17,18 @@ from e7showcase.vision.regions import center
 
 
 class Navigator(Protocol):
+    is_assisted: bool
+
     def wait_for_capture(self, prompt: str) -> bool:
         """Bloque jusqu'à ce qu'une capture doive être prise. False = arrêt demandé."""
         ...
 
-    def open_slot(self, rect: WindowRect, region: list[float]) -> None: ...
-
-    def next_hero(self, rect: WindowRect, region: list[float]) -> None: ...
+    def click(self, rect: WindowRect, region: list[float]) -> None: ...
 
 
 class ManualNavigator:
+    is_assisted = False
+
     def __init__(self, hotkey: str = "f9", stop_hotkey: str = "f10", skip_hotkey: str = "f8"):
         self.hotkey, self.stop_hotkey, self.skip_hotkey = hotkey, stop_hotkey, skip_hotkey
         self.last_skipped = False
@@ -43,19 +46,18 @@ class ManualNavigator:
         self.last_skipped = key == self.skip_hotkey
         return bool(key != self.stop_hotkey)
 
-    def open_slot(self, rect: WindowRect, region: list[float]) -> None:
-        return None  # l'utilisateur ouvre lui-même l'infobulle
-
-    def next_hero(self, rect: WindowRect, region: list[float]) -> None:
-        return None
+    def click(self, rect: WindowRect, region: list[float]) -> None:
+        return None  # l'utilisateur navigue lui-même
 
 
 class AssistedNavigator(ManualNavigator):
+    is_assisted = True
+
     def __init__(self, delay_ms: int = 900, **kwargs: str):
         super().__init__(**kwargs)
         self.delay = delay_ms / 1000
 
-    def _click(self, rect: WindowRect, region: list[float]) -> None:
+    def click(self, rect: WindowRect, region: list[float]) -> None:
         import win32api
         import win32con
 
@@ -68,9 +70,3 @@ class AssistedNavigator(ManualNavigator):
     def wait_for_capture(self, prompt: str) -> bool:
         self.last_skipped = False
         return True
-
-    def open_slot(self, rect: WindowRect, region: list[float]) -> None:
-        self._click(rect, region)
-
-    def next_hero(self, rect: WindowRect, region: list[float]) -> None:
-        self._click(rect, region)

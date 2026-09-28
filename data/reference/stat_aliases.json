@@ -16,7 +16,12 @@
     "resistance aux effets": "effect_res",
     "resistance": "effect_res",
     "chances d'attaque double": "dual_attack",
-    "attaque double": "dual_attack"
+    "attaque double": "dual_attack",
+    "chances de coup critique": "crit_chance",
+    "degats coup crit.": "crit_dmg",
+    "degats coup crit": "crit_dmg",
+    "resistance d'effet": "effect_res",
+    "chances de double attaque": "dual_attack"
   },
   "en": {
     "attack": "atk",

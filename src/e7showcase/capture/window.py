@@ -27,7 +27,7 @@ def find_game_window(title: str = "Epic Seven") -> WindowRect:
     if sys.platform != "win32":
         raise WindowNotFoundError(
             "La capture du client PC n'est supportée que sous Windows. "
-            "Utilisez `e7showcase scan --from-dir` avec des captures existantes."
+            "Utilisez `e7showcase scan --from-dir <dossier>` avec des captures existantes."
         )
     import win32gui
 

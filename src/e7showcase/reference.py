@@ -36,12 +36,12 @@ def set_pieces(set_name: str) -> int:
 
 
 def hero_names(lang: str = "fr") -> list[str]:
-    return [h[lang] for h in load("heroes")["heroes"]]
+    return [h.get(lang) or h["fr"] for h in load("heroes")["heroes"]]
 
 
 def hero_info(name: str) -> dict[str, Any] | None:
     key = normalize(name)
     for h in load("heroes")["heroes"]:
-        if key in (normalize(h["en"]), normalize(h["fr"])):
+        if key in (normalize(h.get("en") or h["fr"]), normalize(h["fr"])):
             return dict(h)
     return None

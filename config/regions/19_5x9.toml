@@ -1,0 +1,57 @@
+# Profil 19,5:9 (smartphones récents, ex. 3120x1440). Calibré sur de vraies captures
+# de la fiche « Infos de héros » du client FR.
+# Coordonnées NORMALISÉES [x, y, largeur, hauteur] relatives à l'écran du jeu.
+
+aspect = 2.167
+
+[detail]
+title       = [0.040, 0.020, 0.200, 0.055]   # « Infos de héros » (sert à reconnaître l'écran)
+classes     = [0.080, 0.118, 0.300, 0.045]   # élément · classe · signe
+name        = [0.062, 0.150, 0.420, 0.080]
+level       = [0.062, 0.262, 0.130, 0.055]
+imprint     = [0.105, 0.325, 0.140, 0.125]
+power       = [0.085, 0.450, 0.090, 0.050]   # puissance de combat
+artifact    = [0.855, 0.120, 0.120, 0.080]
+gear_score  = [0.720, 0.272, 0.200, 0.045]   # « Score moyen d'équipements : 92 »
+stats_icons = [0.066, 0.505, 0.017, 0.294]   # 9 lignes, une icône par ligne
+stats_labels= [0.085, 0.505, 0.125, 0.294]
+stats_values= [0.195, 0.505, 0.060, 0.294]
+stats_rows  = 9
+
+[detail.gear]
+# Ancre de chaque pièce = coin haut-gauche de l'icône de la stat principale.
+weapon   = [0.7865, 0.3390]
+helmet   = [0.7865, 0.5157]
+armor    = [0.7865, 0.6924]
+necklace = [0.9317, 0.3390]
+ring     = [0.9317, 0.5157]
+boots    = [0.9317, 0.6924]
+
+[detail.gear_layout]
+# Boîtes relatives à l'ancre [dx, dy, largeur, hauteur]
+icon_w     = 0.0130
+values_dx  = 0.0130
+values_w   = 0.0360
+line_dy    = [0.0000, 0.0340, 0.0618, 0.0896, 0.1174]   # principale puis 4 secondaires
+line_h     = [0.0320, 0.0270, 0.0270, 0.0270, 0.0270]
+level      = [-0.0600, 0.0040, 0.0165, 0.0300]
+enhance    = [-0.0330, -0.0020, 0.0210, 0.0270]
+set_icon   = [-0.0310, 0.0660, 0.0190, 0.0440]
+score      = [-0.0560, 0.1070, 0.0340, 0.0300]
+
+[navigation]
+# Points de clic (centre des boîtes) pour le mode assisté, depuis la liste des héros
+back_button   = [0.005, 0.015, 0.045, 0.065]
+next_hero     = [0.830, 0.455, 0.150, 0.070]   # entrée juste sous le héros sélectionné
+detail_button = [0.645, 0.835, 0.040, 0.075]   # carré sous les bottes → « Infos de héros »
+
+[hero_list]
+# Écran « liste des héros » : lignes « Set Xxx » sous les stats simplifiées.
+# Chaque ligne = [x_icône, y, largeur_icône, hauteur, largeur_texte] (texte juste à droite de l'icône)
+title_hint = [0.400, 0.880, 0.240, 0.100]   # « Gérer l'équipement · Tout équiper » (reconnaît l'écran)
+name       = [0.040, 0.020, 0.300, 0.055]   # nom du héros sélectionné (barre de titre)
+set_rows = [
+  [0.1125, 0.8690, 0.0175, 0.0310, 0.1500],
+  [0.1125, 0.9000, 0.0175, 0.0310, 0.1500],
+  [0.1125, 0.9310, 0.0175, 0.0310, 0.1500],
+]

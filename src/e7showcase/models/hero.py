@@ -36,10 +36,18 @@ class Hero(BaseModel):
     )
     element: str | None = None
     role: str | None = None
+    zodiac: str | None = None
+    power: int | None = Field(default=None, description="Puissance de combat affichée en jeu")
+    imprint_bonus: str | None = Field(
+        default=None, description="Ex: « Vitesse + 12 », « Verrouillé »"
+    )
     stats: HeroStats = Field(default_factory=HeroStats)
     gear: dict[GearSlot, Gear] = Field(default_factory=dict)
     artifact: str | None = None
     artifact_level: int | None = Field(default=None, ge=0, le=30)
+    gear_score_avg: int | None = Field(
+        default=None, description="« Score moyen d'équipements » en jeu"
+    )
     tags: list[str] = Field(
         default_factory=list, description="Tags guilde: GvG-déf, RTA, Wyvern..."
     )

@@ -1,29 +1,47 @@
-# Zones d'intérêt (ROI) en coordonnées NORMALISÉES [x, y, largeur, hauteur] ∈ [0,1],
-# relatives à la zone cliente de la fenêtre du jeu. Valables pour tout 16:9
-# (1280x720, 1920x1080, 2560x1440...). Recalibrer via la skill `calibrate-ocr-regions`.
-#
-# ⚠ Valeurs initiales approximatives : à calibrer sur de vraies captures avant usage.
+# ESTIMATION dérivée de config/regions/19_5x9.toml par scripts/derive_profile.py — NON VÉRIFIÉE.
+# À calibrer sur de vraies captures (skill `calibrate-ocr-regions`).
 
-[hero_detail]
-name        = [0.055, 0.105, 0.230, 0.050]
-level       = [0.055, 0.160, 0.120, 0.035]
-stars       = [0.055, 0.200, 0.150, 0.030]
-stats_panel = [0.600, 0.250, 0.330, 0.520]  # 9 lignes : ATK, PV, DEF, VIT, CC, DC, EFF, RES, AD
-next_hero   = [0.955, 0.480, 0.035, 0.070]  # flèche « suivant » (mode assisted)
+aspect = 1.7778
 
-[hero_gear_slots]
-# Emplacements cliquables de l'onglet équipement
-weapon   = [0.405, 0.270, 0.070, 0.120]
-helmet   = [0.405, 0.410, 0.070, 0.120]
-armor    = [0.405, 0.550, 0.070, 0.120]
-necklace = [0.515, 0.270, 0.070, 0.120]
-ring     = [0.515, 0.410, 0.070, 0.120]
-boots    = [0.515, 0.550, 0.070, 0.120]
-artifact = [0.300, 0.410, 0.080, 0.150]
+[detail]
+title = [0.0488, 0.02, 0.2438, 0.055]
+classes = [0.0975, 0.118, 0.3657, 0.045]
+name = [0.0756, 0.15, 0.5119, 0.08]
+level = [0.0756, 0.262, 0.1585, 0.055]
+imprint = [0.128, 0.325, 0.1706, 0.125]
+power = [0.1036, 0.45, 0.1097, 0.05]
+artifact = [0.8233, 0.12, 0.1463, 0.08]
+gear_score = [0.6587, 0.272, 0.2438, 0.045]
+stats_icons = [0.0804, 0.505, 0.0207, 0.294]
+stats_labels = [0.1036, 0.505, 0.1524, 0.294]
+stats_values = [0.2377, 0.505, 0.0731, 0.294]
+stats_rows = 9
 
-[gear_tooltip]
-enhance   = [0.625, 0.200, 0.060, 0.040]
-level     = [0.625, 0.245, 0.060, 0.035]
-main_stat = [0.700, 0.330, 0.250, 0.045]
-substats  = [0.700, 0.390, 0.250, 0.200]
-set_name  = [0.700, 0.610, 0.250, 0.040]
+[detail.gear]
+weapon = [0.7398, 0.339]
+helmet = [0.7398, 0.5157]
+armor = [0.7398, 0.6924]
+necklace = [0.9167, 0.339]
+ring = [0.9167, 0.5157]
+boots = [0.9167, 0.6924]
+
+[detail.gear_layout]
+icon_w = 0.0158
+values_dx = 0.0158
+values_w = 0.0439
+line_dy = [0.0, 0.034, 0.0618, 0.0896, 0.1174]
+line_h = [0.032, 0.027, 0.027, 0.027, 0.027]
+level = [-0.0731, 0.004, 0.0201, 0.03]
+enhance = [-0.0402, -0.002, 0.0256, 0.027]
+set_icon = [-0.0378, 0.066, 0.0232, 0.044]
+score = [-0.0683, 0.107, 0.0414, 0.03]
+
+[navigation]
+back_button = [0.0061, 0.015, 0.0549, 0.065]
+next_hero = [0.7928, 0.455, 0.1828, 0.07]
+detail_button = [0.6767, 0.835, 0.0488, 0.075]
+
+[hero_list]
+title_hint = [0.3781, 0.88, 0.2925, 0.1]
+name = [0.0488, 0.02, 0.3657, 0.055]
+set_rows = [[0.1371, 0.869, 0.0213, 0.031, 0.1828], [0.1371, 0.9, 0.0213, 0.031, 0.1828], [0.1371, 0.931, 0.0213, 0.031, 0.1828]]

@@ -1,4 +1,7 @@
-"""Assemblage d'une pièce d'équipement à partir des zones OCR d'une infobulle d'objet."""
+"""Assemblage d'une pièce d'équipement à partir de textes OCR (libellés en toutes lettres).
+
+Utilisé pour les écrans qui affichent les libellés (infobulle d'objet) ; la fiche
+« Infos de héros » utilise des icônes, voir scanner/hero_scanner.py."""
 
 from __future__ import annotations
 

@@ -18,6 +18,21 @@ ELEMENT_COLORS = {
     "dark": "#b07cff",
     None: "#9aa4b2",
 }
+ELEMENT_FR = {
+    "fire": "Feu",
+    "ice": "Glace",
+    "earth": "Terre",
+    "light": "Lumière",
+    "dark": "Ténèbres",
+}
+ROLE_FR = {
+    "knight": "Chevalier",
+    "warrior": "Guerrier",
+    "thief": "Assassin",
+    "ranger": "Tireur",
+    "mage": "Mage",
+    "soul-weaver": "Tisse-âme",
+}
 SLOT_LABELS = {
     GearSlot.WEAPON: "Arme",
     GearSlot.HELMET: "Casque",
@@ -43,6 +58,8 @@ class GearView:
     substats: list[tuple[str, str]]
     score: float
     empty: bool = False
+    level: int | None = None
+    ingame_score: int | None = None
 
 
 @dataclass
@@ -60,6 +77,9 @@ class HeroView:
     sets: list[str]
     total_score: float
     tags: list[str] = field(default_factory=list)
+    power: str | None = None
+    gear_score_avg: int | None = None
+    imprint_bonus: str | None = None
 
 
 def build(hero: Hero) -> HeroView:
@@ -92,14 +112,16 @@ def build(hero: Hero) -> HeroView:
                 main=f"{g.main.stat.label} {fmt(g.main.stat, g.main.value)}",
                 substats=[(x.stat.label, fmt(x.stat, x.value)) for x in g.substats],
                 score=gear_score(g),
+                level=g.level,
+                ingame_score=g.score,
             )
         )
 
     return HeroView(
         name=hero.name,
-        element=hero.element,
+        element=ELEMENT_FR.get(hero.element or "", hero.element),
         color=ELEMENT_COLORS.get(hero.element, ELEMENT_COLORS[None]),
-        role=hero.role,
+        role=ROLE_FR.get(hero.role or "", hero.role),
         stars=hero.stars,
         level=hero.level,
         imprint=hero.imprint,
@@ -109,4 +131,7 @@ def build(hero: Hero) -> HeroView:
         sets=[sets_ref[x]["fr"] for x in hero.sets],
         total_score=round(sum(g.score for g in gear_views), 1),
         tags=hero.tags,
+        power=f"{hero.power:,}".replace(",", " ") if hero.power else None,
+        gear_score_avg=hero.gear_score_avg,
+        imprint_bonus=hero.imprint_bonus,
     )

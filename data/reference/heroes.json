@@ -1,15 +1,182 @@
 {
-  "_comment": "Référentiel minimal pour le fuzzy-matching OCR des noms. À compléter via la skill `e7-reference-data` (source communautaire, ex: export Fribbels / E7 datamine public).",
+  "_comment": "Référentiel pour le fuzzy-matching OCR des noms. 'en' absent = nom anglais non vérifié (le nom FR est alors utilisé). À compléter via la skill e7-reference-data.",
   "heroes": [
-    {"code": "c1001", "en": "Ras", "fr": "Ras", "element": "fire", "role": "knight", "stars": 3},
-    {"code": "c2002", "en": "Fallen Cecilia", "fr": "Cecilia déchue", "element": "dark", "role": "knight", "stars": 5},
-    {"code": "c1019", "en": "Ravi", "fr": "Ravi", "element": "fire", "role": "warrior", "stars": 5},
-    {"code": "c1072", "en": "Sigret", "fr": "Sigret", "element": "ice", "role": "warrior", "stars": 5},
-    {"code": "c1096", "en": "Bellona", "fr": "Bellona", "element": "earth", "role": "ranger", "stars": 5},
-    {"code": "c1100", "en": "Alencia", "fr": "Alencia", "element": "earth", "role": "warrior", "stars": 5},
-    {"code": "c2011", "en": "Specter Tenebria", "fr": "Tenebria spectrale", "element": "dark", "role": "mage", "stars": 5},
-    {"code": "c1111", "en": "Eda", "fr": "Eda", "element": "ice", "role": "mage", "stars": 5},
-    {"code": "c1118", "en": "Ran", "fr": "Ran", "element": "ice", "role": "thief", "stars": 5},
-    {"code": "c2019", "en": "Apocalypse Ravi", "fr": "Ravi de l'apocalypse", "element": "dark", "role": "warrior", "stars": 5}
+    {
+      "code": "c1001",
+      "en": "Ras",
+      "fr": "Ras",
+      "element": "fire",
+      "role": "knight",
+      "stars": 3
+    },
+    {
+      "code": "c2002",
+      "en": "Fallen Cecilia",
+      "fr": "Cecilia déchue",
+      "element": "dark",
+      "role": "knight",
+      "stars": 5
+    },
+    {
+      "code": "c1019",
+      "en": "Ravi",
+      "fr": "Ravi",
+      "element": "fire",
+      "role": "warrior",
+      "stars": 5
+    },
+    {
+      "code": "c1072",
+      "en": "Sigret",
+      "fr": "Sigret",
+      "element": "ice",
+      "role": "warrior",
+      "stars": 5
+    },
+    {
+      "code": "c1096",
+      "en": "Bellona",
+      "fr": "Bellona",
+      "element": "earth",
+      "role": "ranger",
+      "stars": 5
+    },
+    {
+      "code": "c1100",
+      "en": "Alencia",
+      "fr": "Alencia",
+      "element": "earth",
+      "role": "warrior",
+      "stars": 5
+    },
+    {
+      "code": "c2011",
+      "en": "Specter Tenebria",
+      "fr": "Tenebria spectrale",
+      "element": "dark",
+      "role": "mage",
+      "stars": 5
+    },
+    {
+      "code": "c1111",
+      "en": "Eda",
+      "fr": "Eda",
+      "element": "ice",
+      "role": "mage",
+      "stars": 5
+    },
+    {
+      "code": "c1118",
+      "en": "Ran",
+      "fr": "Ran",
+      "element": "ice",
+      "role": "thief",
+      "stars": 5
+    },
+    {
+      "code": "c2019",
+      "en": "Apocalypse Ravi",
+      "fr": "Ravi de l'apocalypse",
+      "element": "dark",
+      "role": "warrior",
+      "stars": 5
+    },
+    {
+      "code": null,
+      "fr": "Kise",
+      "element": "ice",
+      "role": "thief",
+      "stars": 5,
+      "en": "Kise"
+    },
+    {
+      "code": null,
+      "fr": "Coli tactique",
+      "element": "ice",
+      "role": "thief",
+      "stars": 5
+    },
+    {
+      "code": null,
+      "fr": "Ludwig Prélude de l'Aubade",
+      "element": "ice",
+      "role": "ranger",
+      "stars": 5
+    },
+    {
+      "code": null,
+      "fr": "Frieren",
+      "element": "earth",
+      "role": null,
+      "stars": 5,
+      "en": "Frieren"
+    },
+    {
+      "code": null,
+      "fr": "Vildred",
+      "element": "earth",
+      "role": "thief",
+      "stars": 5,
+      "en": "Vildred"
+    },
+    {
+      "code": null,
+      "fr": "Mercedes",
+      "element": "fire",
+      "role": "mage",
+      "stars": 5,
+      "en": "Mercedes"
+    },
+    {
+      "code": null,
+      "fr": "Céline vision d'esprit",
+      "element": "light",
+      "role": null,
+      "stars": 5
+    },
+    {
+      "code": null,
+      "fr": "Vivian Sage sylvestre",
+      "element": "light",
+      "role": null,
+      "stars": 5
+    },
+    {
+      "code": null,
+      "fr": "Luna",
+      "element": "ice",
+      "role": "warrior",
+      "stars": 5,
+      "en": "Luna"
+    },
+    {
+      "code": null,
+      "fr": "Luna Nouvelle lune",
+      "element": "light",
+      "role": null,
+      "stars": 5
+    },
+    {
+      "code": null,
+      "fr": "Hwa-young spectatrice",
+      "element": "dark",
+      "role": null,
+      "stars": 5
+    },
+    {
+      "code": null,
+      "fr": "Tenebria Sorcière du lac",
+      "element": "light",
+      "role": null,
+      "stars": 5
+    },
+    {
+      "code": null,
+      "fr": "Saria",
+      "element": "earth",
+      "role": null,
+      "stars": 5,
+      "en": "Saria"
+    }
   ]
 }

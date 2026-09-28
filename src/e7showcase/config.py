@@ -48,7 +48,19 @@ def settings() -> dict[str, Any]:
     return cfg
 
 
-def regions(profile: str | None = None) -> dict[str, dict[str, list[float]]]:
+def region_profiles() -> dict[str, dict[str, Any]]:
+    profiles = {}
+    for path in sorted((config_dir() / "regions").glob("*.toml")):
+        with path.open("rb") as f:
+            profiles[path.stem] = tomllib.load(f)
+    return profiles
+
+
+def regions(profile: str | None = None, aspect: float | None = None) -> dict[str, Any]:
+    """Profil de zones par nom, ou (« auto ») celui dont le format est le plus proche."""
     name = profile or settings()["game"]["region_profile"]
-    with (config_dir() / "regions" / f"{name}.toml").open("rb") as f:
-        return tomllib.load(f)
+    profiles = region_profiles()
+    if name == "auto":
+        target = aspect or 16 / 9
+        name = min(profiles, key=lambda n: abs(float(profiles[n].get("aspect", 0)) - target))
+    return profiles[name]

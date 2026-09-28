@@ -1,44 +1,55 @@
-# Scan : calibration et extension
+# Scan : fonctionnement, calibration et extension
 
-## Pré-requis côté jeu
-- Client PC en **mode fenêtré**, ratio **16:9** (profil `config/regions/16x9.toml`).
-- Interface à 100 %, langue identique à `game.lang`.
-- Ne pas recouvrir la fenêtre pendant la capture (mss capture l'écran, pas la fenêtre).
+## Écrans utilisés
+| Écran | Reconnu par | Sert à |
+|---|---|---|
+| **Infos de héros** (bouton sous les bottes) | titre « Infos de héros » | tout le héros : stats, 6 pièces, scores, artefact, empreinte, puissance |
+| **Liste des héros** | boutons « Gérer l'équipement / Tout équiper » | nom + sets actifs (« Set Vitesse ») → apprentissage des icônes de sets |
 
-## Calibrer les zones (ROI)
-1. Scanner quelques héros avec `save_captures = true` (dossier `captures/` du répertoire de données).
-2. Ouvrir une capture, relever pour chaque zone `[x, y, largeur, hauteur]` en pixels puis diviser
-   par la taille de l'image → valeurs normalisées.
-3. Mettre à jour le TOML, puis vérifier visuellement :
-   ```python
-   from PIL import ImageDraw, Image
-   from e7showcase.config import regions
-   from e7showcase.vision.regions import to_pixels
+Sur la liste, les stats affichent un bonus (« 4088 ▲2708 ») : on ne les lit **que** sur la fiche.
 
-   img = Image.open("capture.png")
-   d = ImageDraw.Draw(img)
-   for section in regions().values():
-       for box in section.values():
-           d.rectangle(to_pixels(box, img.size), outline="red", width=3)
-   img.save("debug-roi.png")
-   ```
-4. Ajouter la capture et le résultat attendu dans `tests/fixtures/captures/` (test de non-régression).
+## Pipeline de lecture (`scanner/hero_scanner.py`)
+1. **Panneau de stats** : 9 lignes à ordre fixe (ATK, DEF, PV, VIT, CC, DC, EFF, RES, AD).
+   Valeurs lues ligne par ligne (reconnaissance sans détection, sans correction de rotation).
+2. **Icônes de stats apprises sur la capture elle-même** : les icônes du panneau (libellé connu)
+   servent de modèles pour classer les icônes des stats d'équipement (`vision/icons.py::features`,
+   seuillage d'Otsu + recadrage sur le glyphe). ATK/DEF/PV + « % » → variante pourcentage.
+3. **Stat principale contrainte** par emplacement (arme = ATK, casque = PV, armure = DEF, etc.).
+4. **Sets** : icône du blason de chaque pièce comparée à la bibliothèque locale
+   (`<dossier de données>/templates/sets/`). Bibliothèque construite automatiquement à partir des
+   paires liste + fiche d'un même héros : la composition connue (Vitesse ×4 + Critique ×2) permet
+   d'attribuer les groupes d'icônes semblables. Set inconnu → `None` (jamais deviné).
 
-La skill Claude `calibrate-ocr-regions` automatise ces étapes.
+Aucune image du jeu n'est livrée : les modèles viennent des captures de l'utilisateur.
 
-## Ajouter un ratio d'écran
-Copier `16x9.toml` en `16x10.toml` / `21x9.toml`, recalibrer, puis `region_profile = "16x10"`.
-Une détection automatique du ratio (`WindowRect.aspect`) est prévue (ROADMAP).
+## Précision mesurée
+Sur 3 héros réels (captures mobiles 3120×1440, client FR) : **206/207 valeurs exactes (99,5 %)**,
+18/18 sets, ~3 s par héros sur CPU. Mesure reproductible :
+```bash
+python scripts/evaluate_captures.py <dossier local>         # voir le format dans le script
+E7_TEST_CAPTURES=<dossier local> pytest tests/test_real_captures.py
+```
+
+## Profils de zones (`config/regions/`)
+| Profil | Format | État |
+|---|---|---|
+| `19_5x9.toml` | 2,167 (smartphones récents) | **calibré** sur captures réelles |
+| `16x9.toml` | 1,778 (PC 1920×1080, 2560×1440) | **estimé** (`scripts/derive_profile.py`), à vérifier |
+
+`region_profile = "auto"` choisit le profil au format le plus proche de la fenêtre ou des captures.
+Pour un nouveau format : `python scripts/derive_profile.py config/regions/19_5x9.toml <largeur/hauteur>`
+puis calibrer (skill `calibrate-ocr-regions`).
 
 ## Ajouter une langue
-1. Ajouter les libellés dans `data/reference/stat_aliases.json` (clés normalisées : minuscules, sans accents).
-2. Ajouter les noms de sets (`sets.json`) et de héros (`heroes.json`) dans la langue.
-3. Ajouter des cas dans `tests/test_stat_parser.py`.
+1. Libellés dans `data/reference/stat_aliases.json` et `classes.json` (clés normalisées).
+2. Noms de sets (`sets.json`) et de héros (`heroes.json`).
+3. Indices de reconnaissance d'écran (`is_detail_screen`, `is_list_screen`).
+4. Vérité terrain de quelques héros + `scripts/evaluate_captures.py`.
 
-## Erreurs OCR fréquentes
-| Symptôme | Cause probable | Correctif |
-|---|---|---|
-| `20` lu `2O` | police du jeu | déjà corrigé par `_OCR_DIGIT_FIXES` |
-| libellé + valeur sur deux lignes | OCR segmente la ligne | `_merge_rows` (tolérance verticale) |
-| nom de héros inconnu | référentiel incomplet | compléter `heroes.json` |
-| stat principale incohérente | mauvaise ROI / mauvais slot | recalibrer `gear_tooltip` |
+## Erreurs OCR connues et parades
+| Symptôme | Parade |
+|---|---|
+| « 9% » lu « %6 » (texte retourné) | `parsers/common.clean` + reconnaissance sans rotation |
+| « 7% » lu « 17% » (bord d'icône) | marge `values_dx` calibrée |
+| niveau « 90 » illisible | valeur hors bornes → `None` |
+| icône de stat ambiguë (1/81 mesuré) | à améliorer : plusieurs modèles par stat |

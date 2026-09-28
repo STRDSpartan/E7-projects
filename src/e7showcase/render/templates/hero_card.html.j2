@@ -7,6 +7,7 @@
       {% if h.level %}Niv. {{ h.level }} · {% endif %}{{ h.element or "" }} {{ h.role or "" }}
       {% if h.imprint %} · Empreinte {{ h.imprint }}{% endif %}
     </div>
+    {% if h.power %}<div class="power">⚔ {{ h.power }}</div>{% endif %}
     <div class="sets">
       {% for s in h.sets %}<span class="pill">{{ s }}</span>{% endfor %}
       {% for t in h.tags %}<span class="pill tag">{{ t }}</span>{% endfor %}
@@ -15,15 +16,17 @@
       {% for label, value in h.stats %}<tr><td>{{ label }}</td><td>{{ value }}</td></tr>{% endfor %}
     </table>
     {% if h.artifact %}<div class="score">Artefact : {{ h.artifact }}</div>{% endif %}
-    <div class="score">Gear score total <b>{{ h.total_score }}</b></div>
+    {% if h.imprint_bonus %}<div class="score">Empreinte : {{ h.imprint_bonus }}</div>{% endif %}
+    {% if h.gear_score_avg %}<div class="score">Score moyen en jeu <b>{{ h.gear_score_avg }}</b></div>{% endif %}
+    <div class="score">Gear score (Fribbels) <b>{{ h.total_score }}</b></div>
   </div>
   <div class="gear">
     {% for g in h.gear %}
     <div class="piece{% if g.empty %} empty{% endif %}">
-      <div class="head"><span>{{ g.slot }} · {{ g.set_name }}</span>{% if g.enhance %}<span class="enh">+{{ g.enhance }}</span>{% endif %}</div>
+      <div class="head"><span>{{ g.slot }} · {{ g.set_name }}{% if g.level %} · {{ g.level }}{% endif %}</span>{% if g.enhance %}<span class="enh">+{{ g.enhance }}</span>{% endif %}</div>
       <div class="main">{{ g.main }}</div>
       <div class="subs">{% for label, value in g.substats %}<div><span>{{ label }}</span><span>{{ value }}</span></div>{% endfor %}</div>
-      {% if not g.empty %}<div class="gs">GS {{ g.score }}</div>{% endif %}
+      {% if not g.empty %}<div class="gs">{% if g.ingame_score %}<span class="ig">Score {{ g.ingame_score }}</span>{% endif %}GS {{ g.score }}</div>{% endif %}
     </div>
     {% endfor %}
   </div>

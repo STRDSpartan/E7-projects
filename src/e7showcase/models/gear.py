@@ -49,6 +49,7 @@ class GearSet(StrEnum):
     PURSUIT = "pursuit"
     RIPOSTE = "riposte"
     REVERSAL = "reversal"
+    WEAKENING = "weakening"  # « Affaiblissement » (client FR) — nom anglais à confirmer
 
 
 class GearRank(StrEnum):
@@ -77,3 +78,4 @@ class Gear(BaseModel):
     main: StatLine
     substats: list[StatLine] = Field(default_factory=list, max_length=4)
     reforged: bool = False
+    score: int | None = Field(default=None, description="Score de la pièce affiché en jeu")

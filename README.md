@@ -36,7 +36,8 @@ copy .env.example .env                                  # puis renseigner E7_DIS
 ## Utilisation
 
 ```bash
-e7showcase scan --player "MonPseudo"          # F9 = capturer, F8 = passer un emplacement, F10 = terminer
+e7showcase scan --player "MonPseudo"          # client PC en direct : F9 = capturer, F10 = terminer
+e7showcase scan --from-dir captures/          # dossier de captures (PC ou mobile)
 e7showcase import-fribbels export.json        # alternative : import depuis Fribbels
 e7showcase list                               # tableau du roster
 e7showcase tag "Ras" GvG-def                  # tags pour la guilde
@@ -46,13 +47,19 @@ e7showcase share "Ras" --message "Mon Ras GvG"  # publication sur le salon Disco
 e7showcase export                             # roster JSON à partager / déposer au bot
 ```
 
-### Déroulé d'un scan manuel
-1. Lancer le jeu en **16:9 fenêtré** (1920×1080 conseillé), ouvrir *Héros* → fiche détails du premier héros.
-2. `e7showcase scan` → **F9** sur la fiche, puis pour chaque emplacement (arme → bottes) :
-   cliquer la pièce en jeu pour ouvrir l'infobulle et **F9** (ou **F8** si vide).
-3. Passer au héros suivant en jeu, recommencer. **F10** pour terminer.
+### Déroulé d'un scan
+Tout se lit sur l'écran **« Infos de héros »** : stats finales, 6 pièces (stat principale +
+4 secondaires), score de chaque pièce, artefact, empreinte. **Une capture par héros suffit.**
 
-Les captures sont conservées dans le dossier de données (`save_captures`) pour recalibrer l'OCR.
+1. En jeu : *Héros* → sélectionner un héros dans la liste de droite.
+2. *(Facultatif mais conseillé pour les premiers héros)* **F9** sur cet écran de liste : les lignes
+   « Set Vitesse / Set Critique » servent à apprendre les icônes de sets.
+3. Toucher le carré sous les bottes → « Infos de héros » → **F9**.
+4. Retour, héros suivant, recommencer. **F10** pour terminer.
+
+Mobile ou capture sur un autre appareil : faire les mêmes captures, les copier dans un dossier
+puis `e7showcase scan --from-dir <dossier>`. Le format d'écran est détecté automatiquement
+(profils `config/regions/` : `19_5x9` calibré sur mobile, `16x9` estimé pour le PC).
 
 ## Documentation
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — flux de données, modules, décisions

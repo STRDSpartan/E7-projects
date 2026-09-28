@@ -6,11 +6,13 @@
 - Configuration agents & skills Claude Code, CI
 
 ## M1 — Scan fiable sur client réel
-- [ ] Calibrer `16x9.toml` sur de vraies captures 1920×1080 et 2560×1440
-- [ ] Jeu de captures de référence + tests de bout en bout `HeroScanner`
-- [ ] Détection du ratio et choix automatique du profil de ROI
-- [ ] Lecture étoiles / éveil / empreinte / artefact (template matching)
-- [ ] Détection du set par icône (template matching) en secours de l'OCR
+- [x] Lecture complète depuis « Infos de héros » (une capture par héros)
+- [x] Profil 19,5:9 calibré sur captures réelles — 99,5 % sur 207 valeurs
+- [x] Icônes de stats apprises sur la capture ; icônes de sets apprises (liste + fiche)
+- [x] Choix automatique du profil selon le format ; `scan --from-dir` (mobile / hors-ligne)
+- [ ] Calibrer `16x9.toml` sur de vraies captures PC 1920×1080
+- [ ] Étoiles, éveil, rang d'empreinte (SSS…), équipement exclusif
+- [ ] Nom anglais du set « Affaiblissement »
 - [ ] Contrôle de cohérence : stats de la fiche ≈ base du héros + équipement
 
 ## M2 — Vitrine
