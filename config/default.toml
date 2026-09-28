@@ -1,0 +1,29 @@
+# Configuration par défaut — surchargée par ~/.config/e7showcase/config.toml puis les variables E7_*
+
+[game]
+window_title = "Epic Seven"   # titre de la fenêtre du client PC (Steam / launcher Stove)
+lang = "fr"                   # langue du client : fr | en
+region_profile = "16x9"       # fichier dans config/regions/
+
+[scan]
+# manual   : l'utilisateur ouvre chaque héros et appuie sur la touche de capture (recommandé)
+# assisted : l'outil clique sur la flèche « héros suivant » (voir docs/COMPLIANCE.md)
+mode = "manual"
+hotkey = "f9"
+stop_hotkey = "f10"
+delay_after_click_ms = 900
+save_captures = true          # conserver les PNG pour débogage/recalibrage
+
+[ocr]
+backend = "rapidocr"          # rapidocr | tesseract
+min_confidence = 0.6
+
+[render]
+engine = "playwright"         # playwright (HTML fidèle) | pillow (sans navigateur)
+theme = "abyss"
+width = 1200
+scale = 2
+
+[discord]
+# L'URL du webhook se met dans E7_DISCORD_WEBHOOK_URL (ne jamais la committer)
+username = "E7 Showcase"

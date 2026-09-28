@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.env
+# Données locales de l'utilisateur (roster, captures, rendus)
+var/
+out/
+captures/
+*.sqlite3
+.claude/settings.local.json

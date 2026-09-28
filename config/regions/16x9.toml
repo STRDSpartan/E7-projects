@@ -1,0 +1,29 @@
+# Zones d'intérêt (ROI) en coordonnées NORMALISÉES [x, y, largeur, hauteur] ∈ [0,1],
+# relatives à la zone cliente de la fenêtre du jeu. Valables pour tout 16:9
+# (1280x720, 1920x1080, 2560x1440...). Recalibrer via la skill `calibrate-ocr-regions`.
+#
+# ⚠ Valeurs initiales approximatives : à calibrer sur de vraies captures avant usage.
+
+[hero_detail]
+name        = [0.055, 0.105, 0.230, 0.050]
+level       = [0.055, 0.160, 0.120, 0.035]
+stars       = [0.055, 0.200, 0.150, 0.030]
+stats_panel = [0.600, 0.250, 0.330, 0.520]  # 9 lignes : ATK, PV, DEF, VIT, CC, DC, EFF, RES, AD
+next_hero   = [0.955, 0.480, 0.035, 0.070]  # flèche « suivant » (mode assisted)
+
+[hero_gear_slots]
+# Emplacements cliquables de l'onglet équipement
+weapon   = [0.405, 0.270, 0.070, 0.120]
+helmet   = [0.405, 0.410, 0.070, 0.120]
+armor    = [0.405, 0.550, 0.070, 0.120]
+necklace = [0.515, 0.270, 0.070, 0.120]
+ring     = [0.515, 0.410, 0.070, 0.120]
+boots    = [0.515, 0.550, 0.070, 0.120]
+artifact = [0.300, 0.410, 0.080, 0.150]
+
+[gear_tooltip]
+enhance   = [0.625, 0.200, 0.060, 0.040]
+level     = [0.625, 0.245, 0.060, 0.035]
+main_stat = [0.700, 0.330, 0.250, 0.045]
+substats  = [0.700, 0.390, 0.250, 0.200]
+set_name  = [0.700, 0.610, 0.250, 0.040]

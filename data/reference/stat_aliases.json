@@ -1,0 +1,35 @@
+{
+  "_comment": "Libellés OCR -> StatType. Clés en minuscules, sans accents. '%' détermine la variante pourcentage pour atk/hp/def.",
+  "fr": {
+    "attaque": "atk",
+    "pv": "hp",
+    "points de vie": "hp",
+    "sante": "hp",
+    "defense": "def",
+    "vitesse": "spd",
+    "chances de critique": "crit_chance",
+    "chances critiques": "crit_chance",
+    "chance de critique": "crit_chance",
+    "degats critiques": "crit_dmg",
+    "degats de critique": "crit_dmg",
+    "efficacite": "effectiveness",
+    "resistance aux effets": "effect_res",
+    "resistance": "effect_res",
+    "chances d'attaque double": "dual_attack",
+    "attaque double": "dual_attack"
+  },
+  "en": {
+    "attack": "atk",
+    "health": "hp",
+    "hp": "hp",
+    "defense": "def",
+    "speed": "spd",
+    "critical hit chance": "crit_chance",
+    "crit chance": "crit_chance",
+    "critical hit damage": "crit_dmg",
+    "crit damage": "crit_dmg",
+    "effectiveness": "effectiveness",
+    "effect resistance": "effect_res",
+    "dual attack chance": "dual_attack"
+  }
+}

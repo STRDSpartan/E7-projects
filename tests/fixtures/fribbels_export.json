@@ -1,0 +1,21 @@
+{
+  "heroes": [
+    {"id": "h1", "name": "Ras", "stars": 6, "level": 60, "element": "fire", "role": "knight",
+     "equippedStats": {"atk": 1200, "hp": 18000, "def": 1100, "spd": 250, "cr": 15, "cd": 150, "eff": 20, "res": 120, "dac": 5}}
+  ],
+  "items": [
+    {"id": "i1", "gear": "Weapon", "rank": "Epic", "set": "SpeedSet", "level": 85, "enhance": 15,
+     "main": {"type": "Attack", "value": 515},
+     "substats": [
+       {"type": "Speed", "value": 18, "rolls": 4},
+       {"type": "HealthPercent", "value": 12, "rolls": 2},
+       {"type": "EffectResistancePercent", "value": 8, "rolls": 1},
+       {"type": "CriticalHitChancePercent", "value": 5, "rolls": 1}
+     ], "equippedById": "h1"},
+    {"id": "i2", "gear": "Boots", "rank": "Epic", "set": "SpeedSet", "level": 88, "enhance": 15,
+     "main": {"type": "Speed", "value": 45},
+     "substats": [{"type": "Health", "value": 350, "rolls": 2}], "equippedById": "h1"},
+    {"id": "i3", "gear": "Ring", "rank": "Heroic", "set": "UnknownSet", "level": 85, "enhance": 9,
+     "main": {"type": "HealthPercent", "value": 40}, "substats": []}
+  ]
+}

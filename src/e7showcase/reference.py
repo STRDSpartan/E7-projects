@@ -1,0 +1,47 @@
+"""Accès aux données de référence (sets, alias de stats, héros)."""
+
+from __future__ import annotations
+
+import json
+import unicodedata
+from functools import cache
+from pathlib import Path
+from typing import Any
+
+_REPO_REF = Path(__file__).resolve().parents[2] / "data" / "reference"
+_PKG_REF = Path(__file__).resolve().parent / "_reference"
+
+
+def reference_dir() -> Path:
+    return _REPO_REF if _REPO_REF.is_dir() else _PKG_REF
+
+
+@cache
+def load(name: str) -> dict[str, Any]:
+    with (reference_dir() / f"{name}.json").open(encoding="utf-8") as f:
+        data: dict[str, Any] = json.load(f)
+    data.pop("_comment", None)
+    return data
+
+
+def normalize(text: str) -> str:
+    """Minuscules, sans accents, espaces compactés — pour comparer des sorties OCR."""
+    decomposed = unicodedata.normalize("NFKD", text)
+    stripped = "".join(c for c in decomposed if not unicodedata.combining(c))
+    return " ".join(stripped.casefold().replace("’", "'").split())
+
+
+def set_pieces(set_name: str) -> int:
+    return int(load("sets")[set_name]["pieces"])
+
+
+def hero_names(lang: str = "fr") -> list[str]:
+    return [h[lang] for h in load("heroes")["heroes"]]
+
+
+def hero_info(name: str) -> dict[str, Any] | None:
+    key = normalize(name)
+    for h in load("heroes")["heroes"]:
+        if key in (normalize(h["en"]), normalize(h["fr"])):
+            return dict(h)
+    return None

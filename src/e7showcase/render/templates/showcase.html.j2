@@ -1,0 +1,30 @@
+<!doctype html>
+{% from "hero_card.html.j2" import card %}
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+<style>{% include "theme.css" %}</style>
+</head>
+<body>
+  <header class="showcase">
+    <h1>{{ player }}{% if guild %} <span>· {{ guild }}</span>{% endif %}</h1>
+    <div class="meta">{{ heroes|length }} héros · {{ updated }}</div>
+  </header>
+  {% if layout == "cards" %}
+    {% for h in heroes %}{{ card(h) }}{% endfor %}
+  {% else %}
+    <div class="grid">
+    {% for h in heroes %}
+      <div class="mini" style="--accent: {{ h.color }}">
+        <h3>{{ h.name }}</h3>
+        {% for label, value in h.stats[:6] %}<div class="row"><span>{{ label }}</span><b>{{ value }}</b></div>{% endfor %}
+        <div class="row"><span>Sets</span><b>{{ h.sets|join(" / ") or "—" }}</b></div>
+        <div class="row"><span>GS</span><b>{{ h.total_score }}</b></div>
+      </div>
+    {% endfor %}
+    </div>
+  {% endif %}
+  <footer>Généré par e7showcase · données fournies par le joueur</footer>
+</body>
+</html>

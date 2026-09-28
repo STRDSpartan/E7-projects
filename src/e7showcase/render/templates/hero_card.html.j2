@@ -1,0 +1,31 @@
+{% macro card(h) -%}
+<section class="card" style="--accent: {{ h.color }}">
+  <div class="hero-id">
+    <h2>{{ h.name }}</h2>
+    <div class="sub">
+      {% if h.stars %}<span class="stars">{{ "★" * h.stars }}</span> · {% endif %}
+      {% if h.level %}Niv. {{ h.level }} · {% endif %}{{ h.element or "" }} {{ h.role or "" }}
+      {% if h.imprint %} · Empreinte {{ h.imprint }}{% endif %}
+    </div>
+    <div class="sets">
+      {% for s in h.sets %}<span class="pill">{{ s }}</span>{% endfor %}
+      {% for t in h.tags %}<span class="pill tag">{{ t }}</span>{% endfor %}
+    </div>
+    <table class="stats">
+      {% for label, value in h.stats %}<tr><td>{{ label }}</td><td>{{ value }}</td></tr>{% endfor %}
+    </table>
+    {% if h.artifact %}<div class="score">Artefact : {{ h.artifact }}</div>{% endif %}
+    <div class="score">Gear score total <b>{{ h.total_score }}</b></div>
+  </div>
+  <div class="gear">
+    {% for g in h.gear %}
+    <div class="piece{% if g.empty %} empty{% endif %}">
+      <div class="head"><span>{{ g.slot }} · {{ g.set_name }}</span>{% if g.enhance %}<span class="enh">+{{ g.enhance }}</span>{% endif %}</div>
+      <div class="main">{{ g.main }}</div>
+      <div class="subs">{% for label, value in g.substats %}<div><span>{{ label }}</span><span>{{ value }}</span></div>{% endfor %}</div>
+      {% if not g.empty %}<div class="gs">GS {{ g.score }}</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{%- endmacro %}

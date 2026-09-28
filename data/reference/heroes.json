@@ -1,0 +1,15 @@
+{
+  "_comment": "Référentiel minimal pour le fuzzy-matching OCR des noms. À compléter via la skill `e7-reference-data` (source communautaire, ex: export Fribbels / E7 datamine public).",
+  "heroes": [
+    {"code": "c1001", "en": "Ras", "fr": "Ras", "element": "fire", "role": "knight", "stars": 3},
+    {"code": "c2002", "en": "Fallen Cecilia", "fr": "Cecilia déchue", "element": "dark", "role": "knight", "stars": 5},
+    {"code": "c1019", "en": "Ravi", "fr": "Ravi", "element": "fire", "role": "warrior", "stars": 5},
+    {"code": "c1072", "en": "Sigret", "fr": "Sigret", "element": "ice", "role": "warrior", "stars": 5},
+    {"code": "c1096", "en": "Bellona", "fr": "Bellona", "element": "earth", "role": "ranger", "stars": 5},
+    {"code": "c1100", "en": "Alencia", "fr": "Alencia", "element": "earth", "role": "warrior", "stars": 5},
+    {"code": "c2011", "en": "Specter Tenebria", "fr": "Tenebria spectrale", "element": "dark", "role": "mage", "stars": 5},
+    {"code": "c1111", "en": "Eda", "fr": "Eda", "element": "ice", "role": "mage", "stars": 5},
+    {"code": "c1118", "en": "Ran", "fr": "Ran", "element": "ice", "role": "thief", "stars": 5},
+    {"code": "c2019", "en": "Apocalypse Ravi", "fr": "Ravi de l'apocalypse", "element": "dark", "role": "warrior", "stars": 5}
+  ]
+}
