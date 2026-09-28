@@ -11,6 +11,7 @@ import io
 import tempfile
 from pathlib import Path
 
+from e7showcase.assets import AssetStore
 from e7showcase.config import data_dir, settings
 from e7showcase.models.roster import Roster
 from e7showcase.render.showcase import render_showcase
@@ -51,7 +52,11 @@ def run() -> None:
         selection = [h] if heros and (h := roster.find(heros)) else None
         with tempfile.TemporaryDirectory() as tmp:
             images = render_showcase(
-                roster, Path(tmp), selection, layout="cards" if selection else "grid"
+                roster,
+                Path(tmp),
+                selection,
+                layout="cards" if selection else "grid",
+                assets=AssetStore(data_dir() / "assets"),
             )
             files = [discord.File(io.BytesIO(p.read_bytes()), filename=p.name) for p in images[:10]]
         await interaction.followup.send(f"Vitrine de **{roster.player}**", files=files)

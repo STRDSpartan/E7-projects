@@ -18,7 +18,9 @@
 - [ ] Contrôle de cohérence : stats de la fiche ≈ base du héros + équipement
 
 ## M2 — Vitrine
-- [ ] Portraits des héros (assets fournis par l'utilisateur, jamais redistribués dans le dépôt)
+- [x] Portraits des héros et images d'artefacts depuis le dossier local (`e7showcase assets`)
+- [ ] `e7showcase assets sync` depuis un site communautaire (e7codex.com — accès réseau à ouvrir,
+      conditions d'utilisation à vérifier ; images téléchargées en local, jamais dans le dépôt)
 - [ ] Thèmes (par élément, par guilde), logo de guilde
 - [ ] Moteur Pillow de secours sans navigateur
 - [ ] Vue « équipe » (4 héros GvG/RTA côte à côte)

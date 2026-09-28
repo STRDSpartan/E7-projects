@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from e7showcase.assets import AssetStore, data_uri
 from e7showcase.calc.gear_score import gear_score
 from e7showcase.models.gear import GearSlot
 from e7showcase.models.hero import Hero
@@ -80,9 +81,11 @@ class HeroView:
     power: str | None = None
     gear_score_avg: int | None = None
     imprint_bonus: str | None = None
+    portrait: str | None = None  # data URI, None si aucune image locale
+    artifact_image: str | None = None
 
 
-def build(hero: Hero) -> HeroView:
+def build(hero: Hero, assets: AssetStore | None = None) -> HeroView:
     sets_ref = load("sets")
     s = hero.stats
     stats = [
@@ -136,4 +139,8 @@ def build(hero: Hero) -> HeroView:
         power=f"{hero.power:,}".replace(",", " ") if hero.power else None,
         gear_score_avg=hero.gear_score_avg,
         imprint_bonus=hero.imprint_bonus,
+        portrait=data_uri(assets.hero_portrait(hero), "heroes") if assets else None,
+        artifact_image=data_uri(assets.artifact_image(hero.artifact), "artifacts")
+        if assets
+        else None,
     )

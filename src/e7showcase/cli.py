@@ -10,6 +10,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from e7showcase.assets import AssetStore
 from e7showcase.config import data_dir, regions, settings
 from e7showcase.models.hero import Hero
 from e7showcase.storage.repository import RosterRepository
@@ -217,6 +218,7 @@ def render(
         width=cfg["width"],
         scale=cfg["scale"],
         png=not html_only,
+        assets=AssetStore(data_dir() / "assets"),
     )
     for p in paths:
         console.print(f"🖼  {p}")
@@ -238,7 +240,9 @@ def share(
     roster = RosterRepository().load()
     selection = [h for n in heroes if (h := roster.find(n))] if heroes else roster.heroes
     with tempfile.TemporaryDirectory() as tmp:
-        images = render_showcase(roster, Path(tmp), selection, layout=layout)
+        images = render_showcase(
+            roster, Path(tmp), selection, layout=layout, assets=AssetStore(data_dir() / "assets")
+        )
         post_images(
             cfg["discord"]["webhook_url"],
             images,
@@ -246,6 +250,45 @@ def share(
             username=cfg["discord"]["username"],
         )
     console.print(f"[green]Publié[/] ({len(images)} image(s))")
+
+
+assets_app = typer.Typer(help="Portraits des héros et images d'artefacts (dossier local).")
+app.add_typer(assets_app, name="assets")
+
+
+@assets_app.command("add")
+def assets_add(
+    kind: Annotated[str, typer.Argument(help="hero | artifact")],
+    name: Annotated[str, typer.Argument(help="Nom du héros / de l'artefact, ou code (c1001)")],
+    image: Path,
+) -> None:
+    """Importer une image (portrait de héros ou artefact) dans le dossier local."""
+    if kind not in ("hero", "artifact"):
+        raise typer.BadParameter("hero ou artifact")
+    target = AssetStore(data_dir() / "assets").add(
+        "heroes" if kind == "hero" else "artifacts", name, image
+    )
+    console.print(f"Image enregistrée → {target}")
+
+
+@assets_app.command("status")
+def assets_status() -> None:
+    """Quels héros du roster ont un portrait / un artefact illustré ?"""
+    store = AssetStore(data_dir() / "assets")
+    roster = RosterRepository().load()
+    table = Table(title=f"Images locales ({store.root})")
+    for col in ("Héros", "Portrait", "Artefact", "Clés acceptées"):
+        table.add_column(col)
+    for h in sorted(roster.heroes, key=lambda x: x.name):
+        portrait = store.hero_portrait(h)
+        art = store.artifact_image(h.artifact)
+        table.add_row(
+            h.name,
+            "✔" if portrait else "—",
+            ("✔ " if art else "— ") + (h.artifact or ""),
+            ", ".join(store.hero_keys(h)),
+        )
+    console.print(table)
 
 
 @app.command()

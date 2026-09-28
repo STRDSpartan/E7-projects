@@ -1,5 +1,6 @@
 {% macro card(h) -%}
-<section class="card" style="--accent: {{ h.color }}">
+<section class="card{% if h.portrait %} has-portrait{% endif %}" style="--accent: {{ h.color }}">
+  {% if h.portrait %}<div class="portrait"><img src="{{ h.portrait }}" alt=""></div>{% endif %}
   <div class="hero-id">
     <h2>{{ h.name }}</h2>
     <div class="sub">
@@ -15,7 +16,7 @@
     <table class="stats">
       {% for label, value in h.stats %}<tr><td>{{ label }}</td><td>{{ value }}</td></tr>{% endfor %}
     </table>
-    {% if h.artifact %}<div class="score">Artefact : {{ h.artifact }}</div>{% endif %}
+    {% if h.artifact %}<div class="score artifact">{% if h.artifact_image %}<img src="{{ h.artifact_image }}" alt="">{% endif %}<span>Artefact : {{ h.artifact }}</span></div>{% endif %}
     {% if h.imprint_bonus %}<div class="score">Empreinte : {{ h.imprint_bonus }}</div>{% endif %}
     {% if h.gear_score_avg %}<div class="score">Score moyen en jeu <b>{{ h.gear_score_avg }}</b></div>{% endif %}
     <div class="score">Gear score (Fribbels) <b>{{ h.total_score }}</b></div>
@@ -23,7 +24,7 @@
   <div class="gear">
     {% for g in h.gear %}
     <div class="piece{% if g.empty %} empty{% endif %}">
-      <div class="head"><span>{{ g.slot }} · {{ g.set_name }}{% if g.level %} · {{ g.level }}{% endif %}</span>{% if g.enhance %}<span class="enh">+{{ g.enhance }}</span>{% endif %}</div>
+      <div class="head"><span>{{ g.slot }} · {{ g.set_name }}</span><span class="lvl">{% if g.level %}{{ g.level }}{% endif %}{% if g.enhance %} <span class="enh">+{{ g.enhance }}</span>{% endif %}</span></div>
       <div class="main">{{ g.main }}</div>
       <div class="subs">{% for label, value in g.substats %}<div><span>{{ label }}</span><span>{{ value }}</span></div>{% endfor %}</div>
       {% if not g.empty %}<div class="gs">{% if g.ingame_score %}<span class="ig">Score {{ g.ingame_score }}</span>{% endif %}GS {{ g.score }}</div>{% endif %}

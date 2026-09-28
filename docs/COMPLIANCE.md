@@ -17,6 +17,11 @@ Ce projet est conçu pour rester du côté « outil de capture d'écran » :
 Toute contribution introduisant une technique de la colonne ❌ doit être refusée
 (l'agent `compliance-reviewer` le vérifie).
 
+## Visuels du jeu (portraits, artefacts)
+Propriété de Smilegate : jamais committés ni redistribués par le projet. Chaque joueur les place
+dans son dossier de données local (`e7showcase assets`) ; toute synchronisation depuis un site
+tiers doit respecter ses conditions d'utilisation et son robots.txt, et télécharger en local.
+
 ## Données personnelles
 - Le roster reste **local** ; rien n'est envoyé sans commande explicite (`share`, `export`).
 - Les captures peuvent contenir le pseudo et l'UID : elles restent dans le dossier de données

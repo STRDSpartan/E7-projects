@@ -32,6 +32,21 @@ header.showcase .meta { color: var(--muted); font-size: 14px; }
   grid-template-columns: 260px 1fr;
   gap: 20px;
 }
+.card.has-portrait { grid-template-columns: 150px 225px 1fr; gap: 16px; }
+.card.has-portrait .gear { gap: 8px; }
+.portrait { position: relative; border-radius: 10px; overflow: hidden; background: #0f131c;
+  border: 1px solid var(--line); min-height: 100%; }
+.portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  object-position: 50% 12%; }
+.portrait::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 55%, var(--panel) 100%),
+              linear-gradient(90deg, transparent 70%, rgba(22, 27, 38, .55) 100%); }
+.artifact { display: flex; align-items: center; gap: 8px; }
+.artifact img { width: 34px; height: 34px; border-radius: 6px; object-fit: cover;
+  border: 1px solid var(--line); }
+.mini h3 { display: flex; align-items: center; gap: 8px; }
+.mini .avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover;
+  object-position: 50% 15%; border: 2px solid var(--accent); flex: none; }
 .hero-id h2 { font-size: 24px; color: var(--accent); }
 .hero-id .sub { color: var(--muted); font-size: 13px; margin: 4px 0 10px; text-transform: capitalize; }
 .stars { color: var(--gold); letter-spacing: 2px; }
@@ -48,7 +63,10 @@ header.showcase .meta { color: var(--muted); font-size: 14px; }
 .gear { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; align-content: start; }
 .piece { background: #121722; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 12.5px; }
 .piece.empty { opacity: .35; }
-.piece .head { display: flex; justify-content: space-between; color: var(--muted); margin-bottom: 4px; }
+.piece { min-width: 0; }
+.piece .head { display: flex; justify-content: space-between; gap: 6px; color: var(--muted); margin-bottom: 4px; }
+.piece .head span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.piece .head .lvl { white-space: nowrap; flex: none; }
 .piece .head .enh { color: var(--gold); font-weight: 700; }
 .piece .main { font-weight: 700; margin-bottom: 6px; }
 .piece .subs div { display: flex; justify-content: space-between; color: #c9d1de; }

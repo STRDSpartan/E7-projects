@@ -15,7 +15,7 @@ e7showcase --help
 `models/` Pydantic (Roster = format d'échange, `SCHEMA_VERSION`) · `reference.py` + `data/reference/`
 · `calc/` gear score & sets · `parsers/` texte OCR → modèles (purs, très testés) · `capture/` fenêtre
 + capture (Windows) · `vision/` ROI normalisées, prétraitement, OCR · `scanner/` orchestration ·
-`importers/fribbels.py` · `storage/` JSON · `render/` Jinja2 → PNG Playwright · `publish/` webhook & bot
+`importers/fribbels.py` · `storage/` JSON · `assets.py` portraits locaux · `render/` Jinja2 → PNG Playwright · `publish/` webhook & bot
 · `cli.py` Typer. Détails : `docs/ARCHITECTURE.md`.
 
 ## Règles non négociables

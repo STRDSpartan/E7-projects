@@ -7,6 +7,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from e7showcase.assets import AssetStore
 from e7showcase.models.hero import Hero
 from e7showcase.models.roster import Roster
 from e7showcase.render.viewmodel import build
@@ -23,7 +24,12 @@ def _env() -> Environment:
 
 
 def render_html(
-    roster: Roster, heroes: list[Hero] | None = None, *, layout: str = "cards", width: int = 1200
+    roster: Roster,
+    heroes: list[Hero] | None = None,
+    *,
+    layout: str = "cards",
+    width: int = 1200,
+    assets: AssetStore | None = None,
 ) -> str:
     selected = heroes if heroes is not None else roster.heroes
     return (
@@ -34,7 +40,7 @@ def render_html(
             player=roster.player,
             guild=roster.guild,
             updated=roster.updated_at.strftime("%d/%m/%Y"),
-            heroes=[build(h) for h in selected],
+            heroes=[build(h, assets) for h in selected],
             layout=layout,
             width=width,
         )
@@ -64,6 +70,7 @@ def render_showcase(
     width: int = 1200,
     scale: int = 2,
     png: bool = True,
+    assets: AssetStore | None = None,
 ) -> list[Path]:
     """Écrit une ou plusieurs images (découpage automatique pour rester lisible sur Discord)."""
     selected = heroes if heroes is not None else roster.heroes
@@ -72,7 +79,7 @@ def render_showcase(
     outputs: list[Path] = []
     out_dir.mkdir(parents=True, exist_ok=True)
     for i, chunk in enumerate(chunks, start=1):
-        html = render_html(roster, chunk, layout=layout, width=width)
+        html = render_html(roster, chunk, layout=layout, width=width, assets=assets)
         stem = f"showcase-{layout}-{i:02d}"
         html_path = out_dir / f"{stem}.html"
         html_path.write_text(html, encoding="utf-8")

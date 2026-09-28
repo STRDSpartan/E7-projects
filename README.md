@@ -22,6 +22,7 @@ ses équipes GvG / RTA / Boss et comparer les builds.
 | `calc/` | Gear score (formule communautaire), sets actifs | testé |
 | `storage/` | Roster local JSON (= format d'échange guilde) | testé |
 | `render/` | Vitrine HTML (Jinja2) → PNG (Playwright), mise en page cartes ou grille | testé |
+| `assets.py` | Portraits de héros / images d'artefacts du dossier local, intégrés à la vitrine | testé |
 | `publish/` | Publication Discord par webhook, bot `/vitrine` `/draft` `/roster-upload` | squelette bot |
 
 ## Installation
@@ -46,6 +47,8 @@ e7showcase render --layout grid               # vitrine complète en grille → 
 e7showcase render "Ras" "Sigret"              # cartes détaillées de héros choisis
 e7showcase share "Ras" --message "Mon Ras GvG"  # publication sur le salon Discord
 e7showcase export                             # roster JSON à partager / déposer au bot
+e7showcase assets add hero "Kise" kise.png    # portrait affiché sur la vitrine (dossier local)
+e7showcase assets status                      # héros du roster avec / sans portrait
 ```
 
 ### Déroulé d'un scan
