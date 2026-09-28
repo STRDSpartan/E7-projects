@@ -17,6 +17,7 @@ from __future__ import annotations
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 from e7showcase.assets import AssetStore, Kind
@@ -177,3 +178,47 @@ def hero_known(hero: Hero) -> bool:
     from e7showcase.reference import hero_info
 
     return hero_info(hero.name) is not None
+
+
+# --- modèle animé : export via la visionneuse en temps réel d'E7 Codex ----------------------
+VIEWER_URL = BASE_URL + "/viewer?slug={code}"
+
+
+def export_animation(code: str, target: Path, *, timeout_s: int = 300) -> Path:
+    """Ouvre la visionneuse d'E7 Codex dans un navigateur sans interface et utilise son propre
+    export « Transparent · WebP animé » (une boucle complète de l'animation d'attente).
+
+    Le projet n'embarque pas le moteur d'animation Spine : il pilote la page publique du site,
+    exactement comme un joueur cliquant sur « Export animation ».
+    """
+    import os
+
+    from playwright.sync_api import sync_playwright
+
+    target.parent.mkdir(parents=True, exist_ok=True)
+    proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
+    with sync_playwright() as p:
+        browser = p.chromium.launch(
+            executable_path=os.environ.get("E7_CHROMIUM_PATH") or None,
+            proxy={"server": proxy} if proxy else None,
+            # rendu WebGL logiciel : fonctionne aussi sans carte graphique
+            args=["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"],
+        )
+        try:
+            page = browser.new_page(
+                viewport={"width": 760, "height": 1100},
+                accept_downloads=True,
+                user_agent=USER_AGENT,
+            )
+            page.goto(
+                VIEWER_URL.format(code=code), wait_until="networkidle", timeout=timeout_s * 1000
+            )
+            page.wait_for_selector("#stage canvas", timeout=timeout_s * 1000)
+            page.wait_for_timeout(1500)  # premières images rendues
+            page.click("#zexport-toggle")
+            with page.expect_download(timeout=timeout_s * 1000) as download:
+                page.click("#exp-webp")
+            download.value.save_as(str(target))
+        finally:
+            browser.close()
+    return target

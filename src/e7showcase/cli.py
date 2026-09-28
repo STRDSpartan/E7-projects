@@ -13,6 +13,7 @@ from rich.table import Table
 from e7showcase.assets import AssetStore
 from e7showcase.config import data_dir, regions, settings
 from e7showcase.models.hero import Hero
+from e7showcase.models.roster import Roster
 from e7showcase.storage.repository import RosterRepository
 
 app = typer.Typer(
@@ -200,6 +201,9 @@ def render(
     tag_filter: Annotated[str | None, typer.Option("--tag")] = None,
     out: Annotated[Path, typer.Option()] = Path("out"),
     html_only: bool = False,
+    animated: Annotated[
+        bool, typer.Option("--animated", help="Carte animée par héros (WebP, modèle en mouvement)")
+    ] = False,
 ) -> None:
     """Générer la vitrine (PNG) du roster ou d'une sélection."""
     from e7showcase.render.showcase import render_showcase
@@ -211,6 +215,10 @@ def render(
     if tag_filter:
         selection = [h for h in selection if tag_filter in h.tags]
     cfg = settings()["render"]
+    if animated:
+        for p in _animated_cards(roster, selection, out):
+            console.print(f"🎞  {p}")
+        return
     paths = render_showcase(
         roster,
         out,
@@ -225,11 +233,36 @@ def render(
         console.print(f"🖼  {p}")
 
 
+def _animated_cards(roster: Roster, heroes: list[Hero], out: Path) -> list[Path]:
+    """Une carte animée par héros ; exporte le modèle via la visionneuse d'E7 Codex si absent."""
+    from e7showcase.reference import hero_info
+    from e7showcase.render.animated import render_animated_card
+    from e7showcase.sources.e7codex import export_animation
+
+    store = AssetStore(data_dir() / "assets")
+    paths: list[Path] = []
+    for hero in heroes:
+        anim = store.hero_anim(hero)
+        if anim is None:
+            code = hero.skin or (hero_info(hero.name) or {}).get("code")
+            if not code:
+                console.print(
+                    f"[yellow]{hero.name} : absent du référentiel, pas de modèle animé[/]"
+                )
+                continue
+            console.print(f"  Export du modèle animé de {hero.name} (visionneuse E7 Codex)…")
+            anim = export_animation(code, store.root / "anims" / f"{code}.webp")
+        target = out / f"showcase-anim-{AssetStore.hero_keys(hero)[0]}.webp"
+        paths.append(render_animated_card(roster, hero, store, target, anim))
+    return paths
+
+
 @app.command()
 def share(
     heroes: Annotated[list[str] | None, typer.Argument()] = None,
     layout: str = "cards",
     message: str = "",
+    animated: Annotated[bool, typer.Option("--animated", help="Cartes animées (WebP)")] = False,
 ) -> None:
     """Générer puis publier la vitrine dans le salon Discord de la guilde (webhook)."""
     import tempfile
@@ -241,8 +274,16 @@ def share(
     roster = RosterRepository().load()
     selection = [h for n in heroes if (h := roster.find(n))] if heroes else roster.heroes
     with tempfile.TemporaryDirectory() as tmp:
-        images = render_showcase(
-            roster, Path(tmp), selection, layout=layout, assets=AssetStore(data_dir() / "assets")
+        images = (
+            _animated_cards(roster, selection, Path(tmp))
+            if animated
+            else render_showcase(
+                roster,
+                Path(tmp),
+                selection,
+                layout=layout,
+                assets=AssetStore(data_dir() / "assets"),
+            )
         )
         post_images(
             cfg["discord"]["webhook_url"],

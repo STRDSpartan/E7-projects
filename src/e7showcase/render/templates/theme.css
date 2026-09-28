@@ -41,6 +41,11 @@ header.showcase .meta { color: var(--muted); font-size: 14px; }
 .portrait::after { content: ""; position: absolute; inset: 0;
   background: linear-gradient(180deg, transparent 55%, var(--panel) 100%),
               linear-gradient(90deg, transparent 70%, rgba(22, 27, 38, .55) 100%); }
+/* Carte animée : colonne élargie, le modèle y est incrusté image par image */
+.card.animated { grid-template-columns: 300px 225px 1fr; }
+.card.animated .gear { grid-template-columns: repeat(2, 1fr); }
+.portrait.anim-slot { background: radial-gradient(120% 70% at 50% 100%, rgba(255,255,255,.07), transparent 70%), #0f131c; }
+.portrait.anim-slot::after { display: none; }
 .artifact { display: flex; align-items: center; gap: 8px; }
 .artifact img { width: 34px; height: 34px; border-radius: 6px; object-fit: cover;
   border: 1px solid var(--line); }

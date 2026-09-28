@@ -1,6 +1,7 @@
-{% macro card(h) -%}
-<section class="card{% if h.portrait %} has-portrait{% endif %}" style="--accent: {{ h.color }}">
-  {% if h.portrait %}<div class="portrait"><img src="{{ h.portrait }}" alt=""></div>{% endif %}
+{% macro card(h, animated=False) -%}
+<section class="card{% if animated %} has-portrait animated{% elif h.portrait %} has-portrait{% endif %}" style="--accent: {{ h.color }}">
+  {% if animated %}<div class="portrait anim-slot"></div>
+  {% elif h.portrait %}<div class="portrait"><img src="{{ h.portrait }}" alt=""></div>{% endif %}
   <div class="hero-id">
     <h2>{{ h.name }}</h2>
     <div class="sub">

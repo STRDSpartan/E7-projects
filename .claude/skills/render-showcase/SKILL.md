@@ -21,6 +21,18 @@ Images locales uniquement (`<E7_DATA_DIR>/assets/heroes|faces|artifacts/<clé>.w
 Pour tester la mise en page, générer des **portraits synthétiques** (Pillow) — jamais de visuels
 du jeu dans le dépôt ni dans les tests. Vérifier les deux cas : carte avec et sans portrait.
 
+## Carte animée
+`e7showcase render "Kise" --animated` : exporte (une fois, cache `assets/anims/<code>.webp`) le
+modèle via la visionneuse d'E7 Codex (`sources/e7codex.export_animation`), puis
+`render/animated.py` incruste chaque image dans la zone `.anim-slot` de la carte → WebP animé
+(réduit sous 9,5 Mo). Vérifier plusieurs images de l'animation (début, milieu), pas seulement
+la première : un cadrage faussé par des particules rapetisse le personnage.
+
+Dans un conteneur Claude Code, Chromium doit passer par le proxy (géré par `export_animation`
+via `HTTPS_PROXY`) et faire confiance à son autorité : si `ERR_CERT_AUTHORITY_INVALID`,
+`certutil -A -d sql:$HOME/.pki/nssdb -t "C,," -n ccr-agent-proxy -i /root/.ccr/agent-proxy-ca.crt`
+(paquet `libnss3-tools`). Ne jamais désactiver la vérification TLS.
+
 ## Rendre
 ```bash
 e7showcase render --out out/                # cartes détaillées (≤ 6 par image)

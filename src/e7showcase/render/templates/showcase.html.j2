@@ -12,7 +12,7 @@
     <div class="meta">{{ heroes|length }} héros · {{ updated }}</div>
   </header>
   {% if layout == "cards" %}
-    {% for h in heroes %}{{ card(h) }}{% endfor %}
+    {% for h in heroes %}{{ card(h, animated) }}{% endfor %}
   {% else %}
     <div class="grid">
     {% for h in heroes %}

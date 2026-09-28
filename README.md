@@ -23,7 +23,8 @@ ses équipes GvG / RTA / Boss et comparer les builds.
 | `storage/` | Roster local JSON (= format d'échange guilde) | testé |
 | `render/` | Vitrine HTML (Jinja2) → PNG (Playwright), mise en page cartes ou grille | testé |
 | `assets.py` | Portraits, visages, artefacts du dossier local, intégrés à la vitrine | testé |
-| `sources/e7codex.py` | Référentiel (390 héros, 66 skins, 282 artefacts) et synchronisation des illustrations | testé |
+| `sources/e7codex.py` | Référentiel (390 héros, 66 skins, 282 artefacts), illustrations, export du modèle animé | testé |
+| `render/animated.py` | Carte animée : modèle de la visionneuse E7 Codex incrusté image par image (WebP) | testé |
 | `publish/` | Publication Discord par webhook, bot `/vitrine` `/draft` `/roster-upload` | squelette bot |
 
 ## Installation
@@ -47,6 +48,8 @@ e7showcase tag "Ras" GvG-def                  # tags pour la guilde
 e7showcase render --layout grid               # vitrine complète en grille → out/*.png
 e7showcase render "Ras" "Sigret"              # cartes détaillées de héros choisis
 e7showcase share "Ras" --message "Mon Ras GvG"  # publication sur le salon Discord
+e7showcase render "Kise" --animated           # carte animée (WebP) avec le modèle en mouvement
+e7showcase share "Kise" --animated            # … publiée sur Discord (joue directement)
 e7showcase export                             # roster JSON à partager / déposer au bot
 e7showcase assets sync                        # illustrations des héros du roster (e7codex.com, local)
 e7showcase assets sync --skins                # … et leurs skins

@@ -24,6 +24,7 @@
 - [x] Correction des noms d'artefacts lus par l'OCR d'après le référentiel
 - [ ] Thèmes (par élément, par guilde), logo de guilde
 - [ ] Moteur Pillow de secours sans navigateur
+- [x] Carte animée : modèle en mouvement via la visionneuse d'E7 Codex (WebP animé, < 10 Mo)
 - [ ] Vue « équipe » (4 héros GvG/RTA côte à côte)
 
 ## M3 — Guilde

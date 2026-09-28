@@ -29,6 +29,11 @@ Super Creative ; robots.txt `Allow: /`) : le dépôt ne contient que des donnée
 du joueur (sauf `--all` explicite), une seule fois (cache local), avec une pause entre requêtes
 et un User-Agent identifiable. Contact du site pour toute demande : contact@e7codex.com.
 
+**Modèles animés** (`render --animated`) : le projet n'embarque pas le moteur d'animation Spine
+(soumis à sa propre licence). Il ouvre la visionneuse publique d'E7 Codex dans un navigateur sans
+interface et utilise son bouton d'export « WebP animé transparent », comme un joueur le ferait.
+Un export par héros, mis en cache dans le dossier local ; jamais d'export en masse.
+
 ## Données personnelles
 - Le roster reste **local** ; rien n'est envoyé sans commande explicite (`share`, `export`).
 - Les captures peuvent contenir le pseudo et l'UID : elles restent dans le dossier de données

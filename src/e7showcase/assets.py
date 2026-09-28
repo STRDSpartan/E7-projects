@@ -6,6 +6,7 @@ ou via une future synchronisation depuis un site communautaire :
 
     <dossier de données>/assets/heroes/<clé>.(png|webp|jpg)     pose / portrait
     <dossier de données>/assets/faces/<clé>.(png|webp|jpg)      icône ronde du visage
+    <dossier de données>/assets/anims/<code>.webp               modèle animé (une boucle)
     <dossier de données>/assets/artifacts/<clé>.(png|webp|jpg)
 
 La clé est le code (héros c1006, skin c2066_s01_1, artefact art0243) ou le nom
@@ -26,10 +27,10 @@ from PIL import Image
 from e7showcase.models.hero import Hero
 from e7showcase.reference import artifact_info, hero_info, normalize
 
-Kind = Literal["heroes", "faces", "artifacts"]
+Kind = Literal["heroes", "faces", "artifacts", "anims"]
 SUFFIXES = (".webp", ".png", ".jpg", ".jpeg")
 # Taille maximale intégrée dans la vitrine (px) : suffisant en échelle 2, léger pour Discord
-MAX_EMBED = {"heroes": (480, 640), "faces": (112, 112), "artifacts": (160, 160)}
+MAX_EMBED = {"heroes": (480, 640), "faces": (112, 112), "artifacts": (160, 160), "anims": (0, 0)}
 
 
 CODE_RE = re.compile(r"(c\d{4}|art\d{4})(_\w+)?")
@@ -73,6 +74,9 @@ class AssetStore:
 
     def hero_face(self, hero: Hero) -> Path | None:
         return self._find("faces", self.hero_keys(hero))
+
+    def hero_anim(self, hero: Hero) -> Path | None:
+        return self._find("anims", self.hero_keys(hero))
 
     def artifact_image(self, name: str | None) -> Path | None:
         return self._find("artifacts", self.artifact_keys(name)) if name else None

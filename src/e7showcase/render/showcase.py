@@ -30,6 +30,7 @@ def render_html(
     layout: str = "cards",
     width: int = 1200,
     assets: AssetStore | None = None,
+    animated: bool = False,
 ) -> str:
     selected = heroes if heroes is not None else roster.heroes
     return (
@@ -43,6 +44,7 @@ def render_html(
             heroes=[build(h, assets) for h in selected],
             layout=layout,
             width=width,
+            animated=animated,
         )
     )
 
