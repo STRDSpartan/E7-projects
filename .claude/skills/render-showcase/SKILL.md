@@ -15,8 +15,9 @@ Pour tester les cas limites, créer un roster plus riche (6 pièces, noms longs,
 héros sans équipement) via un petit script Python utilisant `models.Roster`.
 
 ## Portraits (facultatif)
-Images locales uniquement (`<E7_DATA_DIR>/assets/heroes|artifacts/<clé>.webp`, clé = code `c1001`
-ou nom slugifié FR/EN) : `e7showcase assets add hero "Kise" img.png`, `e7showcase assets status`.
+Images locales uniquement (`<E7_DATA_DIR>/assets/heroes|faces|artifacts/<clé>.webp`, clé = code
+`c1006` / `art0243` ou nom slugifié FR/EN) : `e7showcase assets sync` (e7codex, héros du roster),
+`e7showcase assets add hero "Kise" img.png`, `e7showcase assets status`.
 Pour tester la mise en page, générer des **portraits synthétiques** (Pillow) — jamais de visuels
 du jeu dans le dépôt ni dans les tests. Vérifier les deux cas : carte avec et sans portrait.
 

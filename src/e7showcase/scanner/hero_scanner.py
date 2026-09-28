@@ -193,6 +193,22 @@ class HeroScanner:
             else text
         )
 
+    def _artifact(self, image: Image.Image) -> str | None:
+        """Nom de l'artefact corrigé par le référentiel (« Orbedel'aube » → « Orbe de l'aube »)."""
+        from e7showcase.reference import artifact_info
+
+        lines = [
+            line.text
+            for line in self.ocr.read_lines(self._box(image, self.regions["detail"]["artifact"]))
+        ]
+        candidates = [
+            t for t in lines if sum(c.isalpha() for c in t) >= 4 and "max" not in t.lower()
+        ]
+        for text in candidates:
+            if info := artifact_info(text):
+                return str(info.get(self.lang) or info["fr"])
+        return candidates[0] if candidates else None
+
     def read_detail(self, image: Image.Image) -> Hero:
         self.issues = []
         d = self.regions["detail"]
@@ -217,11 +233,7 @@ class HeroScanner:
         for slot in GearSlot:
             if gear := self.read_gear(image, slot, icons):
                 hero.gear[slot] = gear
-        artifact = [line.text for line in self.ocr.read_lines(self._box(image, d["artifact"]))]
-        hero.artifact = next(
-            (t for t in artifact if not any(c.isdigit() for c in t) and "max" not in t.lower()),
-            None,
-        )
+        hero.artifact = self._artifact(image)
         for issue in self.issues:
             log.warning("%s : %s — %s", hero.name, issue.field, issue.message)
         return hero

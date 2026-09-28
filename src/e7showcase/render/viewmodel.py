@@ -82,6 +82,7 @@ class HeroView:
     gear_score_avg: int | None = None
     imprint_bonus: str | None = None
     portrait: str | None = None  # data URI, None si aucune image locale
+    face: str | None = None
     artifact_image: str | None = None
 
 
@@ -140,6 +141,7 @@ def build(hero: Hero, assets: AssetStore | None = None) -> HeroView:
         gear_score_avg=hero.gear_score_avg,
         imprint_bonus=hero.imprint_bonus,
         portrait=data_uri(assets.hero_portrait(hero), "heroes") if assets else None,
+        face=data_uri(assets.hero_face(hero), "faces") if assets else None,
         artifact_image=data_uri(assets.artifact_image(hero.artifact), "artifacts")
         if assets
         else None,

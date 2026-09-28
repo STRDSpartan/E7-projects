@@ -26,6 +26,7 @@ def main(verbose: Annotated[bool, typer.Option("--verbose", "-v")] = False) -> N
     logging.basicConfig(
         level=logging.DEBUG if verbose else logging.INFO, format="%(levelname)s %(message)s"
     )
+    logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 @app.command()
@@ -271,6 +272,45 @@ def assets_add(
     console.print(f"Image enregistrée → {target}")
 
 
+@assets_app.command("sync")
+def assets_sync(
+    all_heroes: Annotated[
+        bool, typer.Option("--all", help="Tous les héros du jeu (~2 Go sources)")
+    ] = False,
+    skins: Annotated[bool, typer.Option("--skins", help="Télécharger aussi les skins")] = False,
+    force: Annotated[bool, typer.Option(help="Retélécharger même si déjà présent")] = False,
+) -> None:
+    """Télécharger depuis e7codex.com les illustrations des héros du roster (dossier local)."""
+    import httpx
+
+    from e7showcase.reference import load
+    from e7showcase.sources.e7codex import sync_assets
+
+    store = AssetStore(data_dir() / "assets")
+    if all_heroes:
+        heroes = [Hero(name=h["fr"]) for h in load("heroes")["heroes"]]
+    else:
+        heroes = RosterRepository().load().heroes
+        if not heroes:
+            raise typer.BadParameter("Roster vide : scannez d'abord vos héros, ou utilisez --all.")
+    console.print(f"Synchronisation de {len(heroes)} héros depuis e7codex.com → {store.root}")
+    with httpx.Client(follow_redirects=True) as client:
+        report = sync_assets(
+            store,
+            heroes,
+            client,
+            skins=skins,
+            force=force,
+            on_item=lambda label, status: console.print(f"  {status:<13} {label}"),
+        )
+    console.print(
+        f"[green]{len(report.downloaded)} téléchargé(s)[/], {len(report.skipped)} déjà présent(s), "
+        f"[yellow]{len(report.missing)} introuvable(s)[/]"
+    )
+    for miss in report.missing:
+        console.print(f"  [yellow]•[/] {miss}")
+
+
 @assets_app.command("status")
 def assets_status() -> None:
     """Quels héros du roster ont un portrait / un artefact illustré ?"""
@@ -289,6 +329,42 @@ def assets_status() -> None:
             ", ".join(store.hero_keys(h)),
         )
     console.print(table)
+
+
+@app.command()
+def skin(
+    hero: str,
+    choice: Annotated[str | None, typer.Argument(help="Numéro du skin, code, ou « base »")] = None,
+) -> None:
+    """Lister les skins d'un héros, ou choisir celui affiché sur la vitrine."""
+    from e7showcase.reference import hero_info
+
+    repo = RosterRepository()
+    roster = repo.load()
+    h = roster.find(hero)
+    if not h:
+        raise typer.BadParameter(f"Héros introuvable dans le roster : {hero}")
+    skins = (hero_info(h.name) or {}).get("skins", [])
+    if choice is None:
+        console.print(f"{h.name} — skin actuel : {h.skin or 'base'}")
+        for i, s in enumerate(skins, start=1):
+            console.print(f"  {i}. {s['code']} ({s['variant']}) {s['fr']}")
+        if not skins:
+            console.print("  (aucun skin connu)")
+        return
+    if choice == "base":
+        h.skin = None
+    else:
+        chosen = next(
+            (s for i, s in enumerate(skins, start=1) if choice in (str(i), s["code"])), None
+        )
+        if chosen is None:
+            raise typer.BadParameter(f"Skin inconnu : {choice}")
+        h.skin = chosen["code"]
+    repo.save(roster)
+    console.print(
+        f"{h.name} : skin {h.skin or 'base'} — lancez `e7showcase assets sync` si besoin."
+    )
 
 
 @app.command()

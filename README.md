@@ -22,7 +22,8 @@ ses équipes GvG / RTA / Boss et comparer les builds.
 | `calc/` | Gear score (formule communautaire), sets actifs | testé |
 | `storage/` | Roster local JSON (= format d'échange guilde) | testé |
 | `render/` | Vitrine HTML (Jinja2) → PNG (Playwright), mise en page cartes ou grille | testé |
-| `assets.py` | Portraits de héros / images d'artefacts du dossier local, intégrés à la vitrine | testé |
+| `assets.py` | Portraits, visages, artefacts du dossier local, intégrés à la vitrine | testé |
+| `sources/e7codex.py` | Référentiel (390 héros, 66 skins, 282 artefacts) et synchronisation des illustrations | testé |
 | `publish/` | Publication Discord par webhook, bot `/vitrine` `/draft` `/roster-upload` | squelette bot |
 
 ## Installation
@@ -47,7 +48,10 @@ e7showcase render --layout grid               # vitrine complète en grille → 
 e7showcase render "Ras" "Sigret"              # cartes détaillées de héros choisis
 e7showcase share "Ras" --message "Mon Ras GvG"  # publication sur le salon Discord
 e7showcase export                             # roster JSON à partager / déposer au bot
-e7showcase assets add hero "Kise" kise.png    # portrait affiché sur la vitrine (dossier local)
+e7showcase assets sync                        # illustrations des héros du roster (e7codex.com, local)
+e7showcase assets sync --skins                # … et leurs skins
+e7showcase skin "Luna Nouvelle lune" 1        # choisir le skin affiché sur la vitrine
+e7showcase assets add hero "Kise" kise.png    # ou importer sa propre image
 e7showcase assets status                      # héros du roster avec / sans portrait
 ```
 
@@ -80,4 +84,6 @@ ruff check .      # lint
 mypy              # typage
 ```
 
-> Projet communautaire non affilié à Smilegate. Epic Seven est une marque de Smilegate Megaport.
+> Projet communautaire non affilié à Smilegate. Référentiel et illustrations issus de
+> [E7 Codex](https://e7codex.com), archive fan-made ; les visuels (© Smilegate / Super Creative)
+> ne sont jamais redistribués par ce dépôt : ils sont téléchargés chez chaque joueur. Epic Seven est une marque de Smilegate Megaport.

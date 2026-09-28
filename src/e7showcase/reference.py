@@ -39,6 +39,26 @@ def hero_names(lang: str = "fr") -> list[str]:
     return [h.get(lang) or h["fr"] for h in load("heroes")["heroes"]]
 
 
+def artifact_info(name: str | None, score_cutoff: float = 80) -> dict[str, Any] | None:
+    """Artefact du référentiel le plus proche d'un nom (FR ou EN, tolérant au bruit OCR)."""
+    if not name:
+        return None
+    from rapidfuzz import fuzz, process
+
+    arts = load("artifacts")["artifacts"]
+    choices = {}
+    for a in arts:
+        for n in (a["fr"], a["en"]):
+            choices[normalize(n).replace(" ", "")] = a
+    match = process.extractOne(
+        normalize(name).replace(" ", ""),
+        list(choices),
+        scorer=fuzz.ratio,
+        score_cutoff=score_cutoff,
+    )
+    return dict(choices[match[0]]) if match else None
+
+
 def hero_info(name: str) -> dict[str, Any] | None:
     key = normalize(name)
     for h in load("heroes")["heroes"]:

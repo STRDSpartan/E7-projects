@@ -20,8 +20,11 @@ def test_parse_hero_stats_panel() -> None:
 
 
 def test_match_hero_name_with_ocr_noise() -> None:
-    assert match_hero_name("Cecilia dechue") == "Cecilia déchue"
-    assert match_hero_name("Ravi de l apocalypse") == "Ravi de l'apocalypse"
+    assert match_hero_name("Cecilia dechue") == "Cécilia déchue"
+    assert match_hero_name("Cecilia") == "Cécilia"
+    assert match_hero_name("Kise") == "Kise"  # pas « Juge Kise »
+    assert match_hero_name("Coli tactiqe") == "Coli tactique"
+    assert match_hero_name("Ravi Apocalypes") == "Ravi Apocalypse"
 
 
 def test_unknown_name_returns_none() -> None:

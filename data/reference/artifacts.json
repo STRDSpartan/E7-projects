@@ -1,0 +1,2261 @@
+{
+ "_comment": "Généré depuis e7codex.com (archive fan-made ; contenu du jeu © Smilegate / Super Creative) par scripts/update_reference.py le 2026-09-28. Ne pas éditer à la main.",
+ "artifacts": [
+  {
+   "code": "art0001",
+   "en": "Rod of Amaryllis",
+   "fr": "Tige d'Amaryllis",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0001_fu.png"
+  },
+  {
+   "code": "art0002",
+   "en": "Durandal",
+   "fr": "Durandal",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0002_fu.png"
+  },
+  {
+   "code": "art0004",
+   "en": "Kal'adra",
+   "fr": "Kal'adra",
+   "stars": 4,
+   "role": "mage",
+   "art": "assets/_artifacts/art0004_fu.png"
+  },
+  {
+   "code": "art0007",
+   "en": "Sword of the Sun",
+   "fr": "Épée du soleil",
+   "stars": 1,
+   "role": null,
+   "art": "assets/_artifacts/art0007_fu.png"
+  },
+  {
+   "code": "art0008",
+   "en": "Demon's Pistol",
+   "fr": "Pistolet du démon",
+   "stars": 1,
+   "role": null,
+   "art": "assets/_artifacts/art0008_fu.png"
+  },
+  {
+   "code": "art0009",
+   "en": "Dream Scroll",
+   "fr": "Parchemin de rêve",
+   "stars": 1,
+   "role": null,
+   "art": "assets/_artifacts/art0009_fu.png"
+  },
+  {
+   "code": "art0010",
+   "en": "Biting Wind Star",
+   "fr": "Étoile de vent mordant",
+   "stars": 1,
+   "role": null,
+   "art": "assets/_artifacts/art0010_fu.png"
+  },
+  {
+   "code": "art0011",
+   "en": "Venus Orb",
+   "fr": "Orbe de Vénus",
+   "stars": 1,
+   "role": null,
+   "art": "assets/_artifacts/art0011_fu.png"
+  },
+  {
+   "code": "art0012",
+   "en": "Enhanced Gauntlet",
+   "fr": "Gantelet amélioré",
+   "stars": 1,
+   "role": null,
+   "art": "assets/_artifacts/art0012_fu.png"
+  },
+  {
+   "code": "art0013",
+   "en": "Deadly Sword",
+   "fr": "Épée mortelle",
+   "stars": 2,
+   "role": null,
+   "art": "assets/_artifacts/art0013_fu.png"
+  },
+  {
+   "code": "art0014",
+   "en": "Elf's Bow",
+   "fr": "Arc elfique",
+   "stars": 2,
+   "role": null,
+   "art": "assets/_artifacts/art0014_fu.png"
+  },
+  {
+   "code": "art0015",
+   "en": "Staff of Wisdom",
+   "fr": "Bâton de sagesse",
+   "stars": 2,
+   "role": null,
+   "art": "assets/_artifacts/art0015_fu.png"
+  },
+  {
+   "code": "art0016",
+   "en": "Fairy's Grimoire",
+   "fr": "Grimoire de la fée",
+   "stars": 2,
+   "role": null,
+   "art": "assets/_artifacts/art0016_fu.png"
+  },
+  {
+   "code": "art0017",
+   "en": "Bloodbead Dagger",
+   "fr": "Dague à perles de sang",
+   "stars": 2,
+   "role": null,
+   "art": "assets/_artifacts/art0017_fu.png"
+  },
+  {
+   "code": "art0018",
+   "en": "Firm Shield",
+   "fr": "Bouclier ferme",
+   "stars": 2,
+   "role": null,
+   "art": "assets/_artifacts/art0018_fu.png"
+  },
+  {
+   "code": "art0026",
+   "en": "Ranon's Memorandum",
+   "fr": "Mémorandum de Ranon",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art0026_fu.png"
+  },
+  {
+   "code": "art0027",
+   "en": "Time Matter",
+   "fr": "Substance de temps",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0027_fu.png"
+  },
+  {
+   "code": "art0028",
+   "en": "Otherworldly Machinery",
+   "fr": "Machine éthérée",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0028_fu.png"
+  },
+  {
+   "code": "art0029",
+   "en": "Chatty",
+   "fr": "Chatty",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0029_fu.png"
+  },
+  {
+   "code": "art0030",
+   "en": "Uberius's Tooth",
+   "fr": "Dent d'Uberius",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0030_fu.png"
+  },
+  {
+   "code": "art0031",
+   "en": "Santa Muerte",
+   "fr": "Santa Muerte",
+   "stars": 4,
+   "role": "thief",
+   "art": "assets/_artifacts/art0031_fu.png"
+  },
+  {
+   "code": "art0032",
+   "en": "Celestine",
+   "fr": "Célestine",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0032_fu.png"
+  },
+  {
+   "code": "art0033",
+   "en": "Noble Oath",
+   "fr": "Noble serment",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0033_fu.png"
+  },
+  {
+   "code": "art0034",
+   "en": "Ambrote",
+   "fr": "Ambrote",
+   "stars": 4,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0034_fu.png"
+  },
+  {
+   "code": "art0035",
+   "en": "Card of Small Miracles",
+   "fr": "Carte des petits miracles",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0035_fu.png"
+  },
+  {
+   "code": "art0036",
+   "en": "Alexa's Basket",
+   "fr": "Panier d'Alexa",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0036_fu.png"
+  },
+  {
+   "code": "art0037",
+   "en": "Bottle of Knowledge",
+   "fr": "Bouteille de savoir",
+   "stars": 1,
+   "role": null,
+   "art": "assets/_artifacts/art0037_fu.png"
+  },
+  {
+   "code": "art0038",
+   "en": "Iron Fan",
+   "fr": "Éventail de fer",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0038_fu.png"
+  },
+  {
+   "code": "art0039",
+   "en": "Idol's Cheer",
+   "fr": "Gaieté de l'idole",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0039_fu.png"
+  },
+  {
+   "code": "art0040",
+   "en": "Violet Talisman",
+   "fr": "Talisman de Violet",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0040_fu.png"
+  },
+  {
+   "code": "art0041",
+   "en": "Sword of Judgment",
+   "fr": "Épée du jugement",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0041_fu.png"
+  },
+  {
+   "code": "art0042",
+   "en": "Love Potion",
+   "fr": "Potion d'amour",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0042_fu.png"
+  },
+  {
+   "code": "art0043",
+   "en": "Justice for All",
+   "fr": "Justice pour tous",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0043_fu.png"
+  },
+  {
+   "code": "art0044",
+   "en": "Border Coin",
+   "fr": "Pièce frontalière",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0044_fu.png"
+  },
+  {
+   "code": "art0045",
+   "en": "Radiant Forever",
+   "fr": "Perpétuellement radieux",
+   "stars": 4,
+   "role": "mage",
+   "art": "assets/_artifacts/art0045_fu.png"
+  },
+  {
+   "code": "art0046",
+   "en": "Sword of Ezera",
+   "fr": "Épée d'Ezera",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0046_fu.png"
+  },
+  {
+   "code": "art0047",
+   "en": "Necro & Undine",
+   "fr": "Necro et Undine",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0047_fu.png"
+  },
+  {
+   "code": "art0048",
+   "en": "Portrait of the Saviors",
+   "fr": "Portrait des sauveurs",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0048_fu.png"
+  },
+  {
+   "code": "art0049",
+   "en": "Spirit's Breath",
+   "fr": "Souffle de l'esprit",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0049_fu.png"
+  },
+  {
+   "code": "art0050",
+   "en": "Torn Sleeve",
+   "fr": "Manche déchirée",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0050_fu.png"
+  },
+  {
+   "code": "art0051",
+   "en": "Proof of Valor",
+   "fr": "Preuve de vaillance",
+   "stars": 5,
+   "role": null,
+   "art": "assets/_artifacts/art0051_fu.png"
+  },
+  {
+   "code": "art0052",
+   "en": "Junkyard Dog",
+   "fr": "Junkyard Dog",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0052_fu.png"
+  },
+  {
+   "code": "art0053",
+   "en": "Tear of the Desert",
+   "fr": "Larme du désert",
+   "stars": 4,
+   "role": "mage",
+   "art": "assets/_artifacts/art0053_fu.png"
+  },
+  {
+   "code": "art0054",
+   "en": "Sepulcrum",
+   "fr": "Sépulcre",
+   "stars": 4,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0054_fu.png"
+  },
+  {
+   "code": "art0055",
+   "en": "Eternus",
+   "fr": "Éternus",
+   "stars": 4,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0055_fu.png"
+  },
+  {
+   "code": "art0056",
+   "en": "Silver Rain",
+   "fr": "Pluie soudaine",
+   "stars": 4,
+   "role": "thief",
+   "art": "assets/_artifacts/art0056_fu.png"
+  },
+  {
+   "code": "art0058",
+   "en": "Creation & Destruction",
+   "fr": "Création & destruction",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0058_fu.png"
+  },
+  {
+   "code": "art0059",
+   "en": "Crimson Seed",
+   "fr": "Graine pourpre",
+   "stars": 4,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0059_fu.png"
+  },
+  {
+   "code": "art0060",
+   "en": "Shepherds of Chaos",
+   "fr": "Bergers du chaos",
+   "stars": 4,
+   "role": "thief",
+   "art": "assets/_artifacts/art0060_fu.png"
+  },
+  {
+   "code": "art0061",
+   "en": "Dignus Orb",
+   "fr": "Orbe de Dignus",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0061_fu.png"
+  },
+  {
+   "code": "art0062",
+   "en": "Reingar's Special Drink",
+   "fr": "Nectar de Reingar",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0062_fu.png"
+  },
+  {
+   "code": "art0063",
+   "en": "Rainbow Scale",
+   "fr": "Écaille arc-en-ciel",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0063_fu.png"
+  },
+  {
+   "code": "art0064",
+   "en": "One Year of Gratitude",
+   "fr": "Une année de gratitude",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0064_fu.png"
+  },
+  {
+   "code": "art0065",
+   "en": "Midnight Bloom",
+   "fr": "Fleur de minuit",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0065_fu.png"
+  },
+  {
+   "code": "art0066",
+   "en": "Barthez's Orbuculum",
+   "fr": "Orbuculum de Barthez",
+   "stars": 4,
+   "role": "mage",
+   "art": "assets/_artifacts/art0066_fu.png"
+  },
+  {
+   "code": "art0067",
+   "en": "Bastion of Perlutia",
+   "fr": "Citadelle de Perlutia",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0067_fu.png"
+  },
+  {
+   "code": "art0068",
+   "en": "Spooky Solayu Stories",
+   "fr": "Histoires effrayantes de Solayu",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0068_fu.png"
+  },
+  {
+   "code": "art0069",
+   "en": "Bloody Rose",
+   "fr": "Rose sanglante",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0069_fu.png"
+  },
+  {
+   "code": "art0070",
+   "en": "Draco Plate",
+   "fr": "Plaque draconique",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0070_fu.png"
+  },
+  {
+   "code": "art0071",
+   "en": "Blessings of Camaraderie",
+   "fr": "Bénédictions de camaraderie",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0071_fu.png"
+  },
+  {
+   "code": "art0073",
+   "en": "Steadfast Gatekeeper",
+   "fr": "Portier inébranlable",
+   "stars": 4,
+   "role": "knight",
+   "art": "assets/_artifacts/art0073_fu.png"
+  },
+  {
+   "code": "art0076",
+   "en": "Andre's Crossbow",
+   "fr": "Arbalète d'André",
+   "stars": 4,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0076_fu.png"
+  },
+  {
+   "code": "art0078",
+   "en": "Stella Harpa",
+   "fr": "Stella Harpa",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0078_fu.png"
+  },
+  {
+   "code": "art0079",
+   "en": "Unfading Memories",
+   "fr": "Souvenirs persistants",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0079_fu.png"
+  },
+  {
+   "code": "art0080",
+   "en": "Resolute Soldier Series",
+   "fr": "Série de soldats résolus",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0080_fu.png"
+  },
+  {
+   "code": "art0081",
+   "en": "New Year Cookies",
+   "fr": "Biscuits du Nouvel an",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0081_fu.png"
+  },
+  {
+   "code": "art0082",
+   "en": "Alencinox's Wrath",
+   "fr": "Colère d'Alencinox",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0082_fu.png"
+  },
+  {
+   "code": "art0083",
+   "en": "Merciless Glutton",
+   "fr": "Glouton impitoyable",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0083_fu.png"
+  },
+  {
+   "code": "art0084",
+   "en": "Dux Noctis",
+   "fr": "Dux Noctis",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0084_fu.png"
+  },
+  {
+   "code": "art0085",
+   "en": "Golden Cocoa Cookie",
+   "fr": "Cookie de Cacao d'or",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0085_fu.png"
+  },
+  {
+   "code": "art0086",
+   "en": "Guiding Light",
+   "fr": "Lumière dirigeante",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0086_fu.png"
+  },
+  {
+   "code": "art0087",
+   "en": "Victorious Flag",
+   "fr": "Drapeau de victoire",
+   "stars": 5,
+   "role": null,
+   "art": "assets/_artifacts/art0087_fu.png"
+  },
+  {
+   "code": "art0088",
+   "en": "Black Hand of the Goddess",
+   "fr": "Main noire de la Déesse",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0088_fu.png"
+  },
+  {
+   "code": "art0089",
+   "en": "Alabastron",
+   "fr": "Alabastron",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0089_fu.png"
+  },
+  {
+   "code": "art0090",
+   "en": "Ms. Confille",
+   "fr": "Ms. Confille",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0090_fu.png"
+  },
+  {
+   "code": "art0091",
+   "en": "Touch of Rekos",
+   "fr": "Main de Rekos",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0091_fu.png"
+  },
+  {
+   "code": "art0092",
+   "en": "A Song for Everybody",
+   "fr": "Chant pour tous",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0092_fu.png"
+  },
+  {
+   "code": "art0093",
+   "en": "Cradle of Life",
+   "fr": "Berceau de la vie",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0093_fu.png"
+  },
+  {
+   "code": "art0094",
+   "en": "Doctor's Bag",
+   "fr": "Kit de secours",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0094_fu.png"
+  },
+  {
+   "code": "art0095",
+   "en": "Manica of Control",
+   "fr": "Manica de contrôle",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0095_fu.png"
+  },
+  {
+   "code": "art0096",
+   "en": "Secret Art - Storm Sword",
+   "fr": "Méthode de l'épée de tempête",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0096_fu.png"
+  },
+  {
+   "code": "art0097",
+   "en": "Flower Shower",
+   "fr": "Bain de fleurs",
+   "stars": 4,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0097_fu.png"
+  },
+  {
+   "code": "art0098",
+   "en": "Champion's Trophy",
+   "fr": "Trophée du champion",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0098_fu.png"
+  },
+  {
+   "code": "art0099",
+   "en": "Super Duper Water Gun Shooter",
+   "fr": "Super Mega Pistolet à eau",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0099_fu.png"
+  },
+  {
+   "code": "art0100",
+   "en": "Circus Fantasia",
+   "fr": "Fantasia de cirque",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0100_fu.png"
+  },
+  {
+   "code": "art0101",
+   "en": "Snow Crystal",
+   "fr": "Cristal de neige",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0101_fu.png"
+  },
+  {
+   "code": "art0102",
+   "en": "Rise of a Monarch",
+   "fr": "Naissance d'un monarque",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0102_fu.png"
+  },
+  {
+   "code": "art0103",
+   "en": "Crown of Glory",
+   "fr": "Couronne de la gloire",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0103_fu.png"
+  },
+  {
+   "code": "art0104",
+   "en": "Samsara Prayer Beads",
+   "fr": "Perles de samsara",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0104_fu.png"
+  },
+  {
+   "code": "art0105",
+   "en": "A Little Queen's Huge Crown",
+   "fr": "Couronne d'une petite reine",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0105_fu.png"
+  },
+  {
+   "code": "art0106",
+   "en": "Crimson Moon of Nightmares",
+   "fr": "Lune de cauchemar pourpre",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0106_fu.png"
+  },
+  {
+   "code": "art0107",
+   "en": "Wall of Order",
+   "fr": "Obstacle de la discipline",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0107_fu.png"
+  },
+  {
+   "code": "art0108",
+   "en": "Last Teatime",
+   "fr": "Dernière tasse de thé",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0108_fu.png"
+  },
+  {
+   "code": "art0109",
+   "en": "Shepherd of the Hollow",
+   "fr": "Instigateur de l'oubli",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0109_fu.png"
+  },
+  {
+   "code": "art0110",
+   "en": "To a New World",
+   "fr": "Pour une nouvelle ère",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0110_fu.png"
+  },
+  {
+   "code": "art0112",
+   "en": "Moonlight's Vestige",
+   "fr": "Vestige lunaire",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0112_fu.png"
+  },
+  {
+   "code": "art0113",
+   "en": "XIII. Death",
+   "fr": "XIII. La Mort",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0113_fu.png"
+  },
+  {
+   "code": "art0114",
+   "en": "XVI. The Tower",
+   "fr": "XVI. La Tour",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0114_fu.png"
+  },
+  {
+   "code": "art0115",
+   "en": "XVIII. The Moon",
+   "fr": "XVIII. La Lune",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0115_fu.png"
+  },
+  {
+   "code": "art0116",
+   "en": "Double-Edged Decrescent",
+   "fr": "Decrescent à double tranchant",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0116_fu.png"
+  },
+  {
+   "code": "art0117",
+   "en": "Sword of Summer Twilight",
+   "fr": "Épée crépusculaire d'été",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0117_fu.png"
+  },
+  {
+   "code": "art0119",
+   "en": "Unseen Observer",
+   "fr": "Observateur invisible",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0119_fu.png"
+  },
+  {
+   "code": "art0120",
+   "en": "Days of Destiny",
+   "fr": "Rencontre prédestinée",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0120_fu.png"
+  },
+  {
+   "code": "art0121",
+   "en": "A Symbol of Unity",
+   "fr": "Symbole d'unité",
+   "stars": 5,
+   "role": null,
+   "art": "assets/_artifacts/art0121_fu.png"
+  },
+  {
+   "code": "art0122",
+   "en": "Ancient Dragon's Legacy",
+   "fr": "Héritage du dragon antique",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0122_fu.png"
+  },
+  {
+   "code": "art0123",
+   "en": "Fairy Tale for a Nightmare",
+   "fr": "Conte cauchemardesque",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0123_fu.png"
+  },
+  {
+   "code": "art0124",
+   "en": "Air-to-Surface Missile: MISHA",
+   "fr": "Missile air-sol : MIASH",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0124_fu.png"
+  },
+  {
+   "code": "art0125",
+   "en": "Twilight Calamity",
+   "fr": "Calamité du soleil couchant",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0125_fu.png"
+  },
+  {
+   "code": "art0126",
+   "en": "Knowledge Seed",
+   "fr": "Graine du savoir",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0126_fu.png"
+  },
+  {
+   "code": "art0127",
+   "en": "The Guardian Star's Blessing",
+   "fr": "Louange de l'Étoile gardienne",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0127_fu.png"
+  },
+  {
+   "code": "art0128",
+   "en": "XIV. Temperance",
+   "fr": "XIV. La Tempérance",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0128_fu.png"
+  },
+  {
+   "code": "art0129",
+   "en": "War Horn",
+   "fr": "Cor de guerre",
+   "stars": 5,
+   "role": null,
+   "art": "assets/_artifacts/art0129_fu.png"
+  },
+  {
+   "code": "art0130",
+   "en": "Spear of a New Dawn",
+   "fr": "Lance du renouveau",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0130_fu.png"
+  },
+  {
+   "code": "art0131",
+   "en": "Azure Comet",
+   "fr": "Comète azurée",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0131_fu.png"
+  },
+  {
+   "code": "art0132",
+   "en": "Severed Horn Wand",
+   "fr": "Bâton de cornes coupées",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0132_fu.png"
+  },
+  {
+   "code": "art0133",
+   "en": "Wings of Light and Shadow",
+   "fr": "Ailes du clair-obscur",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0133_fu.png"
+  },
+  {
+   "code": "art0134",
+   "en": "Guardian Ice Crystals",
+   "fr": "Fragment glacé du gardien",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0134_fu.png"
+  },
+  {
+   "code": "art0135",
+   "en": "Official Levulin Beach Volleyball",
+   "fr": "Ballon de Volley de Levulin",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0135_fu.png"
+  },
+  {
+   "code": "art0136",
+   "en": "Guide to a Decision",
+   "fr": "Indicateur de décision",
+   "stars": 5,
+   "role": null,
+   "art": "assets/_artifacts/art0136_fu.png"
+  },
+  {
+   "code": "art0137",
+   "en": "Magic for Friends",
+   "fr": "Magie pour les amis",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0137_fu.png"
+  },
+  {
+   "code": "art0138",
+   "en": "Upgraded Dragon Knuckles",
+   "fr": "Poings du dragon perfectionnés",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0138_fu.png"
+  },
+  {
+   "code": "art0139",
+   "en": "Anti-Magic Mask",
+   "fr": "Masque anti-magie",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0139_fu.png"
+  },
+  {
+   "code": "art0140",
+   "en": "Flawless Garments",
+   "fr": "Vêtements irréprochables",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0140_fu.png"
+  },
+  {
+   "code": "art0141",
+   "en": "Star of the Deep Sea",
+   "fr": "Étoile des profondeurs marines",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0141_fu.png"
+  },
+  {
+   "code": "art0142",
+   "en": "Records of Unity",
+   "fr": "Preuve d'unité",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0142_fu.png"
+  },
+  {
+   "code": "art0143",
+   "en": "Blazing Full Moon Trophy",
+   "fr": "Trophée de la pleine lune enflammée",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0143_fu.png"
+  },
+  {
+   "code": "art0144",
+   "en": "Sword of Winter Shadow",
+   "fr": "Épée d'ombre hivernale",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0144_fu.png"
+  },
+  {
+   "code": "art0145",
+   "en": "Bastion of Hope",
+   "fr": "Bastion de l'espoir",
+   "stars": 5,
+   "role": null,
+   "art": "assets/_artifacts/art0145_fu.png"
+  },
+  {
+   "code": "art0146",
+   "en": "Pure White Trust",
+   "fr": "Confiance pure",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0146_fu.png"
+  },
+  {
+   "code": "art0147",
+   "en": "Brilliant Confidence",
+   "fr": "Assurance éblouissante",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0147_fu.png"
+  },
+  {
+   "code": "art0148",
+   "en": "Nostalgic Music Box",
+   "fr": "Boîte à musique nostalgique",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0148_fu.png"
+  },
+  {
+   "code": "art0149",
+   "en": "Glo-Wings 21",
+   "fr": "Glo-Wings 21",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0149_fu.png"
+  },
+  {
+   "code": "art0150",
+   "en": "Goblet of Oath",
+   "fr": "Calice du serment",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0150_fu.png"
+  },
+  {
+   "code": "art0151",
+   "en": "Jack-O's Symbol",
+   "fr": "Symboles de Jack-O'",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0151_fu.png"
+  },
+  {
+   "code": "art0152",
+   "en": "Scroll of Shadows",
+   "fr": "Parchemin de l'ombre",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0152_fu.png"
+  },
+  {
+   "code": "art0153",
+   "en": "III. The Empress",
+   "fr": "III. L'Impératrice",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0153_fu.png"
+  },
+  {
+   "code": "art0154",
+   "en": "IV. The Emperor",
+   "fr": "IV. L'Empereur",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0154_fu.png"
+  },
+  {
+   "code": "art0155",
+   "en": "Indestructible Gaiters",
+   "fr": "Guêtres indestructibles",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0155_fu.png"
+  },
+  {
+   "code": "art0156",
+   "en": "Spear of Purification",
+   "fr": "Lance de conjuration",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0156_fu.png"
+  },
+  {
+   "code": "art0157",
+   "en": "Fullmetal's Automail",
+   "fr": "Auto-mail de métal",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0157_fu.png"
+  },
+  {
+   "code": "art0158",
+   "en": "Ignition Cloth Gloves",
+   "fr": "Gants de combustion",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0158_fu.png"
+  },
+  {
+   "code": "art0159",
+   "en": "Sharpshooter's Handgun",
+   "fr": "Pistolet de la fine gâchette",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0159_fu.png"
+  },
+  {
+   "code": "art0160",
+   "en": "Sphere of Sadism",
+   "fr": "Sphère de cruauté",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0160_fu.png"
+  },
+  {
+   "code": "art0161",
+   "en": "Mature Sunglasses",
+   "fr": "Lunettes de soleil élégantes",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0161_fu.png"
+  },
+  {
+   "code": "art0162",
+   "en": "XIX. The Sun",
+   "fr": "XIX. Le Soleil",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0162_fu.png"
+  },
+  {
+   "code": "art0163",
+   "en": "VII. The Chariot",
+   "fr": "VII. Le Chariot",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0163_fu.png"
+  },
+  {
+   "code": "art0164",
+   "en": "Sacred Tree Branch",
+   "fr": "Branche de l'Arbre divin",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0164_fu.png"
+  },
+  {
+   "code": "art0165",
+   "en": "Prelude to a New Era",
+   "fr": "Début d'une nouvelle ère",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0165_fu.png"
+  },
+  {
+   "code": "art0166",
+   "en": "Spatiotemporal Fan",
+   "fr": "Éventail temporel",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0166_fu.png"
+  },
+  {
+   "code": "art0167",
+   "en": "Sword of Autumn Eclipse",
+   "fr": "Épée d'éclat automnal",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0167_fu.png"
+  },
+  {
+   "code": "art0168",
+   "en": "Seal of Capture",
+   "fr": "Sceau d'entrave",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0168_fu.png"
+  },
+  {
+   "code": "art0169",
+   "en": "Sword of Cycling Seasons",
+   "fr": "Épée de l'infini",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0169_fu.png"
+  },
+  {
+   "code": "art0170",
+   "en": "Rocket Punch Gauntlet",
+   "fr": "Rocket Punch",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0170_fu.png"
+  },
+  {
+   "code": "art0171",
+   "en": "Frame of Light",
+   "fr": "Cadre de lumière",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0171_fu.png"
+  },
+  {
+   "code": "art0172",
+   "en": "The Armament",
+   "fr": "L'Armement",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0172_fu.png"
+  },
+  {
+   "code": "art0173",
+   "en": "EXIF Detective (E.d.) Gadget",
+   "fr": "EXIF Detective (E.d.)",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0173_fu.png"
+  },
+  {
+   "code": "art0174",
+   "en": "P.O.S",
+   "fr": "P.O.S",
+   "stars": 5,
+   "role": null,
+   "art": "assets/_artifacts/art0174_fu.png"
+  },
+  {
+   "code": "art0175",
+   "en": "Sphere of Inferno",
+   "fr": "Sphère de feu dévastateur",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0175_fu.png"
+  },
+  {
+   "code": "art0176",
+   "en": "Fan of Light and Dark",
+   "fr": "Éventail du clair-obscur",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0176_fu.png"
+  },
+  {
+   "code": "art0177",
+   "en": "VI. The Lovers",
+   "fr": "VI. Les Amoureux",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0177_fu.png"
+  },
+  {
+   "code": "art0178",
+   "en": "An Offer You Can't Refuse",
+   "fr": "Offre à ne pas décliner",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0178_fu.png"
+  },
+  {
+   "code": "art0179",
+   "en": "Cutie Pando",
+   "fr": "Pandou adorable",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0179_fu.png"
+  },
+  {
+   "code": "art0180",
+   "en": "Benimaru's Tachi",
+   "fr": "Tachi de Benimaru",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0180_fu.png"
+  },
+  {
+   "code": "art0181",
+   "en": "Golden Rose",
+   "fr": "Rose dorée",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0181_fu.png"
+  },
+  {
+   "code": "art0182",
+   "en": "Sole Consolation",
+   "fr": "Réconfort incomparable",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0182_fu.png"
+  },
+  {
+   "code": "art0183",
+   "en": "Prayer of Solitude",
+   "fr": "Prière de solitude",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0183_fu.png"
+  },
+  {
+   "code": "art0184",
+   "en": "Elegiac Candle",
+   "fr": "Bougie d'élégie",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0184_fu.png"
+  },
+  {
+   "code": "art0185",
+   "en": "Broken Will of the Priest",
+   "fr": "Volonté brisée du Grand prêtre",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0185_fu.png"
+  },
+  {
+   "code": "art0186",
+   "en": "Hostess of the Banquet",
+   "fr": "Hôte du banquet",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0186_fu.png"
+  },
+  {
+   "code": "art0187",
+   "en": "Our Beautiful Seasons",
+   "fr": "Notre saison",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0187_fu.png"
+  },
+  {
+   "code": "art0188",
+   "en": "Tyrant's Descent",
+   "fr": "Lignée de tyrans",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0188_fu.png"
+  },
+  {
+   "code": "art0189",
+   "en": "Umbral Keystones",
+   "fr": "Pierre angulaire obscure",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0189_fu.png"
+  },
+  {
+   "code": "art0190",
+   "en": "Seductive Flower",
+   "fr": "Fleur séduisante",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0190_fu.png"
+  },
+  {
+   "code": "art0191",
+   "en": "Old Gardening Shears",
+   "fr": "Ciseaux de jardinage",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0191_fu.png"
+  },
+  {
+   "code": "art0192",
+   "en": "Beguiling Wings",
+   "fr": "Ailes envoûtantes",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0192_fu.png"
+  },
+  {
+   "code": "art0193",
+   "en": "3F",
+   "fr": "3F",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0193_fu.png"
+  },
+  {
+   "code": "art0194",
+   "en": "Pipette Lance",
+   "fr": "Lance Pipette",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0194_fu.png"
+  },
+  {
+   "code": "art0195",
+   "en": "Staff of Ainz Ooal Gown",
+   "fr": "Sceptre d'Ainz Ooal Gown",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0195_fu.png"
+  },
+  {
+   "code": "art0196",
+   "en": "New Year's Festival Souvenir",
+   "fr": "Souvenir du festival du Nouvel An",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0196_fu.png"
+  },
+  {
+   "code": "art0198",
+   "en": "Sweet Miracle",
+   "fr": "Doux miracle",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0198_fu.png"
+  },
+  {
+   "code": "art0199",
+   "en": "XVII. The Star",
+   "fr": "XVII. L'Étoile",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0199_fu.png"
+  },
+  {
+   "code": "art0200",
+   "en": "Dark Blood Keeper",
+   "fr": "Gardien du sang obscur",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0200_fu.png"
+  },
+  {
+   "code": "art0201",
+   "en": "Bird's-Eye View",
+   "fr": "Œil de l'observateur",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0201_fu.png"
+  },
+  {
+   "code": "art0202",
+   "en": "Ruyi Jingu Bang",
+   "fr": "Bâton de Bon-Plaisir Cerclé d'Or",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0202_fu.png"
+  },
+  {
+   "code": "art0203",
+   "en": "Midnight Pizza Delivery",
+   "fr": "Livraison de pizza à minuit",
+   "stars": 4,
+   "role": "art4_39",
+   "art": "assets/_artifacts/art0203_fu.png"
+  },
+  {
+   "code": "art0204",
+   "en": "Magic Bubble Maker",
+   "fr": "Créateur de bulles magiques",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0204_fu.png"
+  },
+  {
+   "code": "art0205",
+   "en": "Spotted Mouse Hair Tie",
+   "fr": "Chouchou souris tachetée",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0205_fu.png"
+  },
+  {
+   "code": "art0206",
+   "en": "Special Strawberry Cake",
+   "fr": "Gâteau aux fraises spécial",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0206_fu.png"
+  },
+  {
+   "code": "art0207",
+   "en": "Dreamlike Holiday",
+   "fr": "Vacances de rêve",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0207_fu.png"
+  },
+  {
+   "code": "art0208",
+   "en": "Proof of Friendship",
+   "fr": "Symbole d'amitié",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0208_fu.png"
+  },
+  {
+   "code": "art0209",
+   "en": "Renewed Will",
+   "fr": "Détermination comblée",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0209_fu.png"
+  },
+  {
+   "code": "art0210",
+   "en": "Homage to Tarman",
+   "fr": "Hommage à Tarman",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0210_fu.png"
+  },
+  {
+   "code": "art0211",
+   "en": "XV. The Devil",
+   "fr": "XV. Le Démon",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0211_fu.png"
+  },
+  {
+   "code": "art0212",
+   "en": "Proof of Love",
+   "fr": "Preuve d'amour",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0212_fu.png"
+  },
+  {
+   "code": "art0213",
+   "en": "Feed of Criticism",
+   "fr": "Fenêtre des blâmes",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0213_fu.png"
+  },
+  {
+   "code": "art0214",
+   "en": "Thorn of the Blue Rose",
+   "fr": "Épine de la Rose bleue",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0214_fu.png"
+  },
+  {
+   "code": "art0215",
+   "en": "Frantic Flight",
+   "fr": "Envol d'urgence",
+   "stars": 5,
+   "role": null,
+   "art": "assets/_artifacts/art0215_fu.png"
+  },
+  {
+   "code": "art0216",
+   "en": "M.O.A.S",
+   "fr": "M.O.A.S",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0216_fu.png"
+  },
+  {
+   "code": "art0217",
+   "en": "Discreet Hands",
+   "fr": "Geste furtif",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0217_fu.png"
+  },
+  {
+   "code": "art0218",
+   "en": "An Assassin’s Pledge",
+   "fr": "Protection de l'assassin",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0218_fu.png"
+  },
+  {
+   "code": "art0219",
+   "en": "XII. The Hanged Man",
+   "fr": "XII. Le Pendu",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0219_fu.png"
+  },
+  {
+   "code": "art0220",
+   "en": "Reingar Festival Dumpling",
+   "fr": "Ravioles du Festival de Reingar",
+   "stars": 4,
+   "role": null,
+   "art": "assets/_artifacts/art0220_fu.png"
+  },
+  {
+   "code": "art0221",
+   "en": "Summer Photogenic",
+   "fr": "Photogénique de l’été",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0221_fu.png"
+  },
+  {
+   "code": "art0222",
+   "en": "Strike of Aspiration",
+   "fr": "Frappe du souhait",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0222_fu.png"
+  },
+  {
+   "code": "art0223",
+   "en": "Queen’s Whistle",
+   "fr": "Sifflet de la reine",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0223_fu.png"
+  },
+  {
+   "code": "art0224",
+   "en": "Jumbo Berry Special",
+   "fr": "Jumbo berry spécial",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0224_fu.png"
+  },
+  {
+   "code": "art0225",
+   "en": "Mirrored Lotus Ring",
+   "fr": "Anneau Lotus miroir",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0225_fu.png"
+  },
+  {
+   "code": "art0226",
+   "en": "Butterfly Hair Ornament",
+   "fr": "Épingle à cheveux Papillon",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0226_fu.png"
+  },
+  {
+   "code": "art0227",
+   "en": "Cure-All Magic Wand",
+   "fr": "Baguette magique de soin",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0227_fu.png"
+  },
+  {
+   "code": "art0228",
+   "en": "Lethal Whispers",
+   "fr": "Murmure dangereux",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0228_fu.png"
+  },
+  {
+   "code": "art0229",
+   "en": "A Precious Connection",
+   "fr": "Relation précieuse",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0229_fu.png"
+  },
+  {
+   "code": "art0230",
+   "en": "Awakened Leaf",
+   "fr": "Feuille éveillée",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0230_fu.png"
+  },
+  {
+   "code": "art0231",
+   "en": "Tome of Life's End",
+   "fr": "Livre de la longévité",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0231_fu.png"
+  },
+  {
+   "code": "art0232",
+   "en": "Master of the Nightmare",
+   "fr": "Maîtresse du cauchemar",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0232_fu.png"
+  },
+  {
+   "code": "art0233",
+   "en": "Glorious Flag",
+   "fr": "Drapeau de la gloire",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0233_fu.png"
+  },
+  {
+   "code": "art0234",
+   "en": "Veritas",
+   "fr": "Parfum de vérité",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0234_fu.png"
+  },
+  {
+   "code": "art0235",
+   "en": "Gifted Pen",
+   "fr": "Stylo gracieusement offert",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0235_fu.png"
+  },
+  {
+   "code": "art0236",
+   "en": "Ritual of Sealing Flames",
+   "fr": "Rituel des flammes scellées",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0236_fu.png"
+  },
+  {
+   "code": "art0237",
+   "en": "With a Little Friend",
+   "fr": "Avec un petit compagnon",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0237_fu.png"
+  },
+  {
+   "code": "art0238",
+   "en": "Excommunicant's Censer",
+   "fr": "Encensoir de l'excommuniée",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art0238_fu.png"
+  },
+  {
+   "code": "art0239",
+   "en": "Unleashed Axe of Heavenly Mandate",
+   "fr": "Hache de la volonté céleste libérée",
+   "stars": 5,
+   "role": null,
+   "art": "assets/_artifacts/art0239_fu.png"
+  },
+  {
+   "code": "art0240",
+   "en": "Glorious Throne",
+   "fr": "Trône de gloire",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art0240_fu.png"
+  },
+  {
+   "code": "art0241",
+   "en": "Refracted Desire",
+   "fr": "Désir distordu",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art0241_fu.png"
+  },
+  {
+   "code": "art0242",
+   "en": "Shadow Winds 7",
+   "fr": "Shadow Winds 7",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0242_fu.png"
+  },
+  {
+   "code": "art0243",
+   "en": "Aubade Orb",
+   "fr": "Orbe de l'aube",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0243_fu.png"
+  },
+  {
+   "code": "art0244",
+   "en": "Butterfly's Baptism",
+   "fr": "Baptême de papillon",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0244_fu.png"
+  },
+  {
+   "code": "art0245",
+   "en": "Intoxicating Indulgence",
+   "fr": "Fascination vertigineuse",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0245_fu.png"
+  },
+  {
+   "code": "art0246",
+   "en": "Custom-Made Power Anchor",
+   "fr": "Ancre puissante spéciale sur mesure",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art0246_fu.png"
+  },
+  {
+   "code": "art0248",
+   "en": "Sorrow of the Rose",
+   "fr": "Chagrin de la rose",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0248_fu.png"
+  },
+  {
+   "code": "art0249",
+   "en": "Light and Darkness",
+   "fr": "Lumière et obscurité",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art0249_fu.png"
+  },
+  {
+   "code": "art0250",
+   "en": "Land of Lingering Light",
+   "fr": "Terre de la lumière",
+   "stars": 5,
+   "role": null,
+   "art": "assets/_artifacts/art0250_fu.png"
+  },
+  {
+   "code": "art3_1",
+   "en": "Grail of Blood",
+   "fr": "Graal de sang",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_1_fu.png"
+  },
+  {
+   "code": "art3_10",
+   "en": "Sword of the Morning",
+   "fr": "Épée du matin",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_10_fu.png"
+  },
+  {
+   "code": "art3_11",
+   "en": "Mighty Yaksha",
+   "fr": "Redoutable Yaksha",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_11_fu.png"
+  },
+  {
+   "code": "art3_12",
+   "en": "Devil's Brand",
+   "fr": "Marque du diable",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_12_fu.png"
+  },
+  {
+   "code": "art3_13",
+   "en": "Goblin's Lamp",
+   "fr": "Lampe de gobelin",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_13_fu.png"
+  },
+  {
+   "code": "art3_14",
+   "en": "Aqua Rose",
+   "fr": "Rose turquoise",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_14_fu.png"
+  },
+  {
+   "code": "art3_15",
+   "en": "Axe of Heavenly Mandate",
+   "fr": "Hache de la volonté céleste",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_15_fu.png"
+  },
+  {
+   "code": "art3_16",
+   "en": "Exorcist's Tonfa",
+   "fr": "Tonfa d'exorciste",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_16_fu.png"
+  },
+  {
+   "code": "art3_17",
+   "en": "Daydream Joker",
+   "fr": "Joker de rêverie",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_17_fu.png"
+  },
+  {
+   "code": "art3_18",
+   "en": "Butterfly Mandolin",
+   "fr": "Mandoline papillon",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_18_fu.png"
+  },
+  {
+   "code": "art3_19",
+   "en": "Envoy's Pipe",
+   "fr": "Pipe de l'émissaire",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_19_fu.png"
+  },
+  {
+   "code": "art3_2",
+   "en": "Egg of Delusion",
+   "fr": "Œuf d'illusion",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_2_fu.png"
+  },
+  {
+   "code": "art3_20",
+   "en": "Timeless Anchor",
+   "fr": "Ancre intemporelle",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_20_fu.png"
+  },
+  {
+   "code": "art3_21",
+   "en": "Forest Totem",
+   "fr": "Totem de la forêt",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_21_fu.png"
+  },
+  {
+   "code": "art3_22",
+   "en": "Oath Key",
+   "fr": "Clé de serment",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_22_fu.png"
+  },
+  {
+   "code": "art3_23",
+   "en": "Ruby Essence",
+   "fr": "Essence de rubis",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_23_fu.png"
+  },
+  {
+   "code": "art3_3",
+   "en": "Prophetic Candlestick",
+   "fr": "Chandelier prophétique",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_3_fu.png"
+  },
+  {
+   "code": "art3_4",
+   "en": "Ancient Sheath",
+   "fr": "Fourreau ancien",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_4_fu.png"
+  },
+  {
+   "code": "art3_6",
+   "en": "Atma's Portal",
+   "fr": "Portail d'Atma",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_6_fu.png"
+  },
+  {
+   "code": "art3_7",
+   "en": "Alsacian Spear",
+   "fr": "Lance d'Alsacia",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_7_fu.png"
+  },
+  {
+   "code": "art3_8",
+   "en": "Labyrinth Cube",
+   "fr": "Cube du labyrinthe",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_8_fu.png"
+  },
+  {
+   "code": "art3_9",
+   "en": "Cursed Compass",
+   "fr": "Boussole maudite",
+   "stars": 3,
+   "role": null,
+   "art": "assets/_artifacts/art3_9_fu.png"
+  },
+  {
+   "code": "art4_1",
+   "en": "Wind Rider",
+   "fr": "Cavalier du vent",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art4_1_fu.png"
+  },
+  {
+   "code": "art4_12",
+   "en": "Elyha's Knife",
+   "fr": "Couteau d'Elyha",
+   "stars": 4,
+   "role": "thief",
+   "art": "assets/_artifacts/art4_12_fu.png"
+  },
+  {
+   "code": "art4_13",
+   "en": "Wondrous Potion Vial",
+   "fr": "Fiole de potion extraordinaire",
+   "stars": 4,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art4_13_fu.png"
+  },
+  {
+   "code": "art4_14",
+   "en": "Rosa Hargana",
+   "fr": "Rosa Hargana",
+   "stars": 4,
+   "role": "ranger",
+   "art": "assets/_artifacts/art4_14_fu.png"
+  },
+  {
+   "code": "art4_16",
+   "en": "Infinity Basket",
+   "fr": "Panier infini",
+   "stars": 4,
+   "role": "ranger",
+   "art": "assets/_artifacts/art4_16_fu.png"
+  },
+  {
+   "code": "art4_17",
+   "en": "Bloodstone",
+   "fr": "Pierre de sang",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art4_17_fu.png"
+  },
+  {
+   "code": "art4_2",
+   "en": "Strak Gauntlet",
+   "fr": "Gantelet de Strak",
+   "stars": 4,
+   "role": "warrior",
+   "art": "assets/_artifacts/art4_2_fu.png"
+  },
+  {
+   "code": "art4_3",
+   "en": "Iela Violin",
+   "fr": "Violon d'Iela",
+   "stars": 4,
+   "role": "mage",
+   "art": "assets/_artifacts/art4_3_fu.png"
+  },
+  {
+   "code": "art4_4",
+   "en": "Hell Cutter",
+   "fr": "Coupe-enfer",
+   "stars": 4,
+   "role": "warrior",
+   "art": "assets/_artifacts/art4_4_fu.png"
+  },
+  {
+   "code": "art4_5",
+   "en": "Hilag Lance",
+   "fr": "Lance d'Hilag",
+   "stars": 4,
+   "role": "knight",
+   "art": "assets/_artifacts/art4_5_fu.png"
+  },
+  {
+   "code": "art4_6",
+   "en": "Sashe Ithanes",
+   "fr": "Sashe Ithanes",
+   "stars": 4,
+   "role": "ranger",
+   "art": "assets/_artifacts/art4_6_fu.png"
+  },
+  {
+   "code": "art4_7",
+   "en": "Dust Devil",
+   "fr": "Diable de poussière",
+   "stars": 4,
+   "role": "thief",
+   "art": "assets/_artifacts/art4_7_fu.png"
+  },
+  {
+   "code": "art4_8",
+   "en": "Water's Origin",
+   "fr": "Origine de l'eau",
+   "stars": 4,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art4_8_fu.png"
+  },
+  {
+   "code": "art4_9",
+   "en": "Holy Sacrifice",
+   "fr": "Sacrifice sacré",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art4_9_fu.png"
+  },
+  {
+   "code": "art5_1",
+   "en": "Elbris Ritual Sword",
+   "fr": "Épée rituelle d'Elbris",
+   "stars": 5,
+   "role": "knight",
+   "art": "assets/_artifacts/art5_1_fu.png"
+  },
+  {
+   "code": "art5_11",
+   "en": "Rhianna & Luciella",
+   "fr": "Rhianna et Luciella",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art5_11_fu.png"
+  },
+  {
+   "code": "art5_12",
+   "en": "Moonlight Dreamblade",
+   "fr": "Rêvelame lunaire",
+   "stars": 4,
+   "role": "thief",
+   "art": "assets/_artifacts/art5_12_fu.png"
+  },
+  {
+   "code": "art5_15",
+   "en": "Sira-Ren",
+   "fr": "Sira-Ren",
+   "stars": 4,
+   "role": "mage",
+   "art": "assets/_artifacts/art5_15_fu.png"
+  },
+  {
+   "code": "art5_16",
+   "en": "Cruel Mischief",
+   "fr": "Farce atroce",
+   "stars": 5,
+   "role": null,
+   "art": "assets/_artifacts/art5_16_fu.png"
+  },
+  {
+   "code": "art5_18",
+   "en": "Magaraha's Tome",
+   "fr": "Tome de Magaraha",
+   "stars": 4,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art5_18_fu.png"
+  },
+  {
+   "code": "art5_19",
+   "en": "Tagehel's Ancient Book",
+   "fr": "Livre ancien de Tagehel",
+   "stars": 4,
+   "role": "mage",
+   "art": "assets/_artifacts/art5_19_fu.png"
+  },
+  {
+   "code": "art5_2",
+   "en": "Song of Stars",
+   "fr": "Chanson des étoiles",
+   "stars": 5,
+   "role": "ranger",
+   "art": "assets/_artifacts/art5_2_fu.png"
+  },
+  {
+   "code": "art5_20",
+   "en": "El's Fist",
+   "fr": "Poing d'El",
+   "stars": 4,
+   "role": "warrior",
+   "art": "assets/_artifacts/art5_20_fu.png"
+  },
+  {
+   "code": "art5_21",
+   "en": "Sigurd Scythe",
+   "fr": "Faux de Sigurd",
+   "stars": 5,
+   "role": "warrior",
+   "art": "assets/_artifacts/art5_21_fu.png"
+  },
+  {
+   "code": "art5_3",
+   "en": "Adamant Shield",
+   "fr": "Bouclier inflexible",
+   "stars": 4,
+   "role": "knight",
+   "art": "assets/_artifacts/art5_3_fu.png"
+  },
+  {
+   "code": "art5_4",
+   "en": "Shimadra Staff",
+   "fr": "Bâton de Shimadra",
+   "stars": 5,
+   "role": "soul-weaver",
+   "art": "assets/_artifacts/art5_4_fu.png"
+  },
+  {
+   "code": "art5_5",
+   "en": "Abyssal Crown",
+   "fr": "Couronne de l'abîme",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art5_5_fu.png"
+  },
+  {
+   "code": "art5_6",
+   "en": "Aurius",
+   "fr": "Aurius",
+   "stars": 4,
+   "role": "knight",
+   "art": "assets/_artifacts/art5_6_fu.png"
+  },
+  {
+   "code": "art5_9",
+   "en": "Etica's Scepter",
+   "fr": "Sceptre d'Etica",
+   "stars": 5,
+   "role": "mage",
+   "art": "assets/_artifacts/art5_9_fu.png"
+  }
+ ]
+}

@@ -44,6 +44,7 @@ class Hero(BaseModel):
     stats: HeroStats = Field(default_factory=HeroStats)
     gear: dict[GearSlot, Gear] = Field(default_factory=dict)
     artifact: str | None = None
+    skin: str | None = Field(default=None, description="Code du skin affiché (ex. c2066_s01_1)")
     artifact_level: int | None = Field(default=None, ge=0, le=30)
     gear_score_avg: int | None = Field(
         default=None, description="« Score moyen d'équipements » en jeu"

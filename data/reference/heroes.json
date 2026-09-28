@@ -1,182 +1,5210 @@
 {
-  "_comment": "Référentiel pour le fuzzy-matching OCR des noms. 'en' absent = nom anglais non vérifié (le nom FR est alors utilisé). À compléter via la skill e7-reference-data.",
-  "heroes": [
+ "_comment": "Généré depuis e7codex.com (archive fan-made ; contenu du jeu © Smilegate / Super Creative) par scripts/update_reference.py le 2026-09-28. Ne pas éditer à la main.",
+ "heroes": [
+  {
+   "code": "c0002",
+   "base": "c0002",
+   "en": "Powered up Mercedes",
+   "fr": "Powered up Mercedes",
+   "element": null,
+   "role": null,
+   "stars": null,
+   "pose": "assets/c0002/pose.png",
+   "face": "assets/c0002/face_c0002_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1001",
+   "base": "c1001",
+   "en": "Ras",
+   "fr": "Ras",
+   "element": "fire",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c1001/pose.png",
+   "face": "assets/c1001/face_c1001_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1002",
+   "base": "c1002",
+   "en": "Cecilia",
+   "fr": "Cécilia",
+   "element": "fire",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1002/pose.png",
+   "face": "assets/c1002/face_c1002_s.png",
+   "skins": [
     {
-      "code": "c1001",
-      "en": "Ras",
-      "fr": "Ras",
-      "element": "fire",
-      "role": "knight",
-      "stars": 3
-    },
-    {
-      "code": "c2002",
-      "en": "Fallen Cecilia",
-      "fr": "Cecilia déchue",
-      "element": "dark",
-      "role": "knight",
-      "stars": 5
-    },
-    {
-      "code": "c1019",
-      "en": "Ravi",
-      "fr": "Ravi",
-      "element": "fire",
-      "role": "warrior",
-      "stars": 5
-    },
-    {
-      "code": "c1072",
-      "en": "Sigret",
-      "fr": "Sigret",
-      "element": "ice",
-      "role": "warrior",
-      "stars": 5
-    },
-    {
-      "code": "c1096",
-      "en": "Bellona",
-      "fr": "Bellona",
-      "element": "earth",
-      "role": "ranger",
-      "stars": 5
-    },
-    {
-      "code": "c1100",
-      "en": "Alencia",
-      "fr": "Alencia",
-      "element": "earth",
-      "role": "warrior",
-      "stars": 5
-    },
-    {
-      "code": "c2011",
-      "en": "Specter Tenebria",
-      "fr": "Tenebria spectrale",
-      "element": "dark",
-      "role": "mage",
-      "stars": 5
-    },
-    {
-      "code": "c1111",
-      "en": "Eda",
-      "fr": "Eda",
-      "element": "ice",
-      "role": "mage",
-      "stars": 5
-    },
-    {
-      "code": "c1118",
-      "en": "Ran",
-      "fr": "Ran",
-      "element": "ice",
-      "role": "thief",
-      "stars": 5
-    },
-    {
-      "code": "c2019",
-      "en": "Apocalypse Ravi",
-      "fr": "Ravi de l'apocalypse",
-      "element": "dark",
-      "role": "warrior",
-      "stars": 5
-    },
-    {
-      "code": null,
-      "fr": "Kise",
-      "element": "ice",
-      "role": "thief",
-      "stars": 5,
-      "en": "Kise"
-    },
-    {
-      "code": null,
-      "fr": "Coli tactique",
-      "element": "ice",
-      "role": "thief",
-      "stars": 5
-    },
-    {
-      "code": null,
-      "fr": "Ludwig Prélude de l'Aubade",
-      "element": "ice",
-      "role": "ranger",
-      "stars": 5
-    },
-    {
-      "code": null,
-      "fr": "Frieren",
-      "element": "earth",
-      "role": null,
-      "stars": 5,
-      "en": "Frieren"
-    },
-    {
-      "code": null,
-      "fr": "Vildred",
-      "element": "earth",
-      "role": "thief",
-      "stars": 5,
-      "en": "Vildred"
-    },
-    {
-      "code": null,
-      "fr": "Mercedes",
-      "element": "fire",
-      "role": "mage",
-      "stars": 5,
-      "en": "Mercedes"
-    },
-    {
-      "code": null,
-      "fr": "Céline vision d'esprit",
-      "element": "light",
-      "role": null,
-      "stars": 5
-    },
-    {
-      "code": null,
-      "fr": "Vivian Sage sylvestre",
-      "element": "light",
-      "role": null,
-      "stars": 5
-    },
-    {
-      "code": null,
-      "fr": "Luna",
-      "element": "ice",
-      "role": "warrior",
-      "stars": 5,
-      "en": "Luna"
-    },
-    {
-      "code": null,
-      "fr": "Luna Nouvelle lune",
-      "element": "light",
-      "role": null,
-      "stars": 5
-    },
-    {
-      "code": null,
-      "fr": "Hwa-young spectatrice",
-      "element": "dark",
-      "role": null,
-      "stars": 5
-    },
-    {
-      "code": null,
-      "fr": "Tenebria Sorcière du lac",
-      "element": "light",
-      "role": null,
-      "stars": 5
-    },
-    {
-      "code": null,
-      "fr": "Saria",
-      "element": "earth",
-      "role": null,
-      "stars": 5,
-      "en": "Saria"
+     "code": "c1002_s01",
+     "variant": "s01",
+     "fr": "Succube aux ailes noires",
+     "pose": "assets/c1002_s01/pose.png",
+     "face": "assets/c1002_s01/face_c1002_s01_s.png"
     }
-  ]
+   ]
+  },
+  {
+   "code": "c1003",
+   "base": "c1003",
+   "en": "Rose",
+   "fr": "Rose",
+   "element": "ice",
+   "role": "knight",
+   "stars": 4,
+   "pose": "assets/c1003/pose.png",
+   "face": "assets/c1003/face_c1003_s.png",
+   "skins": [
+    {
+     "code": "c1003_s01",
+     "variant": "s01",
+     "fr": "Ange rebelle",
+     "pose": "assets/c1003_s01/pose.png",
+     "face": "assets/c1003_s01/face_c1003_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1004",
+   "base": "c1004",
+   "en": "Silk",
+   "fr": "Silk",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 4,
+   "pose": "assets/c1004/pose.png",
+   "face": "assets/c1004/face_c1004_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1005",
+   "base": "c1005",
+   "en": "Mercedes",
+   "fr": "Mercedes",
+   "element": "fire",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c1005/pose.png",
+   "face": "assets/c1005/face_c1005_s.png",
+   "skins": [
+    {
+     "code": "c1005_s01",
+     "variant": "s01",
+     "fr": "Demoiselle de douceur",
+     "pose": "assets/c1005_s01/pose.png",
+     "face": "assets/c1005_s01/face_c1005_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1006",
+   "base": "c1006",
+   "en": "Kise",
+   "fr": "Kise",
+   "element": "ice",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1006/pose.png",
+   "face": "assets/c1006/face_c1006_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1007",
+   "base": "c1007",
+   "en": "Vildred",
+   "fr": "Vildred",
+   "element": "earth",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1007/pose.png",
+   "face": "assets/c1007/face_c1007_s.png",
+   "skins": [
+    {
+     "code": "c1007_s01",
+     "variant": "s01",
+     "fr": "Gentilhomme élégant",
+     "pose": "assets/c1007_s01/pose.png",
+     "face": "assets/c1007_s01/face_c1007_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1008",
+   "base": "c1008",
+   "en": "Armin",
+   "fr": "Armin",
+   "element": "earth",
+   "role": "knight",
+   "stars": 4,
+   "pose": "assets/c1008/pose.png",
+   "face": "assets/c1008/face_c1008_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1009",
+   "base": "c1009",
+   "en": "Charlotte",
+   "fr": "Charlotte",
+   "element": "fire",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1009/pose.png",
+   "face": "assets/c1009/face_c1009_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1010",
+   "base": "c1010",
+   "en": "Zerato",
+   "fr": "Zerato",
+   "element": "ice",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c1010/pose.png",
+   "face": "assets/c1010/face_c1010_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1011",
+   "base": "c1011",
+   "en": "Karin",
+   "fr": "Karine",
+   "element": "ice",
+   "role": "thief",
+   "stars": 4,
+   "pose": "assets/c1011/pose.png",
+   "face": "assets/c1011/face_c1011_s.png",
+   "skins": [
+    {
+     "code": "c1011_s01",
+     "variant": "s01",
+     "fr": "Patrouille côtière",
+     "pose": "assets/c1011_s01/pose.png",
+     "face": "assets/c1011_s01/face_c1011_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1012",
+   "base": "c1012",
+   "en": "Corvus",
+   "fr": "Corvus",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c1012/pose.png",
+   "face": "assets/c1012/face_c1012_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1013",
+   "base": "c1013",
+   "en": "Cartuja",
+   "fr": "Cartuja",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c1013/pose.png",
+   "face": "assets/c1013/face_c1013_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1014",
+   "base": "c1014",
+   "en": "Cidd",
+   "fr": "Cidd",
+   "element": "earth",
+   "role": "thief",
+   "stars": 4,
+   "pose": "assets/c1014/pose.png",
+   "face": "assets/c1014/face_c1014_s.png",
+   "skins": [
+    {
+     "code": "c1014_s01",
+     "variant": "s01",
+     "fr": "Gentilhomme masqué",
+     "pose": "assets/c1014_s01/pose.png",
+     "face": "assets/c1014_s01/face_c1014_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1015",
+   "base": "c1015",
+   "en": "Baal & Sezan",
+   "fr": "Baal et Sezan",
+   "element": "fire",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1015/pose.png",
+   "face": "assets/c1015/face_c1015_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1016",
+   "base": "c1016",
+   "en": "Yufine",
+   "fr": "Yufine",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1016/pose.png",
+   "face": "assets/c1016/face_c1016_s.png",
+   "skins": [
+    {
+     "code": "c1016_s01",
+     "variant": "s01",
+     "fr": "Adorable bourgeon de fleur",
+     "pose": "assets/c1016_s01/pose.png",
+     "face": "assets/c1016_s01/face_c1016_s01_s.png"
+    },
+    {
+     "code": "c1016_s02",
+     "variant": "s02",
+     "fr": "Yufine",
+     "pose": "assets/c1016_s02/pose.png",
+     "face": "assets/c1016_s02/face_c1016_s02_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1017",
+   "base": "c1017",
+   "en": "Achates",
+   "fr": "Achates",
+   "element": "fire",
+   "role": "soul-weaver",
+   "stars": 4,
+   "pose": "assets/c1017/pose.png",
+   "face": "assets/c1017/face_c1017_s.png",
+   "skins": [
+    {
+     "code": "c1017_s01",
+     "variant": "s01",
+     "fr": "Éclat azur d'été",
+     "pose": "assets/c1017_s01/pose.png",
+     "face": "assets/c1017_s01/face_c1017_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1018",
+   "base": "c1018",
+   "en": "Aither",
+   "fr": "Aither",
+   "element": "ice",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c1018/pose.png",
+   "face": "assets/c1018/face_c1018_s.png",
+   "skins": [
+    {
+     "code": "c1018_s01",
+     "variant": "s01",
+     "fr": "L'étoile d'Ezera",
+     "pose": "assets/c1018_s01/pose.png",
+     "face": "assets/c1018_s01/face_c1018_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1019",
+   "base": "c1019",
+   "en": "Ravi",
+   "fr": "Ravi",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1019/pose.png",
+   "face": "assets/c1019/face_c1019_s.png",
+   "skins": [
+    {
+     "code": "c1019_s01",
+     "variant": "s01",
+     "fr": "Arc-en-ciel filant",
+     "pose": "assets/c1019_s01/pose.png",
+     "face": "assets/c1019_s01/face_c1019_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1020",
+   "base": "c1020",
+   "en": "Schuri",
+   "fr": "Schuri",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 4,
+   "pose": "assets/c1020/pose.png",
+   "face": "assets/c1020/face_c1020_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1021",
+   "base": "c1021",
+   "en": "Dingo",
+   "fr": "Dingo",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c1021/pose.png",
+   "face": "assets/c1021/face_c1021_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1022",
+   "base": "c1022",
+   "en": "Ruele of Light",
+   "fr": "Ruele de lumière",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1022/pose.png",
+   "face": "assets/c1022/face_c1022_s.png",
+   "skins": [
+    {
+     "code": "c1022_s01",
+     "variant": "s01",
+     "fr": "Héritière radieuse",
+     "pose": "assets/c1022_s01/pose.png",
+     "face": "assets/c1022_s01/face_c1022_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1023",
+   "base": "c1023",
+   "en": "Kayron",
+   "fr": "Kayron",
+   "element": "fire",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1023/pose.png",
+   "face": "assets/c1023/face_c1023_s.png",
+   "skins": [
+    {
+     "code": "c1023_s01",
+     "variant": "s01",
+     "fr": "Lapin à la montre",
+     "pose": "assets/c1023_s01/pose.png",
+     "face": "assets/c1023_s01/face_c1023_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1024",
+   "base": "c1024",
+   "en": "Iseria",
+   "fr": "Iseria",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1024/pose.png",
+   "face": "assets/c1024/face_c1024_s.png",
+   "skins": [
+    {
+     "code": "c1024_s01",
+     "variant": "s01",
+     "fr": "Fleur de minuit",
+     "pose": "assets/c1024_s01/pose.png",
+     "face": "assets/c1024_s01/face_c1024_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1027",
+   "base": "c1027",
+   "en": "Charles",
+   "fr": "Charles",
+   "element": "earth",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1027/pose.png",
+   "face": "assets/c1027/face_c1027_s.png",
+   "skins": [
+    {
+     "code": "c1027_s01",
+     "variant": "s01",
+     "fr": "Chasseur de démons",
+     "pose": "assets/c1027_s01/pose.png",
+     "face": "assets/c1027_s01/face_c1027_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1028",
+   "base": "c1028",
+   "en": "Clarissa",
+   "fr": "Clarissa",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c1028/pose.png",
+   "face": "assets/c1028/face_c1028_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1029",
+   "base": "c1029",
+   "en": "Leo",
+   "fr": "Leo",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 4,
+   "pose": "assets/c1029/pose.png",
+   "face": "assets/c1029/face_c1029_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1030",
+   "base": "c1030",
+   "en": "Yuna",
+   "fr": "Yuna",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1030/pose.png",
+   "face": "assets/c1030/face_c1030_s.png",
+   "skins": [
+    {
+     "code": "c1030_s01",
+     "variant": "s01",
+     "fr": "En soirée !",
+     "pose": "assets/c1030_s01/pose.png",
+     "face": "assets/c1030_s01/face_c1030_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1031",
+   "base": "c1031",
+   "en": "Lots",
+   "fr": "Lots",
+   "element": "earth",
+   "role": "soul-weaver",
+   "stars": 4,
+   "pose": "assets/c1031/pose.png",
+   "face": "assets/c1031/face_c1031_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1032",
+   "base": "c1032",
+   "en": "Maya",
+   "fr": "Maya",
+   "element": "fire",
+   "role": "knight",
+   "stars": 4,
+   "pose": "assets/c1032/pose.png",
+   "face": "assets/c1032/face_c1032_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1033",
+   "base": "c1033",
+   "en": "Coli",
+   "fr": "Coli",
+   "element": "ice",
+   "role": "thief",
+   "stars": 4,
+   "pose": "assets/c1033/pose.png",
+   "face": "assets/c1033/face_c1033_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1034",
+   "base": "c1034",
+   "en": "Straze",
+   "fr": "Straze",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1034/pose.png",
+   "face": "assets/c1034/face_c1034_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1035",
+   "base": "c1035",
+   "en": "Purrgis",
+   "fr": "Purrgis",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c1035/pose.png",
+   "face": "assets/c1035/face_c1035_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1036",
+   "base": "c1036",
+   "en": "Crozet",
+   "fr": "Crozet",
+   "element": "ice",
+   "role": "knight",
+   "stars": 4,
+   "pose": "assets/c1036/pose.png",
+   "face": "assets/c1036/face_c1036_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1037",
+   "base": "c1037",
+   "en": "Dominiel",
+   "fr": "Dominiel",
+   "element": "ice",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c1037/pose.png",
+   "face": "assets/c1037/face_c1037_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1038",
+   "base": "c1038",
+   "en": "Sez",
+   "fr": "Sez",
+   "element": "ice",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1038/pose.png",
+   "face": "assets/c1038/face_c1038_s.png",
+   "skins": [
+    {
+     "code": "c1038_s01",
+     "variant": "s01",
+     "fr": "Maître-nageur distant",
+     "pose": "assets/c1038_s01/pose.png",
+     "face": "assets/c1038_s01/face_c1038_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1039",
+   "base": "c1039",
+   "en": "Haste",
+   "fr": "Haste",
+   "element": "fire",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1039/pose.png",
+   "face": "assets/c1039/face_c1039_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1040",
+   "base": "c1040",
+   "en": "Serila",
+   "fr": "Serila",
+   "element": "fire",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c1040/pose.png",
+   "face": "assets/c1040/face_c1040_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1042",
+   "base": "c1042",
+   "en": "Tywin",
+   "fr": "Tywin",
+   "element": "ice",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1042/pose.png",
+   "face": "assets/c1042/face_c1042_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1043",
+   "base": "c1043",
+   "en": "Romann",
+   "fr": "Romann",
+   "element": "ice",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c1043/pose.png",
+   "face": "assets/c1043/face_c1043_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1044",
+   "base": "c1044",
+   "en": "Mui",
+   "fr": "Mui",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1044/pose.png",
+   "face": "assets/c1044/face_c1044_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1046",
+   "base": "c1046",
+   "en": "Lidica",
+   "fr": "Lidica",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1046/pose.png",
+   "face": "assets/c1046/face_c1046_s.png",
+   "skins": [
+    {
+     "code": "c1046_s01",
+     "variant": "s01",
+     "fr": "Mariée de la rose",
+     "pose": "assets/c1046_s01/pose.png",
+     "face": "assets/c1046_s01/face_c1046_s01_s.png"
+    },
+    {
+     "code": "c1046_s02_1",
+     "variant": "s02",
+     "fr": "Lidica",
+     "pose": "assets/c1046_s02_1/pose.png",
+     "face": "assets/c1046_s02_1/face_c1046_s02_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1047",
+   "base": "c1047",
+   "en": "Ken",
+   "fr": "Ken",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1047/pose.png",
+   "face": "assets/c1047/face_c1047_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1048",
+   "base": "c1048",
+   "en": "Aramintha",
+   "fr": "Aramintha",
+   "element": "fire",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1048/pose.png",
+   "face": "assets/c1048/face_c1048_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1049",
+   "base": "c1049",
+   "en": "Chloe",
+   "fr": "Chloe",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1049/pose.png",
+   "face": "assets/c1049/face_c1049_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1050",
+   "base": "c1050",
+   "en": "Tenebria",
+   "fr": "Tenebria",
+   "element": "fire",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1050/pose.png",
+   "face": "assets/c1050/face_c1050_s.png",
+   "skins": [
+    {
+     "code": "c1050_s01",
+     "variant": "s01",
+     "fr": "Fantôme lycéenne",
+     "pose": "assets/c1050_s01/pose.png",
+     "face": "assets/c1050_s01/face_c1050_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1053",
+   "base": "c1053",
+   "en": "Basar",
+   "fr": "Basar",
+   "element": "earth",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1053/pose.png",
+   "face": "assets/c1053/face_c1053_s.png",
+   "skins": [
+    {
+     "code": "c1053_s01",
+     "variant": "s01",
+     "fr": "Gentilhomme splendide",
+     "pose": "assets/c1053_s01/pose.png",
+     "face": "assets/c1053_s01/face_c1053_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1054",
+   "base": "c1054",
+   "en": "Rin",
+   "fr": "Rin",
+   "element": "earth",
+   "role": "soul-weaver",
+   "stars": 4,
+   "pose": "assets/c1054/pose.png",
+   "face": "assets/c1054/face_c1054_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1055",
+   "base": "c1055",
+   "en": "Jenua",
+   "fr": "Jenua",
+   "element": "fire",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1055/pose.png",
+   "face": "assets/c1055/face_c1055_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1060",
+   "base": "c1060",
+   "en": "Schniel",
+   "fr": "Schniel",
+   "element": "earth",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1060/pose.png",
+   "face": "assets/c1060/face_c1060_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1062",
+   "base": "c1062",
+   "en": "Angelica",
+   "fr": "Angelica",
+   "element": "ice",
+   "role": "soul-weaver",
+   "stars": 4,
+   "pose": "assets/c1062/pose.png",
+   "face": "assets/c1062/face_c1062_s.png",
+   "skins": [
+    {
+     "code": "c1062_s01",
+     "variant": "s01",
+     "fr": "Nouvelle étudiante mystérieuse",
+     "pose": "assets/c1062_s01/pose.png",
+     "face": "assets/c1062_s01/face_c1062_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1065",
+   "base": "c1065",
+   "en": "Surin",
+   "fr": "Surin",
+   "element": "fire",
+   "role": "thief",
+   "stars": 4,
+   "pose": "assets/c1065/pose.png",
+   "face": "assets/c1065/face_c1065_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1066",
+   "base": "c1066",
+   "en": "Luna",
+   "fr": "Luna",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1066/pose.png",
+   "face": "assets/c1066/face_c1066_s.png",
+   "skins": [
+    {
+     "code": "c1066_s01",
+     "variant": "s01",
+     "fr": "Pureté glaciale",
+     "pose": "assets/c1066_s01/pose.png",
+     "face": "assets/c1066_s01/face_c1066_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1067",
+   "base": "c1067",
+   "en": "Tamarinne",
+   "fr": "Tamarinne",
+   "element": "fire",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1067/pose.png",
+   "face": "assets/c1067/face_c1067_s.png",
+   "skins": [
+    {
+     "code": "c1067_s01",
+     "variant": "s01",
+     "fr": "Concert sous les étoiles",
+     "pose": "assets/c1067_s01/pose.png",
+     "face": "assets/c1067_s01/face_c1067_s01_s.png"
+    },
+    {
+     "code": "c1067_s02",
+     "variant": "s02",
+     "fr": "Tamarinne",
+     "pose": "assets/c1067_s02/pose.png",
+     "face": "assets/c1067_s02/face_c1067_s02_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1069",
+   "base": "c1069",
+   "en": "Ludwig",
+   "fr": "Ludwig",
+   "element": "earth",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1069/pose.png",
+   "face": "assets/c1069/face_c1069_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1070",
+   "base": "c1070",
+   "en": "Krau",
+   "fr": "Krau",
+   "element": "ice",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1070/pose.png",
+   "face": "assets/c1070/face_c1070_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1071",
+   "base": "c1071",
+   "en": "Bellona",
+   "fr": "Bellona",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1071/pose.png",
+   "face": "assets/c1071/face_c1071_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1072",
+   "base": "c1072",
+   "en": "Sigret",
+   "fr": "Sigret",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1072/pose.png",
+   "face": "assets/c1072/face_c1072_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1073",
+   "base": "c1073",
+   "en": "Kawerik",
+   "fr": "Kawerik",
+   "element": "fire",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1073/pose.png",
+   "face": "assets/c1073/face_c1073_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1074",
+   "base": "c1074",
+   "en": "Violet",
+   "fr": "Violet",
+   "element": "earth",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1074/pose.png",
+   "face": "assets/c1074/face_c1074_s.png",
+   "skins": [
+    {
+     "code": "c1074_s01",
+     "variant": "s01",
+     "fr": "Gentleman enflammé",
+     "pose": "assets/c1074_s01/pose.png",
+     "face": "assets/c1074_s01/face_c1074_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1076",
+   "base": "c1076",
+   "en": "Diene",
+   "fr": "Diène",
+   "element": "ice",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1076/pose.png",
+   "face": "assets/c1076/face_c1076_s.png",
+   "skins": [
+    {
+     "code": "c1076_s01",
+     "variant": "s01",
+     "fr": "Diène",
+     "pose": "assets/c1076_s01/pose.png",
+     "face": "assets/c1076_s01/face_c1076_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1078",
+   "base": "c1078",
+   "en": "Ras",
+   "fr": "Ras",
+   "element": "fire",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c1078/pose.png",
+   "face": "assets/c1078/face_c1078_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1079",
+   "base": "c1079",
+   "en": "Cermia",
+   "fr": "Cermia",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1079/pose.png",
+   "face": "assets/c1079/face_c1079_s.png",
+   "skins": [
+    {
+     "code": "c1079_s01",
+     "variant": "s01",
+     "fr": "Flemmarde de la plage",
+     "pose": "assets/c1079_s01/pose.png",
+     "face": "assets/c1079_s01/face_c1079_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1080",
+   "base": "c1080",
+   "en": "Pavel",
+   "fr": "Pavel",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1080/pose.png",
+   "face": "assets/c1080/face_c1080_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1081",
+   "base": "c1081",
+   "en": "Cerise",
+   "fr": "Cerise",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1081/pose.png",
+   "face": "assets/c1081/face_c1081_s.png",
+   "skins": [
+    {
+     "code": "c1081_s01",
+     "variant": "s01",
+     "fr": "Perle azurée",
+     "pose": "assets/c1081_s01/pose.png",
+     "face": "assets/c1081_s01/face_c1081_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1082",
+   "base": "c1082",
+   "en": "Luluca",
+   "fr": "Luluca",
+   "element": "ice",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1082/pose.png",
+   "face": "assets/c1082/face_c1082_s.png",
+   "skins": [
+    {
+     "code": "c1082_s01",
+     "variant": "s01",
+     "fr": "Pâtissière de l'amour",
+     "pose": "assets/c1082_s01/pose.png",
+     "face": "assets/c1082_s01/face_c1082_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1083",
+   "base": "c1083",
+   "en": "Zeno",
+   "fr": "Zeno",
+   "element": "ice",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1083/pose.png",
+   "face": "assets/c1083/face_c1083_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1085",
+   "base": "c1085",
+   "en": "Khawazu",
+   "fr": "Khawazu",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c1085/pose.png",
+   "face": "assets/c1085/face_c1085_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1086",
+   "base": "c1086",
+   "en": "Khawana",
+   "fr": "Khawana",
+   "element": "fire",
+   "role": "thief",
+   "stars": 4,
+   "pose": "assets/c1086/pose.png",
+   "face": "assets/c1086/face_c1086_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1087",
+   "base": "c1087",
+   "en": "Furious",
+   "fr": "Furious",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 4,
+   "pose": "assets/c1087/pose.png",
+   "face": "assets/c1087/face_c1087_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1088",
+   "base": "c1088",
+   "en": "Vivian",
+   "fr": "Vivian",
+   "element": "earth",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1088/pose.png",
+   "face": "assets/c1088/face_c1088_s.png",
+   "skins": [
+    {
+     "code": "c1088_s01",
+     "variant": "s01",
+     "fr": "Noble demoiselle insolente",
+     "pose": "assets/c1088_s01/pose.png",
+     "face": "assets/c1088_s01/face_c1088_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1089",
+   "base": "c1089",
+   "en": "Lilias",
+   "fr": "Lilias",
+   "element": "fire",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1089/pose.png",
+   "face": "assets/c1089/face_c1089_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1090",
+   "base": "c1090",
+   "en": "Ray",
+   "fr": "Ray",
+   "element": "earth",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1090/pose.png",
+   "face": "assets/c1090/face_c1090_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1091",
+   "base": "c1091",
+   "en": "Elena",
+   "fr": "Elena",
+   "element": "ice",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1091/pose.png",
+   "face": "assets/c1091/face_c1091_s.png",
+   "skins": [
+    {
+     "code": "c1091_s01",
+     "variant": "s01",
+     "fr": "Astre mélodieux",
+     "pose": "assets/c1091_s01/pose.png",
+     "face": "assets/c1091_s01/face_c1091_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1092",
+   "base": "c1092",
+   "en": "Sol",
+   "fr": "Sol",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1092/pose.png",
+   "face": "assets/c1092/face_c1092_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1093",
+   "base": "c1093",
+   "en": "Baiken",
+   "fr": "Baiken",
+   "element": "earth",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1093/pose.png",
+   "face": "assets/c1093/face_c1093_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1094",
+   "base": "c1094",
+   "en": "Dizzy",
+   "fr": "Dizzy",
+   "element": "ice",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1094/pose.png",
+   "face": "assets/c1094/face_c1094_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1095",
+   "base": "c1095",
+   "en": "Lilibet",
+   "fr": "Lilibet",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1095/pose.png",
+   "face": "assets/c1095/face_c1095_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1096",
+   "base": "c1096",
+   "en": "Melissa",
+   "fr": "Mélissa",
+   "element": "fire",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1096/pose.png",
+   "face": "assets/c1096/face_c1096_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1097",
+   "base": "c1097",
+   "en": "Bomb Model Kanna",
+   "fr": "Kanna, modèle explosive",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1097/pose.png",
+   "face": "assets/c1097/face_c1097_s.png",
+   "skins": [
+    {
+     "code": "c1097_s01",
+     "variant": "s01",
+     "fr": "Cadeau extra",
+     "pose": "assets/c1097_s01/pose.png",
+     "face": "assets/c1097_s01/face_c1097_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1098",
+   "base": "c1098",
+   "en": "Support Model Brinus",
+   "fr": "Brinus, modèle assistante",
+   "element": "ice",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1098/pose.png",
+   "face": "assets/c1098/face_c1098_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1099",
+   "base": "c1099",
+   "en": "Command Model Laika",
+   "fr": "Laïka, modèle commandante",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1099/pose.png",
+   "face": "assets/c1099/face_c1099_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1100",
+   "base": "c1100",
+   "en": "Alencia",
+   "fr": "Alencia",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1100/pose.png",
+   "face": "assets/c1100/face_c1100_s.png",
+   "skins": [
+    {
+     "code": "c1100_s01",
+     "variant": "s01",
+     "fr": "Mémé Cadeaux",
+     "pose": "assets/c1100_s01/pose.png",
+     "face": "assets/c1100_s01/face_c1100_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1101",
+   "base": "c1101",
+   "en": "Choux",
+   "fr": "Chou",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1101/pose.png",
+   "face": "assets/c1101/face_c1101_s.png",
+   "skins": [
+    {
+     "code": "c1101_s01",
+     "variant": "s01",
+     "fr": "E7WC 2022",
+     "pose": "assets/c1101_s01/pose.png",
+     "face": "assets/c1101_s01/face_c1101_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1102",
+   "base": "c1102",
+   "en": "Roana",
+   "fr": "Roenna",
+   "element": "earth",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1102/pose.png",
+   "face": "assets/c1102/face_c1102_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1103",
+   "base": "c1103",
+   "en": "Celine",
+   "fr": "Céline",
+   "element": "earth",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1103/pose.png",
+   "face": "assets/c1103/face_c1103_s.png",
+   "skins": [
+    {
+     "code": "c1103_s01",
+     "variant": "s01",
+     "fr": "Été scintillant",
+     "pose": "assets/c1103_s01/pose.png",
+     "face": "assets/c1103_s01/face_c1103_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1104",
+   "base": "c1104",
+   "en": "Mort",
+   "fr": "Morté",
+   "element": "earth",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1104/pose.png",
+   "face": "assets/c1104/face_c1104_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1105",
+   "base": "c1105",
+   "en": "Elphelt",
+   "fr": "Elphelt",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1105/pose.png",
+   "face": "assets/c1105/face_c1105_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1106",
+   "base": "c1106",
+   "en": "Senya",
+   "fr": "Shennah",
+   "element": "earth",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1106/pose.png",
+   "face": "assets/c1106/face_c1106_s.png",
+   "skins": [
+    {
+     "code": "c1106_s01",
+     "variant": "s01",
+     "fr": "E7WC 2023",
+     "pose": "assets/c1106_s01/pose.png",
+     "face": "assets/c1106_s01/face_c1106_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1107",
+   "base": "c1107",
+   "en": "Kizuna AI",
+   "fr": "Kizuna AI",
+   "element": "fire",
+   "role": "soul-weaver",
+   "stars": 4,
+   "pose": "assets/c1107/pose.png",
+   "face": "assets/c1107/face_c1107_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1108",
+   "base": "c1108",
+   "en": "Ervalen",
+   "fr": "Ervalen",
+   "element": "earth",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1108/pose.png",
+   "face": "assets/c1108/face_c1108_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1109",
+   "base": "c1109",
+   "en": "Landy",
+   "fr": "Landy",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1109/pose.png",
+   "face": "assets/c1109/face_c1109_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1110",
+   "base": "c1110",
+   "en": "Flan",
+   "fr": "Phlan",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1110/pose.png",
+   "face": "assets/c1110/face_c1110_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1111",
+   "base": "c1111",
+   "en": "Eda",
+   "fr": "Eda",
+   "element": "ice",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1111/pose.png",
+   "face": "assets/c1111/face_c1111_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1112",
+   "base": "c1112",
+   "en": "Politis",
+   "fr": "Politis",
+   "element": "fire",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1112/pose.png",
+   "face": "assets/c1112/face_c1112_s.png",
+   "skins": [
+    {
+     "code": "c1112_s01",
+     "variant": "s01",
+     "fr": "Prêtresse du sanctuaire du renard",
+     "pose": "assets/c1112_s01/pose.png",
+     "face": "assets/c1112_s01/face_c1112_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1113",
+   "base": "c1113",
+   "en": "Ilynav",
+   "fr": "Ilynav",
+   "element": "fire",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1113/pose.png",
+   "face": "assets/c1113/face_c1113_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1114",
+   "base": "c1114",
+   "en": "Rem",
+   "fr": "Rem",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1114/pose.png",
+   "face": "assets/c1114/face_c1114_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1115",
+   "base": "c1115",
+   "en": "Ram",
+   "fr": "Ram",
+   "element": "earth",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1115/pose.png",
+   "face": "assets/c1115/face_c1115_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1116",
+   "base": "c1116",
+   "en": "Emilia",
+   "fr": "Émilia",
+   "element": "ice",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1116/pose.png",
+   "face": "assets/c1116/face_c1116_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1117",
+   "base": "c1117",
+   "en": "Belian",
+   "fr": "Belian",
+   "element": "light",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1117/pose.png",
+   "face": "assets/c1117/face_c1117_s.png",
+   "skins": [
+    {
+     "code": "c1117_s01",
+     "variant": "s01",
+     "fr": "Maestra harmonique",
+     "pose": "assets/c1117_s01/pose.png",
+     "face": "assets/c1117_s01/face_c1117_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1118",
+   "base": "c1118",
+   "en": "Ran",
+   "fr": "Rann",
+   "element": "ice",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1118/pose.png",
+   "face": "assets/c1118/face_c1118_s.png",
+   "skins": [
+    {
+     "code": "c1118_s01",
+     "variant": "s01",
+     "fr": "Esprit pur",
+     "pose": "assets/c1118_s01/pose.png",
+     "face": "assets/c1118_s01/face_c1118_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1119",
+   "base": "c1119",
+   "en": "Zahhak",
+   "fr": "Zahhak",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1119/pose.png",
+   "face": "assets/c1119/face_c1119_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1121",
+   "base": "c1121",
+   "en": "Rimuru",
+   "fr": "Limule",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1121/pose.png",
+   "face": "assets/c1121/face_c1121_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1122",
+   "base": "c1122",
+   "en": "Milim",
+   "fr": "Millim",
+   "element": "fire",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1122/pose.png",
+   "face": "assets/c1122/face_c1122_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1123",
+   "base": "c1123",
+   "en": "Shuna",
+   "fr": "Shuna",
+   "element": "fire",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1123/pose.png",
+   "face": "assets/c1123/face_c1123_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1124",
+   "base": "c1124",
+   "en": "Arunka",
+   "fr": "Arunka",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1124/pose.png",
+   "face": "assets/c1124/face_c1124_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1125",
+   "base": "c1125",
+   "en": "Peira",
+   "fr": "Feira",
+   "element": "ice",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1125/pose.png",
+   "face": "assets/c1125/face_c1125_s.png",
+   "skins": [
+    {
+     "code": "c1125_s01",
+     "variant": "s01",
+     "fr": "Nom de code S",
+     "pose": "assets/c1125_s01/pose.png",
+     "face": "assets/c1125_s01/face_c1125_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1126",
+   "base": "c1126",
+   "en": "Lua",
+   "fr": "Lua",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1126/pose.png",
+   "face": "assets/c1126/face_c1126_s.png",
+   "skins": [
+    {
+     "code": "c1126_s01_1",
+     "variant": "s01",
+     "fr": "Lua",
+     "pose": "assets/c1126_s01_1/pose.png",
+     "face": "assets/c1126_s01_1/face_c1126_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1127",
+   "base": "c1127",
+   "en": "Taeyou",
+   "fr": "Taeyou",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1127/pose.png",
+   "face": "assets/c1127/face_c1127_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1128",
+   "base": "c1128",
+   "en": "Hwayoung",
+   "fr": "Hwa-young",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1128/pose.png",
+   "face": "assets/c1128/face_c1128_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1129",
+   "base": "c1129",
+   "en": "Aria",
+   "fr": "Aria",
+   "element": "ice",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1129/pose.png",
+   "face": "assets/c1129/face_c1129_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1130",
+   "base": "c1130",
+   "en": "Jack-O'",
+   "fr": "Jack-O'",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1130/pose.png",
+   "face": "assets/c1130/face_c1130_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1131",
+   "base": "c1131",
+   "en": "Yulha",
+   "fr": "Yulha",
+   "element": "earth",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1131/pose.png",
+   "face": "assets/c1131/face_c1131_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1132",
+   "base": "c1132",
+   "en": "Sharun",
+   "fr": "Sharun",
+   "element": "earth",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1132/pose.png",
+   "face": "assets/c1132/face_c1132_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1133",
+   "base": "c1133",
+   "en": "Zio",
+   "fr": "Zio",
+   "element": "dark",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1133/pose.png",
+   "face": "assets/c1133/face_c1133_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1134",
+   "base": "c1134",
+   "en": "Edward Elric",
+   "fr": "Edward Elric",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1134/pose.png",
+   "face": "assets/c1134/face_c1134_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1135",
+   "base": "c1135",
+   "en": "Roy Mustang",
+   "fr": "Roy Mustang",
+   "element": "fire",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1135/pose.png",
+   "face": "assets/c1135/face_c1135_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1136",
+   "base": "c1136",
+   "en": "Riza Hawkeye",
+   "fr": "Riza Hawkeye",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1136/pose.png",
+   "face": "assets/c1136/face_c1136_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1137",
+   "base": "c1137",
+   "en": "ae-KARINA",
+   "fr": "ae-KARINA",
+   "element": "ice",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1137/pose.png",
+   "face": "assets/c1137/face_c1137_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1138",
+   "base": "c1138",
+   "en": "ae-GISELLE",
+   "fr": "ae-GISELLE",
+   "element": "earth",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1138/pose.png",
+   "face": "assets/c1138/face_c1138_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1139",
+   "base": "c1139",
+   "en": "ae-WINTER",
+   "fr": "ae-WINTER",
+   "element": "fire",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1139/pose.png",
+   "face": "assets/c1139/face_c1139_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1140",
+   "base": "c1140",
+   "en": "ae-NINGNING",
+   "fr": "ae-NINGNING",
+   "element": "fire",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1140/pose.png",
+   "face": "assets/c1140/face_c1140_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1141",
+   "base": "c1141",
+   "en": "Beehoo",
+   "fr": "Bihu",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1141/pose.png",
+   "face": "assets/c1141/face_c1141_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1142",
+   "base": "c1142",
+   "en": "Eligos",
+   "fr": "Eligos",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1142/pose.png",
+   "face": "assets/c1142/face_c1142_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1143",
+   "base": "c1143",
+   "en": "Amid",
+   "fr": "Amid",
+   "element": "ice",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1143/pose.png",
+   "face": "assets/c1143/face_c1143_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1144",
+   "base": "c1144",
+   "en": "Abigail",
+   "fr": "Abigaëlle",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1144/pose.png",
+   "face": "assets/c1144/face_c1144_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1145",
+   "base": "c1145",
+   "en": "Brieg",
+   "fr": "Brigg",
+   "element": "ice",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1145/pose.png",
+   "face": "assets/c1145/face_c1145_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1146",
+   "base": "c1146",
+   "en": "Benimaru",
+   "fr": "Benimaru",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1146/pose.png",
+   "face": "assets/c1146/face_c1146_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1147",
+   "base": "c1147",
+   "en": "Fumyr",
+   "fr": "Fumyr",
+   "element": "ice",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1147/pose.png",
+   "face": "assets/c1147/face_c1147_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1148",
+   "base": "c1148",
+   "en": "Elvira",
+   "fr": "Elvira",
+   "element": "ice",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1148/pose.png",
+   "face": "assets/c1148/face_c1148_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1150",
+   "base": "c1150",
+   "en": "Veronica",
+   "fr": "Véronica",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 4,
+   "pose": "assets/c1150/pose.png",
+   "face": "assets/c1150/face_c1150_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1151",
+   "base": "c1151",
+   "en": "Nahkwol",
+   "fr": "Nahkwol",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1151/pose.png",
+   "face": "assets/c1151/face_c1151_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1152",
+   "base": "c1152",
+   "en": "Kane",
+   "fr": "Kane",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1152/pose.png",
+   "face": "assets/c1152/face_c1152_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1153",
+   "base": "c1153",
+   "en": "Harsetti",
+   "fr": "Harsetti",
+   "element": "dark",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1153/pose.png",
+   "face": "assets/c1153/face_c1153_s.png",
+   "skins": [
+    {
+     "code": "c1153_s01",
+     "variant": "s01",
+     "fr": "Commandante d’une époque troublée",
+     "pose": "assets/c1153_s01/pose.png",
+     "face": "assets/c1153_s01/face_c1153_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c1154",
+   "base": "c1154",
+   "en": "Byblis",
+   "fr": "Byblis",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1154/pose.png",
+   "face": "assets/c1154/face_c1154_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1155",
+   "base": "c1155",
+   "en": "Ainz Ooal Gown",
+   "fr": "Ainz Ooal Gown",
+   "element": "dark",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1155/pose.png",
+   "face": "assets/c1155/face_c1155_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1156",
+   "base": "c1156",
+   "en": "Albedo",
+   "fr": "Albedo",
+   "element": "earth",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1156/pose.png",
+   "face": "assets/c1156/face_c1156_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1157",
+   "base": "c1157",
+   "en": "Shalltear",
+   "fr": "Shalltear",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1157/pose.png",
+   "face": "assets/c1157/face_c1157_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1158",
+   "base": "c1158",
+   "en": "Fenris",
+   "fr": "Fenris",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1158/pose.png",
+   "face": "assets/c1158/face_c1158_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1159",
+   "base": "c1159",
+   "en": "Laia",
+   "fr": "Laïa",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1159/pose.png",
+   "face": "assets/c1159/face_c1159_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1160",
+   "base": "c1160",
+   "en": "Birgitta",
+   "fr": "Birgitta",
+   "element": "ice",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1160/pose.png",
+   "face": "assets/c1160/face_c1160_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1161",
+   "base": "c1161",
+   "en": "Immortal Wukong",
+   "fr": "Wukong l'immortel",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1161/pose.png",
+   "face": "assets/c1161/face_c1161_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1162",
+   "base": "c1162",
+   "en": "Young Senya",
+   "fr": "Shennah jeune",
+   "element": "earth",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1162/pose.png",
+   "face": "assets/c1162/face_c1162_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1163",
+   "base": "c1163",
+   "en": "Frida",
+   "fr": "Frida",
+   "element": "ice",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1163/pose.png",
+   "face": "assets/c1163/face_c1163_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1166",
+   "base": "c1166",
+   "en": "Victorika",
+   "fr": "Victorika",
+   "element": "fire",
+   "role": "knight",
+   "stars": 4,
+   "pose": "assets/c1166/pose.png",
+   "face": "assets/c1166/face_c1166_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1168",
+   "base": "c1168",
+   "en": "Rinak",
+   "fr": "Rinak",
+   "element": "earth",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1168/pose.png",
+   "face": "assets/c1168/face_c1168_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1169",
+   "base": "c1169",
+   "en": "Robin",
+   "fr": "Robin",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1169/pose.png",
+   "face": "assets/c1169/face_c1169_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1170",
+   "base": "c1170",
+   "en": "Fenne",
+   "fr": "Fenne",
+   "element": "ice",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1170/pose.png",
+   "face": "assets/c1170/face_c1170_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1171",
+   "base": "c1171",
+   "en": "Tori",
+   "fr": "Tori",
+   "element": "fire",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1171/pose.png",
+   "face": "assets/c1171/face_c1171_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1172",
+   "base": "c1172",
+   "en": "Frieren",
+   "fr": "Frieren",
+   "element": "earth",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1172/pose.png",
+   "face": "assets/c1172/face_c1172_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1173",
+   "base": "c1173",
+   "en": "Fern",
+   "fr": "Fern",
+   "element": "ice",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c1173/pose.png",
+   "face": "assets/c1173/face_c1173_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1174",
+   "base": "c1174",
+   "en": "Stark",
+   "fr": "Stark",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1174/pose.png",
+   "face": "assets/c1174/face_c1174_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1176",
+   "base": "c1176",
+   "en": "Setsuka",
+   "fr": "Setsuka",
+   "element": "fire",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c1176/pose.png",
+   "face": "assets/c1176/face_c1176_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1177",
+   "base": "c1177",
+   "en": "Saria",
+   "fr": "Saria",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1177/pose.png",
+   "face": "assets/c1177/face_c1177_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1178",
+   "base": "c1178",
+   "en": "Hecate",
+   "fr": "Hécate",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1178/pose.png",
+   "face": "assets/c1178/face_c1178_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1179",
+   "base": "c1179",
+   "en": "Aki",
+   "fr": "Aki",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1179/pose.png",
+   "face": "assets/c1179/face_c1179_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1180_1",
+   "base": "c1180",
+   "en": "Ruiza",
+   "fr": "Louisa",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1180_1/pose.png",
+   "face": "assets/c1180_1/face_c1180_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1182",
+   "base": "c1182",
+   "en": "Ivana",
+   "fr": "Ivana",
+   "element": "fire",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c1182/pose.png",
+   "face": "assets/c1182/face_c1182_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1183_1",
+   "base": "c1183",
+   "en": "Estelle",
+   "fr": "Estelle",
+   "element": "earth",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c1183_1/pose.png",
+   "face": "assets/c1183_1/face_c1183_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1191_1",
+   "base": "c1191",
+   "en": "Mei Lin",
+   "fr": "Mei Lin",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1191_1/pose.png",
+   "face": "assets/c1191_1/face_c1191_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1192",
+   "base": "c1192",
+   "en": "Haru",
+   "fr": "Haru",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c1192/pose.png",
+   "face": "assets/c1192/face_c1192_s.png",
+   "skins": []
+  },
+  {
+   "code": "c1193_1",
+   "base": "c1193",
+   "en": "Renoa",
+   "fr": "Renoa",
+   "element": "dark",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c1193_1/pose.png",
+   "face": "assets/c1193_1/face_c1193_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2001",
+   "base": "c2001",
+   "en": "Genesis Ras",
+   "fr": "Ras de l'origine",
+   "element": "light",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c2001/pose.png",
+   "face": "assets/c2001/face_c2001_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2002",
+   "base": "c2002",
+   "en": "Fallen Cecilia",
+   "fr": "Cécilia déchue",
+   "element": "dark",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c2002/pose.png",
+   "face": "assets/c2002/face_c2002_s.png",
+   "skins": [
+    {
+     "code": "c2002_s01",
+     "variant": "s01",
+     "fr": "Chaleur enneigée",
+     "pose": "assets/c2002_s01/pose.png",
+     "face": "assets/c2002_s01/face_c2002_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2003",
+   "base": "c2003",
+   "en": "Shadow Rose",
+   "fr": "Rose de l'ombre",
+   "element": "dark",
+   "role": "knight",
+   "stars": 4,
+   "pose": "assets/c2003/pose.png",
+   "face": "assets/c2003/face_c2003_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2004",
+   "base": "c2004",
+   "en": "Wanderer Silk",
+   "fr": "Silk nomade",
+   "element": "light",
+   "role": "ranger",
+   "stars": 4,
+   "pose": "assets/c2004/pose.png",
+   "face": "assets/c2004/face_c2004_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2005",
+   "base": "c2005",
+   "en": "Celestial Mercedes",
+   "fr": "Mercedes céleste",
+   "element": "dark",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c2005/pose.png",
+   "face": "assets/c2005/face_c2005_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2006",
+   "base": "c2006",
+   "en": "Judge Kise",
+   "fr": "Juge Kise",
+   "element": "light",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2006/pose.png",
+   "face": "assets/c2006/face_c2006_s.png",
+   "skins": [
+    {
+     "code": "c2006_s01",
+     "variant": "s01",
+     "fr": "Héritière de lumière sacrée",
+     "pose": "assets/c2006_s01/pose.png",
+     "face": "assets/c2006_s01/face_c2006_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2007",
+   "base": "c2007",
+   "en": "Arbiter Vildred",
+   "fr": "Vildred arbitre",
+   "element": "dark",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c2007/pose.png",
+   "face": "assets/c2007/face_c2007_s.png",
+   "skins": [
+    {
+     "code": "c2007_s01",
+     "variant": "s01",
+     "fr": "Seigneur des ténèbres",
+     "pose": "assets/c2007_s01/pose.png",
+     "face": "assets/c2007_s01/face_c2007_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2008",
+   "base": "c2008",
+   "en": "Crimson Armin",
+   "fr": "Armin pourpre",
+   "element": "light",
+   "role": "knight",
+   "stars": 4,
+   "pose": "assets/c2008/pose.png",
+   "face": "assets/c2008/face_c2008_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2009",
+   "base": "c2009",
+   "en": "Little Queen Charlotte",
+   "fr": "Charlotte jeune reine",
+   "element": "light",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2009/pose.png",
+   "face": "assets/c2009/face_c2009_s.png",
+   "skins": [
+    {
+     "code": "c2009_s01",
+     "variant": "s01",
+     "fr": "Sortie splendide",
+     "pose": "assets/c2009_s01/pose.png",
+     "face": "assets/c2009_s01/face_c2009_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2010",
+   "base": "c2010",
+   "en": "Champion Zerato",
+   "fr": "Zerato champion",
+   "element": "dark",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c2010/pose.png",
+   "face": "assets/c2010/face_c2010_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2011",
+   "base": "c2011",
+   "en": "Blood Blade Karin",
+   "fr": "Karine Lame de Sang",
+   "element": "dark",
+   "role": "thief",
+   "stars": 4,
+   "pose": "assets/c2011/pose.png",
+   "face": "assets/c2011/face_c2011_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2012",
+   "base": "c2012",
+   "en": "Dark Corvus",
+   "fr": "Corvus obscur",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2012/pose.png",
+   "face": "assets/c2012/face_c2012_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2013",
+   "base": "c2013",
+   "en": "Assassin Cartuja",
+   "fr": "Cartuja assassin",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c2013/pose.png",
+   "face": "assets/c2013/face_c2013_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2014",
+   "base": "c2014",
+   "en": "Assassin Cidd",
+   "fr": "Cidd assassin",
+   "element": "dark",
+   "role": "thief",
+   "stars": 4,
+   "pose": "assets/c2014/pose.png",
+   "face": "assets/c2014/face_c2014_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2015",
+   "base": "c2015",
+   "en": "Sage Baal & Sezan",
+   "fr": "Sage Baal et Sezan",
+   "element": "light",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c2015/pose.png",
+   "face": "assets/c2015/face_c2015_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2016",
+   "base": "c2016",
+   "en": "Abyssal Yufine",
+   "fr": "Yufine abyssale",
+   "element": "dark",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c2016/pose.png",
+   "face": "assets/c2016/face_c2016_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2017",
+   "base": "c2017",
+   "en": "Shooting Star Achates",
+   "fr": "Achates Étoile filante",
+   "element": "dark",
+   "role": "soul-weaver",
+   "stars": 4,
+   "pose": "assets/c2017/pose.png",
+   "face": "assets/c2017/face_c2017_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2018",
+   "base": "c2018",
+   "en": "Guider Aither",
+   "fr": "Guide Aither",
+   "element": "light",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c2018/pose.png",
+   "face": "assets/c2018/face_c2018_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2019",
+   "base": "c2019",
+   "en": "Apocalypse Ravi",
+   "fr": "Ravi Apocalypse",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2019/pose.png",
+   "face": "assets/c2019/face_c2019_s.png",
+   "skins": [
+    {
+     "code": "c2019_s01",
+     "variant": "s01",
+     "fr": "Incarnation sanguinaire",
+     "pose": "assets/c2019_s01/pose.png",
+     "face": "assets/c2019_s01/face_c2019_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2020",
+   "base": "c2020",
+   "en": "Watcher Schuri",
+   "fr": "Observateur Schuri",
+   "element": "light",
+   "role": "ranger",
+   "stars": 4,
+   "pose": "assets/c2020/pose.png",
+   "face": "assets/c2020/face_c2020_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2021",
+   "base": "c2021",
+   "en": "Blaze Dingo",
+   "fr": "Dingo ardent",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 4,
+   "pose": "assets/c2021/pose.png",
+   "face": "assets/c2021/face_c2021_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2022",
+   "base": "c2022",
+   "en": "Destina",
+   "fr": "Destina",
+   "element": "earth",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c2022/pose.png",
+   "face": "assets/c2022/face_c2022_s.png",
+   "skins": [
+    {
+     "code": "c2022_s01",
+     "variant": "s01",
+     "fr": "Brise printanière",
+     "pose": "assets/c2022_s01/pose.png",
+     "face": "assets/c2022_s01/face_c2022_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2023",
+   "base": "c2023",
+   "en": "Twisted Eidolon Kayron",
+   "fr": "Kayron eidolon torturé",
+   "element": "light",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c2023/pose.png",
+   "face": "assets/c2023/face_c2023_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2024",
+   "base": "c2024",
+   "en": "Briar Witch Iseria",
+   "fr": "Iseria Sorcière cendrée",
+   "element": "dark",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c2024/pose.png",
+   "face": "assets/c2024/face_c2024_s.png",
+   "skins": [
+    {
+     "code": "c2024_s01",
+     "variant": "s01",
+     "fr": "Capitaine chevaleresse",
+     "pose": "assets/c2024_s01/pose.png",
+     "face": "assets/c2024_s01/face_c2024_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2027",
+   "base": "c2027",
+   "en": "Closer Charles",
+   "fr": "Charles exécuteur ultime",
+   "element": "dark",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c2027/pose.png",
+   "face": "assets/c2027/face_c2027_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2028",
+   "base": "c2028",
+   "en": "Kitty Clarissa",
+   "fr": "Clarissa le chaton",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c2028/pose.png",
+   "face": "assets/c2028/face_c2028_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2029",
+   "base": "c2029",
+   "en": "Roaming Warrior Leo",
+   "fr": "Léo guerrier errant",
+   "element": "dark",
+   "role": "ranger",
+   "stars": 4,
+   "pose": "assets/c2029/pose.png",
+   "face": "assets/c2029/face_c2029_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2031",
+   "base": "c2031",
+   "en": "Auxiliary Lots",
+   "fr": "Lots auxiliaire",
+   "element": "dark",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c2031/pose.png",
+   "face": "assets/c2031/face_c2031_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2032",
+   "base": "c2032",
+   "en": "Fighter Maya",
+   "fr": "Maya combattante",
+   "element": "light",
+   "role": "knight",
+   "stars": 4,
+   "pose": "assets/c2032/pose.png",
+   "face": "assets/c2032/face_c2032_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2033",
+   "base": "c2033",
+   "en": "Assassin Coli",
+   "fr": "Coli assassine",
+   "element": "dark",
+   "role": "thief",
+   "stars": 4,
+   "pose": "assets/c2033/pose.png",
+   "face": "assets/c2033/face_c2033_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2035",
+   "base": "c2035",
+   "en": "General Purrgis",
+   "fr": "Général Purrgis",
+   "element": "light",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c2035/pose.png",
+   "face": "assets/c2035/face_c2035_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2036",
+   "base": "c2036",
+   "en": "Troublemaker Crozet",
+   "fr": "Crozet Trublion",
+   "element": "dark",
+   "role": "knight",
+   "stars": 4,
+   "pose": "assets/c2036/pose.png",
+   "face": "assets/c2036/face_c2036_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2037",
+   "base": "c2037",
+   "en": "Challenger Dominiel",
+   "fr": "Dominiel compétitrice",
+   "element": "dark",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c2037/pose.png",
+   "face": "assets/c2037/face_c2037_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2038",
+   "base": "c2038",
+   "en": "Specimen Sez",
+   "fr": "Sez spécimen",
+   "element": "light",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c2038/pose.png",
+   "face": "assets/c2038/face_c2038_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2039",
+   "base": "c2039",
+   "en": "Blood Moon Haste",
+   "fr": "Haste Lune de sang",
+   "element": "dark",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c2039/pose.png",
+   "face": "assets/c2039/face_c2039_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2042",
+   "base": "c2042",
+   "en": "Ambitious Tywin",
+   "fr": "Tywin ambitieux",
+   "element": "light",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c2042/pose.png",
+   "face": "assets/c2042/face_c2042_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2043",
+   "base": "c2043",
+   "en": "Benevolent Romann",
+   "fr": "Romann bienveillant",
+   "element": "light",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c2043/pose.png",
+   "face": "assets/c2043/face_c2043_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2046",
+   "base": "c2046",
+   "en": "Faithless Lidica",
+   "fr": "Lidica impie",
+   "element": "light",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c2046/pose.png",
+   "face": "assets/c2046/face_c2046_s.png",
+   "skins": [
+    {
+     "code": "c2046_s01",
+     "variant": "s01",
+     "fr": "Chevaleresse victorieuse",
+     "pose": "assets/c2046_s01/pose.png",
+     "face": "assets/c2046_s01/face_c2046_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2047",
+   "base": "c2047",
+   "en": "Martial Artist Ken",
+   "fr": "Ken artiste martial",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2047/pose.png",
+   "face": "assets/c2047/face_c2047_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2048",
+   "base": "c2048",
+   "en": "Silver Blade Aramintha",
+   "fr": "Aramintha Lame d'argent",
+   "element": "light",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c2048/pose.png",
+   "face": "assets/c2048/face_c2048_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2049",
+   "base": "c2049",
+   "en": "Maid Chloe",
+   "fr": "Chloe servante",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c2049/pose.png",
+   "face": "assets/c2049/face_c2049_s.png",
+   "skins": [
+    {
+     "code": "c2049_s01",
+     "variant": "s01",
+     "fr": "Énergique",
+     "pose": "assets/c2049_s01/pose.png",
+     "face": "assets/c2049_s01/face_c2049_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2050",
+   "base": "c2050",
+   "en": "Specter Tenebria",
+   "fr": "Tenebria spectrale",
+   "element": "dark",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c2050/pose.png",
+   "face": "assets/c2050/face_c2050_s.png",
+   "skins": [
+    {
+     "code": "c2050_s01",
+     "variant": "s01",
+     "fr": "Tyran de l'astre violine",
+     "pose": "assets/c2050_s01/pose.png",
+     "face": "assets/c2050_s01/face_c2050_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2054",
+   "base": "c2054",
+   "en": "Crescent Moon Rin",
+   "fr": "Rin du croissant de lune",
+   "element": "dark",
+   "role": "thief",
+   "stars": 4,
+   "pose": "assets/c2054/pose.png",
+   "face": "assets/c2054/face_c2054_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2062",
+   "base": "c2062",
+   "en": "Sinful Angelica",
+   "fr": "Angelica Pécheresse",
+   "element": "dark",
+   "role": "soul-weaver",
+   "stars": 4,
+   "pose": "assets/c2062/pose.png",
+   "face": "assets/c2062/face_c2062_s.png",
+   "skins": [
+    {
+     "code": "c2062_s01",
+     "variant": "s01",
+     "fr": "Prophète des étoiles",
+     "pose": "assets/c2062_s01/pose.png",
+     "face": "assets/c2062_s01/face_c2062_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2065",
+   "base": "c2065",
+   "en": "Tempest Surin",
+   "fr": "Surin Tempête",
+   "element": "light",
+   "role": "thief",
+   "stars": 4,
+   "pose": "assets/c2065/pose.png",
+   "face": "assets/c2065/face_c2065_s.png",
+   "skins": [
+    {
+     "code": "c2065_s01",
+     "variant": "s01",
+     "fr": "Beauté fleurissante",
+     "pose": "assets/c2065_s01/pose.png",
+     "face": "assets/c2065_s01/face_c2065_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2066",
+   "base": "c2066",
+   "en": "New Moon Luna",
+   "fr": "Luna Nouvelle lune",
+   "element": "light",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c2066/pose.png",
+   "face": "assets/c2066/face_c2066_s.png",
+   "skins": [
+    {
+     "code": "c2066_s01_1",
+     "variant": "s01",
+     "fr": "Luna Nouvelle lune",
+     "pose": "assets/c2066_s01_1/pose.png",
+     "face": "assets/c2066_s01_1/face_c2066_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2069",
+   "base": "c2069",
+   "en": "Eternal Wanderer Ludwig",
+   "fr": "Ludwig marcheur éternel",
+   "element": "dark",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c2069/pose.png",
+   "face": "assets/c2069/face_c2069_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2070",
+   "base": "c2070",
+   "en": "Last Rider Krau",
+   "fr": "Krau l'ultime rider",
+   "element": "light",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c2070/pose.png",
+   "face": "assets/c2070/face_c2070_s.png",
+   "skins": [
+    {
+     "code": "c2070_s01",
+     "variant": "s01",
+     "fr": "Pièce occulte",
+     "pose": "assets/c2070_s01/pose.png",
+     "face": "assets/c2070_s01/face_c2070_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2071",
+   "base": "c2071",
+   "en": "Lone Crescent Bellona",
+   "fr": "Bellona Lune solitaire",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2071/pose.png",
+   "face": "assets/c2071/face_c2071_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2072",
+   "base": "c2072",
+   "en": "Operator Sigret",
+   "fr": "Sigret opératrice",
+   "element": "dark",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c2072/pose.png",
+   "face": "assets/c2072/face_c2072_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2073",
+   "base": "c2073",
+   "en": "Mediator Kawerik",
+   "fr": "Kawerik le médiateur",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2073/pose.png",
+   "face": "assets/c2073/face_c2073_s.png",
+   "skins": [
+    {
+     "code": "c2073_s01",
+     "variant": "s01",
+     "fr": "Équilibre du fléau",
+     "pose": "assets/c2073_s01/pose.png",
+     "face": "assets/c2073_s01/face_c2073_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2074",
+   "base": "c2074",
+   "en": "Remnant Violet",
+   "fr": "Violet reminiscent",
+   "element": "dark",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c2074/pose.png",
+   "face": "assets/c2074/face_c2074_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2076_1",
+   "base": "c2076",
+   "en": "Shepherd of the Dark Diene",
+   "fr": "Diène bergère obscure",
+   "element": "dark",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c2076_1/pose.png",
+   "face": "assets/c2076_1/face_c2076_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2079",
+   "base": "c2079",
+   "en": "Lionheart Cermia",
+   "fr": "Cermia Cœur de lionne",
+   "element": "light",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2079/pose.png",
+   "face": "assets/c2079/face_c2079_s.png",
+   "skins": [
+    {
+     "code": "c2079_s01",
+     "variant": "s01",
+     "fr": "Nuit de la victoire",
+     "pose": "assets/c2079_s01/pose.png",
+     "face": "assets/c2079_s01/face_c2079_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2080",
+   "base": "c2080",
+   "en": "Commander Pavel",
+   "fr": "Pavel commandant",
+   "element": "light",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c2080/pose.png",
+   "face": "assets/c2080/face_c2080_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2082",
+   "base": "c2082",
+   "en": "Top Model Luluca",
+   "fr": "Luluca Top-modèle",
+   "element": "dark",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c2082/pose.png",
+   "face": "assets/c2082/face_c2082_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2085",
+   "base": "c2085",
+   "en": "Inferno Khawazu",
+   "fr": "Khawazu infernal",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c2085/pose.png",
+   "face": "assets/c2085/face_c2085_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2086",
+   "base": "c2086",
+   "en": "Great Chief Khawana",
+   "fr": "Grande chef Khawana",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c2086/pose.png",
+   "face": "assets/c2086/face_c2086_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2087",
+   "base": "c2087",
+   "en": "Peacemaker Furious",
+   "fr": "Furious pacificateur",
+   "element": "dark",
+   "role": "ranger",
+   "stars": 4,
+   "pose": "assets/c2087/pose.png",
+   "face": "assets/c2087/face_c2087_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2088",
+   "base": "c2088",
+   "en": "Sylvan Sage Vivian",
+   "fr": "Vivian Sage sylvestre",
+   "element": "light",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c2088/pose.png",
+   "face": "assets/c2088/face_c2088_s.png",
+   "skins": [
+    {
+     "code": "c2088_s01",
+     "variant": "s01",
+     "fr": "Parfum des lilas",
+     "pose": "assets/c2088_s01/pose.png",
+     "face": "assets/c2088_s01/face_c2088_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2089",
+   "base": "c2089",
+   "en": "Conqueror Lilias",
+   "fr": "Lilias conquérante",
+   "element": "light",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2089/pose.png",
+   "face": "assets/c2089/face_c2089_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2090",
+   "base": "c2090",
+   "en": "Death Dealer Ray",
+   "fr": "Ray inquisiteur funèbre",
+   "element": "dark",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c2090/pose.png",
+   "face": "assets/c2090/face_c2090_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2091",
+   "base": "c2091",
+   "en": "Astromancer Elena",
+   "fr": "Elena astromancienne",
+   "element": "light",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c2091/pose.png",
+   "face": "assets/c2091/face_c2091_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2095",
+   "base": "c2095",
+   "en": "Designer Lilibet",
+   "fr": "Lilibet styliste",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2095/pose.png",
+   "face": "assets/c2095/face_c2095_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2099",
+   "base": "c2099",
+   "en": "Architect Laika",
+   "fr": "Laïka architecte",
+   "element": "light",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c2099/pose.png",
+   "face": "assets/c2099/face_c2099_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2101",
+   "base": "c2101",
+   "en": "Urban Shadow Choux",
+   "fr": "Chou ombre urbaine",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2101/pose.png",
+   "face": "assets/c2101/face_c2101_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2102",
+   "base": "c2102",
+   "en": "Requiem Roana",
+   "fr": "Roenna requiem",
+   "element": "dark",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c2102/pose.png",
+   "face": "assets/c2102/face_c2102_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2103",
+   "base": "c2103",
+   "en": "Spirit Eye Celine",
+   "fr": "Céline vision d'esprit",
+   "element": "light",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c2103/pose.png",
+   "face": "assets/c2103/face_c2103_s.png",
+   "skins": [
+    {
+     "code": "c2103_s01",
+     "variant": "s01",
+     "fr": "Gardienne du crépuscule",
+     "pose": "assets/c2103_s01/pose.png",
+     "face": "assets/c2103_s01/face_c2103_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2106",
+   "base": "c2106",
+   "en": "Dragon Bride Senya",
+   "fr": "Shennah fiancée du dragon",
+   "element": "light",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c2106/pose.png",
+   "face": "assets/c2106/face_c2106_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2109",
+   "base": "c2109",
+   "en": "Navy Captain Landy",
+   "fr": "Landy capitaine de frégate",
+   "element": "light",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c2109/pose.png",
+   "face": "assets/c2109/face_c2109_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2110",
+   "base": "c2110",
+   "en": "Pirate Captain Flan",
+   "fr": "Phlan Capitaine pirate",
+   "element": "dark",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c2110/pose.png",
+   "face": "assets/c2110/face_c2110_s.png",
+   "skins": [
+    {
+     "code": "c2110_s01",
+     "variant": "s01",
+     "fr": "Sorcière des mers",
+     "pose": "assets/c2110_s01/pose.png",
+     "face": "assets/c2110_s01/face_c2110_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2111",
+   "base": "c2111",
+   "en": "Solitaria of the Snow",
+   "fr": "Solitaria des neiges",
+   "element": "light",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c2111/pose.png",
+   "face": "assets/c2111/face_c2111_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2112",
+   "base": "c2112",
+   "en": "Sea Phantom Politis",
+   "fr": "Politis spectre des mers",
+   "element": "dark",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c2112/pose.png",
+   "face": "assets/c2112/face_c2112_s.png",
+   "skins": [
+    {
+     "code": "c2112_s01_1",
+     "variant": "s01",
+     "fr": "Politis spectre des mers",
+     "pose": "assets/c2112_s01_1/pose.png",
+     "face": "assets/c2112_s01_1/face_c2112_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2113",
+   "base": "c2113",
+   "en": "Empyrean Ilynav",
+   "fr": "Ilynav empyrée",
+   "element": "light",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c2113/pose.png",
+   "face": "assets/c2113/face_c2113_s.png",
+   "skins": [
+    {
+     "code": "c2113_s01_1",
+     "variant": "s01",
+     "fr": "Ilynav empyrée",
+     "pose": "assets/c2113_s01_1/pose.png",
+     "face": "assets/c2113_s01_1/face_c2113_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c2124",
+   "base": "c2124",
+   "en": "Boss Arunka",
+   "fr": "Arunka chef de clan",
+   "element": "light",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c2124/pose.png",
+   "face": "assets/c2124/face_c2124_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2125",
+   "base": "c2125",
+   "en": "Lone Wolf Peira",
+   "fr": "Feira louve solitaire",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2125/pose.png",
+   "face": "assets/c2125/face_c2125_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2126",
+   "base": "c2126",
+   "en": "Hellion Lua",
+   "fr": "Lua petite diablesse",
+   "element": "dark",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c2126/pose.png",
+   "face": "assets/c2126/face_c2126_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2127",
+   "base": "c2127",
+   "en": "Successor Taeyou",
+   "fr": "Taeyou successeur",
+   "element": "light",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2127/pose.png",
+   "face": "assets/c2127/face_c2127_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2128",
+   "base": "c2128",
+   "en": "Bystander Hwayoung",
+   "fr": "Hwa-young spectatrice",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2128/pose.png",
+   "face": "assets/c2128/face_c2128_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2129",
+   "base": "c2129",
+   "en": "Disciplinary Prefect Aria",
+   "fr": "Aria du comité des mœurs",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2129/pose.png",
+   "face": "assets/c2129/face_c2129_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2131",
+   "base": "c2131",
+   "en": "School Nurse Yulha",
+   "fr": "Yulha infirmière scolaire",
+   "element": "dark",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c2131/pose.png",
+   "face": "assets/c2131/face_c2131_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2132",
+   "base": "c2132",
+   "en": "Dragon King Sharun",
+   "fr": "Sharun reine draconique",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c2132/pose.png",
+   "face": "assets/c2132/face_c2132_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2148_1",
+   "base": "c2148",
+   "en": "Tidal Rift Elvira",
+   "fr": "Elvira faille des vagues",
+   "element": "dark",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c2148_1/pose.png",
+   "face": "assets/c2148_1/face_c2148_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2165",
+   "base": "c2165",
+   "en": "New Kid Adin",
+   "fr": "Adine nouvelle élève",
+   "element": "dark",
+   "role": "thief",
+   "stars": 4,
+   "pose": "assets/c2165/pose.png",
+   "face": "assets/c2165/face_c2165_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2181_1",
+   "base": "c2181",
+   "en": "Notos",
+   "fr": "Notos",
+   "element": "light",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c2181_1/pose.png",
+   "face": "assets/c2181_1/face_c2181_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2184_1",
+   "base": "c2184",
+   "en": "Salome",
+   "fr": "Salomé",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c2184_1/pose.png",
+   "face": "assets/c2184_1/face_c2184_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2185_1",
+   "base": "c2185",
+   "en": "Rhianna and Luciella",
+   "fr": "Rhianna Luciella",
+   "element": "dark",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c2185_1/pose.png",
+   "face": "assets/c2185_1/face_c2185_s.png",
+   "skins": []
+  },
+  {
+   "code": "c2186_1",
+   "base": "c2186",
+   "en": "Lisette",
+   "fr": "Lisette",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c2186_1/pose.png",
+   "face": "assets/c2186_1/face_c2186_plant_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3001",
+   "base": "c3001",
+   "en": "Butcher Corps Inquisitor",
+   "fr": "Inquisiteur des Bouchers",
+   "element": "fire",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3001/pose.png",
+   "face": "assets/c3001/face_c3001_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3002",
+   "base": "c3002",
+   "en": "Taranor Royal Guard",
+   "fr": "Garde royal de Taranor",
+   "element": "ice",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3002/pose.png",
+   "face": "assets/c3002/face_c3002_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3003",
+   "base": "c3003",
+   "en": "Kluri",
+   "fr": "Kluri",
+   "element": "earth",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3003/pose.png",
+   "face": "assets/c3003/face_c3003_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3004",
+   "base": "c3004",
+   "en": "Arowell",
+   "fr": "Arowell",
+   "element": "light",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3004/pose.png",
+   "face": "assets/c3004/face_c3004_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3005",
+   "base": "c3005",
+   "en": "Pyllis",
+   "fr": "Pyllis",
+   "element": "dark",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3005/pose.png",
+   "face": "assets/c3005/face_c3005_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3006",
+   "base": "c3006",
+   "en": "Bask",
+   "fr": "Bask",
+   "element": "ice",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3006/pose.png",
+   "face": "assets/c3006/face_c3006_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3011",
+   "base": "c3011",
+   "en": "Judith",
+   "fr": "Judith",
+   "element": "fire",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3011/pose.png",
+   "face": "assets/c3011/face_c3011_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3012",
+   "base": "c3012",
+   "en": "Alexa",
+   "fr": "Alexa",
+   "element": "ice",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3012/pose.png",
+   "face": "assets/c3012/face_c3012_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3013",
+   "base": "c3013",
+   "en": "Roozid",
+   "fr": "Roozid",
+   "element": "earth",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3013/pose.png",
+   "face": "assets/c3013/face_c3013_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3014",
+   "base": "c3014",
+   "en": "Mirsa",
+   "fr": "Mirsa",
+   "element": "light",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3014/pose.png",
+   "face": "assets/c3014/face_c3014_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3015",
+   "base": "c3015",
+   "en": "Sven",
+   "fr": "Sven",
+   "element": "dark",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3015/pose.png",
+   "face": "assets/c3015/face_c3015_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3021",
+   "base": "c3021",
+   "en": "Tieria",
+   "fr": "Tieria",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3021/pose.png",
+   "face": "assets/c3021/face_c3021_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3022",
+   "base": "c3022",
+   "en": "Enott",
+   "fr": "Enott",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3022/pose.png",
+   "face": "assets/c3022/face_c3022_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3023",
+   "base": "c3023",
+   "en": "Helga",
+   "fr": "Helga",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3023/pose.png",
+   "face": "assets/c3023/face_c3023_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3024",
+   "base": "c3024",
+   "en": "Gunther",
+   "fr": "Gunther",
+   "element": "light",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3024/pose.png",
+   "face": "assets/c3024/face_c3024_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3025",
+   "base": "c3025",
+   "en": "Church of Ilryos Axe",
+   "fr": "Hache de l'Église d'Ilryos",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3025/pose.png",
+   "face": "assets/c3025/face_c3025_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3026",
+   "base": "c3026",
+   "en": "Free Spirit Tieria",
+   "fr": "Tieria Esprit libre",
+   "element": "light",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c3026/pose.png",
+   "face": "assets/c3026/face_c3026_s.png",
+   "skins": [
+    {
+     "code": "c3026_s01",
+     "variant": "s01",
+     "fr": "Combattante du Lotus rouge",
+     "pose": "assets/c3026_s01/pose.png",
+     "face": "assets/c3026_s01/face_c3026_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c3031",
+   "base": "c3031",
+   "en": "Azalea",
+   "fr": "Azalea",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3031/pose.png",
+   "face": "assets/c3031/face_c3031_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3032",
+   "base": "c3032",
+   "en": "Taranor Guard",
+   "fr": "Garde de Taranor",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3032/pose.png",
+   "face": "assets/c3032/face_c3032_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3033",
+   "base": "c3033",
+   "en": "Mucacha",
+   "fr": "Mucacha",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3033/pose.png",
+   "face": "assets/c3033/face_c3033_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3034",
+   "base": "c3034",
+   "en": "Rikoris",
+   "fr": "Rikoris",
+   "element": "light",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3034/pose.png",
+   "face": "assets/c3034/face_c3034_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3035",
+   "base": "c3035",
+   "en": "Lorina",
+   "fr": "Lorina",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3035/pose.png",
+   "face": "assets/c3035/face_c3035_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3041",
+   "base": "c3041",
+   "en": "Hazel",
+   "fr": "Hazel",
+   "element": "fire",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c3041/pose.png",
+   "face": "assets/c3041/face_c3041_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3042",
+   "base": "c3042",
+   "en": "Montmorancy",
+   "fr": "Montmorancy",
+   "element": "ice",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c3042/pose.png",
+   "face": "assets/c3042/face_c3042_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3043",
+   "base": "c3043",
+   "en": "Adlay",
+   "fr": "Adlay",
+   "element": "earth",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c3043/pose.png",
+   "face": "assets/c3043/face_c3043_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3044",
+   "base": "c3044",
+   "en": "Doris",
+   "fr": "Doris",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c3044/pose.png",
+   "face": "assets/c3044/face_c3044_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3045",
+   "base": "c3045",
+   "en": "Otillie",
+   "fr": "Otillie",
+   "element": "dark",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c3045/pose.png",
+   "face": "assets/c3045/face_c3045_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3051",
+   "base": "c3051",
+   "en": "Carrot",
+   "fr": "Carrot",
+   "element": "fire",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c3051/pose.png",
+   "face": "assets/c3051/face_c3051_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3052",
+   "base": "c3052",
+   "en": "Jena",
+   "fr": "Jena",
+   "element": "ice",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c3052/pose.png",
+   "face": "assets/c3052/face_c3052_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3053",
+   "base": "c3053",
+   "en": "Jecht",
+   "fr": "Jecht",
+   "element": "earth",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c3053/pose.png",
+   "face": "assets/c3053/face_c3053_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3054",
+   "base": "c3054",
+   "en": "Elson",
+   "fr": "Elson",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c3054/pose.png",
+   "face": "assets/c3054/face_c3054_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3055",
+   "base": "c3055",
+   "en": "Hurado",
+   "fr": "Hurado",
+   "element": "dark",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c3055/pose.png",
+   "face": "assets/c3055/face_c3055_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3061",
+   "base": "c3061",
+   "en": "Nemunas",
+   "fr": "Nemunas",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c3061/pose.png",
+   "face": "assets/c3061/face_c3061_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3062",
+   "base": "c3062",
+   "en": "Rima",
+   "fr": "Rima",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c3062/pose.png",
+   "face": "assets/c3062/face_c3062_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3063",
+   "base": "c3063",
+   "en": "Kiris",
+   "fr": "Kiris",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c3063/pose.png",
+   "face": "assets/c3063/face_c3063_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3064",
+   "base": "c3064",
+   "en": "Celeste",
+   "fr": "Celeste",
+   "element": "light",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c3064/pose.png",
+   "face": "assets/c3064/face_c3064_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3065",
+   "base": "c3065",
+   "en": "Wanda",
+   "fr": "Wanda",
+   "element": "dark",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c3065/pose.png",
+   "face": "assets/c3065/face_c3065_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3071",
+   "base": "c3071",
+   "en": "Carmainerose",
+   "fr": "Carmainerose",
+   "element": "fire",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c3071/pose.png",
+   "face": "assets/c3071/face_c3071_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3072",
+   "base": "c3072",
+   "en": "Mistychain",
+   "fr": "Mornebrume",
+   "element": "ice",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c3072/pose.png",
+   "face": "assets/c3072/face_c3072_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3073",
+   "base": "c3073",
+   "en": "Pearlhorizon",
+   "fr": "Perlhorizon",
+   "element": "earth",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c3073/pose.png",
+   "face": "assets/c3073/face_c3073_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3074",
+   "base": "c3074",
+   "en": "Gloomyrain",
+   "fr": "Sombrepluie",
+   "element": "light",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c3074/pose.png",
+   "face": "assets/c3074/face_c3074_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3075",
+   "base": "c3075",
+   "en": "Requiemroar",
+   "fr": "Hurlerequiem",
+   "element": "dark",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c3075/pose.png",
+   "face": "assets/c3075/face_c3075_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3084",
+   "base": "c3084",
+   "en": "Kikirat v2",
+   "fr": "Kikirat v2",
+   "element": "light",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3084/pose.png",
+   "face": "assets/c3084/face_c3084_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3091",
+   "base": "c3091",
+   "en": "Hataan",
+   "fr": "Hataan",
+   "element": "fire",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3091/pose.png",
+   "face": "assets/c3091/face_c3091_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3092",
+   "base": "c3092",
+   "en": "Lena",
+   "fr": "Léna",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3092/pose.png",
+   "face": "assets/c3092/face_c3092_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3093",
+   "base": "c3093",
+   "en": "Ains",
+   "fr": "Ains",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3093/pose.png",
+   "face": "assets/c3093/face_c3093_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3094",
+   "base": "c3094",
+   "en": "Eaton",
+   "fr": "Eaton",
+   "element": "light",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3094/pose.png",
+   "face": "assets/c3094/face_c3094_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3095",
+   "base": "c3095",
+   "en": "Batisse",
+   "fr": "Batisse",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3095/pose.png",
+   "face": "assets/c3095/face_c3095_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3101",
+   "base": "c3101",
+   "en": "Godmother",
+   "fr": "La Marraine",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c3101/pose.png",
+   "face": "assets/c3101/face_c3101_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3102",
+   "base": "c3102",
+   "en": "Ian",
+   "fr": "Ian",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c3102/pose.png",
+   "face": "assets/c3102/face_c3102_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3103",
+   "base": "c3103",
+   "en": "Glenn",
+   "fr": "Glenn",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c3103/pose.png",
+   "face": "assets/c3103/face_c3103_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3104",
+   "base": "c3104",
+   "en": "Sonia",
+   "fr": "Sonia",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c3104/pose.png",
+   "face": "assets/c3104/face_c3104_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3105",
+   "base": "c3105",
+   "en": "Ainos",
+   "fr": "Ainos",
+   "element": "dark",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c3105/pose.png",
+   "face": "assets/c3105/face_c3105_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3113",
+   "base": "c3113",
+   "en": "Lucy",
+   "fr": "Lucie",
+   "element": "earth",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c3113/pose.png",
+   "face": "assets/c3113/face_c3113_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3121",
+   "base": "c3121",
+   "en": "Melany",
+   "fr": "Mélanie",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3121/pose.png",
+   "face": "assets/c3121/face_c3121_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3122",
+   "base": "c3122",
+   "en": "Helen",
+   "fr": "Hélène",
+   "element": "ice",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3122/pose.png",
+   "face": "assets/c3122/face_c3122_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3123",
+   "base": "c3123",
+   "en": "Christy",
+   "fr": "Christie",
+   "element": "earth",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3123/pose.png",
+   "face": "assets/c3123/face_c3123_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3124",
+   "base": "c3124",
+   "en": "Camilla",
+   "fr": "Camilla",
+   "element": "light",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3124/pose.png",
+   "face": "assets/c3124/face_c3124_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3125",
+   "base": "c3125",
+   "en": "Penelope",
+   "fr": "Pénélope",
+   "element": "dark",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3125/pose.png",
+   "face": "assets/c3125/face_c3125_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3131",
+   "base": "c3131",
+   "en": "Januta",
+   "fr": "Januta",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3131/pose.png",
+   "face": "assets/c3131/face_c3131_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3132",
+   "base": "c3132",
+   "en": "Muwi",
+   "fr": "Muwi",
+   "element": "ice",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3132/pose.png",
+   "face": "assets/c3132/face_c3132_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3133",
+   "base": "c3133",
+   "en": "Orte",
+   "fr": "Orté",
+   "element": "earth",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3133/pose.png",
+   "face": "assets/c3133/face_c3133_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3134",
+   "base": "c3134",
+   "en": "Yoonryoung",
+   "fr": "Yoon-ryong",
+   "element": "light",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3134/pose.png",
+   "face": "assets/c3134/face_c3134_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3135",
+   "base": "c3135",
+   "en": "Hasol",
+   "fr": "Hasol",
+   "element": "dark",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3135/pose.png",
+   "face": "assets/c3135/face_c3135_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3143",
+   "base": "c3143",
+   "en": "Adin",
+   "fr": "Adine",
+   "element": "earth",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3143/pose.png",
+   "face": "assets/c3143/face_c3143_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3151",
+   "base": "c3151",
+   "en": "Juni",
+   "fr": "Juni",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3151/pose.png",
+   "face": "assets/c3151/face_c3151_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3152",
+   "base": "c3152",
+   "en": "Talaz",
+   "fr": "Talaz",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3152/pose.png",
+   "face": "assets/c3152/face_c3152_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3153",
+   "base": "c3153",
+   "en": "Lilka",
+   "fr": "Lilka",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c3153/pose.png",
+   "face": "assets/c3153/face_c3153_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3154",
+   "base": "c3154",
+   "en": "Talia",
+   "fr": "Talia",
+   "element": "light",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3154/pose.png",
+   "face": "assets/c3154/face_c3154_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3155",
+   "base": "c3155",
+   "en": "Suthan",
+   "fr": "Suthan",
+   "element": "dark",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c3155/pose.png",
+   "face": "assets/c3155/face_c3155_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3156",
+   "base": "c3156",
+   "en": "Claudia",
+   "fr": "Claudia",
+   "element": "fire",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c3156/pose.png",
+   "face": "assets/c3156/face_c3156_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3157",
+   "base": "c3157",
+   "en": "Ezra",
+   "fr": "Ezra",
+   "element": "earth",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3157/pose.png",
+   "face": "assets/c3157/face_c3157_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3158",
+   "base": "c3158",
+   "en": "Amiki",
+   "fr": "Amiki",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3158/pose.png",
+   "face": "assets/c3158/face_c3158_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3160",
+   "base": "c3160",
+   "en": "Revna",
+   "fr": "Revna",
+   "element": "dark",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3160/pose.png",
+   "face": "assets/c3160/face_c3160_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3162",
+   "base": "c3162",
+   "en": "Bernard",
+   "fr": "Bernard",
+   "element": "earth",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c3162/pose.png",
+   "face": "assets/c3162/face_c3162_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3163",
+   "base": "c3163",
+   "en": "Leah",
+   "fr": "Léa",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c3163/pose.png",
+   "face": "assets/c3163/face_c3163_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3164",
+   "base": "c3164",
+   "en": "Ragnvald",
+   "fr": "Ragnvald",
+   "element": "ice",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c3164/pose.png",
+   "face": "assets/c3164/face_c3164_s.png",
+   "skins": []
+  },
+  {
+   "code": "c3165",
+   "base": "c3165",
+   "en": "Pernilla",
+   "fr": "Pernilla",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c3165/pose.png",
+   "face": "assets/c3165/face_c3165_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4001",
+   "base": "c4001",
+   "en": "Chaos Inquisitor",
+   "fr": "Inquisiteur du Chaos",
+   "element": "fire",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c4001/pose.png",
+   "face": "assets/c4001/face_c4001_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4003",
+   "base": "c4003",
+   "en": "Falconer Kluri",
+   "fr": "Fauconnière Kluri",
+   "element": "earth",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c4003/pose.png",
+   "face": "assets/c4003/face_c4003_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4004",
+   "base": "c4004",
+   "en": "Unbound Knight Arowell",
+   "fr": "Arowell Chevaleresse libre",
+   "element": "light",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c4004/pose.png",
+   "face": "assets/c4004/face_c4004_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4005",
+   "base": "c4005",
+   "en": "Shadow Knight Pyllis",
+   "fr": "Pyllis Chevaleresse de l'ombre",
+   "element": "dark",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c4005/pose.png",
+   "face": "assets/c4005/face_c4005_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4012",
+   "base": "c4012",
+   "en": "Summer's Disciple Alexa",
+   "fr": "Alexa apprentie de l'été",
+   "element": "ice",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c4012/pose.png",
+   "face": "assets/c4012/face_c4012_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4013",
+   "base": "c4013",
+   "en": "Righteous Thief Roozid",
+   "fr": "Digne voleur Roozid",
+   "element": "earth",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c4013/pose.png",
+   "face": "assets/c4013/face_c4013_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4023",
+   "base": "c4023",
+   "en": "Mercenary Helga",
+   "fr": "Helga mercenaire libre",
+   "element": "earth",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c4023/pose.png",
+   "face": "assets/c4023/face_c4023_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4025",
+   "base": "c4025",
+   "en": "Chaos Sect Axe",
+   "fr": "Hache du chaos",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c4025/pose.png",
+   "face": "assets/c4025/face_c4025_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4034",
+   "base": "c4034",
+   "en": "Captain Rikoris",
+   "fr": "Capitaine Rikoris",
+   "element": "light",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c4034/pose.png",
+   "face": "assets/c4034/face_c4034_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4035",
+   "base": "c4035",
+   "en": "Commander Lorina",
+   "fr": "Commandant Lorina",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c4035/pose.png",
+   "face": "assets/c4035/face_c4035_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4041",
+   "base": "c4041",
+   "en": "Mascot Hazel",
+   "fr": "Mascotte Hazel",
+   "element": "fire",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c4041/pose.png",
+   "face": "assets/c4041/face_c4041_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4042",
+   "base": "c4042",
+   "en": "Angelic Montmorancy",
+   "fr": "Angélique Montmorancy",
+   "element": "ice",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c4042/pose.png",
+   "face": "assets/c4042/face_c4042_s.png",
+   "skins": [
+    {
+     "code": "c4042_s01",
+     "variant": "s01",
+     "fr": "Douce vague",
+     "pose": "assets/c4042_s01/pose.png",
+     "face": "assets/c4042_s01/face_c4042_s01_s.png"
+    }
+   ]
+  },
+  {
+   "code": "c4044",
+   "base": "c4044",
+   "en": "Magic Scholar Doris",
+   "fr": "Doris Mage érudite",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c4044/pose.png",
+   "face": "assets/c4044/face_c4044_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4051",
+   "base": "c4051",
+   "en": "Researcher Carrot",
+   "fr": "Carrot chercheuse",
+   "element": "fire",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c4051/pose.png",
+   "face": "assets/c4051/face_c4051_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4052",
+   "base": "c4052",
+   "en": "Shepherd Jena",
+   "fr": "Jena éclaireuse",
+   "element": "ice",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c4052/pose.png",
+   "face": "assets/c4052/face_c4052_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4062",
+   "base": "c4062",
+   "en": "Muse Rima",
+   "fr": "Rima muse",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c4062/pose.png",
+   "face": "assets/c4062/face_c4062_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4065",
+   "base": "c4065",
+   "en": "All-Rounder Wanda",
+   "fr": "Wanda Polyvalente",
+   "element": "dark",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c4065/pose.png",
+   "face": "assets/c4065/face_c4065_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4071",
+   "base": "c4071",
+   "en": "Zealot Carmainerose",
+   "fr": "Carmainerose zélatrice",
+   "element": "fire",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c4071/pose.png",
+   "face": "assets/c4071/face_c4071_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4073",
+   "base": "c4073",
+   "en": "Doll Maker Pearlhorizon",
+   "fr": "Perlhorizon plangonophile",
+   "element": "earth",
+   "role": "mage",
+   "stars": 3,
+   "pose": "assets/c4073/pose.png",
+   "face": "assets/c4073/face_c4073_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4103",
+   "base": "c4103",
+   "en": "Vigilante Leader Glenn",
+   "fr": "Glenn Chef justicier",
+   "element": "earth",
+   "role": "ranger",
+   "stars": 3,
+   "pose": "assets/c4103/pose.png",
+   "face": "assets/c4103/face_c4103_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4105",
+   "base": "c4105",
+   "en": "Ainos 2.0",
+   "fr": "Ainos 2.0",
+   "element": "dark",
+   "role": "soul-weaver",
+   "stars": 3,
+   "pose": "assets/c4105/pose.png",
+   "face": "assets/c4105/face_c4105_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4123",
+   "base": "c4123",
+   "en": "Silvertide Christy",
+   "fr": "Christie Chevaleresse d'argent",
+   "element": "earth",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c4123/pose.png",
+   "face": "assets/c4123/face_c4123_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4141",
+   "base": "c4141",
+   "en": "Holy Flame Adin",
+   "fr": "Adine flamme sacrée",
+   "element": "fire",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c4141/pose.png",
+   "face": "assets/c4141/face_c4141_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4142",
+   "base": "c4142",
+   "en": "Serene Purity Adin",
+   "fr": "Adine pureté sereine",
+   "element": "ice",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c4142/pose.png",
+   "face": "assets/c4142/face_c4142_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4143",
+   "base": "c4143",
+   "en": "Verdant Adin",
+   "fr": "Adine verdoyante",
+   "element": "earth",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c4143/pose.png",
+   "face": "assets/c4143/face_c4143_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4144",
+   "base": "c4144",
+   "en": "Savior Adin",
+   "fr": "Adine salvatrice",
+   "element": "light",
+   "role": "thief",
+   "stars": 3,
+   "pose": "assets/c4144/pose.png",
+   "face": "assets/c4144/face_c4144_s.png",
+   "skins": []
+  },
+  {
+   "code": "c4158",
+   "base": "c4158",
+   "en": "Inheritor Amiki",
+   "fr": "Amiki l'héritière",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 3,
+   "pose": "assets/c4158/pose.png",
+   "face": "assets/c4158/face_c4158_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5001",
+   "base": "c5001",
+   "en": "Adventurer Ras",
+   "fr": "Ras aventurier",
+   "element": "fire",
+   "role": "knight",
+   "stars": 3,
+   "pose": "assets/c5001/pose.png",
+   "face": "assets/c5001/face_c5001_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5009",
+   "base": "c5009",
+   "en": "Summer Break Charlotte",
+   "fr": "Charlotte vacances d'été",
+   "element": "ice",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c5009/pose.png",
+   "face": "assets/c5009/face_c5009_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5016",
+   "base": "c5016",
+   "en": "Holiday Yufine",
+   "fr": "Yufine vacancière",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c5016/pose.png",
+   "face": "assets/c5016/face_c5016_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5024",
+   "base": "c5024",
+   "en": "Summertime Iseria",
+   "fr": "Iseria tropicale",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c5024/pose.png",
+   "face": "assets/c5024/face_c5024_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5033",
+   "base": "c5033",
+   "en": "Tactical Archetype Coli",
+   "fr": "Coli tactique",
+   "element": "ice",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c5033/pose.png",
+   "face": "assets/c5033/face_c5033_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5046",
+   "base": "c5046",
+   "en": "Blooming Lidica",
+   "fr": "Lidica bourgeonnante",
+   "element": "earth",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c5046/pose.png",
+   "face": "assets/c5046/face_c5046_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5050",
+   "base": "c5050",
+   "en": "Fairytale Tenebria",
+   "fr": "Tenebria des merveilles",
+   "element": "ice",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c5050/pose.png",
+   "face": "assets/c5050/face_c5050_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5069_1",
+   "base": "c5069",
+   "en": "Aubade Ludwig",
+   "fr": "Ludwig Prélude de l'Aubade",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c5069_1/pose.png",
+   "face": "assets/c5069_1/face_c5069_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5070",
+   "base": "c5070",
+   "en": "Guard Captain Krau",
+   "fr": "Krau capitaine d'escorte",
+   "element": "fire",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c5070/pose.png",
+   "face": "assets/c5070/face_c5070_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5071",
+   "base": "c5071",
+   "en": "Seaside Bellona",
+   "fr": "Bellona plage",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c5071/pose.png",
+   "face": "assets/c5071/face_c5071_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5072",
+   "base": "c5072",
+   "en": "Swift Flagbearer Sigret",
+   "fr": "Sigret porte-drapeau éclair",
+   "element": "fire",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c5072/pose.png",
+   "face": "assets/c5072/face_c5072_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5082",
+   "base": "c5082",
+   "en": "Ocean Breeze Luluca",
+   "fr": "Luluca brise marine",
+   "element": "earth",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c5082/pose.png",
+   "face": "assets/c5082/face_c5082_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5089",
+   "base": "c5089",
+   "en": "Midnight Gala Lilias",
+   "fr": "Lilias banquet nocturne",
+   "element": "earth",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c5089/pose.png",
+   "face": "assets/c5089/face_c5089_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5110",
+   "base": "c5110",
+   "en": "Afternoon Soak Flan",
+   "fr": "Phlan baigneuse du midi",
+   "element": "fire",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c5110/pose.png",
+   "face": "assets/c5110/face_c5110_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5111",
+   "base": "c5111",
+   "en": "Festive Eda",
+   "fr": "Eda du festival",
+   "element": "fire",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c5111/pose.png",
+   "face": "assets/c5111/face_c5111_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5112_1",
+   "base": "c5112",
+   "en": "Uncharted Pioneer Politis",
+   "fr": "Politis pionnière de l'inconnu",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c5112_1/pose.png",
+   "face": "assets/c5112_1/face_c5112_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5128",
+   "base": "c5128",
+   "en": "Argent Waves Hwayoung",
+   "fr": "Hwa-young vague argentée",
+   "element": "ice",
+   "role": "thief",
+   "stars": 5,
+   "pose": "assets/c5128/pose.png",
+   "face": "assets/c5128/face_c5128_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5147_1",
+   "base": "c5147",
+   "en": "Eye of the Abyss Fumyr",
+   "fr": "Fumyr Œil des abysses",
+   "element": "earth",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c5147_1/pose.png",
+   "face": "assets/c5147_1/face_c5147_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5149",
+   "base": "c5149",
+   "en": "Lethe",
+   "fr": "Léthé",
+   "element": "ice",
+   "role": "warrior",
+   "stars": 5,
+   "pose": "assets/c5149/pose.png",
+   "face": "assets/c5149/face_c5149_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5154",
+   "base": "c5154",
+   "en": "Perfumer Byblis",
+   "fr": "Byblis parfumeuse",
+   "element": "fire",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c5154/pose.png",
+   "face": "assets/c5154/face_c5154_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5175",
+   "base": "c5175",
+   "en": "Aram",
+   "fr": "Aram",
+   "element": "fire",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c5175/pose.png",
+   "face": "assets/c5175/face_c5175_s.png",
+   "skins": []
+  },
+  {
+   "code": "c5190_1",
+   "base": "c5190",
+   "en": "Aube",
+   "fr": "Aube",
+   "element": "ice",
+   "role": "ranger",
+   "stars": 5,
+   "pose": "assets/c5190_1/pose.png",
+   "face": "assets/c5190_1/face_c5190_s.png",
+   "skins": []
+  },
+  {
+   "code": "c6003",
+   "base": "c6003",
+   "en": "Wretched Rose",
+   "fr": "Rose misérable",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 4,
+   "pose": "assets/c6003/pose.png",
+   "face": "assets/c6003/face_c6003_s.png",
+   "skins": []
+  },
+  {
+   "code": "c6005",
+   "base": "c6005",
+   "en": "Lady of the Scales",
+   "fr": "Maîtresse de la Balance",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 5,
+   "pose": "assets/c6005/pose.png",
+   "face": "assets/c6005/face_c6005_s.png",
+   "skins": []
+  },
+  {
+   "code": "c6008",
+   "base": "c6008",
+   "en": "Bad Cat Armin",
+   "fr": "Armin Vilain Chat",
+   "element": "dark",
+   "role": "warrior",
+   "stars": 4,
+   "pose": "assets/c6008/pose.png",
+   "face": "assets/c6008/face_c6008_s.png",
+   "skins": []
+  },
+  {
+   "code": "c6011",
+   "base": "c6011",
+   "en": "Last Piece Karin",
+   "fr": "Karine Ultime pièce",
+   "element": "light",
+   "role": "thief",
+   "stars": 4,
+   "pose": "assets/c6011/pose.png",
+   "face": "assets/c6011/face_c6011_s.png",
+   "skins": []
+  },
+  {
+   "code": "c6014",
+   "base": "c6014",
+   "en": "Wandering Prince Cidd",
+   "fr": "Cidd prince errant",
+   "element": "light",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c6014/pose.png",
+   "face": "assets/c6014/face_c6014_s.png",
+   "skins": []
+  },
+  {
+   "code": "c6017",
+   "base": "c6017",
+   "en": "Infinite Horizon Achates",
+   "fr": "Achates Horizon infini",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 4,
+   "pose": "assets/c6017/pose.png",
+   "face": "assets/c6017/face_c6017_s.png",
+   "skins": []
+  },
+  {
+   "code": "c6020",
+   "base": "c6020",
+   "en": "Westwind Executioner Schuri",
+   "fr": "Schuri des zéphyrs",
+   "element": "dark",
+   "role": "ranger",
+   "stars": 4,
+   "pose": "assets/c6020/pose.png",
+   "face": "assets/c6020/face_c6020_s.png",
+   "skins": []
+  },
+  {
+   "code": "c6024_1",
+   "base": "c6024",
+   "en": "Monarch of the Sword Iseria",
+   "fr": "Iseria maître de l'Épée rituelle",
+   "element": "light",
+   "role": "knight",
+   "stars": 5,
+   "pose": "assets/c6024_1/pose.png",
+   "face": "assets/c6024_1/face_c6024_s.png",
+   "skins": []
+  },
+  {
+   "code": "c6037",
+   "base": "c6037",
+   "en": "Moon Bunny Dominiel",
+   "fr": "Dominiel lapin lunaire",
+   "element": "light",
+   "role": "soul-weaver",
+   "stars": 4,
+   "pose": "assets/c6037/pose.png",
+   "face": "assets/c6037/face_c6037_s.png",
+   "skins": []
+  },
+  {
+   "code": "c6050",
+   "base": "c6050",
+   "en": "Witch of the Mere Tenebria",
+   "fr": "Tenebria Sorcière du lac",
+   "element": "light",
+   "role": "mage",
+   "stars": 5,
+   "pose": "assets/c6050/pose.png",
+   "face": "assets/c6050/face_c6050_s.png",
+   "skins": []
+  },
+  {
+   "code": "c6062",
+   "base": "c6062",
+   "en": "Angel of Light Angelica",
+   "fr": "Angelica de la lumière",
+   "element": "light",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c6062/pose.png",
+   "face": "assets/c6062/face_c6062_s.png",
+   "skins": []
+  },
+  {
+   "code": "c6065",
+   "base": "c6065",
+   "en": "Sealed Eye Surin",
+   "fr": "Surin Yeux scellés",
+   "element": "dark",
+   "role": "mage",
+   "stars": 4,
+   "pose": "assets/c6065/pose.png",
+   "face": "assets/c6065/face_c6065_s.png",
+   "skins": []
+  }
+ ]
 }

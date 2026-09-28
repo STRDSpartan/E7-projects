@@ -7,7 +7,7 @@ from rapidfuzz import fuzz, process
 from e7showcase.models.hero import HeroStats
 from e7showcase.models.stats import StatType
 from e7showcase.parsers.stat_parser import parse_stat_block
-from e7showcase.reference import hero_names
+from e7showcase.reference import hero_names, normalize
 
 _FIELD = {
     StatType.ATK: "atk",
@@ -39,10 +39,16 @@ def parse_hero_stats(lines: list[str], lang: str = "fr") -> HeroStats:
     return stats
 
 
-def match_hero_name(ocr_text: str, lang: str = "fr", score_cutoff: float = 70) -> str | None:
-    """Associe un nom OCR bruité au nom de référence le plus proche."""
-    names = hero_names(lang) + hero_names("en")
-    match = process.extractOne(
-        ocr_text.strip(), names, scorer=fuzz.WRatio, score_cutoff=score_cutoff
-    )
-    return match[0] if match else None
+def match_hero_name(ocr_text: str, lang: str = "fr", score_cutoff: float = 75) -> str | None:
+    """Associe un nom OCR bruité au nom de référence le plus proche.
+
+    Comparaison sur les noms sans accents ni espaces, nom entier contre nom entier : avec
+    ~400 héros, une comparaison partielle rattacherait « Cecilia dechue » à « Cecilia ».
+    """
+    names = list(dict.fromkeys(hero_names(lang) + hero_names("en")))
+    keys = [normalize(n).replace(" ", "") for n in names]
+    query = normalize(ocr_text).replace(" ", "")
+    if not query:
+        return None
+    match = process.extractOne(query, keys, scorer=fuzz.ratio, score_cutoff=score_cutoff)
+    return names[match[2]] if match else None

@@ -19,8 +19,9 @@
 
 ## M2 — Vitrine
 - [x] Portraits des héros et images d'artefacts depuis le dossier local (`e7showcase assets`)
-- [ ] `e7showcase assets sync` depuis un site communautaire (e7codex.com — accès réseau à ouvrir,
-      conditions d'utilisation à vérifier ; images téléchargées en local, jamais dans le dépôt)
+- [x] Référentiel complet depuis e7codex.com (390 héros, 66 skins, 282 artefacts, noms FR/EN)
+- [x] `e7showcase assets sync` : poses, visages, skins, artefacts des héros du roster (local)
+- [x] Correction des noms d'artefacts lus par l'OCR d'après le référentiel
 - [ ] Thèmes (par élément, par guilde), logo de guilde
 - [ ] Moteur Pillow de secours sans navigateur
 - [ ] Vue « équipe » (4 héros GvG/RTA côte à côte)

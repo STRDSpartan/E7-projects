@@ -5,6 +5,11 @@ description: Ajouter ou mettre à jour les données de référence d'Epic Seven 
 
 # Données de référence
 
+**Héros et artefacts sont générés** depuis e7codex.com : `python scripts/update_reference.py`
+(390 héros, skins, 282 artefacts, noms FR/EN, chemins d'images). Ne pas éditer
+`heroes.json` / `artifacts.json` à la main : corriger le générateur
+(`src/e7showcase/sources/e7codex.py`) et relancer. Les sets et libellés de stats restent manuels.
+
 Fichiers : `data/reference/heroes.json`, `sets.json`, `stat_aliases.json`
 (chargés par `src/e7showcase/reference.py`, mis en cache).
 

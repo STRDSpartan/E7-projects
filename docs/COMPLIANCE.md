@@ -22,6 +22,13 @@ Propriété de Smilegate : jamais committés ni redistribués par le projet. Cha
 dans son dossier de données local (`e7showcase assets`) ; toute synchronisation depuis un site
 tiers doit respecter ses conditions d'utilisation et son robots.txt, et télécharger en local.
 
+**E7 Codex** (e7codex.com, archive fan-made qui reconnaît la propriété de Smilegate /
+Super Creative ; robots.txt `Allow: /`) : le dépôt ne contient que des données factuelles
+(codes, noms, élément, classe, rareté, chemins relatifs) générées par
+`scripts/update_reference.py`. `e7showcase assets sync` ne télécharge que les héros du roster
+du joueur (sauf `--all` explicite), une seule fois (cache local), avec une pause entre requêtes
+et un User-Agent identifiable. Contact du site pour toute demande : contact@e7codex.com.
+
 ## Données personnelles
 - Le roster reste **local** ; rien n'est envoyé sans commande explicite (`share`, `export`).
 - Les captures peuvent contenir le pseudo et l'UID : elles restent dans le dossier de données

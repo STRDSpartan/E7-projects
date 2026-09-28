@@ -17,7 +17,7 @@
     <div class="grid">
     {% for h in heroes %}
       <div class="mini" style="--accent: {{ h.color }}">
-        <h3>{% if h.portrait %}<img class="avatar" src="{{ h.portrait }}" alt="">{% endif %}{{ h.name }}</h3>
+        <h3>{% if h.face %}<img class="avatar face" src="{{ h.face }}" alt="">{% elif h.portrait %}<span class="avatar" style="background-image: url('{{ h.portrait }}')"></span>{% endif %}{{ h.name }}</h3>
         {% for label, value in h.stats[:6] %}<div class="row"><span>{{ label }}</span><b>{{ value }}</b></div>{% endfor %}
         <div class="row"><span>Sets</span><b>{{ h.sets|join(" / ") or "—" }}</b></div>
         <div class="row"><span>GS</span><b>{{ h.total_score }}</b></div>
