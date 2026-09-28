@@ -21,6 +21,13 @@ Images locales uniquement (`<E7_DATA_DIR>/assets/heroes|faces|artifacts/<clé>.w
 Pour tester la mise en page, générer des **portraits synthétiques** (Pillow) — jamais de visuels
 du jeu dans le dépôt ni dans les tests. Vérifier les deux cas : carte avec et sans portrait.
 
+## Vitrine web (fichier HTML autonome)
+`e7showcase export-html --out vitrine.html` (`render/webapp.py` + `templates/webapp.html.j2`).
+Règles : tout intégré (aucune ressource externe), données injectées via `safe_json` (jamais
+d'interpolation brute), rendu JS par `textContent` uniquement (tags saisis par les joueurs).
+Vérifier dans un navigateur (Playwright) : ordinateur 1280 px ET mobile 390 px, clic sur une
+tuile, flèches, Échap, filtres, lien `#<code>`, zéro erreur JS, pas de défilement horizontal.
+
 ## Carte animée
 `e7showcase render "Kise" --animated` : exporte (une fois, cache `assets/anims/<code>.webp`) le
 modèle via la visionneuse d'E7 Codex (`sources/e7codex.export_animation`), puis

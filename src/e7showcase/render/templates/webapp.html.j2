@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+<style>
+:root {
+  --bg: #0b0e15; --panel: #141925; --panel-2: #1b2130; --line: #283044; --line-2: #333d55;
+  --text: #e8ecf3; --muted: #8e98aa; --gold: #e8c26a; --good: #7fe0a0; --accent: #4ab3ff;
+  --radius: 12px; --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { color-scheme: dark; }
+body {
+  background: radial-gradient(1100px 520px at 15% -10%, #18223a 0%, var(--bg) 60%) fixed, var(--bg);
+  color: var(--text); font: 15px/1.45 "Segoe UI", "Noto Sans", system-ui, sans-serif; min-height: 100vh;
+}
+button, input, select { font: inherit; color: inherit; }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 16px; }
+
+/* En-tête */
+header.top { padding: 22px 0 14px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; }
+header.top h1 { font-size: 26px; letter-spacing: .3px; }
+header.top h1 .guild { color: var(--gold); font-weight: 600; }
+header.top .meta { color: var(--muted); font-size: 13px; }
+.summary { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 14px; min-width: 120px; }
+.kpi .v { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--muted); font-size: 12px; }
+
+/* Barre d'outils */
+.toolbar { position: sticky; top: 0; z-index: 5; background: rgba(11, 14, 21, .88); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line); padding: 10px 0; margin-bottom: 16px; }
+.toolbar .wrap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.search { flex: 1 1 220px; min-width: 0; background: var(--panel); border: 1px solid var(--line-2); border-radius: 999px;
+  padding: 8px 14px; outline: none; }
+.search:focus, select:focus, .chip:focus-visible, .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+select { background: var(--panel); border: 1px solid var(--line-2); border-radius: 8px; padding: 7px 10px; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { border: 1px solid var(--line-2); background: var(--panel); border-radius: 999px; padding: 5px 11px; cursor: pointer;
+  font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+.chip .dot { width: 9px; height: 9px; border-radius: 50%; }
+.chip[aria-pressed="true"] { border-color: var(--gold); background: rgba(232, 194, 106, .12); color: var(--gold); }
+.count { color: var(--muted); font-size: 13px; margin-left: auto; white-space: nowrap; }
+
+/* Grille de héros */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; padding-bottom: 32px; }
+.tile { position: relative; text-align: left; background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; cursor: pointer; display: grid;
+  grid-template-columns: 56px 1fr; gap: 4px 12px; align-items: center; transition: transform .12s, border-color .12s; }
+.tile:hover { transform: translateY(-2px); border-color: var(--el, var(--line-2)); }
+.tile::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; border-radius: var(--radius) 0 0 var(--radius); background: var(--el); }
+.avatar { width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--el); background: #0f131c center 8% / cover no-repeat;
+  grid-row: span 2; display: grid; place-items: center; font-weight: 700; color: var(--el); overflow: hidden; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.tile .name { font-weight: 700; font-size: 15px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.tile .sub { color: var(--muted); font-size: 12px; }
+.tile .line { grid-column: 1 / -1; display: flex; justify-content: space-between; font-size: 13px; margin-top: 6px;
+  font-variant-numeric: tabular-nums; }
+.tile .line b { color: var(--text); }
+.tile .line span { color: var(--muted); }
+.tile .pills { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+.pill { background: #232b3d; border: 1px solid var(--line-2); border-radius: 999px; padding: 1px 8px; font-size: 11.5px; }
+.pill.tag { border-color: var(--gold); color: var(--gold); }
+.av { position: relative; grid-row: span 2; width: 56px; height: 56px; }
+.av .avatar { grid-row: auto; }
+.anim-dot { position: absolute; right: -3px; bottom: -3px; width: 20px; height: 20px; border-radius: 50%; background: var(--gold);
+  color: #1a1408; font-size: 10px; display: grid; place-items: center; border: 2px solid var(--panel); }
+.empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 48px 0; }
+
+/* Fiche détaillée */
+dialog { border: none; padding: 0; background: transparent; color: var(--text); max-width: min(1180px, 100vw - 24px); width: 100%;
+  max-height: calc(100vh - 24px); margin: auto; }
+dialog::backdrop { background: rgba(4, 6, 12, .72); backdrop-filter: blur(3px); }
+.sheet { background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--line); border-top: 3px solid var(--el);
+  border-radius: 14px; box-shadow: var(--shadow); display: grid; grid-template-columns: minmax(240px, 340px) 1fr; overflow: hidden;
+  max-height: calc(100vh - 24px); }
+.media { position: relative; background: radial-gradient(120% 70% at 50% 100%, rgba(255,255,255,.07), transparent 70%), #0e121b;
+  display: flex; align-items: flex-end; justify-content: center; min-height: 420px; overflow: hidden; }
+.media img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.media img.portrait { width: 100%; height: 100%; object-fit: cover; object-position: 50% 10%; position: absolute; inset: 0; }
+.media .noimg { align-self: center; color: var(--muted); font-size: 13px; padding: 20px; text-align: center; }
+.body { padding: 18px 20px 20px; overflow-y: auto; }
+.head { display: flex; gap: 12px; align-items: flex-start; }
+.head h2 { font-size: 24px; color: var(--el); line-height: 1.15; }
+.head .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.head .actions { margin-left: auto; display: flex; gap: 6px; flex: none; }
+.iconbtn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--panel); cursor: pointer; font-size: 16px; }
+.iconbtn:hover { border-color: var(--gold); }
+.sheet .pills { display: flex; flex-wrap: wrap; gap: 4px; }
+.power { font-size: 22px; font-weight: 700; margin: 10px 0 6px; font-variant-numeric: tabular-nums; }
+.cols { display: grid; grid-template-columns: 250px 1fr; gap: 18px; margin-top: 8px; }
+table.stats { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.stats td { padding: 4px 0; border-bottom: 1px dashed #263044; }
+table.stats td:last-child { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.info { margin-top: 10px; display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.info b { color: var(--text); }
+.info .artifact { display: flex; align-items: center; gap: 8px; }
+.info .artifact img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; border: 1px solid var(--line-2); }
+.score { color: var(--good); font-weight: 700; }
+.gear { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-content: start; }
+.piece { background: #10151f; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 13px; min-width: 0; }
+.piece.empty { opacity: .35; }
+.piece .ph { display: flex; justify-content: space-between; gap: 6px; color: var(--muted); margin-bottom: 4px; font-size: 12.5px; }
+.piece .ph span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.piece .ph .lvl { white-space: nowrap; flex: none; }
+.piece .enh { color: var(--gold); font-weight: 700; }
+.piece .set { color: var(--muted); font-size: 12px; margin: -2px 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.piece .main { font-weight: 700; margin-bottom: 6px; }
+.piece .subs div { display: flex; justify-content: space-between; color: #c9d1de; }
+.piece .gs { margin-top: 6px; display: flex; justify-content: flex-end; gap: 10px; font-weight: 700; color: var(--good); font-size: 12.5px; }
+.piece .gs .ig { color: var(--gold); }
+footer { color: var(--muted); font-size: 12px; text-align: center; padding: 18px 0 30px; border-top: 1px solid var(--line); }
+
+@media (max-width: 900px) {
+  .sheet { grid-template-columns: 1fr; }
+  .media { min-height: 300px; max-height: 44vh; }
+  .cols { grid-template-columns: 1fr; }
+  .gear { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  dialog { max-width: 100vw; max-height: 100vh; }
+  .sheet { border-radius: 0; max-height: 100vh; }
+  .gear { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .count { width: 100%; margin-left: 0; }
+  .toolbar { position: static; }
+}
+@media (prefers-reduced-motion: reduce) { .tile { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1 id="title"></h1>
+    <div class="meta" id="meta"></div>
+  </header>
+  <section class="summary" id="summary" aria-label="Résumé du roster"></section>
+</div>
+
+<nav class="toolbar" aria-label="Recherche et filtres">
+  <div class="wrap">
+    <input class="search" id="q" type="search" placeholder="Rechercher un héros, un set, un tag…" aria-label="Rechercher">
+    <div class="chips" id="elements" role="group" aria-label="Élément"></div>
+    <select id="role" aria-label="Classe"></select>
+    <select id="set" aria-label="Set"></select>
+    <select id="tag" aria-label="Tag"></select>
+    <select id="sort" aria-label="Trier">
+      <option value="power">Tri : puissance</option>
+      <option value="spd">Tri : vitesse</option>
+      <option value="gs">Tri : gear score</option>
+      <option value="name">Tri : nom</option>
+    </select>
+    <span class="count" id="count" aria-live="polite"></span>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="grid" id="grid"></div>
+</main>
+
+<dialog id="detail" aria-labelledby="d-name"></dialog>
+
+<footer>
+  Généré par e7showcase — données fournies par le joueur.
+  Illustrations et modèles : <span lang="en">E7 Codex</span> (archive communautaire) ; Epic Seven © Smilegate / Super Creative.
+</footer>
+
+<script type="application/json" id="data">{{ data_json | safe }}</script>
+<script>
+(() => {
+  "use strict";
+  const DATA = JSON.parse(document.getElementById("data").textContent);
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, props = {}, ...children) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(props)) {
+      if (v == null || v === false) continue;
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (k === "style") n.style.cssText = v;
+      else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v);
+    }
+    for (const c of children.flat()) if (c != null && c !== false) n.append(c instanceof Node ? c : document.createTextNode(String(c)));
+    return n;
+  };
+  const norm = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const fmt = (n) => Number(n || 0).toLocaleString("fr-FR");
+  const heroes = DATA.heroes;
+  const state = { q: "", elements: new Set(), role: "", set: "", tag: "", sort: "power" };
+
+  // En-tête et résumé
+  $("title").append(DATA.player || "Joueur", DATA.guild ? el("span", { class: "guild", text: " · " + DATA.guild }) : "");
+  $("meta").textContent = `Roster du ${DATA.updated} · fichier généré le ${DATA.generated}`;
+  document.title = `Vitrine de ${DATA.player || "joueur"}`;
+  const avg = (f) => heroes.length ? Math.round(heroes.reduce((a, h) => a + f(h), 0) / heroes.length) : 0;
+  const top = heroes.reduce((a, h) => (h.power_value > (a ? a.power_value : -1) ? h : a), null);
+  for (const [v, l] of [[heroes.length, "héros"], [fmt(avg((h) => h.power_value)), "puissance moyenne"],
+                        [top ? top.name : "—", "meilleure puissance"], [heroes.filter((h) => h.images.anim).length, "modèles animés"]]) {
+    $("summary").append(el("div", { class: "kpi" }, el("div", { class: "v", text: v }), el("div", { class: "l", text: l })));
+  }
+
+  // Filtres
+  const present = (f) => [...new Set(heroes.flatMap(f).filter(Boolean))];
+  for (const key of present((h) => [h.element_key])) {
+    const info = DATA.elements[key] || { label: key, color: "#9aa4b2" };
+    $("elements").append(el("button", {
+      class: "chip", type: "button", "aria-pressed": "false",
+      onclick: (e) => { const b = e.currentTarget; const on = b.getAttribute("aria-pressed") !== "true";
+        b.setAttribute("aria-pressed", String(on)); on ? state.elements.add(key) : state.elements.delete(key); update(); },
+    }, el("span", { class: "dot", style: `background:${info.color}` }), info.label));
+  }
+  const fillSelect = (sel, label, entries) => {
+    sel.append(el("option", { value: "", text: label }));
+    for (const [v, t] of entries) sel.append(el("option", { value: v, text: t }));
+    if (!entries.length) sel.hidden = true;
+  };
+  fillSelect($("role"), "Toutes classes", present((h) => [h.role_key]).map((k) => [k, DATA.roles[k] || k]).sort((a, b) => a[1].localeCompare(b[1])));
+  const setLabels = Object.assign({}, ...heroes.map((h) => h.set_labels));
+  fillSelect($("set"), "Tous sets", Object.entries(setLabels).sort((a, b) => a[1].localeCompare(b[1])));
+  fillSelect($("tag"), "Tous tags", present((h) => h.tags).sort().map((t) => [t, t]));
+  $("q").addEventListener("input", (e) => { state.q = norm(e.target.value); update(); });
+  for (const k of ["role", "set", "tag", "sort"]) $(k).addEventListener("change", (e) => { state[k] = e.target.value; update(); });
+
+  const matches = (h) => {
+    if (state.elements.size && !state.elements.has(h.element_key)) return false;
+    if (state.role && h.role_key !== state.role) return false;
+    if (state.set && !h.set_keys.includes(state.set)) return false;
+    if (state.tag && !h.tags.includes(state.tag)) return false;
+    if (state.q) {
+      const hay = norm([h.name, h.element, h.role, h.artifact, ...Object.values(h.set_labels), ...h.tags].join(" "));
+      if (!state.q.split(/\s+/).every((w) => hay.includes(w))) return false;
+    }
+    return true;
+  };
+  const sorters = {
+    power: (a, b) => b.power_value - a.power_value, spd: (a, b) => b.spd_value - a.spd_value,
+    gs: (a, b) => b.gs_value - a.gs_value, name: (a, b) => a.name.localeCompare(b.name, "fr"),
+  };
+
+  let visible = [];
+  function avatar(h, size) {
+    const a = el("span", { class: "avatar", "aria-hidden": "true" });
+    if (h.images.face) a.append(el("img", { src: h.images.face, alt: "" }));
+    else if (h.images.portrait) a.style.backgroundImage = `url("${h.images.portrait}")`;
+    else a.textContent = (h.name || "?").slice(0, 1);
+    if (size) { a.style.width = a.style.height = size + "px"; }
+    return a;
+  }
+  function tile(h) {
+    return el("button", { class: "tile", type: "button", style: `--el:${h.color}`, "aria-label": `${h.name}, ouvrir la fiche`,
+                          onclick: () => open(h.id) },
+      el("span", { class: "av" }, avatar(h),
+        h.images.anim ? el("span", { class: "anim-dot", title: "Modèle animé", "aria-label": "modèle animé", text: "▶" }) : null),
+      el("span", { class: "name", text: h.name }),
+      el("span", { class: "sub", text: [h.element, h.role].filter(Boolean).join(" · ") }),
+      el("span", { class: "line" }, el("span", {}, "⚔ ", el("b", { text: h.power_value ? fmt(h.power_value) : "—" })),
+                                    el("span", {}, "VIT ", el("b", { text: h.spd_value || "—" }))),
+      el("span", { class: "pills" }, h.sets.map((s) => el("span", { class: "pill", text: s })),
+                                     h.tags.map((t) => el("span", { class: "pill tag", text: t }))));
+  }
+  function update() {
+    visible = heroes.filter(matches).sort(sorters[state.sort]);
+    const grid = $("grid");
+    grid.replaceChildren(...(visible.length ? visible.map(tile) : [el("p", { class: "empty", text: "Aucun héros ne correspond à ces filtres." })]));
+    $("count").textContent = `${visible.length} / ${heroes.length} héros`;
+  }
+
+  // Fiche détaillée
+  const dlg = $("detail");
+  function piece(g) {
+    return el("div", { class: "piece" + (g.empty ? " empty" : "") },
+      el("div", { class: "ph" }, el("span", { text: g.slot }),
+        el("span", { class: "lvl" }, g.level ? g.level + " " : "", g.enhance ? el("span", { class: "enh", text: "+" + g.enhance }) : "")),
+      g.empty ? null : el("div", { class: "set", text: g.set_name }),
+      el("div", { class: "main", text: g.main }),
+      el("div", { class: "subs" }, g.substats.map(([l, v]) => el("div", {}, el("span", { text: l }), el("span", { text: v })))),
+      g.empty ? null : el("div", { class: "gs" }, g.ingame_score ? el("span", { class: "ig", text: "Score " + g.ingame_score }) : null,
+                                                  el("span", { text: "GS " + g.score })));
+  }
+  function open(id, push = true) {
+    const h = heroes.find((x) => x.id === id);
+    if (!h) return;
+    const media = el("div", { class: "media" });
+    if (h.images.anim) media.append(el("img", { src: h.images.anim, alt: `Modèle animé de ${h.name}` }));
+    else if (h.images.portrait) media.append(el("img", { class: "portrait", src: h.images.portrait, alt: `Illustration de ${h.name}` }));
+    else media.append(el("p", { class: "noimg", text: "Pas d'illustration locale (e7showcase assets sync)." }));
+    const nav = (d) => { const list = visible.length ? visible : heroes; const j = (list.findIndex((x) => x.id === h.id) + d + list.length) % list.length; open(list[j].id); };
+    const info = el("div", { class: "info" },
+      h.artifact ? el("div", { class: "artifact" }, h.images.artifact ? el("img", { src: h.images.artifact, alt: "" }) : null,
+                      el("span", {}, "Artefact : ", el("b", { text: h.artifact }))) : null,
+      h.imprint_bonus ? el("div", {}, "Empreinte : ", el("b", { text: h.imprint_bonus })) : null,
+      h.gear_score_avg ? el("div", {}, "Score moyen en jeu : ", el("span", { class: "score", text: h.gear_score_avg })) : null,
+      el("div", {}, "Gear score (Fribbels) : ", el("span", { class: "score", text: h.total_score })));
+    const sheet = el("article", { class: "sheet", style: `--el:${h.color}` },
+      media,
+      el("div", { class: "body" },
+        el("div", { class: "head" },
+          el("div", {}, el("h2", { id: "d-name", text: h.name }),
+            el("div", { class: "sub", text: [h.level ? "Niv. " + h.level : "", h.element, h.role].filter(Boolean).join(" · ") })),
+          el("div", { class: "actions" },
+            el("button", { class: "iconbtn", type: "button", "aria-label": "Héros précédent", text: "‹", onclick: () => nav(-1) }),
+            el("button", { class: "iconbtn", type: "button", "aria-label": "Héros suivant", text: "›", onclick: () => nav(1) }),
+            el("button", { class: "iconbtn", type: "button", "aria-label": "Fermer", text: "✕", onclick: () => close() }))),
+        h.power_value ? el("div", { class: "power", text: "⚔ " + fmt(h.power_value) }) : null,
+        el("div", { class: "pills" }, h.sets.map((s) => el("span", { class: "pill", text: s })), h.tags.map((t) => el("span", { class: "pill tag", text: t }))),
+        el("div", { class: "cols" },
+          el("div", {}, el("table", { class: "stats" }, el("tbody", {}, h.stats.map(([l, v]) => el("tr", {}, el("td", { text: l }), el("td", { text: v }))))), info),
+          el("div", { class: "gear" }, h.gear.map(piece)))));
+    dlg.replaceChildren(sheet);
+    if (!dlg.open) dlg.showModal();
+    if (push) history.replaceState(null, "", "#" + encodeURIComponent(h.key));
+  }
+  function close() { dlg.close(); }
+  dlg.addEventListener("close", () => history.replaceState(null, "", location.pathname + location.search));
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) close(); });
+  document.addEventListener("keydown", (e) => {
+    if (!dlg.open) return;
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      const btn = dlg.querySelector(`[aria-label="${e.key === "ArrowRight" ? "Héros suivant" : "Héros précédent"}"]`);
+      if (btn) btn.click();
+    }
+  });
+
+  update();
+  const fromHash = decodeURIComponent(location.hash.slice(1));
+  if (fromHash) { const h = heroes.find((x) => x.key === fromHash); if (h) open(h.id, false); }
+})();
+</script>
+</body>
+</html>

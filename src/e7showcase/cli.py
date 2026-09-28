@@ -233,6 +233,14 @@ def render(
         console.print(f"🖼  {p}")
 
 
+def _webapp_file(roster: Roster, out: Path) -> Path:
+    from e7showcase.assets import slugify
+    from e7showcase.render.webapp import render_webapp
+
+    target = out / f"vitrine-{slugify(roster.player) or 'joueur'}.html"
+    return render_webapp(roster, target, AssetStore(data_dir() / "assets"))
+
+
 def _animated_cards(roster: Roster, heroes: list[Hero], out: Path) -> list[Path]:
     """Une carte animée par héros ; exporte le modèle via la visionneuse d'E7 Codex si absent."""
     from e7showcase.reference import hero_info
@@ -263,6 +271,9 @@ def share(
     layout: str = "cards",
     message: str = "",
     animated: Annotated[bool, typer.Option("--animated", help="Cartes animées (WebP)")] = False,
+    html: Annotated[
+        bool, typer.Option("--html", help="Envoyer la vitrine web complète (fichier HTML)")
+    ] = False,
 ) -> None:
     """Générer puis publier la vitrine dans le salon Discord de la guilde (webhook)."""
     import tempfile
@@ -275,7 +286,9 @@ def share(
     selection = [h for n in heroes if (h := roster.find(n))] if heroes else roster.heroes
     with tempfile.TemporaryDirectory() as tmp:
         images = (
-            _animated_cards(roster, selection, Path(tmp))
+            [_webapp_file(roster, Path(tmp))]
+            if html
+            else _animated_cards(roster, selection, Path(tmp))
             if animated
             else render_showcase(
                 roster,
@@ -406,6 +419,45 @@ def skin(
     console.print(
         f"{h.name} : skin {h.skin or 'base'} — lancez `e7showcase assets sync` si besoin."
     )
+
+
+@app.command("export-html")
+def export_html(
+    out: Annotated[
+        Path | None, typer.Option(help="Fichier produit (défaut : vitrine-<joueur>.html)")
+    ] = None,
+    anims: Annotated[bool, typer.Option(help="Intégrer les modèles animés déjà en cache")] = True,
+    fetch_anims: Annotated[
+        bool,
+        typer.Option("--fetch-anims", help="Exporter d'abord les modèles manquants (~20 s/héros)"),
+    ] = False,
+) -> None:
+    """Créer la vitrine web complète : UN fichier HTML à ouvrir dans n'importe quel navigateur."""
+    from e7showcase.assets import slugify
+    from e7showcase.render.webapp import render_webapp
+
+    roster = RosterRepository().load()
+    if not roster.heroes:
+        raise typer.BadParameter("Roster vide : scannez ou importez d'abord vos héros.")
+    store = AssetStore(data_dir() / "assets")
+    if fetch_anims:
+        from e7showcase.reference import hero_info
+        from e7showcase.sources.e7codex import export_animation
+
+        for hero in roster.heroes:
+            code = hero.skin or (hero_info(hero.name) or {}).get("code")
+            if code and store.hero_anim(hero) is None:
+                console.print(f"  Export du modèle animé de {hero.name}…")
+                export_animation(code, store.root / "anims" / f"{code}.webp")
+    target = out or Path(f"vitrine-{slugify(roster.player) or 'joueur'}.html")
+    render_webapp(roster, target, store, anims=anims)
+    if target.stat().st_size > 10_000_000:
+        console.print(
+            "[yellow]Fichier > 10 Mo : trop lourd pour Discord sans Nitro, essayez --no-anims.[/]"
+        )
+    size = target.stat().st_size / 1_000_000
+    console.print(f"[green]Vitrine web[/] → {target} ({size:.1f} Mo, {len(roster.heroes)} héros)")
+    console.print("Ouvrez ce fichier dans un navigateur, ou partagez-le à votre guilde.")
 
 
 @app.command()

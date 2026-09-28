@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import mimetypes
 from pathlib import Path
 
 import httpx
@@ -26,7 +27,11 @@ def post_images(
         handles = [p.open("rb") for p in batch]
         try:
             files = {
-                f"files[{i}]": (p.name, h, "image/png")
+                f"files[{i}]": (
+                    p.name,
+                    h,
+                    mimetypes.guess_type(p.name)[0] or "application/octet-stream",
+                )
                 for i, (p, h) in enumerate(zip(batch, handles, strict=True))
             }
             r = httpx.post(

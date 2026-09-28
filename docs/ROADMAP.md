@@ -27,6 +27,12 @@
 - [x] Carte animée : modèle en mouvement via la visionneuse d'E7 Codex (WebP animé, < 10 Mo)
 - [ ] Vue « équipe » (4 héros GvG/RTA côte à côte)
 
+## M2 bis — Vitrine web
+- [x] `export-html` : fichier HTML autonome (données, images, modèles animés intégrés)
+- [x] Recherche, filtres, tris, fiche détaillée, lien direct, clavier, mobile
+- [ ] Vue guilde : fusionner les exports de plusieurs membres dans un même fichier
+- [ ] Comparateur de deux héros / constructeur d'équipe dans la page
+
 ## M3 — Guilde
 - [ ] Bot : `/roster-delete`, `/equipe`, `/qui-a <héros> --vitesse>=200`
 - [ ] Tableau de draft GvG (défenses par tour, attribution des attaques)

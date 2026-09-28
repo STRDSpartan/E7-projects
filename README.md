@@ -24,6 +24,7 @@ ses équipes GvG / RTA / Boss et comparer les builds.
 | `render/` | Vitrine HTML (Jinja2) → PNG (Playwright), mise en page cartes ou grille | testé |
 | `assets.py` | Portraits, visages, artefacts du dossier local, intégrés à la vitrine | testé |
 | `sources/e7codex.py` | Référentiel (390 héros, 66 skins, 282 artefacts), illustrations, export du modèle animé | testé |
+| `render/webapp.py` | Vitrine web autonome : un seul fichier HTML (données + images intégrées), recherche, filtres, fiches | testé |
 | `render/animated.py` | Carte animée : modèle de la visionneuse E7 Codex incrusté image par image (WebP) | testé |
 | `publish/` | Publication Discord par webhook, bot `/vitrine` `/draft` `/roster-upload` | squelette bot |
 
@@ -50,6 +51,9 @@ e7showcase render "Ras" "Sigret"              # cartes détaillées de héros ch
 e7showcase share "Ras" --message "Mon Ras GvG"  # publication sur le salon Discord
 e7showcase render "Kise" --animated           # carte animée (WebP) avec le modèle en mouvement
 e7showcase share "Kise" --animated            # … publiée sur Discord (joue directement)
+e7showcase export-html                        # VITRINE WEB : un fichier .html à ouvrir dans un navigateur
+e7showcase export-html --fetch-anims          # … avec les modèles animés de tous les héros
+e7showcase share --html                       # envoyer ce fichier sur le salon Discord
 e7showcase export                             # roster JSON à partager / déposer au bot
 e7showcase assets sync                        # illustrations des héros du roster (e7codex.com, local)
 e7showcase assets sync --skins                # … et leurs skins
@@ -72,6 +76,13 @@ Tout se lit sur l'écran **« Infos de héros »** : stats finales, 6 pièces (s
 Mobile ou capture sur un autre appareil : faire les mêmes captures, les copier dans un dossier
 puis `e7showcase scan --from-dir <dossier>`. Le format d'écran est détecté automatiquement
 (profils `config/regions/` : `19_5x9` calibré sur mobile, `16x9` estimé pour le PC).
+
+### Vitrine web
+`e7showcase export-html` produit **un seul fichier** (`vitrine-<joueur>.html`) qui s'ouvre dans
+n'importe quel navigateur, PC ou mobile, sans connexion ni installation : grille de tous les
+héros, recherche, filtres (élément, classe, set, tag), tris (puissance, vitesse, gear score),
+fiche détaillée avec modèle animé, lien direct vers un héros (`vitrine.html#c1006`),
+navigation au clavier. Poids indicatif : ~0,1 Mo par héros + ~1 Mo par modèle animé.
 
 ## Documentation
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — flux de données, modules, décisions
