@@ -1,142 +1,185 @@
 {
-  "_comment": "Pièces requises par set. 'verified': false = à confirmer en jeu avant release.",
-  "speed": {
-    "pieces": 4,
-    "fr": "Vitesse",
-    "en": "Speed",
-    "verified": true
-  },
+  "_comment": "Sets d'équipement. 'fr' = nom exact du client FR (vérifié sur le catalogue en jeu). 'pieces' : 2 ou 4 ; 'pieces_verified' false = à confirmer. 'en_mapping' : correspondance avec le nom anglais / Fribbels (certain | probable | inconnu).",
   "attack": {
-    "pieces": 4,
     "fr": "Attaque",
     "en": "Attack",
-    "verified": true
-  },
-  "destruction": {
     "pieces": 4,
-    "fr": "Destruction",
-    "en": "Destruction",
-    "verified": true
-  },
-  "lifesteal": {
-    "pieces": 4,
-    "fr": "Vol de vie",
-    "en": "Lifesteal",
-    "verified": true
-  },
-  "counter": {
-    "pieces": 4,
-    "fr": "Contre-attaque",
-    "en": "Counter",
-    "verified": true
-  },
-  "rage": {
-    "pieces": 4,
-    "fr": "Rage",
-    "en": "Rage",
-    "verified": true
-  },
-  "revenge": {
-    "pieces": 4,
-    "fr": "Vengeance",
-    "en": "Revenge",
-    "verified": false
-  },
-  "injury": {
-    "pieces": 4,
-    "fr": "Blessure",
-    "en": "Injury",
-    "verified": false
-  },
-  "riposte": {
-    "pieces": 4,
-    "fr": "Riposte",
-    "en": "Riposte",
-    "verified": false
-  },
-  "warfare": {
-    "pieces": 4,
-    "fr": "Guerre",
-    "en": "Warfare",
-    "verified": false
-  },
-  "reversal": {
-    "pieces": 4,
-    "fr": "Renversement",
-    "en": "Reversal",
-    "verified": false
-  },
-  "health": {
-    "pieces": 2,
-    "fr": "Santé",
-    "en": "Health",
-    "verified": true
+    "pieces_verified": true,
+    "en_mapping": "certain"
   },
   "defense": {
-    "pieces": 2,
     "fr": "Défense",
     "en": "Defense",
-    "verified": true
+    "pieces": 2,
+    "pieces_verified": true,
+    "en_mapping": "certain"
+  },
+  "health": {
+    "fr": "Santé",
+    "en": "Health",
+    "pieces": 2,
+    "pieces_verified": true,
+    "en_mapping": "certain"
+  },
+  "speed": {
+    "fr": "Vitesse",
+    "en": "Speed",
+    "pieces": 4,
+    "pieces_verified": true,
+    "en_mapping": "certain"
   },
   "critical": {
-    "pieces": 2,
     "fr": "Critique",
     "en": "Critical",
-    "verified": true
+    "pieces": 2,
+    "pieces_verified": true,
+    "en_mapping": "certain"
+  },
+  "destruction": {
+    "fr": "Destruction",
+    "en": "Destruction",
+    "pieces": 4,
+    "pieces_verified": true,
+    "en_mapping": "certain"
   },
   "hit": {
-    "pieces": 2,
-    "fr": "Précision",
+    "fr": "Coup",
     "en": "Hit",
-    "verified": true
+    "pieces": 2,
+    "pieces_verified": true,
+    "en_mapping": "probable"
   },
   "resist": {
-    "pieces": 2,
     "fr": "Résistance",
     "en": "Resist",
-    "verified": true
+    "pieces": 2,
+    "pieces_verified": true,
+    "en_mapping": "certain"
+  },
+  "lifesteal": {
+    "fr": "Vol de vie",
+    "en": "Lifesteal",
+    "pieces": 4,
+    "pieces_verified": true,
+    "en_mapping": "certain"
+  },
+  "counter": {
+    "fr": "Contre",
+    "en": "Counter",
+    "pieces": 4,
+    "pieces_verified": true,
+    "en_mapping": "certain"
   },
   "unity": {
-    "pieces": 2,
     "fr": "Unité",
     "en": "Unity",
-    "verified": true
+    "pieces": 2,
+    "pieces_verified": true,
+    "en_mapping": "certain"
   },
   "immunity": {
-    "pieces": 2,
     "fr": "Immunité",
     "en": "Immunity",
-    "verified": true
+    "pieces": 2,
+    "pieces_verified": true,
+    "en_mapping": "certain"
+  },
+  "rage": {
+    "fr": "Rage",
+    "en": "Rage",
+    "pieces": 4,
+    "pieces_verified": true,
+    "en_mapping": "certain"
   },
   "penetration": {
-    "pieces": 2,
-    "fr": "Pénétration",
+    "fr": "Infiltration",
     "en": "Penetration",
-    "verified": true
+    "pieces": 2,
+    "pieces_verified": true,
+    "en_mapping": "probable"
+  },
+  "revenge": {
+    "fr": "Vengeance",
+    "en": "Revenge",
+    "pieces": 4,
+    "pieces_verified": false,
+    "en_mapping": "certain"
+  },
+  "injury": {
+    "fr": "Blessure",
+    "en": "Injury",
+    "pieces": 4,
+    "pieces_verified": false,
+    "en_mapping": "certain"
   },
   "protection": {
-    "pieces": 2,
     "fr": "Protection",
     "en": "Protection",
-    "verified": false
+    "pieces": 2,
+    "pieces_verified": false,
+    "en_mapping": "certain"
   },
   "torrent": {
-    "pieces": 2,
-    "fr": "Torrent",
+    "fr": "Tumulte",
     "en": "Torrent",
-    "verified": false
+    "pieces": 2,
+    "pieces_verified": false,
+    "en_mapping": "probable"
+  },
+  "riposte": {
+    "fr": "Riposte",
+    "en": "Riposte",
+    "pieces": 4,
+    "pieces_verified": false,
+    "en_mapping": "certain"
   },
   "pursuit": {
-    "pieces": 2,
     "fr": "Poursuite",
     "en": "Pursuit",
-    "verified": true
+    "pieces": 2,
+    "pieces_verified": true,
+    "en_mapping": "certain"
   },
   "weakening": {
-    "pieces": 4,
     "fr": "Affaiblissement",
-    "en": "Weakening",
-    "verified": false,
-    "_note": "4 pièces constaté en jeu (client FR) ; nom anglais à confirmer"
+    "en": null,
+    "pieces": 4,
+    "pieces_verified": true,
+    "en_mapping": "inconnu"
+  },
+  "reaction": {
+    "fr": "Réaction",
+    "en": null,
+    "pieces": 2,
+    "pieces_verified": false,
+    "en_mapping": "inconnu"
+  },
+  "engagement": {
+    "fr": "Engagement",
+    "en": null,
+    "pieces": 2,
+    "pieces_verified": false,
+    "en_mapping": "inconnu"
+  },
+  "implication": {
+    "fr": "Implication",
+    "en": null,
+    "pieces": 2,
+    "pieces_verified": false,
+    "en_mapping": "inconnu"
+  },
+  "warfare": {
+    "fr": null,
+    "en": "Warfare",
+    "pieces": 4,
+    "pieces_verified": false,
+    "en_mapping": "inconnu"
+  },
+  "reversal": {
+    "fr": null,
+    "en": "Reversal",
+    "pieces": 4,
+    "pieces_verified": false,
+    "en_mapping": "inconnu"
   }
 }

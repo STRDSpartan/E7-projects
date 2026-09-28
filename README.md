@@ -38,6 +38,7 @@ copy .env.example .env                                  # puis renseigner E7_DIS
 ```bash
 e7showcase scan --player "MonPseudo"          # client PC en direct : F9 = capturer, F10 = terminer
 e7showcase scan --from-dir captures/          # dossier de captures (PC ou mobile)
+e7showcase learn-sets catalogue.png           # apprendre les blasons de sets (une fois)
 e7showcase import-fribbels export.json        # alternative : import depuis Fribbels
 e7showcase list                               # tableau du roster
 e7showcase tag "Ras" GvG-def                  # tags pour la guilde
@@ -51,11 +52,12 @@ e7showcase export                             # roster JSON à partager / dépos
 Tout se lit sur l'écran **« Infos de héros »** : stats finales, 6 pièces (stat principale +
 4 secondaires), score de chaque pièce, artefact, empreinte. **Une capture par héros suffit.**
 
+0. **Une seule fois** : ouvrir le filtre de l'inventaire qui liste tous les sets
+   (« Set Attaque », « Set Vitesse »…) et le capturer (**F9**, ou `e7showcase learn-sets <capture>`) :
+   les 24 blasons de sets sont appris.
 1. En jeu : *Héros* → sélectionner un héros dans la liste de droite.
-2. *(Facultatif mais conseillé pour les premiers héros)* **F9** sur cet écran de liste : les lignes
-   « Set Vitesse / Set Critique » servent à apprendre les icônes de sets.
-3. Toucher le carré sous les bottes → « Infos de héros » → **F9**.
-4. Retour, héros suivant, recommencer. **F10** pour terminer.
+2. Toucher le carré sous les bottes → « Infos de héros » → **F9**.
+3. Retour, héros suivant, recommencer. **F10** pour terminer.
 
 Mobile ou capture sur un autre appareil : faire les mêmes captures, les copier dans un dossier
 puis `e7showcase scan --from-dir <dossier>`. Le format d'écran est détecté automatiquement

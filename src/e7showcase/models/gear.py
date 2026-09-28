@@ -49,7 +49,11 @@ class GearSet(StrEnum):
     PURSUIT = "pursuit"
     RIPOSTE = "riposte"
     REVERSAL = "reversal"
-    WEAKENING = "weakening"  # « Affaiblissement » (client FR) — nom anglais à confirmer
+    # Sets identifiés dans le client FR, nom anglais non confirmé (voir data/reference/sets.json)
+    WEAKENING = "weakening"  # « Affaiblissement »
+    REACTION = "reaction"  # « Réaction »
+    ENGAGEMENT = "engagement"  # « Engagement »
+    IMPLICATION = "implication"  # « Implication »
 
 
 class GearRank(StrEnum):

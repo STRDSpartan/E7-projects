@@ -41,8 +41,8 @@ def scan(
     from PIL import Image
 
     from e7showcase.scanner.hero_scanner import HeroScanner
-    from e7showcase.vision.icons import IconClassifier, set_features
     from e7showcase.vision.ocr import get_engine
+    from e7showcase.vision.set_catalog import SetMatcher
 
     cfg = settings()
     repo = RosterRepository()
@@ -50,7 +50,11 @@ def scan(
     if player:
         roster.player = player
     library = data_dir() / "templates" / "sets"
-    set_icons = IconClassifier.load(library, set_features)
+    sets = SetMatcher.load(library)
+    no_sets_hint = (
+        "[yellow]Aucun blason de set connu : les sets resteront vides. Ajoutez une capture "
+        "du catalogue des sets (filtre d'inventaire) ou lancez `e7showcase learn-sets`.[/]"
+    )
     ocr = get_engine(cfg["ocr"]["backend"])
 
     def save(hero: Hero) -> None:
@@ -69,8 +73,10 @@ def scan(
             raise typer.BadParameter(f"Aucune image dans {from_dir}")
         with Image.open(files[0]) as first:
             aspect = first.width / first.height
-        scanner = HeroScanner(ocr, regions(profile, aspect), cfg["game"]["lang"], set_icons)
+        scanner = HeroScanner(ocr, regions(profile, aspect), cfg["game"]["lang"], sets)
         result = scan_directory(scanner, from_dir, library)
+        if not scanner.sets.templates:
+            console.print(no_sets_hint)
         for hero in result.heroes:
             save(hero)
         if result.ignored:
@@ -90,7 +96,9 @@ def scan(
         else ManualNavigator(**keys)
     )
     rect = find_game_window(cfg["game"]["window_title"])
-    scanner = HeroScanner(ocr, regions(profile, rect.aspect), cfg["game"]["lang"], set_icons)
+    if not sets.templates:
+        console.print(no_sets_hint)
+    scanner = HeroScanner(ocr, regions(profile, rect.aspect), cfg["game"]["lang"], sets)
     session = ScanSession(
         scanner,
         navigator,
@@ -101,6 +109,26 @@ def scan(
     )
     heroes = session.run(max_heroes)
     console.print(f"{len(heroes)} héros scannés → {repo.path}")
+
+
+@app.command("learn-sets")
+def learn_sets(images: list[Path]) -> None:
+    """Apprendre les blasons de sets depuis une capture du catalogue (filtre d'inventaire)."""
+    from PIL import Image
+
+    from e7showcase.vision.ocr import get_engine
+    from e7showcase.vision.set_catalog import SetMatcher, read_catalog
+
+    library = data_dir() / "templates" / "sets"
+    matcher = SetMatcher.load(library)
+    ocr = get_engine(settings()["ocr"]["backend"])
+    for path in images:
+        found = read_catalog(Image.open(path).convert("RGB"), ocr, settings()["game"]["lang"])
+        for gear_set, shield in found.items():
+            matcher.add(gear_set.value, shield)
+        console.print(f"{path.name} : {len(found)} sets — {', '.join(s.value for s in found)}")
+    matcher.save(library)
+    console.print(f"{len(matcher.templates)} blasons de sets connus → {library}")
 
 
 @app.command("import-fribbels")

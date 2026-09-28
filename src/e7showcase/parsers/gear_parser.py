@@ -19,9 +19,12 @@ _LEVEL_RE = re.compile(r"(\d{2,3})")
 
 def parse_set(text: str, lang: str = "fr") -> GearSet | None:
     sets = load("sets")
-    choices = {normalize(v[lang]): k for k, v in sets.items()}
-    choices.update({normalize(v["en"]): k for k, v in sets.items()})
-    cleaned = normalize(text)
+    choices: dict[str, str] = {}
+    for key, info in sets.items():
+        for name in (info.get("en"), info.get(lang)):
+            if name:
+                choices[normalize(name)] = key
+    cleaned = re.sub(r"\s*\d+$", "", normalize(text))  # « Set Affaiblissement 131 »
     for prefix in ("set ", "ensemble ", "ensemble de "):
         cleaned = cleaned.removeprefix(prefix)
     cleaned = cleaned.removesuffix(" set")

@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw
 
 pytest.importorskip("cv2")
 
-from e7showcase.vision.icons import IconClassifier, set_features  # noqa: E402
+from e7showcase.vision.icons import IconClassifier  # noqa: E402
 
 
 def glyph(kind: str, size: int = 40, bg: int = 20, fg: int = 230, offset: int = 0) -> Image.Image:
@@ -43,10 +43,3 @@ def test_unknown_icon_below_threshold() -> None:
     clf = IconClassifier()
     clf.add("circle", glyph("circle"))
     assert clf.predict(Image.new("RGB", (40, 40), (20, 20, 30)), min_score=0.9)[0] is None
-
-
-def test_library_roundtrip(tmp_path) -> None:  # type: ignore[no-untyped-def]
-    clf = IconClassifier(extractor=set_features)
-    clf.save(tmp_path, "speed", glyph("triangle"))
-    loaded = IconClassifier.load(tmp_path, set_features)
-    assert loaded.predict(glyph("triangle"))[0] == "speed"

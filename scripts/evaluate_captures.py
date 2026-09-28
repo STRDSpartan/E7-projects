@@ -1,7 +1,8 @@
 """Mesure la précision du scanner sur un dossier LOCAL de captures + vérité terrain.
 
 Le dossier (jamais committé : captures et roster réels) contient :
-  - des paires `<nom>-list.<ext>` / `<nom>-detail.<ext>` (liste des héros + « Infos de héros ») ;
+  - des captures « Infos de héros » ;
+  - `sets-catalog*.<ext>` : captures du catalogue des sets (filtre d'inventaire) ;
   - `expected.json` : { "<fichier fiche>": {name, level, element, role, power, gear_score_avg,
     stats: {...}, gear: {slot: {score, level, enhance, set, main: [stat, valeur], subs: [...]}}} }
 
@@ -18,6 +19,7 @@ from typing import Any
 from PIL import Image
 
 from e7showcase.config import regions
+from e7showcase.scanner.batch import learn_catalog
 from e7showcase.scanner.hero_scanner import HeroScanner
 from e7showcase.vision.ocr import OcrEngine, get_engine
 
@@ -28,11 +30,10 @@ def evaluate(
     expected: dict[str, Any] = json.loads((caps / "expected.json").read_text(encoding="utf-8"))
     first = Image.open(caps / next(iter(expected)))
     scanner = HeroScanner(ocr or get_engine(), regions(profile, first.width / first.height))
-    for list_file in sorted(caps.glob("*-list.*")):
-        detail_file = next(caps.glob(list_file.stem.replace("-list", "-detail") + ".*"), None)
-        if detail_file:
-            name, sets = scanner.read_list(Image.open(list_file).convert("RGB"))
-            scanner.learn_sets(Image.open(detail_file).convert("RGB"), sets)
+    for catalog in sorted(caps.glob("sets-catalog*.*")):
+        learned = learn_catalog(scanner, Image.open(catalog).convert("RGB"), None)
+        if verbose:
+            print(f"{catalog.name} : {len(learned)} sets appris")
     ok = total = 0
 
     def check(label: str, got: Any, want: Any) -> None:

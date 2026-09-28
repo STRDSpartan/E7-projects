@@ -107,7 +107,9 @@ def build(hero: Hero) -> HeroView:
         gear_views.append(
             GearView(
                 slot=SLOT_LABELS[slot],
-                set_name=sets_ref[g.set.value]["fr"] if g.set else "?",
+                set_name=(sets_ref[g.set.value]["fr"] or sets_ref[g.set.value]["en"])
+                if g.set
+                else "?",
                 enhance=g.enhance,
                 main=f"{g.main.stat.label} {fmt(g.main.stat, g.main.value)}",
                 substats=[(x.stat.label, fmt(x.stat, x.value)) for x in g.substats],
@@ -128,7 +130,7 @@ def build(hero: Hero) -> HeroView:
         artifact=hero.artifact,
         stats=stats,
         gear=gear_views,
-        sets=[sets_ref[x]["fr"] for x in hero.sets],
+        sets=[sets_ref[x]["fr"] or sets_ref[x]["en"] for x in hero.sets],
         total_score=round(sum(g.score for g in gear_views), 1),
         tags=hero.tags,
         power=f"{hero.power:,}".replace(",", " ") if hero.power else None,

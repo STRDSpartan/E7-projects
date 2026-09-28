@@ -34,7 +34,12 @@ incohérence (signe d'une ROI mal calibrée).
 
 ## Sets
 Bonus actif par tranche de 2 ou 4 pièces identiques ; 6 pièces = au plus un set 4 + un set 2,
-ou trois sets 2. Nombre de pièces par set : `data/reference/sets.json` (champ `verified`).
+ou trois sets 2. Référence : `data/reference/sets.json` — 24 sets du client FR (catalogue vérifié
+en jeu) : Attaque, Défense, Santé, Vitesse, Critique, Destruction, Coup (≈ Hit), Résistance,
+Vol de vie, Contre, Unité, Immunité, Rage, Infiltration (≈ Penetration), Vengeance, Blessure,
+Protection, Tumulte (≈ Torrent), Riposte, Réaction, Engagement, Poursuite, Affaiblissement,
+Implication. Champs `pieces_verified` et `en_mapping` (certain | probable | inconnu) : ne jamais
+présenter comme certaine une correspondance « probable » ou « inconnue ».
 
 ## Gear score (`calc/gear_score.py`)
 Convention Fribbels, sur les **substats** uniquement :

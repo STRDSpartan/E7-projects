@@ -14,7 +14,6 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from pathlib import Path
 from typing import Any
 
 from PIL import Image
@@ -25,9 +24,10 @@ from e7showcase.models.stats import StatType
 from e7showcase.parsers.common import clean, parse_classes, parse_int, parse_level, parse_number
 from e7showcase.parsers.hero_parser import match_hero_name
 from e7showcase.reference import hero_info, normalize
-from e7showcase.vision.icons import IconClassifier, set_features
+from e7showcase.vision.icons import IconClassifier
 from e7showcase.vision.ocr import OcrEngine
 from e7showcase.vision.regions import crop
+from e7showcase.vision.set_catalog import SetMatcher
 
 log = logging.getLogger(__name__)
 
@@ -72,15 +72,22 @@ class HeroScanner:
         ocr: OcrEngine,
         regions: dict[str, Any],
         lang: str = "fr",
-        set_icons: IconClassifier | None = None,
+        sets: SetMatcher | None = None,
     ):
         self.ocr = ocr
         self.regions = regions
         self.lang = lang
-        self.set_icons = set_icons or IconClassifier(extractor=set_features)
+        self.sets = sets or SetMatcher()
         self.issues: list[ScanIssue] = []
 
     # --- utilitaires
+    def _set_area(self, image: Image.Image, box: list[float], margin: float = 0.3) -> Image.Image:
+        """Zone de recherche du blason : l'icône + une marge (la corrélation glisse dedans)."""
+        x, y, w, h = box
+        return self._box(
+            image, [x - w * margin, y - h * margin, w * (1 + 2 * margin), h * (1 + 2 * margin)]
+        )
+
     def _box(self, image: Image.Image, box: list[float]) -> Image.Image:
         return crop(image, box)
 
@@ -157,7 +164,7 @@ class HeroScanner:
         level = parse_int(self._text(image, rel("level")), 50, 100)
         enhance = parse_int(self._text(image, rel("enhance")), 0, 15) or 0
         score = parse_int(self._text(image, rel("score")), 0, 200)
-        set_label, _ = self.set_icons.predict(self._box(image, rel("set_icon")), min_score=0.45)
+        set_label, _ = self.sets.predict(self._set_area(image, rel("set_icon")))
         return Gear(
             slot=slot,
             set=GearSet(set_label)
@@ -240,67 +247,3 @@ class HeroScanner:
             if text and "aucun" not in normalize(text) and (gear_set := parse_set(text, self.lang)):
                 sets.append(gear_set)
         return name, sets
-
-    def set_icon_images(self, image: Image.Image) -> dict[GearSlot, Image.Image]:
-        d = self.regions["detail"]
-        dx, dy, w, h = d["gear_layout"]["set_icon"]
-        return {
-            slot: self._box(image, [ax + dx, ay + dy, w, h])
-            for slot, (ax, ay) in ((GearSlot(k), v) for k, v in d["gear"].items())
-        }
-
-    def learn_sets(
-        self,
-        detail: Image.Image,
-        active: list[GearSet],
-        library: Path | None = None,
-        min_similarity: float = 0.3,
-    ) -> dict[GearSlot, GearSet]:
-        """Associe les icônes des 6 pièces aux sets actifs lus sur la liste des héros.
-
-        On connaît la composition (ex. Vitesse ×4 + Critique ×2) : pour chaque set, du plus
-        grand au plus petit, on retient parmi les pièces restantes la combinaison la plus
-        homogène visuellement. Si plusieurs sets de même taille restent à attribuer, la
-        bibliothèque existante départage ; à défaut on n'apprend rien plutôt que de deviner.
-        """
-        from itertools import combinations
-
-        from e7showcase.reference import set_pieces
-
-        icons = self.set_icon_images(detail)
-        feats = {slot: set_features(img) for slot, img in icons.items()}
-
-        def cohesion(group: tuple[GearSlot, ...]) -> float:
-            pairs = list(combinations(group, 2))
-            return sum(float(feats[a] @ feats[b]) for a, b in pairs) / len(pairs)
-
-        free = list(feats)
-        assigned: dict[GearSlot, GearSet] = {}
-        todo = sorted(active, key=lambda st: -set_pieces(st.value))
-        while todo:
-            gear_set = todo.pop(0)
-            size = set_pieces(gear_set.value)
-            if len(free) < size:
-                break
-            group = max(combinations(free, size), key=cohesion)
-            if cohesion(group) < min_similarity:
-                continue
-            same_size = [t for t in todo if set_pieces(t.value) == size and t != gear_set]
-            if same_size:  # plusieurs sets de même taille : lequel est ce groupe ?
-                if not self.set_icons.templates:
-                    continue
-                scores = self.set_icons.scores(icons[group[0]])
-                ranked = sorted([gear_set, *same_size], key=lambda t: -scores.get(t.value, -1.0))
-                if ranked[0] != gear_set:
-                    todo.remove(ranked[0])
-                    todo.insert(0, gear_set)
-                    gear_set = ranked[0]
-            for slot in group:
-                assigned[slot] = gear_set
-                free.remove(slot)
-        for slot, gear_set in assigned.items():
-            if library is not None:
-                self.set_icons.save(library, gear_set.value, icons[slot])
-            else:
-                self.set_icons.add(gear_set.value, icons[slot])
-        return assigned

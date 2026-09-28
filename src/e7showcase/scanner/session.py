@@ -2,8 +2,8 @@
 
 Parcours dans le jeu : liste des héros (sets actifs lisibles) → bouton sous les bottes →
 « Infos de héros » (une capture suffit pour tout le héros) → retour → héros suivant.
-Le type d'écran est reconnu automatiquement : l'utilisateur peut capturer la liste
-(facultatif, sert à apprendre les icônes de sets) puis la fiche.
+Le type d'écran est reconnu automatiquement. Une capture du catalogue des sets (filtre
+d'inventaire) apprend tous les blasons de sets en une fois.
 """
 
 from __future__ import annotations
@@ -18,8 +18,8 @@ from PIL import Image
 
 from e7showcase.capture.screenshot import grab
 from e7showcase.capture.window import WindowRect, find_game_window
-from e7showcase.models.gear import GearSet
 from e7showcase.models.hero import Hero
+from e7showcase.scanner.batch import learn_catalog
 from e7showcase.scanner.hero_scanner import HeroScanner
 from e7showcase.scanner.navigator import Navigator
 
@@ -42,7 +42,6 @@ class ScanSession:
         self.capture_dir = capture_dir
         self.set_library = set_library
         self.on_hero = on_hero or (lambda _h: None)
-        self._pending_sets: tuple[str | None, list[GearSet]] = (None, [])
 
     def _shot(self, rect: WindowRect, label: str) -> Image.Image:
         img = grab(rect)
@@ -53,19 +52,17 @@ class ScanSession:
 
     def handle(self, image: Image.Image) -> Hero | None:
         """Traite une capture quelconque ; retourne le héros si c'était une fiche détaillée."""
+        if self.scanner.is_detail_screen(image):
+            hero = self.scanner.read_detail(image)
+            self.on_hero(hero)
+            return hero
         if self.scanner.is_list_screen(image):
-            self._pending_sets = self.scanner.read_list(image)
             return None
-        if not self.scanner.is_detail_screen(image):
-            log.warning("Écran non reconnu : ouvrez la liste des héros ou « Infos de héros ».")
-            return None
-        name, sets = self._pending_sets
-        if sets and name == self.scanner.read_name(image):
-            self.scanner.learn_sets(image, sets, self.set_library)
-        self._pending_sets = (None, [])
-        hero = self.scanner.read_detail(image)
-        self.on_hero(hero)
-        return hero
+        if learned := learn_catalog(self.scanner, image, self.set_library):
+            log.info("Catalogue des sets : %d blasons appris", len(learned))
+        else:
+            log.warning("Écran non reconnu : ouvrez « Infos de héros » ou le catalogue des sets.")
+        return None
 
     def run(self, max_heroes: int | None = None) -> list[Hero]:
         rect = find_game_window(self.window_title)

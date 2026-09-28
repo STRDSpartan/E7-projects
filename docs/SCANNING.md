@@ -4,7 +4,8 @@
 | Écran | Reconnu par | Sert à |
 |---|---|---|
 | **Infos de héros** (bouton sous les bottes) | titre « Infos de héros » | tout le héros : stats, 6 pièces, scores, artefact, empreinte, puissance |
-| **Liste des héros** | boutons « Gérer l'équipement / Tout équiper » | nom + sets actifs (« Set Vitesse ») → apprentissage des icônes de sets |
+| **Catalogue des sets** (filtre de l'inventaire) | lignes « Set Xxx » | blasons des 24 sets → bibliothèque locale (une fois pour toutes) |
+| **Liste des héros** | boutons « Gérer l'équipement / Tout équiper » | navigation (mode assisté) ; nom + sets actifs |
 
 Sur la liste, les stats affichent un bonus (« 4088 ▲2708 ») : on ne les lit **que** sur la fiche.
 
@@ -15,16 +16,18 @@ Sur la liste, les stats affichent un bonus (« 4088 ▲2708 ») : on ne les lit 
    servent de modèles pour classer les icônes des stats d'équipement (`vision/icons.py::features`,
    seuillage d'Otsu + recadrage sur le glyphe). ATK/DEF/PV + « % » → variante pourcentage.
 3. **Stat principale contrainte** par emplacement (arme = ATK, casque = PV, armure = DEF, etc.).
-4. **Sets** : icône du blason de chaque pièce comparée à la bibliothèque locale
-   (`<dossier de données>/templates/sets/`). Bibliothèque construite automatiquement à partir des
-   paires liste + fiche d'un même héros : la composition connue (Vitesse ×4 + Critique ×2) permet
-   d'attribuer les groupes d'icônes semblables. Set inconnu → `None` (jamais deviné).
+4. **Sets** (`vision/set_catalog.py`) : une capture du catalogue des sets (filtre d'inventaire)
+   donne les 24 blasons ; chacun est recadré sur fond noir et enregistré dans
+   `<dossier de données>/templates/sets/<set>.png`. Sur la fiche, le blason de chaque pièce est
+   retrouvé par corrélation multi-échelle (glissement + tailles 0,8 → 1,25) sur l'intérieur du
+   blason. Seuil 0,78 : bon set ≥ 0,91, meilleur mauvais set ≤ 0,63 sur captures réelles ;
+   paire de blasons la plus proche : Protection / Implication (0,70). Set inconnu → `None`.
 
 Aucune image du jeu n'est livrée : les modèles viennent des captures de l'utilisateur.
 
 ## Précision mesurée
 Sur 3 héros réels (captures mobiles 3120×1440, client FR) : **206/207 valeurs exactes (99,5 %)**,
-18/18 sets, ~3 s par héros sur CPU. Mesure reproductible :
+18/18 sets (appris uniquement depuis le catalogue), ~3 s par héros sur CPU. Mesure reproductible :
 ```bash
 python scripts/evaluate_captures.py <dossier local>         # voir le format dans le script
 E7_TEST_CAPTURES=<dossier local> pytest tests/test_real_captures.py

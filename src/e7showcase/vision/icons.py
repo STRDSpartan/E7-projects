@@ -1,15 +1,14 @@
 """Classification de petites icônes (stats, sets) par corrélation de formes.
 
 Aucune image du jeu n'est livrée avec le projet : les modèles sont appris à la volée
-(icônes du panneau de stats, dont le libellé est connu) ou depuis la bibliothèque locale
-de l'utilisateur (dossier de données), jamais depuis le dépôt.
+sur la capture elle-même (icônes du panneau de stats, dont le libellé est connu).
+Les blasons de sets sont gérés par vision/set_catalog.py.
 """
 
 from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from pathlib import Path
 
 import numpy as np
 from PIL import Image
@@ -42,23 +41,6 @@ def features(image: Image.Image) -> np.ndarray:
     return v / norm if norm else v
 
 
-def set_features(image: Image.Image) -> np.ndarray:
-    """Icône de set (blason) : seul le dessin central distingue les sets, le contour étant
-    commun. Canal « doré » (G - B/2) au centre de l'icône, légèrement flouté."""
-    import cv2
-
-    w, h = image.size
-    a = np.asarray(
-        image.convert("RGB").crop((int(w * 0.25), int(h * 0.2), int(w * 0.75), int(h * 0.7)))
-    ).astype(np.float32)
-    g = a[..., 1] - 0.5 * a[..., 2]
-    g = cv2.GaussianBlur(cv2.resize(g, (20, 20), interpolation=cv2.INTER_AREA), (3, 3), 0)
-    v = g.ravel()
-    v -= v.mean()
-    norm = float(np.linalg.norm(v))
-    return v / norm if norm else v
-
-
 @dataclass
 class IconClassifier:
     templates: dict[str, list[np.ndarray]] = field(default_factory=dict)
@@ -77,22 +59,3 @@ class IconClassifier:
             return None, 0.0
         label = max(scores, key=lambda k: scores[k])
         return (label if scores[label] >= min_score else None), scores[label]
-
-    # --- bibliothèque locale (icônes de sets apprises depuis la liste des héros)
-    def save(self, directory: Path, label: str, image: Image.Image) -> Path:
-        target = directory / label
-        target.mkdir(parents=True, exist_ok=True)
-        path = target / f"{len(list(target.glob('*.png'))):03d}.png"
-        image.save(path)
-        self.add(label, image)
-        return path
-
-    @classmethod
-    def load(
-        cls, directory: Path, extractor: Callable[[Image.Image], np.ndarray] = features
-    ) -> IconClassifier:
-        clf = cls(extractor=extractor)
-        if directory.is_dir():
-            for path in sorted(directory.glob("*/*.png")):
-                clf.add(path.parent.name, Image.open(path))
-        return clf
