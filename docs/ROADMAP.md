@@ -1,5 +1,7 @@
 # Roadmap
 
+> Vue d'ensemble, ordre des étapes et chemin critique : [PLAN.md](PLAN.md).
+
 ## M0 — Fondations ✅ (ce commit)
 - Modèles, parseurs FR/EN, gear score, sets, import Fribbels, stockage JSON
 - Rendu HTML/PNG (cartes + grille), webhook Discord, CLI, squelette bot

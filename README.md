@@ -95,6 +95,7 @@ Un membre présent deux fois n'est gardé qu'une fois (version la plus récente)
 mutualisées ; une vue guilde peut elle-même être refusionnée. Bot : `/vitrine-guilde`.
 
 ## Documentation
+- [docs/PLAN.md](docs/PLAN.md) — **plan de projet** : état, organigramme des étapes, structure, chemin critique
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — flux de données, modules, décisions
 - [docs/SCANNING.md](docs/SCANNING.md) — calibration des zones OCR, ajout de résolutions / langues
 - [docs/COMPLIANCE.md](docs/COMPLIANCE.md) — conformité aux CGU de Smilegate, vie privée
