@@ -17,3 +17,7 @@ out/
 captures/
 *.sqlite3
 .claude/settings.local.json
+# Plateforme web
+node_modules/
+platform/frontend/dist/
+*.tsbuildinfo

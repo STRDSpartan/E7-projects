@@ -1,0 +1,30 @@
+# Environnement local complet : PostgreSQL + API. Le frontend tourne avec `npm run dev`.
+# Les identifiants ci-dessous sont des valeurs de développement LOCAL uniquement.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: e7social
+      POSTGRES_PASSWORD: e7social-dev
+      POSTGRES_DB: e7social
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U e7social"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    environment:
+      E7S_DATABASE_URL: postgresql+psycopg://e7social:e7social-dev@db:5432/e7social
+      E7S_MEDIA_DIR: /data/media
+      E7S_CORS_ORIGINS: '["http://localhost:5173"]'
+    ports: ["8000:8000"]
+    volumes: [media:/data/media]
+    depends_on:
+      db: { condition: service_healthy }
+
+volumes:
+  pgdata:
+  media:

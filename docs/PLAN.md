@@ -26,6 +26,8 @@ le client PC, et une guilde pilote qui l'utilise pour une vraie guerre de guilde
 | **P5** Expérience joueur | Assistant de scan, interface, installateur Windows | ⬜ à faire |
 | **P6** Qualité & conformité | Tests réels PC, CI Windows, relecture finale | 🟡 continu |
 | **P7** Lancement | Bêta guilde pilote → v1.0 → maintenance | ⬜ à faire |
+| **W1** Plateforme web — socle | Comptes, profils, amis, publications (vitrine/clip/succès), guildes, chat temps réel, forum, RGPD | ✅ socle (API testée + interface React) |
+| **W2** Plateforme web — ouverture | Modération & signalements, limitation de débit, vérification d'e-mail, hébergement, import direct du scanner | ⬜ à faire |
 
 ## 3. Organigramme des étapes
 
@@ -249,6 +251,16 @@ Chaque étape a un **critère de fin vérifiable**. Colonne « Toi » : ce qui n
 | Tâches | Bêta avec 3-5 membres sur une vraie GvG → corrections → v1.0 (guide FR illustré, version publiée) → maintenance après chaque patch du jeu (`update_reference.py`, recalibrage si l'UI change) |
 | Fin quand | La guilde pilote utilise la vue guilde pour préparer une GvG complète |
 | **Toi** | Recruter les testeurs, recueillir les retours, annoncer la v1.0 |
+
+### W2 · Plateforme web — vers l'ouverture publique
+Référence : `docs/platform/ARCHITECTURE.md` (agent `platform-engineer`, skill `platform-dev`).
+1. Modération : signalement, file de modération, sanctions ; CGU, mentions légales, âge minimum.
+2. Sécurité : limitation de débit, vérification d'e-mail et réinitialisation du mot de passe, CSP.
+3. Médias : stockage objet (S3 compatible), transcodage/miniatures des clips.
+4. Temps réel multi-instance (Redis pub/sub), notifications en direct.
+5. Pont avec le scanner : `e7showcase publish --site` envoie le roster sur le profil ; rendu
+   de la vitrine riche (réutiliser `render/webapp`) dans la page profil.
+6. Hébergement (PostgreSQL managé, HTTPS), sauvegardes, supervision ; bêta avec la guilde pilote.
 
 ## 8. Méthode de travail pour chaque tâche
 

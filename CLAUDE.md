@@ -16,7 +16,10 @@ e7showcase --help
 · `calc/` gear score & sets · `parsers/` texte OCR → modèles (purs, très testés) · `capture/` fenêtre
 + capture (Windows) · `vision/` ROI normalisées, prétraitement, OCR · `scanner/` orchestration ·
 `importers/fribbels.py` · `storage/` JSON · `assets.py` portraits locaux · `sources/e7codex.py` référentiel & sync · `render/` Jinja2 → PNG Playwright · `publish/` webhook & bot
-· `cli.py` Typer. Détails : `docs/ARCHITECTURE.md` ; étapes et état du projet : `docs/PLAN.md`.
+· `cli.py` Typer.
+Plateforme web **E7 Social** (`platform/backend` FastAPI, `platform/frontend` React) : voir
+`docs/platform/ARCHITECTURE.md`, agent `platform-engineer`, skill `platform-dev`.
+Détails : `docs/ARCHITECTURE.md` ; étapes et état du projet : `docs/PLAN.md`.
 
 ## Règles non négociables
 1. **Conformité** (`docs/COMPLIANCE.md`) : jamais de lecture mémoire, d'interception réseau,

@@ -22,3 +22,39 @@ jobs:
       - run: ruff check .
       - run: mypy
       - run: pytest
+
+  platform-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: platform/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - run: ruff format --check .
+      - run: ruff check .
+      - run: mypy
+      - run: pytest
+      - name: Migrations (upgrade/downgrade)
+        run: |
+          export E7S_DATABASE_URL=sqlite:///$RUNNER_TEMP/ci.db
+          alembic upgrade head && alembic downgrade base
+
+  platform-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: platform/frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: platform/frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
