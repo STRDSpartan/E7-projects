@@ -35,9 +35,10 @@ Sur la liste, les stats affichent un bonus (« 4088 ▲2708 ») : on ne les lit 
 Aucune image du jeu n'est livrée : les modèles viennent des captures de l'utilisateur.
 
 ## Précision mesurée
-**Client PC** (fenêtre agrandie sur écran 1920×1080, zone cliente 1919×1009, client FR), 2 héros
-réels avec les captures brutes (barre de titre et barre des tâches comprises) :
-**138/138 valeurs exactes (100 %)**, 12/12 sets appris depuis 2 listes des héros, sans catalogue.
+**Client PC** (fenêtre agrandie sur écran 1920×1080, zone cliente 1919×1009, client FR), 3 héros
+réels (Kise, Coli tactique, Ludwig Prélude de l'Aubade) avec les captures brutes (barre de titre et
+barre des tâches comprises) : **207/207 valeurs exactes (100 %)**, 18/18 sets appris depuis
+2 listes des héros, sans catalogue.
 
 **Mobile** : sur 3 héros réels (captures mobiles 3120×1440, client FR) : **206/207 valeurs exactes (99,5 %)**,
 18/18 sets (appris uniquement depuis le catalogue), ~3 s par héros sur CPU. Mesure reproductible :

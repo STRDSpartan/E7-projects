@@ -45,7 +45,7 @@ flowchart TD
     P0 --> P1M["P1a · Scan captures mobiles<br/>99,5 % sur 207 valeurs"]:::done
     P0 --> P2["P2 · Référentiel & illustrations<br/>E7 Codex, sync locale"]:::done
     P1M --> P1S["P1b · 24 blasons de sets<br/>catalogue en jeu"]:::done
-    P1S --> P1PC["P1c · Calibrer le client PC<br/>fenêtre agrandie ✅ 100 % · test Windows en direct"]:::doing
+    P1S --> P1PC["P1c · Calibrer le client PC<br/>fenêtre agrandie ✅ 207/207 · test Windows en direct"]:::doing
     P1PC --> G1{"Précision PC<br/>≥ 95 % ?"}:::gate
     G1 -- "non" --> P1PC
     G1 -- "oui" --> P1X["P1d · Étoiles, éveil, empreinte,<br/>équipement exclusif, cohérence"]:::todo
@@ -200,8 +200,8 @@ Chaque étape a un **critère de fin vérifiable**. Colonne « Toi » : ce qui n
 ### P1c · Calibrer le client PC (chemin critique)
 | | |
 |---|---|
-| Fait | `config/regions/pc_19x10.toml` calibré (fenêtre agrandie 1920×1080) : **138/138 (100 %)** sur 2 héros ; sets appris depuis la liste des héros ; captures « Impr. écran » brutes acceptées |
-| Reste | Scan en direct F9 testé sous Windows ; vérifier `16x9.toml` (plein écran) et 16:10 / 21:9 si besoin ; 3ᵉ héros (fiche de Ludwig) pour la mesure |
+| Fait | `config/regions/pc_19x10.toml` calibré (fenêtre agrandie 1920×1080) : **207/207 (100 %)** sur 3 héros ; sets appris depuis la liste des héros ; captures « Impr. écran » brutes acceptées |
+| Reste | Scan en direct F9 testé sous Windows ; vérifier `16x9.toml` (plein écran) et 16:10 / 21:9 si besoin |
 | Fin quand | Scan en direct validé sous Windows sur une dizaine de héros |
 | Agents · skills | `vision-ocr-engineer` · `calibrate-ocr-regions`, `dev-checks` |
 | **Toi** | un test en direct sous Windows (`e7showcase scan`) ; une capture en plein écran si tu joues ainsi |
