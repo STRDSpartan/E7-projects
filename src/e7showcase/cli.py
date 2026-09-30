@@ -56,8 +56,8 @@ def scan(
     library = data_dir() / "templates" / "sets"
     sets = SetMatcher.load(library)
     no_sets_hint = (
-        "[yellow]Aucun blason de set connu : les sets resteront vides. Ajoutez une capture "
-        "du catalogue des sets (filtre d'inventaire) ou lancez `e7showcase learn-sets`.[/]"
+        "[yellow]Aucun blason de set connu : capturez d'abord la liste des héros (F9 : les "
+        "blasons des sets portés sont appris) ou le catalogue des sets (filtre d'inventaire).[/]"
     )
     ocr = get_engine(cfg["ocr"]["backend"])
 

@@ -67,16 +67,18 @@ e7showcase assets status                      # héros du roster avec / sans por
 Tout se lit sur l'écran **« Infos de héros »** : stats finales, 6 pièces (stat principale +
 4 secondaires), score de chaque pièce, artefact, empreinte. **Une capture par héros suffit.**
 
-0. **Une seule fois** : ouvrir le filtre de l'inventaire qui liste tous les sets
-   (« Set Attaque », « Set Vitesse »…) et le capturer (**F9**, ou `e7showcase learn-sets <capture>`) :
-   les 24 blasons de sets sont appris.
+0. **Blasons des sets** : appuyer sur **F9** sur la liste des héros apprend les blasons des sets
+   portés par le héros affiché (« Set Vitesse », « Set Critique »…). Pour tout apprendre d'un coup :
+   capturer le filtre de l'inventaire qui liste les 24 sets (**F9**, ou `e7showcase learn-sets`).
 1. En jeu : *Héros* → sélectionner un héros dans la liste de droite.
 2. Toucher le carré sous les bottes → « Infos de héros » → **F9**.
 3. Retour, héros suivant, recommencer. **F10** pour terminer.
 
 Mobile ou capture sur un autre appareil : faire les mêmes captures, les copier dans un dossier
 puis `e7showcase scan --from-dir <dossier>`. Le format d'écran est détecté automatiquement
-(profils `config/regions/` : `19_5x9` calibré sur mobile, `16x9` estimé pour le PC).
+(profils `config/regions/` : `19_5x9` calibré sur mobile, `pc_19x10` calibré sur PC en fenêtre
+agrandie 1920×1080, `16x9` estimé pour le plein écran). Les captures « Impr. écran » avec barre
+de titre et barre des tâches sont acceptées telles quelles.
 
 ### Vitrine web
 `e7showcase export-html` produit **un seul fichier** (`vitrine-<joueur>.html`) qui s'ouvre dans

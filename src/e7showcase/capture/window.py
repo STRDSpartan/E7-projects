@@ -29,8 +29,16 @@ def find_game_window(title: str = "Epic Seven") -> WindowRect:
             "La capture du client PC n'est supportée que sous Windows. "
             "Utilisez `e7showcase scan --from-dir <dossier>` avec des captures existantes."
         )
+    import ctypes
+
     import win32gui
 
+    # Coordonnées en pixels physiques même si l'affichage Windows est à 125 % / 150 % :
+    # sinon la zone lue par GetClientRect ne correspond pas aux pixels capturés.
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(2)  # par écran
+    except (AttributeError, OSError):
+        ctypes.windll.user32.SetProcessDPIAware()
     hwnd = win32gui.FindWindow(None, title)
     if not hwnd:
         matches: list[int] = []
