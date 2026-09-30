@@ -19,7 +19,7 @@ le client PC, et une guilde pilote qui l'utilise pour une vraie guerre de guilde
 | Phase | Contenu | État |
 |---|---|---|
 | **P0** Fondations | Modèles, CLI, CI, agents & skills, conformité | ✅ terminé |
-| **P1** Acquisition | Scan « Infos de héros », sets, import Fribbels | 🟡 mobile ✅ (99,5 %) · **PC à calibrer** |
+| **P1** Acquisition | Scan « Infos de héros », sets, import Fribbels | ✅ mobile (99,5 %) · PC fenêtre agrandie (100 %) · plein écran 16:9 à vérifier |
 | **P2** Référentiel & illustrations | 390 héros, 282 artefacts, portraits, modèles animés | ✅ terminé (mise à jour à automatiser) |
 | **P3** Restitution | PNG, carte animée, vitrine web, vue guilde | 🟡 socle ✅ · fonctions « vision » à faire |
 | **P4** Partage Discord | Webhook, bot de guilde | 🟡 webhook ✅ · bot à héberger et tester |
@@ -45,7 +45,7 @@ flowchart TD
     P0 --> P1M["P1a · Scan captures mobiles<br/>99,5 % sur 207 valeurs"]:::done
     P0 --> P2["P2 · Référentiel & illustrations<br/>E7 Codex, sync locale"]:::done
     P1M --> P1S["P1b · 24 blasons de sets<br/>catalogue en jeu"]:::done
-    P1S --> P1PC["P1c · Calibrer le client PC 16:9<br/>captures 1920×1080 requises"]:::doing
+    P1S --> P1PC["P1c · Calibrer le client PC<br/>fenêtre agrandie ✅ 100 % · test Windows en direct"]:::doing
     P1PC --> G1{"Précision PC<br/>≥ 95 % ?"}:::gate
     G1 -- "non" --> P1PC
     G1 -- "oui" --> P1X["P1d · Étoiles, éveil, empreinte,<br/>équipement exclusif, cohérence"]:::todo
@@ -200,11 +200,11 @@ Chaque étape a un **critère de fin vérifiable**. Colonne « Toi » : ce qui n
 ### P1c · Calibrer le client PC (chemin critique)
 | | |
 |---|---|
-| Tâches | Captures PC → mesure des zones → fixture locale → précision ; profils 16:10 / 21:9 si besoin |
-| Livrable | `config/regions/16x9.toml` calibré, section « précision PC » dans SCANNING.md |
-| Fin quand | `evaluate_captures.py` ≥ 95 % sur 3 héros PC ; scan en direct F9 testé sous Windows |
+| Fait | `config/regions/pc_19x10.toml` calibré (fenêtre agrandie 1920×1080) : **138/138 (100 %)** sur 2 héros ; sets appris depuis la liste des héros ; captures « Impr. écran » brutes acceptées |
+| Reste | Scan en direct F9 testé sous Windows ; vérifier `16x9.toml` (plein écran) et 16:10 / 21:9 si besoin ; 3ᵉ héros (fiche de Ludwig) pour la mesure |
+| Fin quand | Scan en direct validé sous Windows sur une dizaine de héros |
 | Agents · skills | `vision-ocr-engineer` · `calibrate-ocr-regions`, `dev-checks` |
-| **Toi** | 3 paires de captures PC 1920×1080 (catalogue des sets + « Infos de héros ») ; un test sous Windows |
+| **Toi** | un test en direct sous Windows (`e7showcase scan`) ; une capture en plein écran si tu joues ainsi |
 
 ### P1d · Compléter la lecture du héros
 | | |

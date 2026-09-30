@@ -1,7 +1,7 @@
 """Classifieur d'icônes sur des glyphes synthétiques (aucune image du jeu)."""
 
 import pytest
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageOps
 
 pytest.importorskip("cv2")
 
@@ -43,3 +43,14 @@ def test_unknown_icon_below_threshold() -> None:
     clf = IconClassifier()
     clf.add("circle", glyph("circle"))
     assert clf.predict(Image.new("RGB", (40, 40), (20, 20, 30)), min_score=0.9)[0] is None
+
+
+def test_background_bleeding_into_box_is_ignored() -> None:
+    """Décor clair qui déborde dans un coin de la boîte (ex. cristaux derrière Coli tactique)."""
+    clf = IconClassifier()
+    for kind in KINDS:
+        clf.add(kind, glyph(kind))
+    for kind in KINDS:
+        icon = ImageOps.expand(glyph(kind, size=32, fg=150, offset=3), border=4, fill=(20, 20, 30))
+        ImageDraw.Draw(icon).polygon([(0, 0), (5, 0), (0, 16)], fill=(235, 245, 250))
+        assert clf.predict(icon)[0] == kind, (kind, clf.scores(icon))

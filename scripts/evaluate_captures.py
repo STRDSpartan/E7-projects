@@ -3,6 +3,7 @@
 Le dossier (jamais committé : captures et roster réels) contient :
   - des captures « Infos de héros » ;
   - `sets-catalog*.<ext>` : captures du catalogue des sets (filtre d'inventaire) ;
+  - `*list*.<ext>` (facultatif) : listes des héros, dont on apprend les blasons des sets actifs ;
   - `expected.json` : { "<fichier fiche>": {name, level, element, role, power, gear_score_avg,
     stats: {...}, gear: {slot: {score, level, enhance, set, main: [stat, valeur], subs: [...]}}} }
 
@@ -22,18 +23,23 @@ from e7showcase.config import regions
 from e7showcase.scanner.batch import learn_catalog
 from e7showcase.scanner.hero_scanner import HeroScanner
 from e7showcase.vision.ocr import OcrEngine, get_engine
+from e7showcase.vision.preprocess import strip_window_chrome
 
 
 def evaluate(
     caps: Path, profile: str = "auto", ocr: OcrEngine | None = None, verbose: bool = True
 ) -> tuple[int, int]:
     expected: dict[str, Any] = json.loads((caps / "expected.json").read_text(encoding="utf-8"))
-    first = Image.open(caps / next(iter(expected)))
+    first = strip_window_chrome(Image.open(caps / next(iter(expected))).convert("RGB"))
     scanner = HeroScanner(ocr or get_engine(), regions(profile, first.width / first.height))
     for catalog in sorted(caps.glob("sets-catalog*.*")):
         learned = learn_catalog(scanner, Image.open(catalog).convert("RGB"), None)
         if verbose:
             print(f"{catalog.name} : {len(learned)} sets appris")
+    for listing in sorted(caps.glob("*list*.*")):  # liste des héros : blasons des sets actifs
+        learned = scanner.learn_list_sets(strip_window_chrome(Image.open(listing).convert("RGB")))
+        if verbose and learned:
+            print(f"{listing.name} : {', '.join(learned)}")
     ok = total = 0
 
     def check(label: str, got: Any, want: Any) -> None:
@@ -44,7 +50,7 @@ def evaluate(
             print(f"  ✗ {label}: lu={got!r} attendu={want!r}")
 
     for fname, exp in expected.items():
-        hero = scanner.read_detail(Image.open(caps / fname).convert("RGB"))
+        hero = scanner.read_detail(strip_window_chrome(Image.open(caps / fname).convert("RGB")))
         for k in ("name", "level", "element", "role", "power", "gear_score_avg"):
             check(f"{fname} {k}", getattr(hero, k), exp[k])
         for k, v in exp["stats"].items():

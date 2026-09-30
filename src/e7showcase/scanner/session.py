@@ -57,6 +57,10 @@ class ScanSession:
             self.on_hero(hero)
             return hero
         if self.scanner.is_list_screen(image):
+            if learned := self.scanner.learn_list_sets(image):
+                if self.set_library is not None:
+                    self.scanner.sets.save(self.set_library)
+                log.info("Blasons appris sur la liste des héros : %s", ", ".join(learned))
             return None
         if learned := learn_catalog(self.scanner, image, self.set_library):
             log.info("Catalogue des sets : %d blasons appris", len(learned))

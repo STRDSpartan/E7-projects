@@ -16,15 +16,30 @@ from PIL import Image
 SIZE = 24
 
 
-def features(image: Image.Image) -> np.ndarray:
+def features(image: Image.Image, drop_border: bool = False) -> np.ndarray:
     """Vecteur normalisé du glyphe : seuillage d'Otsu, recadrage sur les composantes
-    significatives, mise au carré puis réduction à SIZE×SIZE (niveaux de gris centrés)."""
+    significatives, mise au carré puis réduction à SIZE×SIZE (niveaux de gris centrés).
+
+    `drop_border` : ignore les formes qui touchent le bord de la boîte (décor du fond qui
+    déborde sur l'icône) ; elles sont gardées si rien d'autre ne reste."""
     import cv2
 
-    g = np.asarray(image.convert("L"))
+    g = np.asarray(image.convert("L")).copy()
     _, mask = cv2.threshold(g, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    n, _, st, _ = cv2.connectedComponentsWithStats(mask)
+    n, labels, st, _ = cv2.connectedComponentsWithStats(mask)
     keep = [i for i in range(1, n) if st[i, cv2.CC_STAT_AREA] >= 0.02 * mask.size]
+    if drop_border:
+        h, w = mask.shape
+
+        def inside(i: int) -> bool:
+            x, y, cw, ch = (int(v) for v in st[i, :4])
+            return x > 0 and y > 0 and x + cw < w and y + ch < h
+
+        inner = [i for i in keep if inside(i)]
+        if inner and len(inner) < len(keep):
+            for i in set(keep) - set(inner):
+                g[labels == i] = 0  # décor effacé : il ne pèse plus dans le vecteur
+            keep = inner
     if keep:
         x0 = min(st[i, 0] for i in keep)
         y0 = min(st[i, 1] for i in keep)
@@ -50,8 +65,13 @@ class IconClassifier:
         self.templates.setdefault(label, []).append(self.extractor(image))
 
     def scores(self, image: Image.Image) -> dict[str, float]:
-        f = self.extractor(image)
-        return {label: max(float(f @ t) for t in ts) for label, ts in self.templates.items()}
+        variants = [self.extractor(image)]
+        if self.extractor is features:
+            variants.append(features(image, drop_border=True))
+        return {
+            label: max(float(f @ t) for t in ts for f in variants)
+            for label, ts in self.templates.items()
+        }
 
     def predict(self, image: Image.Image, min_score: float = 0.5) -> tuple[str | None, float]:
         scores = self.scores(image)

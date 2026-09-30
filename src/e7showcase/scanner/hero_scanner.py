@@ -99,9 +99,9 @@ class HeroScanner:
         return [[x, y + i * h / n, w, h / n] for i in range(n)]
 
     def is_detail_screen(self, image: Image.Image) -> bool:
-        return "infos de h" in normalize(
-            self._text(image, self.regions["detail"]["title"])
-        ) or "hero info" in normalize(self._text(image, self.regions["detail"]["title"]))
+        """Titre « Infos de héros » / « Hero Info », tolérant à une lettre perdue."""
+        title = normalize(self._text(image, self.regions["detail"]["title"]))
+        return ("infos" in title and "ero" in title) or "hero info" in title
 
     # --- lecture
     def read_panel(self, image: Image.Image) -> tuple[HeroStats, IconClassifier]:
@@ -259,3 +259,24 @@ class HeroScanner:
             if text and "aucun" not in normalize(text) and (gear_set := parse_set(text, self.lang)):
                 sets.append(gear_set)
         return name, sets
+
+    def learn_list_sets(self, image: Image.Image) -> list[str]:
+        """Apprend les blasons des sets actifs affichés sur la liste des héros.
+
+        Chaque ligne « Set Xxx » montre le blason à côté de son nom : on l'enregistre comme
+        modèle s'il manque (un blason issu du catalogue des sets reste prioritaire).
+        """
+        from e7showcase.parsers.gear_parser import parse_set
+        from e7showcase.vision.set_catalog import tight_shield
+
+        learned: list[str] = []
+        for row in self.regions.get("hero_list", {}).get("set_rows", []):
+            text = self._text(image, [row[0] + row[2], row[1], row[4], row[3]])
+            if not text or "aucun" in normalize(text):
+                continue
+            gear_set = parse_set(text, self.lang)
+            if gear_set is None or gear_set.value in self.sets.templates:
+                continue
+            self.sets.add(gear_set.value, tight_shield(self._box(image, row[:4])))
+            learned.append(gear_set.value)
+        return learned

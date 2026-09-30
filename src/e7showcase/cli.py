@@ -45,6 +45,7 @@ def scan(
 
     from e7showcase.scanner.hero_scanner import HeroScanner
     from e7showcase.vision.ocr import get_engine
+    from e7showcase.vision.preprocess import strip_window_chrome
     from e7showcase.vision.set_catalog import SetMatcher
 
     cfg = settings()
@@ -74,7 +75,8 @@ def scan(
         files = image_files(from_dir)
         if not files:
             raise typer.BadParameter(f"Aucune image dans {from_dir}")
-        with Image.open(files[0]) as first:
+        with Image.open(files[0]) as raw:
+            first = strip_window_chrome(raw.convert("RGB"))  # sans barre de titre/tâches
             aspect = first.width / first.height
         scanner = HeroScanner(ocr, regions(profile, aspect), cfg["game"]["lang"], sets)
         result = scan_directory(scanner, from_dir, library)
@@ -120,13 +122,16 @@ def learn_sets(images: list[Path]) -> None:
     from PIL import Image
 
     from e7showcase.vision.ocr import get_engine
+    from e7showcase.vision.preprocess import strip_window_chrome
     from e7showcase.vision.set_catalog import SetMatcher, read_catalog
 
     library = data_dir() / "templates" / "sets"
     matcher = SetMatcher.load(library)
     ocr = get_engine(settings()["ocr"]["backend"])
     for path in images:
-        found = read_catalog(Image.open(path).convert("RGB"), ocr, settings()["game"]["lang"])
+        found = read_catalog(
+            strip_window_chrome(Image.open(path).convert("RGB")), ocr, settings()["game"]["lang"]
+        )
         for gear_set, shield in found.items():
             matcher.add(gear_set.value, shield)
         console.print(f"{path.name} : {len(found)} sets — {', '.join(s.value for s in found)}")

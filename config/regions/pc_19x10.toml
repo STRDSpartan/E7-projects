@@ -1,0 +1,57 @@
+# Profil PC : client Windows en fenêtre agrandie sur un écran 1920x1080 (zone cliente
+# 1919x1009 sans barre de titre ni barre des tâches, format ≈ 1,90). Calibré sur de vraies
+# captures de la fiche « Infos de héros » et de la liste des héros du client FR.
+# Coordonnées NORMALISÉES [x, y, largeur, hauteur] relatives à la zone cliente.
+
+aspect = 1.902
+
+[detail]
+title       = [0.040, 0.015, 0.200, 0.060]   # « Infos de héros » (sert à reconnaître l'écran)
+classes     = [0.040, 0.112, 0.240, 0.055]   # élément · classe · signe
+name        = [0.020, 0.150, 0.400, 0.080]
+level       = [0.020, 0.258, 0.130, 0.062]
+imprint     = [0.075, 0.320, 0.170, 0.135]
+power       = [0.045, 0.445, 0.090, 0.060]   # puissance de combat
+artifact    = [0.835, 0.120, 0.137, 0.090]
+gear_score  = [0.680, 0.268, 0.240, 0.050]   # « Score moyen d'équipements : 92 »
+stats_icons = [0.024, 0.5035, 0.020, 0.294]  # 9 lignes, une icône par ligne
+stats_labels= [0.046, 0.5035, 0.136, 0.294]
+stats_values= [0.184, 0.5035, 0.052, 0.294]
+stats_rows  = 9
+
+[detail.gear]
+# Ancre de chaque pièce = coin haut-gauche de l'icône de la stat principale.
+weapon   = [0.7570, 0.3360]
+helmet   = [0.7570, 0.5130]
+armor    = [0.7570, 0.6900]
+necklace = [0.9210, 0.3360]
+ring     = [0.9210, 0.5130]
+boots    = [0.9210, 0.6900]
+
+[detail.gear_layout]
+# Boîtes relatives à l'ancre [dx, dy, largeur, hauteur]
+icon_w     = 0.0130
+values_dx  = 0.0130
+values_w   = 0.0410
+line_dy    = [0.0000, 0.0340, 0.0618, 0.0896, 0.1174]   # principale puis 4 secondaires
+line_h     = [0.0320, 0.0270, 0.0270, 0.0270, 0.0270]
+level      = [-0.0720, 0.0090, 0.0210, 0.0330]
+enhance    = [-0.0370, -0.0010, 0.0240, 0.0300]
+set_icon   = [-0.0360, 0.0700, 0.0210, 0.0420]
+score      = [-0.0600, 0.1060, 0.0360, 0.0320]
+
+[navigation]
+# Points de clic (centre des boîtes) pour le mode assisté, depuis la liste des héros
+back_button   = [0.010, 0.020, 0.035, 0.055]
+next_hero     = [0.810, 0.455, 0.170, 0.060]   # entrée juste sous le héros sélectionné
+detail_button = [0.667, 0.835, 0.038, 0.072]   # carré sous les bottes → « Infos de héros »
+
+[hero_list]
+# Chaque ligne = [x_icône, y, largeur_icône, hauteur, largeur_texte]
+title_hint = [0.400, 0.905, 0.240, 0.080]   # « Gérer l'équipement · Tout équiper »
+name       = [0.045, 0.018, 0.250, 0.060]   # nom du héros sélectionné (barre de titre)
+set_rows = [
+  [0.0770, 0.8690, 0.0200, 0.0330, 0.1500],
+  [0.0770, 0.9020, 0.0200, 0.0330, 0.1500],
+  [0.0770, 0.9350, 0.0200, 0.0330, 0.1500],
+]

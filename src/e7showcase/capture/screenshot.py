@@ -21,5 +21,7 @@ def grab(rect: WindowRect) -> Image.Image:
 
 def load_captures(directory: Path) -> list[tuple[Path, Image.Image]]:
     """Mode hors-ligne : relit des captures déjà enregistrées (tests, recalibrage, Linux/macOS)."""
-    files = sorted(p for p in directory.iterdir() if p.suffix.lower() in {".png", ".jpg", ".jpeg"})
+    files = sorted(
+        p for p in directory.iterdir() if p.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}
+    )
     return [(p, Image.open(p).convert("RGB")) for p in files]

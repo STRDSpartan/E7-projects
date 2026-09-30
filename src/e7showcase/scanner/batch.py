@@ -2,7 +2,8 @@
 
 1. Chaque capture est classée : fiche « Infos de héros », liste des héros, catalogue des
    sets (filtre d'inventaire), ou ignorée.
-2. Les captures du catalogue enrichissent la bibliothèque locale des blasons de sets.
+2. Les captures du catalogue enrichissent la bibliothèque locale des blasons de sets ;
+   la liste des héros apprend aussi les blasons des sets actifs (nom + blason côte à côte).
 3. Chaque fiche produit un Hero complet.
 """
 
@@ -16,6 +17,7 @@ from PIL import Image
 
 from e7showcase.models.hero import Hero
 from e7showcase.scanner.hero_scanner import HeroScanner
+from e7showcase.vision.preprocess import strip_window_chrome
 from e7showcase.vision.set_catalog import read_catalog
 
 log = logging.getLogger(__name__)
@@ -51,11 +53,15 @@ def scan_directory(
     result = BatchResult()
     details: list[tuple[Path, Image.Image]] = []
     for path in image_files(directory):
-        image = Image.open(path).convert("RGB")
+        image = strip_window_chrome(Image.open(path).convert("RGB"))
         if scanner.is_detail_screen(image):
             details.append((path, image))
         elif scanner.is_list_screen(image):
-            continue  # utile en direct pour naviguer ; rien à extraire ici
+            if learned := scanner.learn_list_sets(image):  # blasons des sets actifs
+                if library is not None:
+                    scanner.sets.save(library)
+                result.learned_sets.extend(learned)
+                log.info("Liste des héros : blasons appris (%s)", ", ".join(learned))
         elif learned := learn_catalog(scanner, image, library):
             result.learned_sets.extend(learned)
             log.info("Catalogue des sets : %d blasons appris (%s)", len(learned), path.name)
