@@ -23,7 +23,17 @@ jobs:
       - run: pip install -e ".[app]" pyinstaller
       - name: Vérification rapide
         run: python -c "import e7showcase.app.launcher, rapidocr_onnxruntime, webview"
+      - name: Icône et images de l'installateur
+        run: python scripts/make_icon.py packaging/windows/build
       - run: pyinstaller packaging/e7showcase-app.spec --noconfirm
+      - name: Test de démarrage de l'exécutable
+        shell: pwsh
+        run: |
+          $env:E7_DATA_DIR = "$env:RUNNER_TEMP\e7data"
+          $p = Start-Process dist\E7Showcase\E7Showcase.exe -ArgumentList "--browser" -PassThru
+          Start-Sleep -Seconds 20
+          if ($p.HasExited) { Get-Content "$env:E7_DATA_DIR\e7showcase.log" -ErrorAction SilentlyContinue; Write-Host "::error::l'exécutable s'est arrêté au démarrage"; exit 1 }
+          Stop-Process -Id $p.Id -Force
       - name: Installateur (Inno Setup)
         shell: pwsh
         run: |

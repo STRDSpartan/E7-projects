@@ -21,3 +21,4 @@ captures/
 node_modules/
 platform/frontend/dist/
 *.tsbuildinfo
+packaging/windows/build/

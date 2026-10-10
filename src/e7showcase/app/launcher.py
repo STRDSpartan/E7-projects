@@ -7,6 +7,7 @@ est ajouté aux vitrines reçues et affiché directement.
 
 from __future__ import annotations
 
+import contextlib
 import logging
 import sys
 import threading
@@ -91,7 +92,13 @@ def main(argv: list[str] | None = None) -> int:
     api = WindowApi(state)
     webview.settings["ALLOW_DOWNLOADS"] = True
     api.window = webview.create_window("E7 Showcase", url, js_api=api, width=1360, height=860)
-    webview.start()
+    try:
+        webview.start()
+    except Exception:  # noqa: BLE001 - composant d'affichage absent (WebView2) : navigateur
+        log.exception("Fenêtre native indisponible, ouverture dans le navigateur")
+        webbrowser.open(url)
+        with contextlib.suppress(KeyboardInterrupt):
+            threading.Event().wait()
     server.shutdown()
     return 0
 

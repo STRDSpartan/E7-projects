@@ -1,0 +1,15 @@
+E7 Showcase — vitrines Epic Seven
+
+Ce que fait l'application :
+  • vous glissez les captures d'écran de vos héros (fiche « Infos de héros », liste des héros) ;
+  • elle reconnaît chaque héros, ses stats, son équipement et ses sets ;
+  • elle construit votre vitrine et l'exporte en fichier .e7v ;
+  • toute personne qui possède l'application ouvre ce fichier d'un double-clic.
+
+Bon à savoir :
+  • tout reste sur votre ordinateur : aucune donnée n'est envoyée sur Internet ;
+  • l'application ne touche jamais au jeu (ni lecture mémoire, ni clic automatique) ;
+  • Windows peut afficher « Windows a protégé votre ordinateur » : l'application n'est pas
+    signée. Cliquez sur « Informations complémentaires » puis « Exécuter quand même ».
+
+Configuration requise : Windows 10 ou 11, 64 bits, environ 600 Mo d'espace disque.
