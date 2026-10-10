@@ -37,7 +37,7 @@ jobs:
           $ok = $false
           for ($i = 0; $i -lt 45; $i++) {
             Start-Sleep -Seconds 2
-            if ((Test-Path $log) -and (Select-String -Path $log -Pattern "Fenêtre chargée|Fenetre chargee" -Quiet)) { $ok = $true; break }
+            if ((Test-Path $log) -and (Select-String -Path $log -Pattern "window-loaded" -Quiet)) { $ok = $true; break }
             if ($p.HasExited) { break }
           }
           Get-Content $log -ErrorAction SilentlyContinue

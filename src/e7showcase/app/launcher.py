@@ -65,6 +65,7 @@ def main(argv: list[str] | None = None) -> int:
     }
     if sys.stderr is None:  # exécutable fenêtré (Windows) : pas de console → journal fichier
         log_kwargs["filename"] = str(data_dir() / "e7showcase.log")
+        log_kwargs["encoding"] = "utf-8"
     logging.basicConfig(**log_kwargs)
     args = sys.argv[1:] if argv is None else argv
     browser = "--browser" in args
@@ -98,7 +99,7 @@ def main(argv: list[str] | None = None) -> int:
     webview.settings["ALLOW_DOWNLOADS"] = True
     window = webview.create_window("E7 Showcase", url, js_api=api, width=1360, height=860)
     api._window = window  # noqa: SLF001 - jamais exposé à JavaScript
-    window.events.loaded += lambda: log.info("Fenêtre chargée")
+    window.events.loaded += lambda: log.info("Fenêtre chargée [window-loaded]")
     try:
         webview.start()
     except Exception:  # noqa: BLE001 - composant d'affichage absent (WebView2) : navigateur
