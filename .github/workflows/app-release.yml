@@ -28,14 +28,26 @@ jobs:
       - name: Icône et images de l'installateur
         run: python scripts/make_icon.py packaging/windows/build
       - run: pyinstaller packaging/e7showcase-app.spec --noconfirm
-      - name: Test de démarrage de l'exécutable
+      - name: Test de démarrage (fenêtre native)
         shell: pwsh
         run: |
           $env:E7_DATA_DIR = "$env:RUNNER_TEMP\e7data"
-          $p = Start-Process dist\E7Showcase\E7Showcase.exe -ArgumentList "--browser" -PassThru
-          Start-Sleep -Seconds 20
-          if ($p.HasExited) { Get-Content "$env:E7_DATA_DIR\e7showcase.log" -ErrorAction SilentlyContinue; Write-Host "::error::l'exécutable s'est arrêté au démarrage"; exit 1 }
-          Stop-Process -Id $p.Id -Force
+          $log = "$env:E7_DATA_DIR\e7showcase.log"
+          $p = Start-Process dist\E7Showcase\E7Showcase.exe -PassThru
+          $ok = $false
+          for ($i = 0; $i -lt 45; $i++) {
+            Start-Sleep -Seconds 2
+            if ((Test-Path $log) -and (Select-String -Path $log -Pattern "Fenêtre chargée|Fenetre chargee" -Quiet)) { $ok = $true; break }
+            if ($p.HasExited) { break }
+          }
+          Get-Content $log -ErrorAction SilentlyContinue
+          $alive = -not $p.HasExited
+          if ($alive) { Stop-Process -Id $p.Id -Force }
+          if (-not $ok -or -not $alive) {
+            Get-Content $log -ErrorAction SilentlyContinue | Select-Object -Last 20 | ForEach-Object { Write-Host "::error::log: $_" }
+            Write-Host "::error::la fenêtre de l'application ne s'est pas chargée"
+            exit 1
+          }
       - name: Installateur (Inno Setup)
         shell: pwsh
         run: |

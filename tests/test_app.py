@@ -186,3 +186,13 @@ def test_rejects_foreign_host(app: Any) -> None:
     with pytest.raises(urllib.error.HTTPError) as err:
         urllib.request.urlopen(req)
     assert err.value.code == 403
+
+
+def test_window_api_exposes_only_its_functions(tmp_path: Path) -> None:
+    """pywebview parcourt les attributs publics de js_api : rien d'autre que les fonctions."""
+    from e7showcase.app.launcher import WindowApi
+
+    api = WindowApi(AppState(tmp_path, importer=FakeImporter()))  # type: ignore[arg-type]
+    api._window = object()
+    public = [n for n in dir(api) if not n.startswith("_")]
+    assert all(callable(getattr(api, n)) for n in public), public

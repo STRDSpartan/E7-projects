@@ -29,17 +29,22 @@ log = logging.getLogger(__name__)
 
 
 class WindowApi:
-    """Fonctions natives appelées depuis l'interface (fenêtre pywebview uniquement)."""
+    """Fonctions natives appelées depuis l'interface (fenêtre pywebview uniquement).
+
+    pywebview expose à JavaScript tout attribut PUBLIC de cet objet en le parcourant
+    récursivement : l'état et la fenêtre doivent rester privés (préfixe « _ »), sinon il
+    explore la fenêtre native elle-même et l'application se fige au chargement.
+    """
 
     def __init__(self, state: AppState):
-        self.state = state
-        self.window: Any = None
+        self._state = state
+        self._window: Any = None
 
     def save_vitrine(self, profile_id: str) -> str | None:
         import webview
 
-        player = self.state.store.load(profile_id).player
-        chosen = self.window.create_file_dialog(
+        player = self._state.store.load(profile_id).player
+        chosen = self._window.create_file_dialog(
             webview.SAVE_DIALOG,
             save_filename=suggested_filename(player),
             file_types=(f"Vitrine E7 Showcase (*{SUFFIX})",),
@@ -49,7 +54,7 @@ class WindowApi:
         target = Path(chosen if isinstance(chosen, str) else chosen[0])
         if target.suffix.lower() != SUFFIX:
             target = target.with_suffix(SUFFIX)
-        target.write_bytes(export_profile(self.state.store, profile_id))
+        target.write_bytes(export_profile(self._state.store, profile_id))
         return str(target)
 
 
@@ -91,7 +96,9 @@ def main(argv: list[str] | None = None) -> int:
 
     api = WindowApi(state)
     webview.settings["ALLOW_DOWNLOADS"] = True
-    api.window = webview.create_window("E7 Showcase", url, js_api=api, width=1360, height=860)
+    window = webview.create_window("E7 Showcase", url, js_api=api, width=1360, height=860)
+    api._window = window  # noqa: SLF001 - jamais exposé à JavaScript
+    window.events.loaded += lambda: log.info("Fenêtre chargée")
     try:
         webview.start()
     except Exception:  # noqa: BLE001 - composant d'affichage absent (WebView2) : navigateur

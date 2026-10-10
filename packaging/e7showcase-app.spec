@@ -4,7 +4,7 @@
 import sys
 from pathlib import Path
 
-from PyInstaller.utils.hooks import collect_all, collect_data_files
+from PyInstaller.utils.hooks import collect_all
 
 ROOT = Path(SPECPATH).parent
 SRC = ROOT / "src" / "e7showcase"
@@ -22,11 +22,15 @@ for package in ("rapidocr_onnxruntime", "onnxruntime"):
     datas += d
     binaries += b
     hiddenimports += h
-try:
-    datas += collect_data_files("webview")
-    hiddenimports += ["webview"]
-except Exception:  # pywebview absent : l'application s'ouvre dans le navigateur
-    pass
+# Fenêtre native : pywebview + pythonnet (WebView2 via .NET sous Windows)
+for package in ("webview", "clr_loader", "pythonnet", "clr"):
+    try:
+        d, b, h = collect_all(package)
+    except Exception:  # paquet absent sur cette plateforme
+        continue
+    datas += d
+    binaries += b
+    hiddenimports += h
 
 # Icône et informations de version (Propriétés → Détails de l'exécutable Windows)
 ICON = ROOT / "packaging" / "windows" / "build" / "e7showcase.ico"
