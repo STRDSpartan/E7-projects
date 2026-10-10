@@ -4,6 +4,13 @@
 > et comment savoir qu'une étape est terminée.** Mis à jour le 29/09/2026.
 > Le détail des jalons cochés reste dans [ROADMAP.md](ROADMAP.md).
 
+## 0. Nouveau cap (octobre 2026)
+Le produit devient une **application de bureau téléchargeable** (`docs/APP.md`) : captures →
+reconnaissance → profil vitrine → export `.e7v` partageable. Fait : application, format `.e7v`,
+installateur Windows automatisé, moteur calibré PC 100 %. Suite : tester l'installateur sous
+Windows, reconnaissance de la liste des héros seule (sans fiche), comparaison de vitrines,
+mise à jour automatique. Le site communautaire (`platform/`, phases W1/W2) est en pause.
+
 ## 1. Objectif final
 
 Un joueur d'Epic Seven installe l'outil, **scanne ses héros** (client PC ou captures mobiles),

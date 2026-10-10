@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E7 Showcase</title>
+<style>
+:root { --bg:#0b0e15; --panel:#141925; --panel-2:#1b2130; --line:#283044; --text:#e8ecf3; --muted:#8e98aa;
+  --gold:#e8c26a; --accent:#4ab3ff; --danger:#e26060; --ok:#7fe0a0; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font:14px/1.45 "Segoe UI", system-ui, sans-serif;
+  display:grid; grid-template-columns: 260px minmax(0,1fr); height:100vh; }
+aside { background:var(--panel); border-right:1px solid var(--line); display:flex; flex-direction:column; min-height:0; }
+.brand { padding:16px; font-weight:800; letter-spacing:.06em; color:var(--gold); font-size:17px; }
+.brand small { display:block; color:var(--muted); font-weight:400; letter-spacing:0; font-size:12px; }
+.list { flex:1; overflow:auto; padding:0 8px; }
+.list h3 { font-size:11px; text-transform:uppercase; color:var(--muted); margin:14px 8px 6px; letter-spacing:.08em; }
+.item { display:block; width:100%; text-align:left; background:none; border:0; color:var(--text); padding:8px 10px;
+  border-radius:8px; cursor:pointer; }
+.item:hover { background:var(--panel-2); } .item.active { background:#22304c; }
+.item small { display:block; color:var(--muted); }
+.side-actions { padding:12px; display:grid; gap:8px; border-top:1px solid var(--line); }
+button { font:inherit; border:0; border-radius:8px; padding:8px 12px; cursor:pointer; background:var(--gold); color:#1d1606; font-weight:600; }
+button.ghost { background:var(--panel-2); color:var(--text); font-weight:500; }
+button.danger { background:transparent; color:var(--danger); border:1px solid #5a2a2a; }
+button:disabled { opacity:.5; cursor:default; }
+main { display:flex; flex-direction:column; min-height:0; }
+.bar { display:flex; gap:10px; align-items:center; padding:12px 16px; border-bottom:1px solid var(--line); flex-wrap:wrap; }
+.bar h1 { margin:0; font-size:20px; flex:1; min-width:0; }
+.bar h1 input { background:transparent; border:1px solid transparent; color:var(--text); font:inherit; font-weight:700; width:100%; padding:2px 6px; border-radius:6px; }
+.bar h1 input:hover, .bar h1 input:focus { border-color:var(--line); outline:none; }
+.badge { font-size:12px; color:var(--accent); border:1px solid #2a4b6b; border-radius:999px; padding:2px 10px; }
+.drop { margin:12px 16px 0; border:2px dashed var(--line); border-radius:12px; padding:14px; text-align:center; color:var(--muted); cursor:pointer; }
+.drop.over { border-color:var(--gold); color:var(--text); background:#1a1c14; }
+.report { margin:8px 16px 0; font-size:13px; }
+.report .ok { color:var(--ok); } .report .warn { color:var(--gold); } .report .err { color:var(--danger); }
+iframe { flex:1; border:0; width:100%; margin-top:10px; background:var(--bg); }
+.empty { margin:auto; text-align:center; color:var(--muted); max-width:520px; padding:24px; }
+.empty h2 { color:var(--text); }
+.empty ol { text-align:left; }
+dialog { background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:12px; padding:18px; }
+dialog input { width:100%; background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:8px; margin:10px 0; font:inherit; }
+@media (max-width: 760px) { body { grid-template-columns: 1fr; grid-template-rows: auto minmax(0,1fr); } aside { max-height: 40vh; } }
+</style>
+</head>
+<body>
+<aside>
+  <div class="brand">E7 SHOWCASE<small>Vitrines Epic Seven</small></div>
+  <div class="list" id="list"></div>
+  <div class="side-actions">
+    <button id="new">+ Nouveau profil</button>
+    <button class="ghost" id="open">Ouvrir une vitrine (.e7v)</button>
+    <input type="file" id="open-file" accept=".e7v" hidden>
+  </div>
+</aside>
+<main id="main"></main>
+
+<dialog id="dlg">
+  <form method="dialog">
+    <strong>Nom du joueur</strong>
+    <input id="dlg-name" maxlength="40" placeholder="Pseudo en jeu" required>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="ghost" value="cancel" formnovalidate>Annuler</button>
+      <button value="ok">Créer</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+const TOKEN = "__TOKEN__";
+const $ = (s) => document.querySelector(s);
+let profiles = [], current = null;
+
+async function api(method, path, body) {
+  const res = await fetch("/api" + path, {
+    method, headers: { "X-E7-Token": TOKEN, ...(body ? { "Content-Type": "application/json" } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    let msg = "Erreur " + res.status;
+    try { msg = (await res.json()).error || msg; } catch {}
+    throw new Error(msg);
+  }
+  return res.status === 204 ? null : res;
+}
+const json = async (m, p, b) => (await api(m, p, b)).json();
+const el = (tag, attrs = {}, ...kids) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) k === "class" ? (n.className = v) : k.startsWith("on") ? n.addEventListener(k.slice(2), v) : n.setAttribute(k, v);
+  for (const c of kids) n.append(c);
+  return n;
+};
+const toB64 = (file) => new Promise((ok, ko) => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = ko; r.readAsDataURL(file); });
+
+async function refresh(select) {
+  profiles = await json("GET", "/profiles");
+  const list = $("#list"); list.replaceChildren();
+  const mine = profiles.filter((p) => !p.received), recv = profiles.filter((p) => p.received);
+  for (const [title, group] of [["Mes profils", mine], ["Vitrines reçues", recv]]) {
+    if (!group.length) continue;
+    list.append(el("h3", {}, title));
+    for (const p of group) list.append(el("button", { class: "item" + (p.id === (select || current) ? " active" : ""), "data-id": p.id, onclick: () => show(p.id) },
+      p.player, el("small", {}, `${p.heroes} héros · ${p.updated_at}`)));
+  }
+  if (select) show(select); else if (!current) welcome();
+}
+
+function welcome() {
+  current = null;
+  $("#main").replaceChildren(el("div", { class: "empty" },
+    el("h2", {}, "Bienvenue"),
+    el("p", {}, "Créez votre profil, puis ajoutez les captures d'écran de vos héros."),
+    el("ol", {},
+      el("li", {}, "Dans le jeu : Héros → choisissez un héros → bouton sous les bottes → « Infos de héros »."),
+      el("li", {}, "Faites une capture (Impr. écran ou Win+Maj+S) pour chaque héros."),
+      el("li", {}, "Pour reconnaître les sets, ajoutez aussi une capture de la liste des héros (lignes « Set … »)."),
+      el("li", {}, "Glissez toutes les captures dans l'application : la vitrine se construit seule.")),
+    el("p", {}, "Quelqu'un vous a envoyé sa vitrine ? « Ouvrir une vitrine (.e7v) ».")));
+}
+
+async function show(id) {
+  current = id;
+  document.querySelectorAll(".item").forEach((b) => b.classList.toggle("active", b.dataset.id === id));
+  const p = await json("GET", "/profiles/" + id);
+  const name = el("input", { value: p.player, maxlength: "40", "aria-label": "Nom du joueur" });
+  if (p.received) name.setAttribute("readonly", "");
+  else name.addEventListener("change", async () => { await api("PATCH", "/profiles/" + id, { player: name.value }); reloadFrame(); refresh(); });
+  const bar = el("div", { class: "bar" }, el("h1", {}, name),
+    p.received ? el("span", { class: "badge" }, "Vitrine reçue") : "",
+    el("button", { onclick: () => exportVitrine(id, p.player) }, "Exporter la vitrine"),
+    el("button", { class: "danger", onclick: () => removeProfile(id, p.player) }, "Supprimer"));
+  const kids = [bar];
+  const report = el("div", { class: "report", id: "report" });
+  if (!p.received) {
+    const input = el("input", { type: "file", accept: "image/png,image/jpeg,image/webp", multiple: "", hidden: "" });
+    const drop = el("div", { class: "drop", onclick: () => input.click() },
+      "Glissez ici vos captures (Infos de héros, liste des héros) — ou cliquez pour les choisir");
+    input.addEventListener("change", () => importFiles([...input.files]));
+    drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+    drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+    drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); importFiles([...e.dataTransfer.files]); });
+    kids.push(drop, input);
+  }
+  kids.push(report);
+  if (p.heroes.length) kids.push(el("iframe", { id: "frame", src: "/profile/" + id, title: "Vitrine" }));
+  else kids.push(el("div", { class: "empty" }, p.received ? "Cette vitrine ne contient aucun héros." : "Aucun héros pour l'instant : ajoutez vos captures ci-dessus."));
+  $("#main").replaceChildren(...kids);
+}
+function reloadFrame() { const f = $("#frame"); if (f) f.src = f.src; }
+
+async function importFiles(files) {
+  files = files.filter((f) => /\.(png|jpe?g|webp)$/i.test(f.name));
+  if (!files.length) return;
+  const report = $("#report");
+  report.replaceChildren(el("span", {}, `Analyse de ${files.length} capture(s)… (quelques secondes par héros)`));
+  try {
+    const payload = { files: await Promise.all(files.map(async (f) => ({ name: f.name, data: await toB64(f) }))) };
+    const r = await json("POST", `/profiles/${current}/screenshots`, payload);
+    const lines = [];
+    if (r.heroes.length) lines.push(el("div", { class: "ok" }, `✔ ${r.heroes.length} héros ajouté(s) : ${r.heroes.join(", ")}`));
+    if (r.learned_sets.length) lines.push(el("div", {}, `Sets appris : ${r.learned_sets.join(", ")}`));
+    for (const w of r.warnings) lines.push(el("div", { class: "warn" }, "⚠ " + w));
+    if (r.ignored.length) lines.push(el("div", { class: "warn" }, `Captures non reconnues : ${r.ignored.join(", ")}`));
+    report.replaceChildren(...lines);
+    const keep = report.cloneNode(true);
+    await refresh(); await show(current); $("#report").replaceWith(keep);
+  } catch (e) { report.replaceChildren(el("span", { class: "err" }, e.message)); }
+}
+
+async function exportVitrine(id, player) {
+  if (window.pywebview?.api?.save_vitrine) {
+    const path = await window.pywebview.api.save_vitrine(id);
+    if (path) alert("Vitrine enregistrée :\n" + path);
+    return;
+  }
+  const res = await api("GET", `/profiles/${id}/export`);
+  const name = (res.headers.get("Content-Disposition") || "").match(/filename="(.+)"/)?.[1] || "vitrine.e7v";
+  const url = URL.createObjectURL(await res.blob());
+  el("a", { href: url, download: name }).click();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+async function removeProfile(id, player) {
+  if (!confirm(`Supprimer le profil « ${player} » de cet ordinateur ?`)) return;
+  await api("DELETE", "/profiles/" + id); current = null; refresh();
+}
+
+$("#new").onclick = () => { $("#dlg-name").value = ""; $("#dlg").showModal(); };
+$("#dlg").addEventListener("close", async () => {
+  if ($("#dlg").returnValue !== "ok" || !$("#dlg-name").value.trim()) return;
+  const r = await json("POST", "/profiles", { player: $("#dlg-name").value });
+  refresh(r.id);
+});
+$("#open").onclick = () => $("#open-file").click();
+$("#open-file").addEventListener("change", async (e) => {
+  const f = e.target.files[0]; e.target.value = "";
+  if (!f) return;
+  try { const r = await json("POST", "/open", { name: f.name, data: await toB64(f) }); refresh(r.id); }
+  catch (err) { alert(err.message); }
+});
+const start = new URLSearchParams(location.hash.slice(1)).get("p");
+refresh(start || undefined);
+</script>
+</body>
+</html>

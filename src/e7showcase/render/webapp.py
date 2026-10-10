@@ -266,10 +266,10 @@ def safe_json(payload: dict[str, Any]) -> str:
     return text.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
 
 
-def write_page(payload: dict[str, Any], target: Path) -> Path:
+def page_html(payload: dict[str, Any]) -> str:
     from e7showcase.render.showcase import _env
 
-    html = (
+    return (
         _env()
         .get_template("webapp.html.j2")
         .render(
@@ -278,6 +278,10 @@ def write_page(payload: dict[str, Any], target: Path) -> Path:
             data_json=safe_json(payload),
         )
     )
+
+
+def write_page(payload: dict[str, Any], target: Path) -> Path:
+    html = page_html(payload)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(html, encoding="utf-8")
     return target

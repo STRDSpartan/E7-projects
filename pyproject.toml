@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "e7showcase"
-version = "0.1.0"
+version = "0.2.0"
 description = "Scanner de roster Epic Seven (client PC) et générateur de vitrines partageables sur Discord."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -30,6 +30,12 @@ scan = [
   "pywin32>=306; sys_platform == 'win32'",
   "keyboard>=0.13",
 ]
+# Application de bureau (fenêtre native) : `e7showcase-app`
+app = [
+  "pywebview>=5.0",
+  "opencv-python-headless>=4.9",
+  "rapidocr-onnxruntime>=1.3",
+]
 # Rendu HTML -> PNG haute fidélité
 render = ["playwright>=1.44"]
 # Bot Discord (slash commands)
@@ -44,6 +50,9 @@ dev = [
 
 [project.scripts]
 e7showcase = "e7showcase.cli:app"
+
+[project.gui-scripts]
+e7showcase-app = "e7showcase.app.launcher:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/e7showcase"]

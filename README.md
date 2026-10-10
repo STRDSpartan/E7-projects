@@ -1,14 +1,18 @@
 # E7 Showcase
 
-Scanner de roster pour le **client PC d'Epic Seven** (Stove / bientôt Steam) qui génère des
-**vitrines visuelles partageables sur Discord** — pour que la guilde puisse se concerter, drafter
-ses équipes GvG / RTA / Boss et comparer les builds.
+**Application de bureau** pour Epic Seven : le joueur glisse les captures d'écran de ses héros,
+l'application reconnaît chaque héros (nom, pose, stats, équipement, sets), construit son **profil
+vitrine**, et l'exporte en un fichier **`.e7v`** que n'importe qui ouvre avec l'application.
 
 ```
- Client PC E7 ──capture écran──► OCR ──► Roster JSON ──► Vitrine PNG ──► Discord (webhook / bot)
- Export Fribbels ─────────────────────────┘                    ▲
-                                             tags guilde, filtres, draft
+ captures « Infos de héros » + liste ──► reconnaissance (OCR calibré) ──► profil ──► vitrine
+                                                                              │
+                                    ami / guilde ◄── fichier vitrine.e7v ◄────┘ (export)
 ```
+
+**Télécharger** : installateur Windows dans l'onglet *Actions* (workflow « Application Windows »,
+artefact `E7Showcase-Windows`) ou dans les *Releases*. Détails : [`docs/APP.md`](docs/APP.md).
+L'outil en ligne de commande (`e7showcase …`, rendu PNG, Discord) reste disponible ci-dessous.
 
 ## Fonctionnalités
 

@@ -1,7 +1,9 @@
 # E7 Showcase — guide pour Claude
 
-Scanner de roster du **client PC Epic Seven** (capture d'écran + OCR, ou import Fribbels) qui
-génère des **vitrines PNG** partageables sur **Discord** au sein d'une guilde.
+**Application de bureau** (`src/e7showcase/app/`, voir `docs/APP.md`) : le joueur importe les
+captures d'écran de ses héros, l'app les reconnaît (moteur OCR `scanner/`), construit un profil
+vitrine et l'exporte en fichier `.e7v` ouvrable par n'importe qui avec l'app. Le CLI historique
+(scan en direct, PNG, Discord) reste disponible ; `platform/` (site web) est en pause.
 Langue du projet : documentation et messages utilisateur en **français**, code et identifiants en anglais.
 
 ## Commandes
@@ -9,6 +11,7 @@ Langue du projet : documentation et messages utilisateur en **français**, code 
 pip install -e ".[dev]"          # + [scan] [render] [bot]
 ruff format . && ruff check . && mypy && pytest     # définition de « terminé » (skill dev-checks)
 e7showcase --help
+e7showcase app --browser          # application (interface dans le navigateur)
 ```
 
 ## Carte du code (`src/e7showcase/`)
@@ -29,7 +32,8 @@ Détails : `docs/ARCHITECTURE.md` ; étapes et état du projet : `docs/PLAN.md`.
 3. Capturer ≠ comprendre ; parseurs sans I/O ; ROI toujours normalisées.
 4. Imports lourds (`mss`, `cv2`, `rapidocr_onnxruntime`, `win32*`, `keyboard`, `playwright`,
    `discord`) **dans les fonctions**, pour que le cœur s'importe sans extras.
-5. Rupture du format `Roster` → incrémenter `SCHEMA_VERSION` + migration.
+5. Rupture du format `Roster` → incrémenter `SCHEMA_VERSION` + migration ; rupture du format
+   `.e7v` → incrémenter `vitrine_file.VERSION` en gardant la lecture des anciennes versions.
 6. mypy strict, ruff, tests verts avant tout commit ; ne jamais désactiver un test.
 
 ## Agents (`.claude/agents/`) et skills (`.claude/skills/`)

@@ -1,0 +1,40 @@
+name: Application Windows
+
+# Construit l'installateur Windows à chaque push sur la branche de travail ou sur main
+# (artefact téléchargeable dans l'onglet Actions) et le publie en Release sur un tag v*.
+on:
+  push:
+    branches: [main, "claude/**"]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[app]" pyinstaller
+      - name: Vérification rapide
+        run: python -c "import e7showcase.app.launcher, rapidocr_onnxruntime, webview"
+      - run: pyinstaller packaging/e7showcase-app.spec --noconfirm
+      - name: Installateur (Inno Setup)
+        shell: pwsh
+        run: |
+          $version = (Select-String -Path src/e7showcase/__init__.py -Pattern '"(.+)"').Matches[0].Groups[1].Value
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\iscc.exe" "/DAppVersion=$version" packaging\windows\installer.iss
+      - uses: actions/upload-artifact@v4
+        with:
+          name: E7Showcase-Windows
+          path: dist/E7Showcase-Setup-*.exe
+      - name: Release (tags v*)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/E7Showcase-Setup-*.exe

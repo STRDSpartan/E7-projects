@@ -14,6 +14,7 @@ imprint     = [0.075, 0.320, 0.170, 0.135]
 power       = [0.045, 0.445, 0.090, 0.060]   # puissance de combat
 artifact    = [0.835, 0.120, 0.137, 0.090]
 gear_score  = [0.680, 0.268, 0.240, 0.050]   # « Score moyen d'équipements : 92 »
+portrait    = [0.255, 0.110, 0.415, 0.890]   # pose du héros (image de la vitrine)
 stats_icons = [0.024, 0.5035, 0.020, 0.294]  # 9 lignes, une icône par ligne
 stats_labels= [0.046, 0.5035, 0.136, 0.294]
 stats_values= [0.184, 0.5035, 0.052, 0.294]

@@ -17,6 +17,7 @@ from typing import Any
 # Ancrage horizontal de chaque zone (défaut : gauche)
 ANCHORS = {
     "detail.artifact": "right",
+    "detail.portrait": "center",
     "detail.gear_score": "right",
     "detail.gear": "right",
     "navigation.next_hero": "right",

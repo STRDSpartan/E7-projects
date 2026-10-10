@@ -562,3 +562,16 @@ def bot() -> None:
 
 if __name__ == "__main__":
     app()
+
+
+@app.command("app")
+def desktop_app(
+    vitrine: Annotated[Path | None, typer.Argument(help="Vitrine .e7v à ouvrir")] = None,
+    browser: Annotated[bool, typer.Option(help="Ouvrir dans le navigateur")] = False,
+) -> None:
+    """Lancer l'application de bureau (profils, import de captures, vitrines .e7v)."""
+    from e7showcase.app.launcher import main as launch
+
+    raise typer.Exit(
+        launch([*([str(vitrine)] if vitrine else []), *(["--browser"] if browser else [])])
+    )
