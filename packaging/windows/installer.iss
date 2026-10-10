@@ -1,4 +1,4 @@
-; Installateur Windows (Inno Setup 6) : raccourcis + association des fichiers .e7v
+﻿; Installateur Windows (Inno Setup 6) : raccourcis + association des fichiers .e7v
 ;   iscc /DAppVersion=0.2.0 packaging\windows\installer.iss
 #ifndef AppVersion
   #define AppVersion "0.2.0"
