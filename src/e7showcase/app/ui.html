@@ -34,6 +34,24 @@ main { display:flex; flex-direction:column; min-height:0; }
 .drop.over { border-color:var(--gold); color:var(--text); background:#1a1c14; }
 .report { margin:8px 16px 0; font-size:13px; }
 .report .ok { color:var(--ok); } .report .warn { color:var(--gold); } .report .err { color:var(--danger); }
+.progress { margin:10px 16px 0; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px 14px; }
+.progress .head { display:flex; justify-content:space-between; gap:12px; font-size:13px; margin-bottom:8px; }
+.progress .head b { color:var(--gold); font-variant-numeric:tabular-nums; }
+.progress .msg { color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.track { height:12px; background:#0f131c; border-radius:999px; overflow:hidden; border:1px solid #232a3b; }
+.fill { height:100%; width:0; border-radius:999px; transition:width .45s ease;
+  background:linear-gradient(90deg, #b8892f, var(--gold) 50%, #fff0c2);
+  background-size:200% 100%; position:relative; animation:shine 2.2s linear infinite; }
+.fill::after { content:""; position:absolute; inset:0; border-radius:inherit;
+  background:repeating-linear-gradient(-45deg, rgba(255,255,255,.22) 0 10px, transparent 10px 20px);
+  background-size:28px 28px; animation:stripes .8s linear infinite; }
+.progress.done .fill { animation:none; background:var(--ok); } .progress.done .fill::after { display:none; }
+.progress .heroes { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+.progress .heroes span { font-size:12px; background:#1f2a1f; color:var(--ok); border-radius:999px; padding:2px 10px; animation:pop .35s ease; }
+@keyframes stripes { to { background-position:28px 0; } }
+@keyframes shine { to { background-position:-200% 0; } }
+@keyframes pop { from { transform:scale(.6); opacity:0; } to { transform:scale(1); opacity:1; } }
+@media (prefers-reduced-motion: reduce) { .fill, .fill::after, .progress .heroes span { animation:none; } }
 iframe { flex:1; border:0; width:100%; margin-top:10px; background:var(--bg); }
 .empty { margin:auto; text-align:center; color:var(--muted); max-width:520px; padding:24px; }
 .empty h2 { color:var(--text); }
@@ -148,22 +166,62 @@ async function show(id) {
 }
 function reloadFrame() { const f = $("#frame"); if (f) f.src = f.src; }
 
+function progressBox() {
+  const fill = el("div", { class: "fill" });
+  const pct = el("b", {}, "0 %"), msg = el("span", { class: "msg" }, "Préparation des captures…");
+  const heroes = el("div", { class: "heroes" });
+  const box = el("div", { class: "progress", role: "progressbar", "aria-valuemin": "0", "aria-valuemax": "100" },
+    el("div", { class: "head" }, msg, pct), el("div", { class: "track" }, fill), heroes);
+  const seen = new Set();
+  return {
+    box,
+    set(ratio, text) {
+      const v = Math.max(0, Math.min(100, Math.round(ratio * 100)));
+      fill.style.width = v + "%"; pct.textContent = v + " %"; box.setAttribute("aria-valuenow", v);
+      if (text) msg.textContent = text;
+    },
+    hero(name) { if (!seen.has(name)) { seen.add(name); heroes.append(el("span", {}, "✔ " + name)); } },
+    finish() { box.classList.add("done"); },
+  };
+}
+
 async function importFiles(files) {
   files = files.filter((f) => /\.(png|jpe?g|webp)$/i.test(f.name));
   if (!files.length) return;
   const report = $("#report");
-  report.replaceChildren(el("span", {}, `Analyse de ${files.length} capture(s)… (quelques secondes par héros)`));
+  const bar = progressBox();
+  report.replaceChildren(bar.box);
   try {
-    const payload = { files: await Promise.all(files.map(async (f) => ({ name: f.name, data: await toB64(f) }))) };
-    const r = await json("POST", `/profiles/${current}/screenshots`, payload);
-    const lines = [];
-    if (r.heroes.length) lines.push(el("div", { class: "ok" }, `✔ ${r.heroes.length} héros ajouté(s) : ${r.heroes.join(", ")}`));
+    // 1) lecture des fichiers (0 → 10 %)
+    const encoded = [];
+    for (const [i, f] of files.entries()) {
+      bar.set((i / files.length) * 0.1, `Préparation ${i + 1}/${files.length} : ${f.name}`);
+      encoded.push({ name: f.name, data: await toB64(f) });
+    }
+    bar.set(0.1, "Envoi des captures…");
+    const { job } = await json("POST", `/profiles/${current}/screenshots`, { files: encoded });
+    // 2) analyse côté application (10 → 100 %)
+    let state;
+    for (;;) {
+      state = await json("GET", "/jobs/" + job);
+      bar.set(0.1 + 0.9 * (state.done / state.total), state.message);
+      const m = /^(.+) ajouté$/.exec(state.message);
+      if (m) bar.hero(m[1]);
+      if (state.finished) break;
+      await new Promise((r) => setTimeout(r, 300));
+    }
+    if (state.error) throw new Error(state.error);
+    const r = state.report;
+    r.heroes.forEach((h) => bar.hero(h));
+    bar.set(1, `Terminé : ${r.heroes.length} héros ajouté(s)`);
+    bar.finish();
+    const lines = [bar.box];
     if (r.learned_sets.length) lines.push(el("div", {}, `Sets appris : ${r.learned_sets.join(", ")}`));
     for (const w of r.warnings) lines.push(el("div", { class: "warn" }, "⚠ " + w));
     if (r.ignored.length) lines.push(el("div", { class: "warn" }, `Captures non reconnues : ${r.ignored.join(", ")}`));
     report.replaceChildren(...lines);
-    const keep = report.cloneNode(true);
-    await refresh(); await show(current); $("#report").replaceWith(keep);
+    const keep = [...report.childNodes];
+    await refresh(); await show(current); $("#report").replaceChildren(...keep);
   } catch (e) { report.replaceChildren(el("span", { class: "err" }, e.message)); }
 }
 

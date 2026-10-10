@@ -22,6 +22,7 @@ from PIL import Image
 from e7showcase.config import regions
 from e7showcase.scanner.batch import learn_catalog
 from e7showcase.scanner.hero_scanner import HeroScanner
+from e7showcase.vision.layouts import normalize_scale
 from e7showcase.vision.ocr import OcrEngine, get_engine
 from e7showcase.vision.preprocess import strip_window_chrome
 
@@ -37,7 +38,11 @@ def evaluate(
         if verbose:
             print(f"{catalog.name} : {len(learned)} sets appris")
     for listing in sorted(caps.glob("*list*.*")):  # liste des héros : blasons des sets actifs
-        learned = scanner.learn_list_sets(strip_window_chrome(Image.open(listing).convert("RGB")))
+        learned = scanner.learn_list_sets(
+            normalize_scale(
+                strip_window_chrome(Image.open(listing).convert("RGB")), scanner.regions
+            )
+        )
         if verbose and learned:
             print(f"{listing.name} : {', '.join(learned)}")
     ok = total = 0
@@ -50,7 +55,8 @@ def evaluate(
             print(f"  ✗ {label}: lu={got!r} attendu={want!r}")
 
     for fname, exp in expected.items():
-        hero = scanner.read_detail(strip_window_chrome(Image.open(caps / fname).convert("RGB")))
+        image = strip_window_chrome(Image.open(caps / fname).convert("RGB"))
+        hero = scanner.read_detail(normalize_scale(image, scanner.regions))
         for k in ("name", "level", "element", "role", "power", "gear_score_avg"):
             check(f"{fname} {k}", getattr(hero, k), exp[k])
         for k, v in exp["stats"].items():

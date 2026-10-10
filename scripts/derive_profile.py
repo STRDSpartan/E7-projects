@@ -14,60 +14,7 @@ import sys
 import tomllib
 from typing import Any
 
-# Ancrage horizontal de chaque zone (défaut : gauche)
-ANCHORS = {
-    "detail.artifact": "right",
-    "detail.portrait": "center",
-    "detail.gear_score": "right",
-    "detail.gear": "right",
-    "navigation.next_hero": "right",
-    "navigation.detail_button": "center",
-    "hero_list.title_hint": "center",
-}
-
-
-def convert_x(x: float, k: float, anchor: str) -> float:
-    if anchor == "right":
-        return 1 - (1 - x) * k
-    if anchor == "center":
-        return 0.5 + (x - 0.5) * k
-    return x * k
-
-
-def derive(cfg: dict[str, Any], aspect: float) -> dict[str, Any]:
-    k = cfg["aspect"] / aspect
-    out: dict[str, Any] = {"aspect": round(aspect, 4)}
-    for section, body in cfg.items():
-        if not isinstance(body, dict):
-            continue
-        out[section] = {}
-        for key, value in body.items():
-            anchor = ANCHORS.get(f"{section}.{key}", "left")
-            if key == "gear":
-                out[section][key] = {
-                    s: [round(convert_x(x, k, "right"), 4), y] for s, (x, y) in value.items()
-                }
-            elif key == "gear_layout":
-                lay = {}
-                for lk, lv in value.items():
-                    if lk in ("icon_w", "values_dx", "values_w"):
-                        lay[lk] = round(lv * k, 4)
-                    elif isinstance(lv, list) and len(lv) == 4 and lk not in ("line_dy", "line_h"):
-                        lay[lk] = [round(lv[0] * k, 4), lv[1], round(lv[2] * k, 4), lv[3]]
-                    else:
-                        lay[lk] = lv
-                out[section][key] = lay
-            elif key == "set_rows":
-                out[section][key] = [
-                    [round(r[0] * k, 4), r[1], round(r[2] * k, 4), r[3], round(r[4] * k, 4)]
-                    for r in value
-                ]
-            elif isinstance(value, list) and len(value) == 4:
-                x, y, w, h = value
-                out[section][key] = [round(convert_x(x, k, anchor), 4), y, round(w * k, 4), h]
-            else:
-                out[section][key] = value
-    return out
+from e7showcase.vision.layouts import derive  # noqa: E402
 
 
 def dump(cfg: dict[str, Any], source: str) -> str:

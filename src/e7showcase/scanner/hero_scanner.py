@@ -66,6 +66,24 @@ def _stat(icon: str, pct: bool) -> StatType:
     return StatType(icon)
 
 
+def stars_start(image: Image.Image) -> float:
+    """Fraction de la largeur où commencent les étoiles (1.0 s'il n'y en a pas).
+
+    Seuls pixels très colorés de la zone du nom (le nom est blanc) ; sans cette coupe, l'OCR
+    lit les étoiles comme des lettres (« Kise ★★★ » → « Kise Aan », un autre héros).
+    """
+    import numpy as np
+
+    hsv = np.asarray(image.convert("HSV"), dtype=np.int16)
+    colored = (hsv[..., 1] > 120) & (hsv[..., 2] > 120)
+    columns = colored.sum(axis=0) > image.height * 0.15
+    start = int(image.width * 0.08)  # au moins le début du nom
+    for x in range(start, image.width):
+        if columns[x : x + 3].all():
+            return max(1, x - 2) / image.width
+    return 1.0
+
+
 class HeroScanner:
     def __init__(
         self,
@@ -178,7 +196,9 @@ class HeroScanner:
         )
 
     def read_name(self, image: Image.Image) -> str:
-        raw_name = self._text(image, self.regions["detail"]["name"])
+        x, y, w, h = self.regions["detail"]["name"]
+        cut = stars_start(self._box(image, [x, y, w, h]))
+        raw_name = self._text(image, [x, y, w * cut, h] if cut < 1.0 else [x, y, w, h])
         return match_hero_name(raw_name, self.lang) or raw_name or "Inconnu"
 
     def _imprint(self, image: Image.Image) -> str | None:

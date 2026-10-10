@@ -47,6 +47,21 @@ python scripts/evaluate_captures.py <dossier local>         # voir le format dan
 E7_TEST_CAPTURES=<dossier local> pytest tests/test_real_captures.py
 ```
 
+## Toutes les résolutions et tous les formats (`vision/layouts.py`)
+- **Résolution** : chaque capture est remise à la hauteur des captures de calibration du profil
+  (`reference_height` : 1009 px PC, 1440 px mobile). Mesuré sur les 3 héros réels, captures
+  redimensionnées : **720p, 768p, 900p, 1080p, 1440p, 4K → 204/204 (100 %)**. Sans cette étape,
+  la 1440p tombait à ~50 %.
+- **Format** (16:9, 16:10, 21:9, 32:9, 4:3, fenêtre agrandie, mobile 20:9…) : les profils
+  marqués `calibrated = true` sont transposés au format EXACT de la capture (panneaux ancrés à
+  gauche / à droite / au centre, distances conservées en unités de hauteur). Les formats non
+  encore vus sur de vraies captures sont donc estimés : à vérifier avec une capture.
+- **Ambiguïté PC / mobile** : si une fiche se lit mal (moins de 6 pièces), l'autre profil
+  calibré est essayé et la lecture la plus complète est gardée.
+- **Barres Windows** : retirées même sur une capture rééchantillonnée (liseré toléré).
+- **Nom du héros** : la zone est coupée avant les étoiles (sinon « Kise ★★★ » était lu
+  « Kise Aan », un autre héros).
+
 ## Profils de zones (`config/regions/`)
 | Profil | Format | État |
 |---|---|---|

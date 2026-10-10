@@ -3,6 +3,7 @@
 import base64
 import io
 import json
+import time
 import urllib.error
 import urllib.request
 import zipfile
@@ -120,8 +121,15 @@ class FakeImporter:
     def __init__(self) -> None:
         self.calls: list[list[tuple[str, bytes]]] = []
 
-    def run(self, store: ProfileStore, pid: str, files: list[tuple[str, bytes]]) -> ImportReport:
+    def run(
+        self, store: ProfileStore, pid: str, files: list[tuple[str, bytes]], progress: Any = None
+    ) -> ImportReport:
         self.calls.append(files)
+        self.steps: list[int] = []
+        for done in range(3):
+            if progress:
+                progress(done, 2, f"étape {done}")
+            self.steps.append(done)
         store.add_hero(pid, Hero(name="Kise", power=205138), pose())
         return ImportReport(heroes=["Kise"])
 
@@ -150,14 +158,20 @@ def test_server_flow(app: Any) -> None:
     t = state.token
     pid = call(base, "POST", "/api/profiles", {"player": "Spartan"}, t)["id"]
     shot = base64.b64encode(b"fake").decode()
-    report = call(
+    started = call(
         base,
         "POST",
         f"/api/profiles/{pid}/screenshots",
         {"files": [{"name": "a.png", "data": shot}]},
         t,
     )
-    assert report["heroes"] == ["Kise"] and state.importer.calls[0] == [("a.png", b"fake")]
+    for _ in range(100):  # l'import tourne en arrière-plan ; l'interface interroge /jobs
+        job = call(base, "GET", f"/api/jobs/{started['job']}", token=t)
+        if job["finished"]:
+            break
+        time.sleep(0.05)
+    assert job["finished"] and job["done"] == job["total"] and not job["error"]
+    assert job["report"]["heroes"] == ["Kise"] and state.importer.calls[0] == [("a.png", b"fake")]
     page = call(base, "GET", f"/profile/{pid}").decode()
     assert "Kise" in page and "data:image/webp;base64" in page
     exported = call(base, "GET", f"/api/profiles/{pid}/export", token=t)

@@ -3,6 +3,8 @@
 # Coordonnées NORMALISÉES [x, y, largeur, hauteur] relatives à l'écran du jeu.
 
 aspect = 2.167
+calibrated = true
+reference_height = 1440   # hauteur (px) des captures de calibration   # vérifié sur de vraies captures (base des autres formats)
 
 [detail]
 title       = [0.040, 0.020, 0.200, 0.055]   # « Infos de héros » (sert à reconnaître l'écran)

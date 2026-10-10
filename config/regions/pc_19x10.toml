@@ -4,6 +4,8 @@
 # Coordonnées NORMALISÉES [x, y, largeur, hauteur] relatives à la zone cliente.
 
 aspect = 1.902
+calibrated = true
+reference_height = 1009   # hauteur (px) des captures de calibration   # vérifié sur de vraies captures (base des autres formats)
 
 [detail]
 title       = [0.040, 0.015, 0.200, 0.060]   # « Infos de héros » (sert à reconnaître l'écran)

@@ -14,7 +14,7 @@ import logging
 import re
 import secrets
 import threading
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -44,6 +44,42 @@ class AppState:
         self.importer = importer or ScreenshotImporter(data_root / "templates" / "sets")
         self.token = secrets.token_urlsafe(24)
         self.lock = threading.Lock()  # un import OCR à la fois
+        self.jobs: dict[str, ImportJob] = {}
+
+    def start_import(self, profile_id: str, files: list[tuple[str, bytes]]) -> ImportJob:
+        job = ImportJob(id=secrets.token_hex(6), total=max(1, len(files) * 2))
+        self.jobs = {k: j for k, j in self.jobs.items() if not j.finished}  # purge
+        self.jobs[job.id] = job
+
+        def work() -> None:
+            try:
+                with self.lock:
+                    report = self.importer.run(self.store, profile_id, files, job.update)
+                job.report = report.as_dict()
+            except Exception:  # noqa: BLE001 - l'interface affiche l'erreur
+                log.exception("Échec de l'import")
+                job.error = "l'analyse des captures a échoué (voir le journal)"
+            finally:
+                job.finished = True
+
+        threading.Thread(target=work, daemon=True).start()
+        return job
+
+
+@dataclass
+class ImportJob:
+    """Progression d'un import, lue par l'interface toutes les ~300 ms."""
+
+    id: str
+    total: int
+    done: int = 0
+    message: str = "Préparation…"
+    finished: bool = False
+    report: dict[str, Any] | None = None
+    error: str | None = None
+
+    def update(self, done: int, total: int, message: str) -> None:
+        self.done, self.total, self.message = done, max(1, total), message
 
 
 class ApiError(Exception):
@@ -137,6 +173,11 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 if method == "POST":
                     pid = store.create(str(self._body().get("player", "")))
                     return self._json({"id": pid}, 201)
+            if (j := re.fullmatch(r"/jobs/([0-9a-f]+)", path)) and method == "GET":
+                job = state.jobs.get(j[1])
+                if job is None:
+                    raise ApiError(404, "import introuvable")
+                return self._json(asdict(job))
             if path == "/open" and method == "POST":
                 body = self._body()
                 try:
@@ -180,9 +221,8 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 if not isinstance(files, list) or not files:
                     raise ApiError(400, "aucune capture reçue")
                 decoded = [(str(f.get("name", "capture")), _b64(f.get("data"))) for f in files]
-                with state.lock:
-                    report = state.importer.run(store, pid, decoded)
-                return self._json(report.as_dict())
+                job = state.start_import(pid, decoded)
+                return self._json({"job": job.id, "total": job.total}, 202)
             if (h := re.fullmatch(r"/heroes/(.+)", rest)) and method == "DELETE":
                 store.remove_hero(pid, unquote(h[1]))
                 return self._send(204, b"", "text/plain")

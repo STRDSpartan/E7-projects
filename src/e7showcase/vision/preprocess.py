@@ -36,8 +36,9 @@ def strip_window_chrome(image: Image.Image, min_jump: float = 40.0) -> Image.Ima
         best = max(candidates, key=lambda y: abs(rows[y] - rows[y - 1]))
         if abs(rows[best] - rows[best - 1]) < min_jump:
             return None
-        band = rows[:best] if above else rows[best:]
-        return best if float(band.std()) < 12 else None
+        # 3 lignes de marge : le rééchantillonnage d'une capture crée un liseré au bord des barres
+        band = rows[: max(1, best - 3)] if above else rows[best + 3 :]
+        return best if len(band) and float(band.std()) < 12 else None
 
     top = boundary(range(8, min(60, h // 10)), above=True) or 0
     bottom = boundary(range(h - int(h * 0.08), h - 8), above=False) or h

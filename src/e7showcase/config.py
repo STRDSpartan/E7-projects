@@ -61,6 +61,7 @@ def regions(profile: str | None = None, aspect: float | None = None) -> dict[str
     name = profile or settings()["game"]["region_profile"]
     profiles = region_profiles()
     if name == "auto":
-        target = aspect or 16 / 9
-        name = min(profiles, key=lambda n: abs(float(profiles[n].get("aspect", 0)) - target))
+        from e7showcase.vision.layouts import candidate_layouts
+
+        return candidate_layouts(profiles, aspect or 16 / 9)[0]
     return profiles[name]

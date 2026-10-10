@@ -20,7 +20,7 @@ la même application sur son ordinateur.
 | Fichier | Rôle |
 |---|---|
 | `launcher.py` | point d'entrée `e7showcase-app [fichier.e7v]` : serveur local + fenêtre native (pywebview) ou navigateur (`--browser`) |
-| `server.py` | serveur HTTP local (127.0.0.1, port aléatoire), API JSON, jeton de session + contrôle de l'en-tête Host |
+| `server.py` | serveur HTTP local (127.0.0.1, port aléatoire), API JSON, jeton de session + contrôle de l'en-tête Host ; import en arrière-plan suivi par `/api/jobs/<id>` (barre de progression) |
 | `ui.html` | interface (HTML/JS sans dépendance) |
 | `profiles.py` | profils dans `<données>/profiles/<id>/` (`profile.json` = Roster, `images/*.webp`) |
 | `importer.py` | reconnaissance des captures (moteur `scanner/` calibré : 100 % sur captures PC réelles) |

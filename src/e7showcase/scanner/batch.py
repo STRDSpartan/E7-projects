@@ -17,6 +17,7 @@ from PIL import Image
 
 from e7showcase.models.hero import Hero
 from e7showcase.scanner.hero_scanner import HeroScanner
+from e7showcase.vision.layouts import normalize_scale
 from e7showcase.vision.preprocess import strip_window_chrome
 from e7showcase.vision.set_catalog import read_catalog
 
@@ -53,7 +54,9 @@ def scan_directory(
     result = BatchResult()
     details: list[tuple[Path, Image.Image]] = []
     for path in image_files(directory):
-        image = strip_window_chrome(Image.open(path).convert("RGB"))
+        image = normalize_scale(
+            strip_window_chrome(Image.open(path).convert("RGB")), scanner.regions
+        )
         if scanner.is_detail_screen(image):
             details.append((path, image))
         elif scanner.is_list_screen(image):
