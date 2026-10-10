@@ -27,14 +27,24 @@ jobs:
       - name: Installateur (Inno Setup)
         shell: pwsh
         run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\iscc.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress }
           $version = (Select-String -Path src/e7showcase/__init__.py -Pattern '"(.+)"').Matches[0].Groups[1].Value
-          & "${env:ProgramFiles(x86)}\Inno Setup 6\iscc.exe" "/DAppVersion=$version" packaging\windows\installer.iss
+          & $iscc "/DAppVersion=$version" packaging\windows\installer.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Version portable (sans installation)
+        shell: pwsh
+        run: Compress-Archive -Path dist\E7Showcase -DestinationPath dist\E7Showcase-portable.zip
       - uses: actions/upload-artifact@v4
         with:
           name: E7Showcase-Windows
-          path: dist/E7Showcase-Setup-*.exe
+          path: |
+            dist/E7Showcase-Setup-*.exe
+            dist/E7Showcase-portable.zip
       - name: Release (tags v*)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/E7Showcase-Setup-*.exe
+          files: |
+            dist/E7Showcase-Setup-*.exe
+            dist/E7Showcase-portable.zip

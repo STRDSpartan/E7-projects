@@ -69,7 +69,7 @@ class SetMatcher:
                 t = _gray(_inner(np.asarray(tpl.resize((w, h), Image.Resampling.BILINEAR))))
                 if t.shape[0] >= area.shape[0] or t.shape[1] >= area.shape[1]:
                     continue
-                best = max(best, float(cv2.matchTemplate(area, t, cv2.TM_CCOEFF_NORMED).max()))
+                best = max(best, float(np.max(cv2.matchTemplate(area, t, cv2.TM_CCOEFF_NORMED))))
             out[key] = best
         return out
 
