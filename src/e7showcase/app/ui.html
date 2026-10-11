@@ -74,12 +74,12 @@ dialog input { width:100%; background:var(--panel-2); color:var(--text); border:
 <main id="main"></main>
 
 <dialog id="dlg">
-  <form method="dialog">
+  <form id="dlg-form">
     <strong>Nom du joueur</strong>
     <input id="dlg-name" maxlength="40" placeholder="Pseudo en jeu" required>
     <div style="display:flex;gap:8px;justify-content:flex-end">
-      <button class="ghost" value="cancel" formnovalidate>Annuler</button>
-      <button value="ok">Créer</button>
+      <button type="button" class="ghost" id="dlg-cancel">Annuler</button>
+      <button type="submit">Créer</button>
     </div>
   </form>
 </dialog>
@@ -244,10 +244,14 @@ async function removeProfile(id, player) {
 }
 
 $("#new").onclick = () => { $("#dlg-name").value = ""; $("#dlg").showModal(); };
-$("#dlg").addEventListener("close", async () => {
-  if ($("#dlg").returnValue !== "ok" || !$("#dlg-name").value.trim()) return;
-  const r = await json("POST", "/profiles", { player: $("#dlg-name").value });
-  refresh(r.id);
+$("#dlg-cancel").onclick = () => $("#dlg").close();
+$("#dlg-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const player = $("#dlg-name").value.trim();
+  if (!player) return;
+  $("#dlg").close();
+  try { const r = await json("POST", "/profiles", { player }); await refresh(r.id); }
+  catch (err) { alert(err.message); }
 });
 $("#open").onclick = () => $("#open-file").click();
 $("#open-file").addEventListener("change", async (e) => {
