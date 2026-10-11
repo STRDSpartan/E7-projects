@@ -189,7 +189,24 @@ partiel, contre-attaque quand un allié est attaqué, dégâts doublés hors de 
   ressources (Lidica, Sea Phantom Politis), premier tour d'Aram, riposte Sura de Bystander
   Hwayoung, saccage réservé aux héros Ténèbres (donné à tous).
 - **Correction** : Dégâts critiques + vaut +70 % (infobulle officielle).
-- **Lot 6** (à faire) : rangs 76 et suivants.
+- **Lot 6** (fait, rangs 76 à 105 — le site ne publie pas au-delà) : Politis, Sage Baal &
+  Sezan, Inheritor Amiki, Requiem Roana, Unbound Knight Arowell, Elvira, Schuri, Veronica,
+  Summer Break Charlotte, Top Model Luluca, Fallen Cecilia, Silver Blade Aramintha, Midnight
+  Gala Lilias, Sinful Angelica, Abyssal Yufine, Dragon King Sharun, Diene, Jenua, Designer
+  Lilibet, Yulha, Fenris, Lilias, Death Dealer Ray, Surin, Westwind Executioner Schuri, Twisted
+  Eidolon Kayron, Dragon Bride Senya, Last Rider Krau, Zeno. Mei Lin n'a pas de multiplicateurs
+  (absente d'E7Calc) : non simulable. Mécaniques ajoutées : Escorte (40 % de partage), Explosifs,
+  Serment de punition (insensible aux débuffs, 2 500 dégâts fixes), Pestilence, Traumatisme
+  (défense −70 %, attaque et vitesse ×2), Attaque double renforcée, posture de contre-attaque,
+  débuff de classe (classe du héros ajoutée au combattant), renvoi de dégâts, réduction des
+  dégâts additionnels et fixes, réduction des gains de jauge ennemis (compétences et vitesse),
+  transfert de débuffs, allongement / raccourcissement des débuffs, résurrection interdite aux
+  ennemis, critique garanti selon la Concentration (Schuri), compétence remplacée selon une
+  recharge ou un débuff. Non simulés : Morsure de Jenua et cumuls de Zeno (multiplicateurs
+  inconnus), dégâts de zone additionnels non chiffrés (Amiki, Jenua), bonus d'Esprit de Kayron ;
+  déclencheurs approchés pour Fenris et Arowell (toute attaque subie par un allié).
+- **Suite** : le classement public d'epic7rtastats s'arrête au rang 105 (filtre « Remove Low
+  Pick Data ») ; les héros restants pourront suivre par listes fournies.
 
 **Non simulés** : mécaniques uniques non encore décrites dans `hero_mechanics.json` (balles de
 Renoa, vitesse fixe de Harsetti, marques...), Bombes, partage de dégâts, transferts, artefacts,

@@ -37,6 +37,7 @@ def fighter(hero: Hero) -> Fighter:
         effect_res=s.effect_res,
         counter_chance=COUNTER_SET_CHANCE if "counter" in hero.sets else 0,
         lifesteal=LIFESTEAL_SET if "lifesteal" in hero.sets else 0,
+        role=data.get("class"),
     )
 
 

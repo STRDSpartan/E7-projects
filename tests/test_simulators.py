@@ -454,7 +454,10 @@ def _hero(name: str, **kw: float) -> Fighter:
     data = hero_skills(name)
     assert data is not None, name
     stats = {"effectiveness": 80.0, "effect_res": 60.0, **kw}
-    return Fighter(name, 3000, 18000, 1300, 230, 60, 250, data["element"], data["skills"], **stats)
+    return Fighter(
+        name, 3000, 18000, 1300, 230, 60, 250, data["element"], data["skills"], **stats,
+        role=data.get("class"),
+    )  # fmt: skip
 
 
 LOT1 = [
@@ -781,3 +784,67 @@ def test_lot5_unique_mechanics() -> None:
     ruele.hp = 1
     assert "ressuscite" in battle.hit(foe, foe.fighter.skills["s3"], ruele)
     assert ruele.hp == pytest.approx(0.5 * ruele.max_hp)
+
+
+LOT6 = [
+    "Politis", "Sage Baal & Sezan", "Inheritor Amiki", "Requiem Roana", "Unbound Knight Arowell",
+    "Elvira", "Schuri", "Veronica", "Summer Break Charlotte", "Top Model Luluca", "Fallen Cecilia",
+    "Silver Blade Aramintha", "Midnight Gala Lilias", "Sinful Angelica", "Abyssal Yufine",
+    "Dragon King Sharun", "Diene", "Jenua", "Designer Lilibet", "Yulha", "Fenris", "Lilias",
+    "Death Dealer Ray", "Surin", "Westwind Executioner Schuri", "Twisted Eidolon Kayron",
+    "Dragon Bride Senya", "Last Rider Krau", "Zeno",
+]  # fmt: skip
+
+
+def test_lot6_arena_heroes_have_rules_and_fight() -> None:
+    rules = load("hero_mechanics")["heroes"]
+    assert sum(1 for r in rules.values() if r.get("lot") == 6) == 29
+    assert hero_skills("Mei Lin") is None  # pas de multiplicateurs (E7Calc)
+    for i in range(0, 29, 8):
+        group = LOT6[i : i + 8]
+        first, second = group[:4], group[4:] or LOT6[:4]
+        res = simulate([_hero(n) for n in first], [_hero(n) for n in second], runs=15)
+        assert sum(res["win_rate"]) + res["draws"] == pytest.approx(100)
+
+
+def test_lot6_unique_mechanics() -> None:
+    # Escorte (Arowell) : 40 % des dégâts d'un allié
+    team = _Battle([_hero("Unbound Knight Arowell"), _hero("Zio")], [_hero("Renoa")],
+                   random.Random(1), {}, Options(), True)  # fmt: skip
+    arowell, zio, foe = team.units
+    team.fire(arowell, "battle_start")
+    hp = arowell.hp
+    team.hit(foe, foe.fighter.skills["s1"], zio)
+    assert arowell.hp < hp and "escort" in arowell.buffs
+    # Yulha : renvoie 40 % des dégâts subis
+    battle, yulha, foe = _duel("Yulha", "Zio")
+    hp = foe.hp
+    battle.hit(foe, foe.fighter.skills["s1"], yulha)
+    assert foe.hp < hp
+    # débuff de classe : Chevalier → défense −, autres → attaque −
+    battle, sharun, foe = _duel("Dragon King Sharun", "Boss Arunka")
+    battle.apply(sharun, {"type": "class_debuff", "target": "target", "turns": 2,
+                          "ignore_resist": True}, [foe])  # fmt: skip
+    assert ("def_down" if foe.fighter.role == "knight" else "atk_down") in foe.debuffs
+    # Traumatisme (Abyssal Yufine) : défense −70 %, attaque ×2
+    battle, yufine, _ = _duel("Abyssal Yufine", "Zio")
+    atk, df = yufine.stat("atk"), yufine.stat("defense")
+    yufine.debuffs["trauma"] = 3
+    assert yufine.stat("atk") == pytest.approx(2 * atk)
+    assert yufine.stat("defense") == pytest.approx(0.3 * df)
+    # Sinful Angelica : les ennemis ne peuvent pas ressusciter
+    battle, angelica, ras = _duel("Sinful Angelica", "Genesis Ras")
+    battle.fire(ras, "battle_start")
+    ras.hp = 10
+    battle.hit(angelica, angelica.fighter.skills["s1"], ras)
+    assert not ras.alive
+    # Fallen Cecilia : transfère ses débuffs
+    battle, cecilia, foe = _duel("Fallen Cecilia", "Zio")
+    cecilia.debuffs["stun"] = 1
+    battle.apply(cecilia, {"type": "transfer", "target": "target"}, [foe])
+    assert "stun" in foe.debuffs and not cecilia.debuffs
+    # Kayron : posture de contre-attaque (100 %)
+    battle, kayron, foe = _duel("Twisted Eidolon Kayron", "Zio")
+    battle.fire(kayron, "battle_start")
+    battle.counter(kayron, foe)
+    assert battle.stats["counters"] == 1
