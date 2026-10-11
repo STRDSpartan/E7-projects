@@ -11,8 +11,41 @@
        "effect": "unhealable"
       }
      ]
+    },
+    "s3": {
+     "source": "Attacks the enemy, dispelling all buffs before a 100% chance each to inflict two burn effects for 2 turns. At the end of the turn, detonates burn effects.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "target",
+       "all": true
+      },
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn"
+       ]
+      }
+     ]
     }
-   }
+   },
+   "lot": 5
   },
   "westwind_executioner_schuri": {
    "skills": {
@@ -2750,6 +2783,2376 @@
        "amount": 3000,
        "per_debuff": false,
        "on_crit": false
+      }
+     ]
+    }
+   }
+  },
+  "spirit_eye_celine": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "When this skill is used, if it was not triggered by a Dual Attack, and the caster has a buff, uses Nimble Sword instead (after granting increased Attack to the caster for 1 turn, attacks and absorbs some of the damage dealt as Health; penetrates Defense by 50%).",
+     "set": {
+      "swap": {
+       "skill": "s1_bis",
+       "if_buff": "*"
+      }
+     },
+     "effects": []
+    },
+    "s1_bis": {
+     "source": "Nimble Sword.",
+     "set": {
+      "passive": true
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "self",
+       "turns": 1
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
+    },
+    "s2": {
+     "source": "Damage suffered in one attack does not exceed 51% of max Health. Decreases skill cooldown by 1 turn when somebody dies, and acquires 5 Souls (once per turn).",
+     "set": {
+      "trigger": {
+       "event": "death",
+       "chance": 1.0,
+       "every": 1
+      }
+     },
+     "effects": [
+      {
+       "type": "damage_cap",
+       "value": 0.51
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "souls",
+       "amount": 5,
+       "target": "self"
+      }
+     ]
+    },
+    "s3": {
+     "source": "Opens the gate of the spirits to revive all dead allies. Grants immortality to all allies for 1 turn, and grants possession (Attack +25%, counterattacks when suffering a critical hit) to the caster for 3 turns. (PV à la résurrection non précisés : 50 %, estimé.)",
+     "effects": [
+      {
+       "type": "revive_ally",
+       "all": true,
+       "ratio": 0.5,
+       "estimated": true
+      },
+      {
+       "type": "buff",
+       "effect": "immortal",
+       "target": "allies",
+       "turns": 1
+      },
+      {
+       "type": "buff",
+       "effect": "possession",
+       "target": "self",
+       "turns": 3
+      }
+     ]
+    }
+   }
+  },
+  "ruele_of_light": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with a staff, before recovering Health of all allies.",
+     "effects": [
+      {
+       "type": "heal",
+       "target": "allies",
+       "stat": "hp",
+       "ratio": 0.05,
+       "estimated": true
+      }
+     ]
+    },
+    "s2": {
+     "source": "Dispelling all debuffs from an ally and recovering their Health before granting them a barrier and damage limit (35% of max Health per attack) for 2 turns.",
+     "effects": [
+      {
+       "type": "heal",
+       "target": "ally",
+       "stat": "hp",
+       "ratio": 0.15,
+       "estimated": true
+      },
+      {
+       "type": "cleanse",
+       "target": "last",
+       "all": true
+      },
+      {
+       "type": "barrier",
+       "target": "last",
+       "stat": "hp",
+       "ratio": 0.15,
+       "turns": 2,
+       "estimated": true
+      },
+      {
+       "type": "buff",
+       "effect": "damage_limit",
+       "target": "last",
+       "turns": 2
+      }
+     ]
+    },
+    "s3": {
+     "source": "Dispels all debuffs from an ally before recovering Health by 50% and granting invincibility for 1 turn. When the target is already dead, revives them with 100% Health.",
+     "effects": [
+      {
+       "type": "revive_ally",
+       "ratio": 0.5
+      },
+      {
+       "type": "cleanse",
+       "target": "last",
+       "all": true
+      },
+      {
+       "type": "buff",
+       "effect": "invincible",
+       "target": "last",
+       "turns": 1
+      }
+     ]
+    },
+    "s3_guard": {
+     "source": "At the start of the first battle, grants Spirit Lord's Protection to the caster (upon receiving lethal damage, revives with 50% Health and CR +50%).",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "spirit_guard",
+       "target": "self",
+       "turns": 999,
+       "unique": true
+      }
+     ]
+    }
+   }
+  },
+  "vildred": {
+   "lot": 5,
+   "skills": {
+    "s2": {
+     "source": "Increases Attack of the caster for 2 turns and activates Dancing Blade (all enemies) when an enemy is defeated by Sweep or Blade Ascent.",
+     "set": {
+      "trigger": {
+       "event": "kill",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "self",
+       "turns": 2
+      }
+     ]
+    }
+   }
+  },
+  "mort": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy by piercing them, with a 50% chance to decrease Defense for 2 turns.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "def_down",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "Immune to debuffs which prevent movement. All Heroes except for the caster cannot counterattack. When an ally is attacked, has a 20% chance to counterattack.",
+     "set": {
+      "trigger": {
+       "event": "ally_attacked",
+       "chance": 0.2,
+       "counter": true
+      }
+     },
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "no_counter"
+      },
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep",
+        "fear"
+       ]
+      }
+     ]
+    },
+    "s2_blessing": {
+     "source": "When counterattacking, activates Sacred Blessing (once every 3 turns): grants a barrier to all allies for 2 turns, and increases Speed of the caster for 2 turns. (Tirage indépendant de la contre-attaque, estimé.)",
+     "set": {
+      "trigger": {
+       "event": "ally_attacked",
+       "chance": 0.2,
+       "every": 3
+      }
+     },
+     "effects": [
+      {
+       "type": "barrier",
+       "target": "allies",
+       "stat": "hp",
+       "ratio": 0.15,
+       "turns": 2,
+       "estimated": true
+      },
+      {
+       "type": "buff",
+       "effect": "spd_up",
+       "target": "self",
+       "turns": 2
+      }
+     ]
+    },
+    "s3": {
+     "source": "Descends and attacks all enemies, inflicting fear for 2 turns, before recovering Health of the caster.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "fear",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "heal",
+       "target": "self",
+       "stat": "hp",
+       "ratio": 0.1,
+       "estimated": true
+      }
+     ]
+    }
+   }
+  },
+  "successor_taeyou": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with a spear, decreasing Combat Readiness by 20%. When the caster is granted possession, activates Roaring Spiritfall instead (increases Attack of the caster for 2 turns before attacking).",
+     "set": {
+      "swap": {
+       "skill": "s1_bis",
+       "if_buff": "possession"
+      }
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": -20,
+       "target": "target",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s1_bis": {
+     "source": "Roaring Spiritfall.",
+     "set": {
+      "passive": true,
+      "always_crit": true
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "self",
+       "turns": 2
+      }
+     ]
+    },
+    "s2": {
+     "source": "Starts the first battle with 60 Fighting Spirit. When Combat Readiness of an enemy is decreased, gains Fighting Spirit equal to the amount reduced, and at the end of a turn, when Fighting Spirit is full, consumes all, increasing Combat Readiness of the caster by 100% and granting possession for 2 turns.",
+     "set": {
+      "trigger": {
+       "event": "resource",
+       "chance": 1.0,
+       "resource": {
+        "kind": "spirit",
+        "need": 100,
+        "gain": 0,
+        "on": "any_turn_end",
+        "start": 60
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "cr_spirit"
+      },
+      {
+       "type": "gauge",
+       "amount": 100,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "buff",
+       "effect": "possession",
+       "target": "self",
+       "turns": 2
+      }
+     ]
+    },
+    "s3": {
+     "source": "Dispelling two buffs from all enemies and a 85% chance to decrease Defense for 2 turns. When the caster is granted possession, extends buff durations by 1 turn and grants an extra turn.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "debuff",
+       "effect": "def_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 0.85,
+       "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false,
+       "if_buff": "possession"
+      }
+     ]
+    }
+   }
+  },
+  "dark_corvus": {
+   "lot": 5,
+   "skills": {
+    "s2": {
+     "source": "Immune to stun. At the moment the caster is attacked, skill cooldown decreased by 1 turn (2 turns on a critical hit).",
+     "set": {
+      "trigger": {
+       "event": "attacked",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun"
+       ]
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "witch_of_the_mere_tenebria": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with a mirror, with a 100% chance to inflict a random debuff (stun, sleep, redirected provoke) for 1 turn. When Mirror of the Abyss is on cooldown, triggers a Dual Attack.",
+     "effects": [
+      {
+       "type": "random_debuff",
+       "target": "target",
+       "turns": 1,
+       "chance": 1.0
+      },
+      {
+       "type": "dual",
+       "if_cooldown": "s3"
+      }
+     ]
+    },
+    "s2": {
+     "source": "After inflicting rupture on all enemies for 2 turns, attacks all enemies and inflicts restrict for 2 turns. Grants stealth and a barrier to the caster for 2 turns.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "rupture",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "restrict",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "buff",
+       "effect": "stealth",
+       "target": "self",
+       "turns": 2
+      },
+      {
+       "type": "barrier",
+       "target": "self",
+       "stat": "hp",
+       "ratio": 0.15,
+       "turns": 2,
+       "estimated": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Dispelling two buffs before inflicting block for 2 turns and a random debuff for 1 turn on all enemies. Increases Combat Readiness of the caster by 50%.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "debuff",
+       "effect": "block",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "random_debuff",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 1.0
+      },
+      {
+       "type": "gauge",
+       "amount": 50,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "saria": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks two enemies with a burst and has a 65% chance to dispel one buff.",
+     "set": {
+      "targets": 2
+     },
+     "effects": [
+      {
+       "type": "strip",
+       "target": "target",
+       "all": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the start of an ally's extra turn, gains 2 Focus. When Focus is full, activates Wings of Liberation (consumes 5 Focus): attacks all enemies.",
+     "set": {
+      "trigger": {
+       "event": "resource",
+       "chance": 1.0,
+       "resource": {
+        "kind": "focus",
+        "need": 5,
+        "gain": 2,
+        "on": "ally_extra_turn",
+        "cost": 5
+       }
+      }
+     },
+     "effects": []
+    },
+    "s2_cr": {
+     "source": "At the start of an ally's extra turn, increases Combat Readiness of the caster by 30%.",
+     "set": {
+      "trigger": {
+       "event": "ally_extra_turn",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 30,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Grants invincibility to all allies for 1 turn and increased Attack for 2 turns.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "invincible",
+       "target": "allies",
+       "turns": 1
+      },
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "allies",
+       "turns": 2
+      }
+     ]
+    }
+   }
+  },
+  "young_senya": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy, triggers a Dual Attack from a random ally, and increases Combat Readiness of the caster by 15%.",
+     "effects": [
+      {
+       "type": "dual"
+      },
+      {
+       "type": "gauge",
+       "amount": 15,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Dispelling all debuffs from all allies and granting continuous healing for 2 turns before increasing Combat Readiness by 40%.",
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": true
+      },
+      {
+       "type": "buff",
+       "effect": "continuous_heal",
+       "target": "allies",
+       "turns": 2
+      },
+      {
+       "type": "gauge",
+       "amount": 40,
+       "target": "allies",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "tori": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy by whipping a ribbon, and grants a barrier to the caster for 1 turn (proportional to Attack).",
+     "effects": [
+      {
+       "type": "barrier",
+       "target": "self",
+       "stat": "atk",
+       "ratio": 0.5,
+       "turns": 1,
+       "estimated": true
+      }
+     ]
+    },
+    "s2": {
+     "source": "Buffs granted to the caster are applied as undispellable. Damage suffered in one attack does not exceed 51% of max Health. At the start of the turn, has a 20% chance for each buff to grant cascade (once every 2 turns). (Chance moyenne 40 %, estimée.)",
+     "set": {
+      "trigger": {
+       "event": "turn_start",
+       "chance": 0.4,
+       "every": 2
+      }
+     },
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "undispellable"
+      },
+      {
+       "type": "damage_cap",
+       "value": 0.51
+      },
+      {
+       "type": "buff",
+       "effect": "cascade",
+       "target": "self",
+       "turns": 99,
+       "unique": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Granting increased Attack and increased Speed to all allies for 3 turns.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "allies",
+       "turns": 3
+      },
+      {
+       "type": "buff",
+       "effect": "spd_up",
+       "target": "allies",
+       "turns": 3
+      }
+     ]
+    }
+   }
+  },
+  "lidica": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy and has a 80% chance each to inflict two bleeding effects for 1 turn. At the end of the turn, detonates bleeding effects.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.8,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.8,
+       "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "bleed"
+       ]
+      }
+     ]
+    },
+    "s2": {
+     "source": "Attacking all enemies, decreasing buff durations by 1 turn and inflicting bind for 2 turns. For every target, increases Combat Readiness of the caster by 25%. (Réduction de ressources : non simulée.)",
+     "effects": [
+      {
+       "type": "buff_shorten",
+       "amount": 1,
+       "target": "enemies"
+      },
+      {
+       "type": "debuff",
+       "effect": "bind",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "gauge",
+       "amount": 25,
+       "target": "self",
+       "chance": 1.0,
+       "per_hit": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Inflicting decreased Defense for 2 turns before decreasing Combat Readiness by 100%. Grants skill nullifier once to all allies.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "def_down",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "gauge",
+       "amount": -100,
+       "target": "target",
+       "chance": 1.0
+      },
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "allies",
+       "turns": 99
+      }
+     ]
+    }
+   }
+  },
+  "aram": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Has a 35% chance to inflict stun for 1 turn, before recovering Health of all allies.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "stun",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.35,
+       "ignore_resist": false
+      },
+      {
+       "type": "heal",
+       "target": "allies",
+       "stat": "hp",
+       "ratio": 0.05,
+       "estimated": true
+      }
+     ]
+    },
+    "s2": {
+     "source": "After suffering an attack that targets all allies, activates Warming Up (gains 10 Soul): grants vigor and increased Speed to all allies for 2 turns. (Effet du premier tour : non simulé.)",
+     "set": {
+      "trigger": {
+       "event": "aoe_attacked",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "vigor",
+       "target": "allies",
+       "turns": 2
+      },
+      {
+       "type": "buff",
+       "effect": "spd_up",
+       "target": "allies",
+       "turns": 2
+      },
+      {
+       "type": "souls",
+       "amount": 10,
+       "target": "self"
+      }
+     ]
+    },
+    "s3": {
+     "source": "Resetting skill cooldowns of an ally except for the caster before increasing Combat Readiness by 100%.",
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "ally",
+       "chance": 1.0
+      },
+      {
+       "type": "gauge",
+       "amount": 100,
+       "target": "last",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "celine": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with a sheath, and grants stealth to the caster for 1 turn.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "stealth",
+       "target": "self",
+       "turns": 1
+      }
+     ]
+    },
+    "s2": {
+     "source": "After an enemy uses a non-attack skill, dispels all debuffs from the caster and attacks a random enemy with Blink (Acquire 10 Soul; CR +30%). Once every 2 turns.",
+     "set": {
+      "trigger": {
+       "event": "enemy_skill",
+       "chance": 1.0,
+       "every": 2,
+       "condition": {
+        "kind": "non_attack"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "self",
+       "all": true
+      },
+      {
+       "type": "gauge",
+       "amount": 30,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "souls",
+       "amount": 10,
+       "target": "self"
+      }
+     ]
+    },
+    "s2_stealth": {
+     "source": "At the start of the first battle, grants stealth for 2 turns.",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "stealth",
+       "target": "self",
+       "turns": 2
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks the enemy repeatedly, and grants increased Evasion and a barrier to the caster for 2 turns. Damage sharing effects are ignored.",
+     "set": {
+      "ignore_share": true
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      },
+      {
+       "type": "barrier",
+       "target": "self",
+       "stat": "atk",
+       "ratio": 0.5,
+       "turns": 2,
+       "estimated": true
+      }
+     ]
+    }
+   }
+  },
+  "frida": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Increases Combat Readiness of the ally with the highest Combat Readiness except for the caster by 10% (max 15%).",
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 15,
+       "target": "ally",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the start of the first battle, grants Oasis All-Ride Pass (first Soulburn free) to the caster and the foremost ally.",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "oasis",
+       "target": "self",
+       "turns": 999,
+       "unique": true
+      },
+      {
+       "type": "buff",
+       "effect": "oasis",
+       "target": "front",
+       "turns": 999,
+       "unique": true
+      }
+     ]
+    },
+    "s2_soulburn": {
+     "source": "When an ally uses a Soulburn, increases Combat Readiness of the caster by 15% (max 20%).",
+     "set": {
+      "trigger": {
+       "event": "soulburn",
+       "chance": 1.0,
+       "condition": {
+        "kind": "other_ally"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Increases Combat Readiness of all allies by 15% (max 25%) and grants increased Attack and ignore sharing for 3 turns. (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 25,
+       "target": "allies",
+       "chance": 1.0
+      },
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "allies",
+       "turns": 3
+      },
+      {
+       "type": "buff",
+       "effect": "ignore_share",
+       "target": "allies",
+       "turns": 3
+      }
+     ]
+    }
+   }
+  },
+  "sea_phantom_politis": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with phantoms, dispelling one buff. When the caster is enraged, triggers a Dual Attack.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "target",
+       "all": false
+      },
+      {
+       "type": "dual",
+       "if_buff": "rage"
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the start of battle, has a 100% chance to grant stealth for 1 turn. (Réduction des ressources ennemies : non simulée.)",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "stealth",
+       "target": "self",
+       "turns": 1
+      }
+     ]
+    },
+    "s2_end": {
+     "source": "At the end of the turn, has a 100% chance to grant stealth for 1 turn.",
+     "set": {
+      "trigger": {
+       "event": "turn_end",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "stealth",
+       "target": "self",
+       "turns": 1
+      }
+     ]
+    },
+    "s3": {
+     "source": "Making all allies enraged (Attack and Speed +20%) for 2 turns. Dispels two buffs from all enemies and decreases Speed for 2 turns before decreasing Combat Readiness by 20%.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "rage",
+       "target": "allies",
+       "turns": 2
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "debuff",
+       "effect": "spd_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "gauge",
+       "amount": -20,
+       "target": "enemies",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "swift_flagbearer_sigret": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "With a 75% chance to inflict silence for 1 turn. After attacking, if the target is inflicted with silence, decreases Combat Readiness of the target by 25%.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "silence",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      },
+      {
+       "type": "gauge",
+       "amount": -25,
+       "target": "target",
+       "chance": 1.0,
+       "if_target_debuff": "silence"
+      }
+     ]
+    },
+    "s2": {
+     "source": "After dispelling all buffs from the enemy, has a 100% chance to inflict target (damage received +15%) for 2 turns, and makes all allies except for the caster attack with a basic skill. Increases Combat Readiness of the caster by 30%.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "target",
+       "all": true
+      },
+      {
+       "type": "debuff",
+       "effect": "target_mark",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "assist",
+       "target": "self"
+      },
+      {
+       "type": "gauge",
+       "amount": 30,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Dispels two buffs from all enemies, before a 95% chance to inflict fear for 2 turns, and decrease Combat Readiness by 20%. Grants increased Speed to all allies for 2 turns. (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false,
+      "trigger": null
+     },
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "debuff",
+       "effect": "fear",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 0.95,
+       "ignore_resist": false
+      },
+      {
+       "type": "gauge",
+       "amount": -20,
+       "target": "enemies",
+       "chance": 1.0
+      },
+      {
+       "type": "buff",
+       "effect": "spd_up",
+       "target": "allies",
+       "turns": 2
+      }
+     ]
+    },
+    "s3_evasion": {
+     "source": "At the start of the first battle, grants increased Evasion to the caster for 2 turns.",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      }
+     ]
+    }
+   }
+  },
+  "infinite_horizon_achates": {
+   "lot": 5,
+   "skills": {
+    "s2": {
+     "source": "Dispels two debuffs from an ally except for the caster and grants a barrier for 2 turns before increasing Combat Readiness by 40%.",
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "ally",
+       "all": false
+      },
+      {
+       "type": "cleanse",
+       "target": "ally",
+       "all": false
+      },
+      {
+       "type": "barrier",
+       "target": "last",
+       "stat": "hp",
+       "ratio": 0.15,
+       "turns": 2,
+       "estimated": true
+      },
+      {
+       "type": "gauge",
+       "amount": 40,
+       "target": "last",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Dispels all debuffs from all allies before granting a random buff for 2 turns for each debuff dispelled. (Un buff aléatoire par allié, estimé.)",
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": true
+      },
+      {
+       "type": "random_buff",
+       "target": "allies",
+       "choices": [
+        "atk_up",
+        "def_up",
+        "spd_up",
+        "cc_up",
+        "immunity"
+       ],
+       "turns": 2
+      }
+     ]
+    },
+    "s3_ready": {
+     "source": "When this skill is available according to cooldown count, at the end of an enemy's turn, increases Combat Readiness of the caster by 20%.",
+     "set": {
+      "trigger": {
+       "event": "enemy_turn_end",
+       "chance": 1.0,
+       "condition": {
+        "kind": "skill_ready",
+        "skill": "s3"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "faithless_lidica": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks with a sword, with a 75% chance to decrease Hit Chance for 1 turn.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "Binds all enemies with a sword, with a 100% chance to dispel one buff, before increasing the caster's Combat Readiness by 25% per target. This skill cannot trigger a counterattack.",
+     "set": {
+      "no_counter": true
+     },
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "gauge",
+       "amount": 25,
+       "target": "self",
+       "chance": 1.0,
+       "per_hit": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Increasing skill cooldown to max, and increases Combat Readiness of all allies by 25%. A critical hit grants all allies skill nullifier once.",
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": 99,
+       "target": "target",
+       "chance": 1.0
+      },
+      {
+       "type": "gauge",
+       "amount": 25,
+       "target": "allies",
+       "chance": 1.0
+      },
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "allies",
+       "turns": 99,
+       "if_crit": true
+      }
+     ]
+    }
+   }
+  },
+  "elena": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Dispelling one debuff each from two allies.",
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "When an ally suffers an attack that targets all allies, grants 25% (max 30%) damage reduction and activates Consecrated Ground: recovers Health of all allies before increasing Combat Readiness of the caster by 30%.",
+     "set": {
+      "trigger": {
+       "event": "aoe_attacked",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "damage_reduction",
+       "value": 0.3
+      },
+      {
+       "type": "heal",
+       "target": "allies",
+       "stat": "hp",
+       "ratio": 0.1,
+       "estimated": true
+      },
+      {
+       "type": "gauge",
+       "amount": 30,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks all enemies, and dispels one debuff from all allies before granting invincibility for 1 turn. (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": false
+      },
+      {
+       "type": "buff",
+       "effect": "invincible",
+       "target": "allies",
+       "turns": 1
+      }
+     ]
+    }
+   }
+  },
+  "maid_chloe": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "With a 40% chance to stun for 1 turn. When the target is stunned after the attack, increases Combat Readiness of all allies except for the caster by 15%.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "stun",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.4,
+       "ignore_resist": false
+      },
+      {
+       "type": "gauge",
+       "amount": 15,
+       "target": "allies",
+       "chance": 1.0,
+       "if_target_debuff": "stun"
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the start of the turn, recovers Health of the two allies with the lowest Health. (Résistance +20 % aux alliés : non simulée.)",
+     "set": {
+      "trigger": {
+       "event": "turn_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "heal",
+       "target": "ally",
+       "stat": "hp",
+       "ratio": 0.08,
+       "estimated": true
+      },
+      {
+       "type": "heal",
+       "target": "ally",
+       "stat": "hp",
+       "ratio": 0.08,
+       "estimated": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Reviving all dead allies to 20% Health. Dispels two debuffs from all living allies and grants revive (lethal damage: revive with 30%) for 3 turns.",
+     "effects": [
+      {
+       "type": "revive_ally",
+       "all": true,
+       "ratio": 0.2
+      },
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": false
+      },
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": false
+      },
+      {
+       "type": "buff",
+       "effect": "revive_buff",
+       "target": "allies",
+       "turns": 3
+      }
+     ]
+    }
+   }
+  },
+  "commander_pavel": {
+   "lot": 5,
+   "skills": {
+    "s2": {
+     "source": "Starts with 60 Fighting Spirit. After an ally except for the caster makes a critical hit, gains 20 Fighting Spirit and when full, activates Begone!: increases Attack of the caster for 2 turns, attacks all enemies, before increasing Combat Readiness of the caster by 50%.",
+     "set": {
+      "trigger": {
+       "event": "resource",
+       "chance": 1.0,
+       "resource": {
+        "kind": "spirit",
+        "need": 100,
+        "gain": 20,
+        "on": "ally_crit",
+        "start": 60
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "self",
+       "turns": 2
+      },
+      {
+       "type": "gauge",
+       "amount": 50,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "afternoon_soak_flan": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "When used on the caster's turn, uses It's a Whopper! instead (attacks all enemies, gains 1 Focus; always critical; does not trigger a counterattack).",
+     "set": {
+      "swap": {
+       "skill": "s1_bis"
+      }
+     },
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "stun",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.4,
+       "ignore_resist": false
+      }
+     ]
+    },
+    "s1_bis": {
+     "source": "It's a Whopper!",
+     "set": {
+      "passive": true,
+      "always_crit": true,
+      "no_counter": true
+     },
+     "effects": [
+      {
+       "type": "stack",
+       "skill": "s2",
+       "amount": 1,
+       "target": "self"
+      }
+     ]
+    },
+    "s2": {
+     "source": "Starts with 3 Focus. Increases Evasion by 50% (+50% with Focus). After an ally uses a basic skill, consumes 1 Focus, triggering a Dual Attack, and increases Combat Readiness of the caster by 25%. (Esquive : 50 %, estimé.)",
+     "set": {
+      "rate": 1.1,
+      "pow": 1,
+      "enhance": [],
+      "pen": 0,
+      "aoe": false,
+      "always_crit": true,
+      "trigger": {
+       "event": "resource",
+       "chance": 1.0,
+       "resource": {
+        "kind": "focus",
+        "need": 1,
+        "gain": 0,
+        "on": "ally_basic",
+        "start": 3,
+        "cost": 1
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "static_aura",
+       "aura": "evasion_self",
+       "value": 0.5
+      },
+      {
+       "type": "gauge",
+       "amount": 25,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "straze": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Increases Combat Readiness of the caster by 20%.",
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2": {
+     "source": "Attacks all enemies and dispels two buffs.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks all enemies. This skill cannot trigger a counterattack.",
+     "set": {
+      "no_counter": true
+     },
+     "effects": []
+    }
+   }
+  },
+  "lionheart_cermia": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Increases Speed of the caster for 1 turn.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "spd_up",
+       "target": "self",
+       "turns": 1
+      }
+     ]
+    },
+    "s2": {
+     "source": "After an ally suffers an extra attack, counterattack, or Dual Attack, dispels all debuffs and activates Shine! (once every 2 turns): Defense and Effect Resistance up for 2 turns, CR +20%, resets skill cooldowns. (Déclenché sur toute attaque subie par un allié, estimé.)",
+     "set": {
+      "trigger": {
+       "event": "ally_attacked",
+       "chance": 1.0,
+       "every": 2
+      }
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "self",
+       "all": true
+      },
+      {
+       "type": "buff",
+       "effect": "def_up",
+       "target": "self",
+       "turns": 2
+      },
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "bystander_hwayoung": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Increases Combat Readiness of the caster by 20%.",
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2": {
+     "source": "Immune to buffs and debuffs. (Riposte Sura et défense ∝ attaque : non simulées.)",
+     "set": {
+      "trigger": null
+     },
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "immune_all"
+      }
+     ]
+    },
+    "s3": {
+     "source": "When the target is a Hero, ignores damage reduction and damage sharing effects.",
+     "set": {
+      "ignore_share": true,
+      "ignore_reduction": true
+     },
+     "effects": []
+    }
+   }
+  },
+  "argent_waves_hwayoung": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with kicks and dispels one buff.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "target",
+       "all": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "After an ally uses a non-attack skill, activates Swallow Kick: increases Combat Readiness of the caster by 20%; penetrates Defense by 50%; when the caster is granted vigor, grants an extra turn.",
+     "set": {
+      "trigger": {
+       "event": "ally_nonattack",
+       "chance": 1.0
+      },
+      "pen": 0.5
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false,
+       "if_buff": "vigor"
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks all enemies, and increases Combat Readiness of the ally in the back row by 50%. Grants vigor to the caster for 2 turns.",
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 50,
+       "target": "back_row",
+       "chance": 1.0
+      },
+      {
+       "type": "buff",
+       "effect": "vigor",
+       "target": "self",
+       "turns": 2
+      }
+     ]
+    }
+   }
+  },
+  "wanderer_silk": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "With a 50% chance to target (damage received +15%) for 2 turns.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "target_mark",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "Dispelling one buff. When the caster has a buff, triggers a Dual Attack.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "target",
+       "all": false
+      },
+      {
+       "type": "dual",
+       "if_buff": "*"
+      }
+     ]
+    },
+    "s3": {
+     "source": "Inflicting silence for 2 turns and decreasing Combat Readiness by 100%. Grants a barrier to the caster for 2 turns.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "silence",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "gauge",
+       "amount": -100,
+       "target": "target",
+       "chance": 1.0
+      },
+      {
+       "type": "barrier",
+       "target": "self",
+       "stat": "hp",
+       "ratio": 0.15,
+       "turns": 2,
+       "estimated": true
+      }
+     ]
+    }
+   }
+  },
+  "festive_eda": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "With a 75% chance to decrease Hit Chance for 1 turn.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "After attacking, when granted Shyness, activates Expected Outcome: attacks all enemies, dispelling two buffs and decreasing Combat Readiness by 50% before an 85% chance to decrease Defense for 2 turns. (La Timidité est consommée à l'activation, estimé.)",
+     "set": {
+      "passive": true,
+      "cooldown": 0,
+      "trigger": {
+       "event": "after_attack",
+       "chance": 1.0,
+       "condition": {
+        "kind": "has_buff",
+        "buff": "shyness"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "gauge",
+       "amount": -50,
+       "target": "enemies",
+       "chance": 1.0
+      },
+      {
+       "type": "debuff",
+       "effect": "def_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 0.85,
+       "ignore_resist": false
+      },
+      {
+       "type": "strip",
+       "target": "self",
+       "only": "shyness"
+      }
+     ]
+    },
+    "s2_stealth": {
+     "source": "At the start of battle, grants stealth for 1 turn.",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "stealth",
+       "target": "self",
+       "turns": 1
+      }
+     ]
+    },
+    "s2_end": {
+     "source": "At the end of the turn, grants stealth for 1 turn.",
+     "set": {
+      "trigger": {
+       "event": "turn_end",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "stealth",
+       "target": "self",
+       "turns": 1
+      }
+     ]
+    },
+    "s2_shy": {
+     "source": "At the start of the turn, when not stealthed, dispels all debuffs and grants Shyness for 1 turn (once every 4 turns).",
+     "set": {
+      "trigger": {
+       "event": "turn_start",
+       "chance": 1.0,
+       "every": 4,
+       "condition": {
+        "kind": "lacks_buff",
+        "buff": "stealth"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "self",
+       "all": true
+      },
+      {
+       "type": "buff",
+       "effect": "shyness",
+       "target": "self",
+       "turns": 1,
+       "unique": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks all enemies, with a 100% chance to make them unable to be buffed for 2 turns.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
+    }
+   }
+  },
+  "blooming_lidica": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "With a 40% chance to stun for 1 turn.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "stun",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.4,
+       "ignore_resist": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "After an ally except for the caster attacks, when the target has a debuff, activates Thorned Vine (once every 3 turns): attacks all enemies, decreasing buff durations by 1 turn and making them unable to be buffed for 2 turns. (Vitesse ∝ débuffs ennemis : non simulée.)",
+     "set": {
+      "trigger": {
+       "event": "ally_hit",
+       "chance": 1.0,
+       "every": 3,
+       "condition": {
+        "kind": "target_has_debuff"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "buff_shorten",
+       "amount": 1,
+       "target": "enemies"
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks the enemy with a flower, and grants skill nullifier once to the caster. Penetrates Defense by 50%. Cannot trigger a critical hit.",
+     "set": {
+      "no_crit": true
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "self",
+       "turns": 99
+      }
+     ]
+    }
+   }
+  },
+  "amid": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Increases Combat Readiness of the caster by 15%.",
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 15,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2": {
+     "source": "Grants skill nullifier once to all allies and increases Combat Readiness by 25%. Grants an extra turn to the caster.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "allies",
+       "turns": 99
+      },
+      {
+       "type": "gauge",
+       "amount": 25,
+       "target": "allies",
+       "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
+    },
+    "s3": {
+     "source": "Dispels two debuffs from an ally except for the caster and grants Swift Attack.",
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "ally",
+       "all": false
+      },
+      {
+       "type": "cleanse",
+       "target": "ally",
+       "all": false
+      },
+      {
+       "type": "buff",
+       "effect": "swift",
+       "target": "last",
+       "turns": 1
+      }
+     ]
+    }
+   }
+  },
+  "lone_wolf_peira": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "With a 75% chance to decrease Defense for 1 turn.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "def_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "Increases Evasion by 50%. At the start of the turn, increases Attack by 20%, and can stack up to 5 times.",
+     "set": {
+      "trigger": {
+       "event": "turn_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "static_aura",
+       "aura": "evasion_self",
+       "value": 0.5
+      },
+      {
+       "type": "mark",
+       "mark": "hunt",
+       "target": "self"
+      }
+     ]
+    },
+    "s2_end": {
+     "source": "At the end of the turn, increases Combat Readiness of all allies by 10%.",
+     "set": {
+      "trigger": {
+       "event": "turn_end",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 10,
+       "target": "allies",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Dispels two debuffs from all allies before granting rampage (Speed and Evasion +20%) to Dark elemental allies for 3 turns. Grants swift attack to all allies except for the caster. (Saccage donné à tous les alliés : élément non vérifié.)",
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": false
+      },
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": false
+      },
+      {
+       "type": "buff",
+       "effect": "rampage",
+       "target": "allies",
+       "turns": 3
+      },
+      {
+       "type": "buff",
+       "effect": "swift",
+       "target": "allies",
+       "turns": 1
+      }
+     ]
+    }
+   }
+  },
+  "chaos_sect_axe": {
+   "lot": 5,
+   "skills": {
+    "s2": {
+     "source": "Attacks all enemies with a shockwave and inflicts up to 15% injuries. (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false
+     },
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": false
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks the enemy, dispelling all buffs before a 55% (max 75%) chance to increase skill cooldowns by 2 turns. When the enemy is defeated, resets cooldown of this skill. (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false,
+      "trigger": null
+     },
+     "effects": [
+      {
+       "type": "strip",
+       "target": "target",
+       "all": true
+      },
+      {
+       "type": "cooldown",
+       "amount": 2,
+       "target": "target",
+       "chance": 0.75
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0,
+       "on_kill": true
+      }
+     ]
+    }
+   }
+  },
+  "urban_shadow_choux": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Increases Combat Readiness of the caster by 15%. When it is the caster's turn, gains 1 Focus.",
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 15,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "stack",
+       "skill": "s2",
+       "amount": 1,
+       "target": "self"
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the start of the first battle, gains 1 Focus. At the start of the turn, gains 1 Focus, and when Focus is full, resets cooldown of Operation: Cream Pastry.",
+     "set": {
+      "trigger": {
+       "event": "resource",
+       "chance": 1.0,
+       "resource": {
+        "kind": "focus",
+        "need": 5,
+        "gain": 1,
+        "on": "turn_start",
+        "start": 1
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2_bzzt": {
+     "source": "At the start of the turn, grants Bzzt! (after attacking, 2,500 additional damage to all enemies) to the caster for 1 turn.",
+     "set": {
+      "trigger": {
+       "event": "turn_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "bzzt",
+       "target": "self",
+       "turns": 1,
+       "unique": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks the enemy, inflicting up to 25% injuries. Penetrates Defense by 50%. (Consommation de la Concentration : non simulée. Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false,
+      "trigger": null
+     },
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.25,
+       "estimated": false
+      }
+     ]
+    }
+   }
+  },
+  "pirate_captain_flan": {
+   "lot": 5,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with a gun, stealing one buff. At the end of the turn, detonates burn and bomb effects inflicted on the target. Cannot trigger a critical hit.",
+     "set": {
+      "no_crit": true
+     },
+     "effects": [
+      {
+       "type": "buff_steal",
+       "target": "target"
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn",
+        "bomb"
+       ]
+      }
+     ]
+    },
+    "s2": {
+     "source": "When attacked, decreases damage suffered by 30%. After an ally attacks, when the target does not have a buff, activates Hunt (once every 3 turns): increases Combat Readiness of all allies by 15%.",
+     "set": {
+      "passive": true,
+      "cooldown": 0,
+      "trigger": {
+       "event": "ally_hit",
+       "chance": 1.0,
+       "every": 3,
+       "condition": {
+        "kind": "target_no_buff"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "damage_reduction",
+       "value": 0.3
+      },
+      {
+       "type": "gauge",
+       "amount": 15,
+       "target": "allies",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Increases Attack of the caster for 3 turns and attacks all enemies, inflicting burn and planting a bomb for 2 turns before decreasing Combat Readiness by 30%. Cannot trigger a critical hit.",
+     "set": {
+      "no_crit": true
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "self",
+       "turns": 3
+      },
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "bomb",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "gauge",
+       "amount": -30,
+       "target": "enemies",
+       "chance": 1.0
       }
      ]
     }

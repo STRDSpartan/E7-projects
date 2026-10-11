@@ -168,7 +168,28 @@ partiel, contre-attaque quand un allié est attaqué, dégâts doublés hors de 
   sur une cible », « attaque de l'équipe », « allié esquive », « critique subi ». Non simulés :
   consommation des PV de Setsuka, cumul des dégâts fixes de Schniel, bonus anti-Ténèbres de
   Charlotte, bonus de stats des missions de Politis.
-- **Lot 5** (à faire) : rangs 41 et suivants du classement.
+- **Lot 5** (fait, rangs 41 à 75, 35 héros) : Spirit Eye Celine, Ruele of Light, Vildred,
+  Mort, Successor Taeyou, Dark Corvus, Witch of the Mere Tenebria, Saria, Young Senya, Tori,
+  Lidica, Aram, Celine, Frida, Sea Phantom Politis, Swift Flagbearer Sigret, Infinite Horizon
+  Achates, Faithless Lidica, Elena, Maid Chloe, Commander Pavel, Afternoon Soak Flan, Straze,
+  Lionheart Cermia, Bystander Hwayoung, Argent Waves Hwayoung, Wanderer Silk, Aki, Festive Eda,
+  Blooming Lidica, Amid, Lone Wolf Peira, Chaos Sect Axe, Urban Shadow Choux, Pirate Captain
+  Flan. Mécaniques ajoutées : Possession (+25 % d'attaque, contre-attaque sur critique subi),
+  Rage, Saccage, Cible (+15 % de dégâts reçus), buffs Résurrection (30 %) et Protection du
+  Seigneur des esprits (50 %, jauge +50 %), Limite de dégâts (35 %), Amitié spéciale, Bzzt!,
+  âme brûlée offerte, débuff aléatoire, vol de buff, assistance des alliés, compétence
+  remplacée pendant son tour (`swap`), résurrection de tous les alliés, buffs indissipables,
+  insensibilité aux buffs et débuffs, interdiction de contre-attaquer (Mort), compétences sans
+  contre-attaque, jauge par cible touchée, Esprit combatif tiré de la jauge ennemie (Taeyou),
+  Âmes gagnées, conditions d'effet (buff du lanceur, débuff de la cible, critique, recharge),
+  nouveaux événements (ennemi vaincu, critique allié, tour supplémentaire allié, compétence de
+  base alliée, compétence non offensive alliée, attaque de zone subie, attaque alliée).
+  Estimations et limites : PV des résurrections non chiffrés, chance moyenne de Cascade de
+  Tori, déclencheurs de Lionheart Cermia et de Mort approchés ; non simulés : réduction de
+  ressources (Lidica, Sea Phantom Politis), premier tour d'Aram, riposte Sura de Bystander
+  Hwayoung, saccage réservé aux héros Ténèbres (donné à tous).
+- **Correction** : Dégâts critiques + vaut +70 % (infobulle officielle).
+- **Lot 6** (à faire) : rangs 76 et suivants.
 
 **Non simulés** : mécaniques uniques non encore décrites dans `hero_mechanics.json` (balles de
 Renoa, vitesse fixe de Harsetti, marques...), Bombes, partage de dégâts, transferts, artefacts,

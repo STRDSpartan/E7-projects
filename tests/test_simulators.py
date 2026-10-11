@@ -716,3 +716,68 @@ def test_lot4_unique_mechanics() -> None:
     for _ in range(10):
         battle.fire(politis, "team_attack", politis)
     assert "knowledge" in politis.buffs and politis.gauge == 100
+
+
+LOT5 = [
+    "Spirit Eye Celine", "Ruele of Light", "Vildred", "Mort", "Successor Taeyou", "Dark Corvus",
+    "Witch of the Mere Tenebria", "Saria", "Young Senya", "Tori", "Lidica", "Aram", "Celine",
+    "Frida", "Sea Phantom Politis", "Swift Flagbearer Sigret", "Infinite Horizon Achates",
+    "Faithless Lidica", "Elena", "Maid Chloe", "Commander Pavel", "Afternoon Soak Flan", "Straze",
+    "Lionheart Cermia", "Bystander Hwayoung", "Argent Waves Hwayoung", "Wanderer Silk", "Aki",
+    "Festive Eda", "Blooming Lidica", "Amid", "Lone Wolf Peira", "Chaos Sect Axe",
+    "Urban Shadow Choux", "Pirate Captain Flan",
+]  # fmt: skip
+
+
+def test_lot5_arena_heroes_have_rules_and_fight() -> None:
+    rules = load("hero_mechanics")["heroes"]
+    assert sum(1 for r in rules.values() if r.get("lot") == 5) == 35
+    for i in range(0, 35, 8):
+        group = LOT5[i : i + 8]
+        first, second = group[:4], group[4:] or LOT5[:4]
+        res = simulate([_hero(n) for n in first], [_hero(n) for n in second], runs=15)
+        assert sum(res["win_rate"]) + res["draws"] == pytest.approx(100)
+
+
+def test_lot5_unique_mechanics() -> None:
+    # Mort : personne d'autre ne peut contre-attaquer
+    two = _Battle([_hero("Mort")], [_hero("Zio", counter_chance=100)], random.Random(1), {},
+                  Options(), True)  # fmt: skip
+    mort, zio = two.units
+    two.counter(zio, mort)
+    assert two.stats["counters"] == 0
+    # Spirit Eye Celine : ressuscite tous les alliés morts
+    team = _Battle([_hero("Spirit Eye Celine"), _hero("Zio"), _hero("Renoa")], [_hero("Aki")],
+                   random.Random(1), {}, Options(), True)  # fmt: skip
+    celine, zio, renoa, _ = team.units
+    zio.hp = renoa.hp = 0
+    team.apply(celine, celine.fighter.skills["s3"]["effects"][0], [])
+    assert zio.alive and renoa.alive
+    # Possession : contre-attaque quand on subit un critique
+    battle, taeyou, foe = _duel("Successor Taeyou", "Lone Crescent Bellona")
+    taeyou.buffs["possession"] = 2
+    battle.current = foe
+    battle.hit(foe, foe.fighter.skills["s1"], taeyou)  # toujours critique
+    assert battle.stats["counters"] == 1
+    # Taeyou : l'Esprit combatif vient de la jauge retirée aux ennemis
+    battle, taeyou, foe = _duel("Successor Taeyou", "Zio")
+    foe.gauge = 50
+    battle.apply(taeyou, {"type": "gauge", "amount": -20, "target": "target"}, [foe])
+    assert taeyou.stacks["s2"] == 80
+    # Afternoon Soak Flan : « It's a Whopper! » pendant son tour ; Frida : âme brûlée offerte
+    flan = _hero("Afternoon Soak Flan")
+    assert flan.skills["s1"]["swap"] == {"skill": "s1_bis"}
+    battle, frida, _ = _duel("Frida", "Zio")
+    battle.fire(frida, "battle_start")
+    assert "oasis" in frida.buffs
+    # Bystander Hwayoung : insensible aux buffs et aux débuffs
+    battle, hwa, foe = _duel("Bystander Hwayoung", "Zio")
+    battle.apply(foe, {"type": "debuff", "effect": "stun", "target": "target",
+                       "ignore_resist": True}, [hwa])  # fmt: skip
+    assert "stun" not in hwa.debuffs
+    # Ruele : Protection du Seigneur des esprits (résurrection à 50 %)
+    battle, ruele, foe = _duel("Ruele of Light", "Zio")
+    battle.fire(ruele, "battle_start")
+    ruele.hp = 1
+    assert "ressuscite" in battle.hit(foe, foe.fighter.skills["s3"], ruele)
+    assert ruele.hp == pytest.approx(0.5 * ruele.max_hp)
