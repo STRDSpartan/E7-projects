@@ -22,6 +22,17 @@ stats_labels= [0.046, 0.5035, 0.136, 0.294]
 stats_values= [0.184, 0.5035, 0.052, 0.294]
 stats_rows  = 9
 
+[detail.landmarks]
+# Repères pour recadrer une capture mal cadrée (barre de titre sombre, marges d'une sélection
+# Win+Maj+S…). Mesurés sur les boîtes OCR, en unités de HAUTEUR du jeu (stables à ±1 %).
+title_left     = 0.0942   # « Infos de héros » : bord gauche du jeu → début du texte
+title_center_y = 0.0466   # haut du jeu → centre vertical du texte
+title_width    = 0.2210   # largeur du texte (donne l'échelle)
+score_end_to_right = 0.1916   # « Score moyen d'équipements : 92 » : fin du texte → bord droit
+score_digit_width  = 0.0105   # largeur d'un chiffre (score à 3 chiffres)
+dual_center_y  = 0.7815   # « Chances de double attaque » : centre vertical (échelle précise)
+dual_left      = 0.0929   # … début du texte
+
 [detail.gear]
 # Ancre de chaque pièce = coin haut-gauche de l'icône de la stat principale.
 weapon   = [0.7570, 0.3360]

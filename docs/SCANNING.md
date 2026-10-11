@@ -59,6 +59,12 @@ E7_TEST_CAPTURES=<dossier local> pytest tests/test_real_captures.py
 - **Ambiguïté PC / mobile** : si une fiche se lit mal (moins de 6 pièces), l'autre profil
   calibré est essayé et la lecture la plus complète est gardée.
 - **Barres Windows** : retirées même sur une capture rééchantillonnée (liseré toléré).
+- **Cadrage de la capture** : tous les cadrages donnent 204/204 sur les captures réelles —
+  jeu seul, fenêtre avec barre de titre (Alt+Impr. écran), jeu + barre des tâches, écran
+  complet, **barre de titre en thème sombre**, **sélection Win+Maj+S avec marges**. Les deux
+  derniers cas sont recadrés par repères (`vision/framing.py`, `[detail.landmarks]`) : le
+  titre « Infos de héros » et « Chances de double attaque » donnent l'échelle et le haut/la
+  gauche du jeu, « Score moyen d'équipements » (ancré à droite) le bord droit.
 - **Nom du héros** : la zone est coupée avant les étoiles (sinon « Kise ★★★ » était lu
   « Kise Aan », un autre héros).
 

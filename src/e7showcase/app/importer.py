@@ -21,6 +21,7 @@ from PIL import Image
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.config import regions
 from e7showcase.models.hero import Hero
+from e7showcase.vision.framing import frame_detail
 from e7showcase.vision.layouts import candidate_layouts, normalize_scale
 from e7showcase.vision.preprocess import strip_window_chrome
 from e7showcase.vision.set_catalog import SetMatcher
@@ -79,6 +80,18 @@ class ScreenshotImporter:
             self._ocr = get_engine()
         return self._ocr
 
+    def _frame(self, image: Image.Image) -> Image.Image:
+        """Recadre une fiche mal cadrée (barre de titre sombre, marges) grâce aux repères."""
+        from e7showcase.config import region_profiles
+
+        for cfg in region_profiles().values():
+            landmarks = cfg.get("detail", {}).get("landmarks")
+            if cfg.get("calibrated") and landmarks:
+                framed = frame_detail(normalize_scale(image, cfg), self._engine(), landmarks)
+                if framed is not None:
+                    return framed
+        return image
+
     def _scanners(self, image: Image.Image) -> list[Any]:
         """Un lecteur par profil de zones candidat, transposé au format exact de la capture."""
         from e7showcase.config import region_profiles
@@ -113,6 +126,7 @@ class ScreenshotImporter:
                 report.ignored.append(name)
                 step += 2
                 continue
+            raw = self._frame(raw)
             scanners = self._scanners(raw)
             images = [normalize_scale(raw, sc.regions) for sc in scanners]
             kind = "ignored"
