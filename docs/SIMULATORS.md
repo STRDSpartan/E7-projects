@@ -141,7 +141,23 @@ partiel, contre-attaque quand un allié est attaqué, dégâts doublés hors de 
   compétences alliées, dégâts ∝ PV de la cible de Zio, ressources +40 % de Frieren.
 - **Correction** : Critique + vaut +50 % (infobulle officielle), et l'insensibilité aux
   débuffs d'immobilisation couvre aussi la peur.
-- **Lot 3** (à faire) : héros suivants du classement RTA.
+- **Lot 3** (fait, page /heroes d'epic7rtastats : taux de pick/ban, saison d'automne 2026,
+  héros 3 à 30 non encore traités) : Lisette, Harsetti, Hecate, Salome, Briar Witch Iseria,
+  Genesis Ras, New Moon Luna, Moon Bunny Dominiel, Aube, Disciplinary Prefect Aria.
+  Mécaniques ajoutées : loi de Skuggiheim (vitesse figée, autres limités à 90 %, pas de gain
+  de jauge pendant le tour d'Harsetti), interdiction de résurrection et d'immortalité,
+  Divinité (insensible aux débuffs, PV et défense +20 % par marque) et résurrection d'un allié
+  mort, Effondrement (PV max −50 % sur un héros), Pacte sacré, annulation d'effet,
+  Immobilisation, Restriction, Dissimulation, Vigueur (+30 % attaque et défense), durée des
+  buffs réduite, tour supplémentaire sur critique, événement « tour supplémentaire ennemi »,
+  attaque supplémentaire si une compétence est en recharge, aura de résistance, coût d'âme
+  brûlée doublé. Non simulés : clonage de Salome, retour temporel de Lisette (PvP), dégâts de
+  zone additionnels de Luna, pénétration cumulable d'Aria.
+- **Corrections générales** (infobulles officielles) : le sommeil se dissipe quand on subit des
+  dégâts ; le camouflage réduit de 50 % les dégâts de zone puis disparaît.
+- **Lot 4** (à faire) : Tactical Archetype Coli, Desert Jewel Basar, Schniel, Setsuka, Empyrean
+  Ilynav, Lone Crescent Bellona, Little Queen Charlotte, Silvertide Christy, Ivana, Uncharted
+  Pioneer Politis (rangs 31 à 40).
 
 **Non simulés** : mécaniques uniques non encore décrites dans `hero_mechanics.json` (balles de
 Renoa, vitesse fixe de Harsetti, marques...), Bombes, partage de dégâts, transferts, artefacts,

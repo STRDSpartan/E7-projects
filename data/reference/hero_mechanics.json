@@ -1466,6 +1466,581 @@
      ]
     }
    }
+  },
+  "lisette": {
+   "lot": 3,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with light, and recovers Health of all allies. Amount recovered increases proportional to the caster's max Health.",
+     "effects": [
+      {
+       "type": "heal",
+       "target": "allies",
+       "stat": "hp",
+       "ratio": 0.05,
+       "estimated": true
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the start of the first battle, grants four divinity effects (immune to debuffs; Health and Defense +20% per stack).",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "mark",
+       "mark": "divinity",
+       "target": "self",
+       "count": 4
+      }
+     ]
+    },
+    "s2_fragment": {
+     "source": "When an ally except for the caster dies, consumes one divinity to revive them as a Fragment of Life for 2 turns and increase Combat Readiness by 20% (max 30%). (Fragment de vie puis retour au héros : résurrection à 100 % des PV, estimé.)",
+     "set": {
+      "trigger": {
+       "event": "death",
+       "chance": 1.0,
+       "condition": {
+        "kind": "ally_died",
+        "mark": "divinity"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "revive_ally",
+       "ratio": 1.0,
+       "estimated": true,
+       "dead_only": true
+      },
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "last",
+       "chance": 1.0
+      },
+      {
+       "type": "mark",
+       "mark": "divinity",
+       "target": "self",
+       "count": -1,
+       "require_last": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Reconstructs the world to fully recover Health of all allies. (Retour temporel : non simulé. Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false
+     },
+     "effects": [
+      {
+       "type": "heal",
+       "target": "allies",
+       "stat": "max",
+       "ratio": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "harsetti": {
+   "lot": 3,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy, with a 75% chance to decrease Defense for 1 turn. When it is the caster's turn, uses En Passant as an extra attack.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "def_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      },
+      {
+       "type": "extra_attack",
+       "skill": "s1_bis",
+       "own_turn": true
+      }
+     ]
+    },
+    "s1_bis": {
+     "source": "En Passant: Attacks all enemies, with a 60% chance to decrease Attack for 1 turn.",
+     "set": {
+      "passive": true
+     },
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "atk_down",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 0.6,
+       "ignore_resist": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the start of battle, Speed of the caster is fixed going forward, and Speed of all Heroes except for the caster is limited to a maximum of 90% of the caster's Speed. On the caster's turn, Combat Readiness increase effects of all Heroes is not applied.",
+     "set": {
+      "trigger": null
+     },
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "speed_law"
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks all enemies, decreasing buff durations by 2 turns and a 100% chance to inflict unable to be buffed for 2 turns. Penetrates the target's Defense.",
+     "effects": [
+      {
+       "type": "buff_shorten",
+       "amount": 2,
+       "target": "enemies"
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
+    }
+   }
+  },
+  "hecate": {
+   "lot": 3,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with Sigurd Scythe, before increasing Combat Readiness of the caster by 20%. When used on the caster's turn, activates Final Deliverance as an extra attack. Cannot trigger a critical hit; penetrates Defense by 85%.",
+     "set": {
+      "no_crit": true,
+      "pen": 0.85
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "extra_attack",
+       "skill": "s1_bis",
+       "own_turn": true
+      }
+     ]
+    },
+    "s1_bis": {
+     "source": "Final Deliverance: Attacks all enemies, before granting stealth to the caster for 1 turn and decreasing skill cooldowns by 2 turns.",
+     "set": {
+      "passive": true
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "stealth",
+       "target": "self",
+       "turns": 1
+      },
+      {
+       "type": "cooldown",
+       "amount": -2,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2": {
+     "source": "All Heroes cannot revive and cannot be granted immortality. When attacking, penetrates the target's Defense by 85%, and cannot trigger a critical hit or a heavy blow.",
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "no_revive"
+      },
+      {
+       "type": "static_flag",
+       "flag": "no_immortal"
+      }
+     ]
+    },
+    "s3": {
+     "source": "After granting increased Attack to the caster for 3 turns, attacks the enemy. When the target is a Hero, ignores damage share. Cannot trigger a critical hit; penetrates Defense by 85%.",
+     "set": {
+      "no_crit": true,
+      "pen": 0.85,
+      "ignore_share": true
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "self",
+       "turns": 3
+      }
+     ]
+    }
+   }
+  },
+  "salome": {
+   "lot": 3,
+   "skills": {
+    "s2": {
+     "source": "Releases divinity, granting skill nullifier once to the caster, and cloning a target Hero except for the caster for 1 turn. Grants an extra turn. (Clonage : non simulé.)",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "self",
+       "turns": 99
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
+    }
+   }
+  },
+  "briar_witch_iseria": {
+   "lot": 3,
+   "skills": {
+    "s2": {
+     "source": "Allies and enemies cannot revive. Upon receiving lethal damage, grants immortality for 1 turn. Immortality effect can only be activated once every 5 turns.",
+     "effects_add": [
+      {
+       "type": "static_flag",
+       "flag": "no_revive"
+      }
+     ]
+    }
+   }
+  },
+  "genesis_ras": {
+   "lot": 3,
+   "skills": {
+    "s2": {
+     "source": "After inflicting seal and collapse (max Health −25%, doubled on Heroes) on the enemy for 2 turns, attacks the enemy. A critical hit will grant an extra turn.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "seal",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "collapse",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false,
+       "on_crit": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks all enemies with divinity and penetrates the target's Defense. (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false,
+      "trigger": null
+     },
+     "effects": []
+    },
+    "s3_covenant": {
+     "source": "At the start of the first battle, grants Sacred Covenant for 5 turns (cannot be affected by debuffs; upon dying, revives with 100% Health).",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "covenant",
+       "target": "self",
+       "turns": 5,
+       "unique": true
+      }
+     ]
+    }
+   }
+  },
+  "new_moon_luna": {
+   "lot": 3,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with a spear, and increases Combat Readiness of the caster by 20%.",
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2": {
+     "source": "Attacks the enemy, decreasing Defense for 1 turn, and increasing Combat Readiness of the caster by 50%. (Dégâts additionnels de zone non chiffrés : non simulés.)",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "def_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "gauge",
+       "amount": 50,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Dispels all buffs from all enemies before sealing for 2 turns.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": true
+      },
+      {
+       "type": "debuff",
+       "effect": "seal",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
+    },
+    "s3_nullifier": {
+     "source": "At the start of the first battle, grants skill effect nullifier once to the caster (nullifies an effect from skills of enemy Heroes).",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "effect_nullifier",
+       "target": "self",
+       "turns": 99
+      }
+     ]
+    }
+   }
+  },
+  "moon_bunny_dominiel": {
+   "lot": 3,
+   "skills": {
+    "s2": {
+     "source": "At the start of an enemy's extra turn, dispels all debuffs from all allies and grants skill nullifier once and immunity for 2 turns. Can only be activated once every 2 turns.",
+     "set": {
+      "passive": true,
+      "cooldown": 0,
+      "trigger": {
+       "event": "enemy_extra_turn",
+       "chance": 1.0,
+       "every": 2
+      }
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": true
+      },
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "allies",
+       "turns": 99
+      },
+      {
+       "type": "buff",
+       "effect": "immunity",
+       "target": "allies",
+       "turns": 2
+      }
+     ]
+    },
+    "s3": {
+     "source": "Increases Attack of all allies for 2 turns (vigor: Attack and Defense +30%) and Combat Readiness by 20%.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "vigor",
+       "target": "allies",
+       "turns": 2
+      },
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "allies",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "aube": {
+   "lot": 3,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with coral magic and decreases Combat Readiness by 20%.",
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": -20,
+       "target": "target",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2": {
+     "source": "With a 100% chance to grant cascade to all allies. Grants skill nullifier once and an extra turn to the caster.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "cascade",
+       "target": "allies",
+       "turns": 99,
+       "unique": true
+      },
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "self",
+       "turns": 99
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
+    },
+    "s3": {
+     "source": "Fixes all enemies in a frame, dispelling two buffs before a 100% chance each to inflict immobilize and restrict for 1 turn. Concealment will remain throughout the battle (cannot be targeted while another ally is present).",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "debuff",
+       "effect": "immobilize",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "restrict",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
+    },
+    "s3_conceal": {
+     "source": "Concealment will remain throughout the battle.",
+     "set": {
+      "trigger": null
+     },
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "conceal"
+      }
+     ]
+    }
+   }
+  },
+  "disciplinary_prefect_aria": {
+   "lot": 3,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy, increasing Combat Readiness of the caster by 15%. When Purge is on cooldown, activates Disciplinary Action as an extra attack.",
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 15,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "extra_attack",
+       "skill": "s1_bis",
+       "own_turn": false,
+       "if_cooldown": "s3"
+      }
+     ]
+    },
+    "s1_bis": {
+     "source": "Disciplinary Action: Attacks the enemy, inflicting up to 10% injuries. A successful attack always results in a critical hit.",
+     "set": {
+      "passive": true,
+      "always_crit": true
+     },
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.1,
+       "estimated": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "Increases Soulburn consumption of the enemy by 100%. When the caster is not inflicted with a debuff, increases Effect Resistance of all allies by 40%.",
+     "set": {
+      "trigger": null
+     },
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "soulburn_tax"
+      },
+      {
+       "type": "static_flag",
+       "flag": "res_aura"
+      }
+     ]
+    }
+   }
   }
  }
 }

@@ -586,3 +586,67 @@ def test_lot2_unique_mechanics() -> None:
     # Iseria : chances de contre-attaque doublées par la S2
     battle, iseria, _ = _duel("Monarch of the Sword Iseria", "Zio")
     assert {"counter_x2", "counter_chain"} <= iseria.flags
+
+
+LOT3 = [
+    "Lisette",
+    "Harsetti",
+    "Hecate",
+    "Salome",
+    "Briar Witch Iseria",
+    "Genesis Ras",
+    "New Moon Luna",
+    "Moon Bunny Dominiel",
+    "Aube",
+    "Disciplinary Prefect Aria",
+]
+
+
+def test_lot3_arena_heroes_have_rules_and_fight() -> None:
+    rules = load("hero_mechanics")["heroes"]
+    assert sum(1 for r in rules.values() if r.get("lot") == 3) == 10
+    for first, second in ((LOT3[:5], LOT3[5:]), (LOT3[5:], LOT2[:5])):
+        res = simulate([_hero(n) for n in first[:4]], [_hero(n) for n in second[:4]], runs=30)
+        assert sum(res["win_rate"]) + res["draws"] == pytest.approx(100)
+
+
+def test_lot3_unique_mechanics() -> None:
+    # Harsetti : vitesse figée, celle des autres limitée à 90 % de la sienne
+    battle, harsetti, foe = _duel("Harsetti", "Zio")
+    foe.fighter = replace(foe.fighter, spd=400)
+    assert battle.speed(foe) == pytest.approx(0.9 * harsetti.fighter.spd)
+    harsetti.buffs["spd_up"] = 2
+    assert battle.speed(harsetti) == harsetti.fighter.spd
+    # Hecate : ni résurrection ni immortalité
+    battle, hecate, ras = _duel("Hecate", "Genesis Ras")
+    battle.fire(ras, "battle_start")
+    assert "covenant" in ras.buffs and battle.flagged("no_revive")
+    ras.hp = 10
+    battle.hit(hecate, hecate.fighter.skills["s3"], ras)
+    assert not ras.alive
+    battle.apply(ras, {"type": "buff", "effect": "immortal", "target": "self"}, [])
+    assert "immortal" not in ras.buffs
+    # Genesis Ras : le pacte sacré ressuscite à 100 % (sans Hecate)
+    battle, ras, foe = _duel("Genesis Ras", "Zio")
+    battle.fire(ras, "battle_start")
+    ras.hp = 10
+    assert "pacte sacré" in battle.hit(foe, foe.fighter.skills["s1"], ras)
+    assert ras.hp == ras.max_hp
+    # Lisette : divinité (PV et défense +20 % par marque), résurrection d'un allié mort
+    lis = _Battle([_hero("Lisette"), _hero("Zio")], [_hero("Renoa")], random.Random(1), {},
+                  Options(), True)  # fmt: skip
+    lisette, mate, enemy = lis.units
+    lis.fire(lisette, "battle_start")
+    assert lisette.marks["divinity"] == 4 and lisette.max_hp == pytest.approx(1.8 * 18000)
+    mate.hp = 0
+    lis.fire(lisette, "death", mate)
+    assert mate.alive and lisette.marks["divinity"] == 3
+    lis.fire(lisette, "death", enemy)  # un ennemi mort : rien
+    assert lisette.marks["divinity"] == 3
+    # Aube : immobilisation (pas de jauge par la vitesse) ; dissimulation
+    battle, aube, foe = _duel("Aube", "Zio")
+    assert "conceal" in aube.flags
+    # sommeil dissipé par les dégâts
+    foe.debuffs["sleep"] = 1
+    battle.hit(aube, aube.fighter.skills["s1"], foe)
+    assert "sleep" not in foe.debuffs
