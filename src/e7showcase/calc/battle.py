@@ -76,6 +76,10 @@ BUFF_NAMES = {
     "effect_nullifier": "Annulation d'effet",
     "vigor": "Vigueur",
     "fragment": "Fragment de vie",
+    "overload": "Surcharge",
+    "swift": "Attaque rapide",
+    "radiance": "Rayonnement",
+    "knowledge": "Savoir des étoiles",
 }
 DEBUFF_NAMES = {
     "def_down": "Défense −",
@@ -102,6 +106,9 @@ DEBUFF_NAMES = {
     "collapse": "Effondrement",
     "immobilize": "Immobilisation",
     "restrict": "Restriction",
+    "bomb": "Bombe",
+    "depletion": "Épuisement",
+    "beguile": "Envoûtement",
 }
 # dégâts sur la durée au début du tour du porteur (définitions E7GW) : saignement 40 % et
 # brûlure 70 % de l'attaque du lanceur en ignorant 70 % de la défense, poison 5 % et venin 10 %
@@ -122,7 +129,12 @@ MARKS = {
     "pilfer": ({"atk": -0.2, "hp": -0.2, "defense": -0.2}, 1),
     "dirge": ({}, 10),
     "divinity": ({"hp": 0.2, "defense": 0.2}, 4),
+    "fervor": ({"atk": 0.1}, 5),  # Bellona Croissant solitaire : attaque +10 % par attaque
 }
+BOMB = 1.5  # « 150% of caster's Attack as damage, ignores 70% of defense », puis 1 tour immobile
+SWIFT = 50  # attaque rapide : jauge +50 % à la fin du tour
+BEGUILE = 0.1  # envoûtement : 10 % des PV max de chaque allié du porteur
+RADIANCE = 0.5  # rayonnement : dégâts subis −50 %
 STEALTH_AOE_REDUCTION = 0.5  # camouflage : « 50% reduced damage taken » contre une attaque de zone
 SPEED_LAW = 0.9  # Harsetti : vitesse des autres héros limitée à 90 % de la sienne
 OFFERING_SHARE = 0.7  # « grants 70% damage sharing of the damage received by all allies »
@@ -134,7 +146,8 @@ EFFECT_TYPES = frozenset(
         "cooldown", "lifesteal", "damage_reduction", "damage_cap", "injury", "detonate",
         "extinction", "fixed", "static_buff", "static_debuff", "static_immune",
         "static_stat", "static_share", "revive_ally", "static_flag", "mark", "fixed_hit",
-        "random_buff", "extra_attack", "soul_damage", "buff_shorten",
+        "random_buff", "extra_attack", "soul_damage", "buff_shorten", "barrier_invert",
+        "crit_guard", "static_aura",
     }
 )  # fmt: skip
 PERMANENT = 10**6  # durée d'un statut permanent
@@ -177,6 +190,7 @@ class _Unit:
     bonus: list[dict[str, Any]] = field(default_factory=list)  # stats tant qu'un buff est actif
     marks: dict[str, int] = field(default_factory=dict)  # Fracture, Butin, Pillage, balles...
     flags: set[str] = field(default_factory=set)  # mécaniques permanentes (static_flag)
+    aura: dict[str, float] = field(default_factory=dict)  # esquive, réduction des critiques
 
     @property
     def max_hp(self) -> float:
@@ -205,6 +219,10 @@ class _Unit:
             value += 100
         if name in ("atk", "defense"):
             value *= self.mark_mult(name) * (1.3 if "vigor" in self.buffs else 1)
+        if name == "atk":
+            value *= (1.5 if "overload" in self.buffs else 1) * (
+                0.5 if "depletion" in self.debuffs else 1
+            )
         if "god" in self.buffs and name in ("atk", "defense", "effectiveness", "effect_res"):
             value *= 2  # Dieu de la guerre : toutes les stats doublées
         return value
@@ -225,6 +243,8 @@ class _Unit:
             - (0.3 if "spd_down" in self.debuffs else 0)
             + (1.0 if "superhuman" in self.buffs else 0)
             + (0.2 if self.marks.get("dirge") else 0)
+            + (0.5 if "overload" in self.buffs else 0)
+            - (0.5 if "depletion" in self.debuffs else 0)
         )
         return max(self.fighter.spd * mult * (2 if "god" in self.buffs else 1), 1)
 
@@ -277,6 +297,7 @@ class _Battle:
         self.deaths: list[_Unit] = []
         self.last_targets: list[_Unit] = []
         self.soul_bonus = 0.0  # dégâts additionnels payés en Âmes (Aubade Ludwig)
+        self.evaded: list[_Unit] = []  # héros ayant esquivé pendant l'action
         self.crits: list[_Unit] = []
         for u in self.units:  # mécaniques permanentes des passifs, recharges pleines au départ
             for sid, skill in u.fighter.skills.items():
@@ -303,6 +324,11 @@ class _Battle:
                         u.share = max(u.share, float(e["value"]))
                     elif e["type"] == "static_flag":
                         u.flags.add(e["flag"])
+                    elif e["type"] == "crit_guard":
+                        u.aura["crit_self"] = float(e.get("self", 0))
+                        u.aura["crit_allies"] = float(e.get("allies", 0))
+                    elif e["type"] == "static_aura":
+                        u.aura[e["aura"]] = float(e["value"])
         for u in self.units:  # jauges de départ (« starts the first battle with 50 ... »)
             for sid, skill in u.fighter.skills.items():
                 res = (skill.get("trigger") or {}).get("resource")
@@ -395,6 +421,8 @@ class _Battle:
             return [min(pool, key=key)] if pool else []
         if who == "enemies":
             return foes
+        if who == "current":  # le héros dont c'est le tour
+            return [self.current] if self.current and self.current.alive else []
         if who == "enemy_front":  # premier ennemi
             return foes[:1]
         if who == "front":  # premier emplacement de l'équipe
@@ -431,6 +459,14 @@ class _Battle:
             return self.allies(u)[:1] == [u]
         if kind == "has_buff":
             return cond.get("buff") in u.buffs if cond.get("buff") else bool(u.buffs)
+        if kind == "has_barrier":
+            return u.barrier > 0
+        if kind == "not_front":
+            return self.allies(u)[:1] != [u]
+        if kind == "enemy_has":
+            return any(cond["buff"] in f.buffs for f in self.foes(u))
+        if kind == "allies_have":
+            return any(set(cond["debuffs"]) & set(a.debuffs) for a in self.allies(u))
         if kind == "has_mark":
             return u.marks.get(cond["mark"], 0) > 0
         if kind == "on_cooldown":
@@ -612,7 +648,7 @@ class _Battle:
                 t.debuffs[name] = max(t.debuffs.get(name, 0), int(effect.get("turns", 2)))
                 if name == "provoke":
                     t.provoker = actor
-                if name in DOT:
+                if name in DOT or name == "bomb":
                     t.dot_atk[name] = max(t.dot_atk.get(name, 0), actor.fighter.atk)
                 self.mark(t, "debuff:" + name)
                 self.stats["debuffs"] += 1
@@ -622,6 +658,8 @@ class _Battle:
                 law = self.current is not None and "speed_law" in self.current.flags
                 if amount > 0 and ("restrict" in t.debuffs or law):
                     continue  # restriction, ou loi de Skuggiheim pendant le tour de Harsetti
+                if amount < 0 and "cr_floor" in t.flags:
+                    continue  # « unaffected by decreases to Combat Readiness »
                 if "cr_lock" in t.flags or (
                     amount < 0 and self.rng.random() >= effect.get("chance", 1)
                 ):
@@ -638,6 +676,18 @@ class _Battle:
                         cd = self.cooldown(k, t.fighter.skills[k])
                         t.cooldowns[k] = min(max(t.cooldowns.get(k, 0) + effect["amount"], 0), cd)
                 notes.append(f"recharges {t.name} {effect['amount']:+d}".replace("+99", "max"))
+            elif kind == "strip" and effect.get("only"):
+                if effect["only"] in t.buffs:
+                    del t.buffs[effect["only"]]
+                    notes.append(
+                        f"{BUFF_NAMES.get(effect['only'], effect['only'])} retiré ({t.name})"
+                    )
+            elif kind == "barrier_invert" and t.barrier > 0:
+                amount, t.barrier, t.barrier_turns = t.barrier, 0.0, 0
+                t.hp = max(1.0 if "immortal" in t.buffs else 0.0, t.hp - amount)
+                notes.append(f"barrière inversée {t.name} −{_fmt(amount)}")
+                if not t.alive:
+                    self.deaths.append(t)
             elif kind == "strip" and t.buffs:
                 gone = list(t.buffs) if effect.get("all") else [next(iter(t.buffs))]
                 for b in gone:
@@ -757,9 +807,12 @@ class _Battle:
         if "def_magic" in target.flags and self.souls[target.team] >= DEFENSIVE_MAGIC_SOULS:
             self.souls[target.team] -= DEFENSIVE_MAGIC_SOULS  # Magie défensive : 4 Âmes
             return f"{target.name} annule la compétence (magie défensive)"
-        miss = ("evasion" in target.buffs or "hit_down" in actor.debuffs) and (
-            self.rng.random() < MISS_CHANCE
-        )
+        dodge = MISS_CHANCE if "evasion" in target.buffs or "hit_down" in actor.debuffs else 0
+        for a in self.allies(target):  # aura d'esquive (ex. Setsuka : +30 % aux alliés)
+            dodge = max(dodge, float(a.aura.get("evasion", 0)))
+        miss = dodge > 0 and self.rng.random() < dodge
+        if miss and actor is self.current:
+            self.evaded.append(target)
         if miss:
             crit, amount = False, amount_miss(dmg)
         if skill.get("off_turn_mult") and actor is not self.current:
@@ -772,6 +825,12 @@ class _Battle:
             amount += CASCADE
         amount += self.soul_bonus
         reduction = max(target.reduction, 0.5 if "deify" in target.buffs else 0)
+        if "radiance" in target.buffs:
+            reduction = max(reduction, RADIANCE)
+        if crit:  # réduction des dégâts critiques (ex. Little Queen Charlotte)
+            for a in self.allies(target) + [target]:
+                guard = a.aura.get("crit_self" if a is target else "crit_allies", 0)
+                reduction = max(reduction, float(guard))
         if "stealth" in target.buffs and skill.get("aoe"):
             reduction = max(reduction, STEALTH_AOE_REDUCTION)
             del target.buffs["stealth"]  # « dispelled upon suffering damage »
@@ -796,6 +855,8 @@ class _Battle:
         target.hp = max(1.0 if "immortal" in target.buffs else 0.0, target.hp - (amount - absorbed))
         if crit:
             self.crits.append(actor)
+            if target.alive:
+                self.fire(target, "crit_taken", actor)
         if target.hp <= 0 and any(e["type"] == "extinction" for e in skill.get("effects", [])):
             target.extinct = True
         if target.hp <= 0 and "covenant" in target.buffs and not self.flagged("no_revive"):
@@ -825,6 +886,7 @@ class _Battle:
                 target.hp = min(target.hp, target.max_hp)
             elif e["type"] == "fixed" and target.alive and (crit or not e.get("on_crit")):
                 fixed = float(e["amount"]) * (len(target.debuffs) if e.get("per_debuff") else 1)
+                fixed *= 2 if "knowledge" in actor.buffs else 1  # dégâts additionnels +100 %
                 if fixed:
                     target.hp = max(1.0 if "immortal" in target.buffs else 0.0, target.hp - fixed)
                     amount += fixed
@@ -984,6 +1046,8 @@ class _Battle:
                 if not t.alive or "invincible" in t.buffs:
                     continue
                 total = 0.0
+                if "bomb" in e.get("what", []) and "bomb" in t.debuffs:
+                    self.explode(t)
                 for name in e.get("what", []):
                     if name in DOT and name in t.debuffs:
                         total += self.dot_amount(t, name) * t.debuffs.pop(name)
@@ -994,6 +1058,19 @@ class _Battle:
                     if not t.alive:
                         self.deaths.append(t)
         self.after_events()
+
+    def explode(self, u: _Unit) -> None:
+        """Bombe : 150 % de l'attaque du lanceur (70 % de défense ignorée), puis immobile."""
+        mitigation = u.stat("defense") * (1 - DOT_DEF_IGNORED) / 300 + 1
+        amount = BOMB * u.dot_atk.get("bomb", 0) / mitigation * (1 - u.reduction)
+        u.debuffs.pop("bomb", None)
+        if "invincible" in u.buffs:
+            return
+        u.hp = max(1.0 if "immortal" in u.buffs else 0.0, u.hp - amount)
+        u.debuffs["stun"] = max(u.debuffs.get("stun", 0), 1)
+        self.note(f"  ↳ bombe sur {u.name} −{_fmt(amount)}" + (" ✝" if not u.alive else ""))
+        if not u.alive:
+            self.deaths.append(u)
 
     def dots(self, u: _Unit) -> None:
         """Brûlure, saignement, poison : dégâts au début du tour du porteur."""
@@ -1030,6 +1107,17 @@ class _Battle:
         for other in [x for x in self.units if x.alive and x is not u]:
             self.fire(other, "any_turn_end", u)
             self.fire(other, "ally_turn_end" if other.team == u.team else "enemy_turn_end", u)
+        if u.alive and "swift" in u.buffs:  # « at the end of the turn, CR +50%, then dispelled »
+            del u.buffs["swift"]
+            u.gauge = min(u.gauge + SWIFT, 100)
+        if u.alive and "beguile" in u.debuffs:  # « dispelled once the effect is activated »
+            del u.debuffs["beguile"]
+            for a in self.allies(u):
+                if a is not u:
+                    a.hp = max(1.0 if "immortal" in a.buffs else 0.0, a.hp - BEGUILE * a.max_hp)
+                    if not a.alive:
+                        self.deaths.append(a)
+            self.note(f"  ↳ envoûtement de {u.name} : alliés −10 % PV")
         for bag, prefix in ((u.buffs, "buff:"), (u.debuffs, "debuff:")):
             for name in list(bag):
                 if prefix + name in u.fresh:
@@ -1037,6 +1125,11 @@ class _Battle:
                 bag[name] -= 1
                 if bag[name] <= 0:
                     del bag[name]
+                    if name == "overload":  # « upon ending, inflicts energy depletion »
+                        u.debuffs["depletion"] = 1
+                        u.fresh.add("debuff:depletion")  # pas décompté ce tour-ci
+                    elif name == "bomb" and u.alive:
+                        self.explode(u)
         if u.barrier_turns and "barrier" not in u.fresh:
             u.barrier_turns -= 1
             if u.barrier_turns <= 0:
@@ -1125,6 +1218,16 @@ class _Battle:
                 self.fire(actor, "after_attack", hit[0])
             for f in self.foes(actor):
                 self.fire(f, "enemy_skill", actor, non_attack=skill.get("rate") is None)
+            if hit:
+                for a in self.allies(actor):
+                    self.fire(a, "team_attack", actor)  # ex. mission offensive de Politis
+                    if a is not actor and len(hit) == 1 and not skill.get("aoe"):
+                        self.fire(a, "ally_single_attack", hit[0])
+            evaded, self.evaded = self.evaded, []
+            for t in evaded:
+                for a in self.allies(t):
+                    if a is not t:
+                        self.fire(a, "ally_evaded", t)
             self.specials(actor, skill, hit)
             self.detonate(skill, hit)
             self.after_events()

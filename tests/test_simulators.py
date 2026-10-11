@@ -650,3 +650,69 @@ def test_lot3_unique_mechanics() -> None:
     foe.debuffs["sleep"] = 1
     battle.hit(aube, aube.fighter.skills["s1"], foe)
     assert "sleep" not in foe.debuffs
+
+
+LOT4 = [
+    "Tactical Archetype Coli",
+    "Desert Jewel Basar",
+    "Schniel",
+    "Setsuka",
+    "Empyrean Ilynav",
+    "Lone Crescent Bellona",
+    "Little Queen Charlotte",
+    "Ivana",
+    "Uncharted Pioneer Politis",
+]
+
+
+def test_lot4_arena_heroes_have_rules_and_fight() -> None:
+    rules = load("hero_mechanics")["heroes"]
+    assert sum(1 for r in rules.values() if r.get("lot") == 4) == 9
+    assert hero_skills("Silvertide Christy") is None  # pas de multiplicateurs (E7Calc)
+    for first, second in ((LOT4[:4], LOT4[4:8]), (LOT4[5:], LOT3[:4])):
+        res = simulate([_hero(n) for n in first[:4]], [_hero(n) for n in second[:4]], runs=30)
+        assert sum(res["win_rate"]) + res["draws"] == pytest.approx(100)
+
+
+def test_lot4_unique_mechanics() -> None:
+    # bombe : 150 % de l'attaque (70 % de défense ignorée), puis immobile 1 tour
+    battle, coli, foe = _duel("Tactical Archetype Coli", "Zio")
+    battle.apply(coli, {"type": "debuff", "effect": "bomb", "target": "target", "turns": 2,
+                        "ignore_resist": True}, [foe])  # fmt: skip
+    hp = foe.hp
+    battle.explode(foe)
+    mitigation = foe.stat("defense") * 0.3 / 300 + 1
+    assert hp - foe.hp == pytest.approx(1.5 * 3000 / mitigation) and "stun" in foe.debuffs
+    # surcharge puis épuisement
+    coli.buffs["overload"] = 1
+    atk = coli.stat("atk")
+    battle.end_turn(coli)
+    assert "depletion" in coli.debuffs and coli.stat("atk") == pytest.approx(atk / 3)
+    # inversion de barrière (Basar)
+    battle, basar, foe = _duel("Desert Jewel Basar", "Zio")
+    foe.barrier, hp = 3000.0, foe.hp
+    battle.apply(basar, {"type": "barrier_invert", "target": "target"}, [foe])
+    assert foe.barrier == 0 and hp - foe.hp == 3000
+    # envoûtement : les alliés du porteur perdent 10 % de leurs PV max
+    two = _Battle([_hero("Setsuka")], [_hero("Zio"), _hero("Renoa")], random.Random(1), {},
+                  Options(), True)  # fmt: skip
+    _, zio, renoa = two.units
+    zio.debuffs["beguile"] = 2
+    hp = renoa.hp
+    two.end_turn(zio)
+    assert hp - renoa.hp == pytest.approx(0.1 * renoa.max_hp) and "beguile" not in zio.debuffs
+    # Ivana : jauge jamais diminuée ; retire l'immortalité ennemie
+    battle, ivana, foe = _duel("Ivana", "Zio")
+    battle.apply(foe, {"type": "gauge", "amount": -50, "target": "target"}, [ivana])
+    assert ivana.gauge >= 0 and "cr_floor" in ivana.flags
+    foe.buffs["immortal"] = 2
+    battle.fire(ivana, "turn_start")
+    assert "immortal" not in foe.buffs
+    # Little Queen Charlotte : dégâts critiques subis −30 %
+    battle, lqc, foe = _duel("Little Queen Charlotte", "Lone Crescent Bellona")
+    assert lqc.aura["crit_self"] == 0.3
+    # Politis : mission offensive accomplie après 10 attaques alliées
+    battle, politis, _ = _duel("Uncharted Pioneer Politis", "Zio")
+    for _ in range(10):
+        battle.fire(politis, "team_attack", politis)
+    assert "knowledge" in politis.buffs and politis.gauge == 100

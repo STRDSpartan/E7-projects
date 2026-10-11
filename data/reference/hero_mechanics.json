@@ -2041,6 +2041,719 @@
      ]
     }
    }
+  },
+  "tactical_archetype_coli": {
+   "lot": 4,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with a blade, with a 80% chance each to inflict two bleeding effects for 2 turns. At the end of the turn, detonates bleeding effects inflicted on the target.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.8,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.8,
+       "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "bleed"
+       ]
+      }
+     ]
+    },
+    "s2": {
+     "source": "After an ally except for the caster uses a Single Attack, grants swift attack (end of turn: CR +50%) to the ally, and activates Flank Strike against the enemy target: dispelling one buff and inflicting decreased Defense for 2 turns, before increasing Combat Readiness of the caster by 20%.",
+     "set": {
+      "trigger": {
+       "event": "ally_single_attack",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "swift",
+       "target": "current",
+       "turns": 1
+      },
+      {
+       "type": "strip",
+       "target": "target",
+       "all": false
+      },
+      {
+       "type": "debuff",
+       "effect": "def_down",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "After granting overload (Attack and Speed +50%; then energy depletion −50% for 1 turn) to the caster for 2 turns, attacks all enemies, dispelling two buffs, and has a 100% chance to inflict a bomb for 2 turns. At the end of the turn, detonates bombs inflicted on the target.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "overload",
+       "target": "self",
+       "turns": 2,
+       "unique": true
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "debuff",
+       "effect": "bomb",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "bomb"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "desert_jewel_basar": {
+   "lot": 4,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with wind and has a 25% (max 35%) chance to inflict stun for 1 turn, before recovering Health of all allies proportional to the target's max Health.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "stun",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.35,
+       "ignore_resist": false
+      },
+      {
+       "type": "heal",
+       "target": "allies",
+       "stat": "hp",
+       "ratio": 0.05,
+       "estimated": true
+      }
+     ]
+    },
+    "s2": {
+     "source": "When attacked, grants 25% (max 20%) damage reduction. After an enemy uses a skill, when granted a barrier, activates Desert Storm: inflicts barrier inversion on all enemies before decreasing Combat Readiness by 20%. Increases Combat Readiness of the caster by 20%.",
+     "set": {
+      "trigger": {
+       "event": "enemy_skill",
+       "chance": 1.0,
+       "condition": {
+        "kind": "has_barrier"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "damage_reduction",
+       "value": 0.2
+      },
+      {
+       "type": "barrier_invert",
+       "target": "enemies"
+      },
+      {
+       "type": "gauge",
+       "amount": -20,
+       "target": "enemies",
+       "chance": 1.0
+      },
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Bastet roars, dispelling all debuffs from all allies before increasing Combat Readiness by 20% (max 30%). (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": true
+      },
+      {
+       "type": "gauge",
+       "amount": 30,
+       "target": "allies",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "schniel": {
+   "lot": 4,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy, and dispels one debuff from an ally.",
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "ally",
+       "all": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "After an enemy uses a skill, when an ally is inflicted with poison or venom, dispels all debuffs from the caster and activates Cleanse: dispels all debuffs from all allies and grants immunity for 1 turn, before resetting skill cooldowns of the caster. Can only be activated once every 1 turn.",
+     "set": {
+      "trigger": {
+       "event": "enemy_skill",
+       "chance": 1.0,
+       "every": 1,
+       "condition": {
+        "kind": "allies_have",
+        "debuffs": [
+         "poison",
+         "venom"
+        ]
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": true
+      },
+      {
+       "type": "buff",
+       "effect": "immunity",
+       "target": "allies",
+       "turns": 1
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks all enemies, and increases Combat Readiness of the caster by 50%. A successful attack inflicts 4000 fixed damage. (Cumul +4 000 par utilisation : non simulé.)",
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 50,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "fixed",
+       "amount": 4000,
+       "per_debuff": false,
+       "on_crit": false
+      }
+     ]
+    }
+   }
+  },
+  "setsuka": {
+   "lot": 4,
+   "skills": {
+    "s2": {
+     "source": "Increases Evasion of all allies by 30%. After attacking, when Fighting Spirit is full, consumes it all, granting Demon Blade Unleashed to the caster for 1 turn, before activating Blade Art: Bewitching Blossom: attacks all enemies, and increase Combat Readiness of the caster by 50%. (Consommation des PV et gain d'Esprit non chiffrés : non simulés / estimés.)",
+     "set": {
+      "trigger": {
+       "event": "resource",
+       "chance": 1.0,
+       "resource": {
+        "kind": "spirit",
+        "need": 100,
+        "gain": 10,
+        "on": "attacked",
+        "estimated": true
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "static_aura",
+       "aura": "evasion",
+       "value": 0.3
+      },
+      {
+       "type": "gauge",
+       "amount": 50,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2_counter": {
+     "source": "When an ally except for the caster evades, counterattacks.",
+     "set": {
+      "trigger": {
+       "event": "ally_evaded",
+       "chance": 1.0,
+       "counter": true
+      }
+     },
+     "effects": []
+    },
+    "s3": {
+     "source": "Dispel all buffs from all enemies before inflicting beguile (end of turn: 10% of max Health to the bearer's allies) and decreased Hit Chance for 2 turns.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": true
+      },
+      {
+       "type": "debuff",
+       "effect": "beguile",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
+    }
+   }
+  },
+  "empyrean_ilynav": {
+   "lot": 4,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with a sword, inflicting injuries (up to 10% of max Health every time this skill is used).",
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.1,
+       "estimated": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "After every attack suffered by an ally, increases Combat Readiness of the caster by 10%.",
+     "set": {
+      "trigger": {
+       "event": "ally_attacked",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 10,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks the enemy with a spear, inflicting injuries (up to 20%), before dispelling two debuffs from all allies and granting indomitable for 2 turns. (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false
+     },
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.2,
+       "estimated": false
+      },
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": false
+      },
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": false
+      },
+      {
+       "type": "buff",
+       "effect": "indomitable",
+       "target": "allies",
+       "turns": 2
+      }
+     ]
+    }
+   }
+  },
+  "lone_crescent_bellona": {
+   "lot": 4,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with a fan, before granting immunity to the caster for 1 turn. A successful attack always results in a critical hit.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "immunity",
+       "target": "self",
+       "turns": 1
+      }
+     ]
+    },
+    "s2": {
+     "source": "When an ally is attacked, gains 20 Fighting Spirit, and when Fighting Spirit is full, consumes all Fighting Spirit to activate All Eyes on Me: attacks all enemies, and increases Combat Readiness of the caster by 20%. A successful attack always results in a critical hit.",
+     "set": {
+      "always_crit": true
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2_fervor": {
+     "source": "After attacking, increases Attack of the caster by 10%. This effect can stack up to 5 times.",
+     "set": {
+      "trigger": {
+       "event": "after_attack",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "mark",
+       "mark": "fervor",
+       "target": "self"
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks the enemy by moving unpredictably, before granting vigor to the caster for 2 turns. A successful attack always results in a critical hit.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "vigor",
+       "target": "self",
+       "turns": 2
+      }
+     ]
+    }
+   }
+  },
+  "little_queen_charlotte": {
+   "lot": 4,
+   "skills": {
+    "s1": {
+     "source": "Attacks with a giant sword before granting the caster immunity for 1 turn. (Always Results in a Critical Hit.)",
+     "set": {
+      "always_crit": true
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "immunity",
+       "target": "self",
+       "turns": 1
+      }
+     ]
+    },
+    "s2": {
+     "source": "Decreases damage suffered from a critical hit by 30%. Decreases damage suffered from a critical hit for all allies except for the caster by 15%. At the moment the caster suffers a critical hit, increases Combat Readiness of the caster by 15%. Immune to debuffs which prevent movement.",
+     "set": {
+      "trigger": {
+       "event": "crit_taken",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "crit_guard",
+       "self": 0.3,
+       "allies": 0.15
+      },
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep",
+        "fear"
+       ]
+      },
+      {
+       "type": "gauge",
+       "amount": 15,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Smashes the enemy with a sword and attacks. When the enemy is defeated, inflicts extinction. Penetrates the target's Defense by 50%. (Bonus contre les héros Ténèbres : non simulé.)",
+     "set": {
+      "always_crit": true
+     },
+     "effects": [
+      {
+       "type": "extinction"
+      }
+     ]
+    }
+   }
+  },
+  "ivana": {
+   "lot": 4,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with holy light, and recovers Health of allies proportional to the target's max Health.",
+     "effects": [
+      {
+       "type": "heal",
+       "target": "allies",
+       "stat": "hp",
+       "ratio": 0.05,
+       "estimated": true
+      }
+     ]
+    },
+    "s2": {
+     "source": "Unaffected by decreases to Combat Readiness. At the end of someone's turn, when the enemy is granted immortality, dispels all debuffs from all allies and grants radiance (damage suffered −50%) for 2 turns, before increasing Combat Readiness of the caster by 50%.",
+     "set": {
+      "trigger": {
+       "event": "any_turn_end",
+       "chance": 1.0,
+       "condition": {
+        "kind": "enemy_has",
+        "buff": "immortal"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "cr_floor"
+      },
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": true
+      },
+      {
+       "type": "buff",
+       "effect": "radiance",
+       "target": "allies",
+       "turns": 2,
+       "unique": true
+      },
+      {
+       "type": "gauge",
+       "amount": 50,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2_dispel": {
+     "source": "At the start of the turn, dispels immortality from all enemies. Ignores Effect Resistance.",
+     "set": {
+      "trigger": {
+       "event": "turn_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "only": "immortal"
+      }
+     ]
+    },
+    "s3": {
+     "source": "Dispels two debuffs from all allies, and grants immunity for 2 turns before increasing Combat Readiness by 20%.",
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": false
+      },
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": false
+      },
+      {
+       "type": "buff",
+       "effect": "immunity",
+       "target": "allies",
+       "turns": 2
+      },
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "allies",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "uncharted_pioneer_politis": {
+   "lot": 4,
+   "skills": {
+    "s1": {
+     "source": "Attacks all enemies with light, with a 50% (max 65%) chance to dispel one buff. Deals 1000 additional damage regardless of whether the attack hits.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "fixed",
+       "amount": 1000,
+       "per_debuff": false,
+       "on_crit": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the start of battle, when in the front row, grants offense mission (completed when allies attack 10 times). When a mission is complete, dispels all debuffs from the caster, and activates Last Words of a Fallen Star: grants knowledge of the stars (additional damage +100%) to all allies, and grants an extra turn to the caster.",
+     "set": {
+      "trigger": {
+       "event": "resource",
+       "chance": 1.0,
+       "every": 99,
+       "condition": {
+        "kind": "front_row"
+       },
+       "resource": {
+        "kind": "mission",
+        "need": 10,
+        "gain": 1,
+        "on": "team_attack"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "self",
+       "all": true
+      },
+      {
+       "type": "buff",
+       "effect": "knowledge",
+       "target": "allies",
+       "turns": 999,
+       "unique": true
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
+    },
+    "s2_defense": {
+     "source": "When in the back row, grants defense mission (completed when allies are attacked 10 times), then Last Words of a Fallen Star.",
+     "set": {
+      "trigger": {
+       "event": "resource",
+       "chance": 1.0,
+       "every": 99,
+       "condition": {
+        "kind": "not_front"
+       },
+       "resource": {
+        "kind": "mission",
+        "need": 10,
+        "gain": 1,
+        "on": "ally_attacked"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "self",
+       "all": true
+      },
+      {
+       "type": "buff",
+       "effect": "knowledge",
+       "target": "allies",
+       "turns": 999,
+       "unique": true
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks all enemies with a drone, increasing skill cooldowns by 1 turn. Deals 3000 additional damage regardless of whether the attack hits. (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false
+     },
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": 1,
+       "target": "enemies",
+       "chance": 1.0
+      },
+      {
+       "type": "fixed",
+       "amount": 3000,
+       "per_debuff": false,
+       "on_crit": false
+      }
+     ]
+    }
+   }
   }
  }
 }

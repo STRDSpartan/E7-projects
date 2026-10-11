@@ -155,9 +155,20 @@ partiel, contre-attaque quand un allié est attaqué, dégâts doublés hors de 
   zone additionnels de Luna, pénétration cumulable d'Aria.
 - **Corrections générales** (infobulles officielles) : le sommeil se dissipe quand on subit des
   dégâts ; le camouflage réduit de 50 % les dégâts de zone puis disparaît.
-- **Lot 4** (à faire) : Tactical Archetype Coli, Desert Jewel Basar, Schniel, Setsuka, Empyrean
-  Ilynav, Lone Crescent Bellona, Little Queen Charlotte, Silvertide Christy, Ivana, Uncharted
-  Pioneer Politis (rangs 31 à 40).
+- **Lot 4** (fait, rangs 31 à 40) : Tactical Archetype Coli, Desert Jewel Basar, Schniel,
+  Setsuka, Empyrean Ilynav, Lone Crescent Bellona, Little Queen Charlotte, Ivana, Uncharted
+  Pioneer Politis. Silvertide Christy n'a pas de multiplicateurs (absente d'E7Calc) : non
+  simulable. Mécaniques ajoutées : Bombe (150 % de l'attaque, 70 % de défense ignorée, puis
+  immobile 1 tour), Surcharge (+50 % attaque et vitesse) puis Épuisement, Attaque rapide (+50 %
+  de jauge en fin de tour), Inversion de barrière, Envoûtement (10 % des PV max des alliés du
+  porteur), Rayonnement (dégâts −50 %), aura d'esquive et contre-attaque quand un allié esquive,
+  réduction des dégâts critiques, Savoir des étoiles (dégâts additionnels ×2), missions de
+  Politis (10 attaques alliées ou 10 attaques subies), cumul d'attaque de Bellona, retrait
+  ciblé d'un buff (immortalité), jauge jamais diminuée, événements « allié utilise une attaque
+  sur une cible », « attaque de l'équipe », « allié esquive », « critique subi ». Non simulés :
+  consommation des PV de Setsuka, cumul des dégâts fixes de Schniel, bonus anti-Ténèbres de
+  Charlotte, bonus de stats des missions de Politis.
+- **Lot 5** (à faire) : rangs 41 et suivants du classement.
 
 **Non simulés** : mécaniques uniques non encore décrites dans `hero_mechanics.json` (balles de
 Renoa, vitesse fixe de Harsetti, marques...), Bombes, partage de dégâts, transferts, artefacts,
