@@ -1023,9 +1023,12 @@
       }
      ],
      "trigger": {
-      "event": "turn_end",
+      "event": "enemy_skill",
       "chance": 1.0,
-      "every": 2
+      "every": 2,
+      "condition": {
+       "kind": "non_attack"
+      }
      },
      "aoe": false
     }
@@ -1126,8 +1129,16 @@
       }
      ],
      "trigger": {
-      "event": "battle_start",
-      "chance": 1.0
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "focus",
+       "need": 1,
+       "start": 3,
+       "gain": 1,
+       "on": "turn_end",
+       "estimated": true
+      }
      },
      "aoe": false
     }
@@ -1457,6 +1468,11 @@
        "estimated": false
       }
      ],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 0.35,
+      "every": 3
+     },
      "aoe": false
     },
     "s3": {
@@ -1756,7 +1772,12 @@
        "target": "ally",
        "all": false
       }
-     ]
+     ],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 1.0,
+      "every": 2
+     }
     },
     "s3": {
      "rate": 0.7,
@@ -2368,6 +2389,11 @@
        "all": false
       }
      ],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 1.0,
+      "every": 3
+     },
      "aoe": false
     },
     "s3": {
@@ -2661,6 +2687,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -2956,6 +2986,12 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "revive",
+      "chance": 1.0,
+      "every": 99,
+      "health": 1.0
+     },
      "aoe": false
     }
    }
@@ -3245,7 +3281,18 @@
        "target": "enemies",
        "all": false
       }
-     ]
+     ],
+     "trigger": {
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "focus",
+       "need": 5,
+       "gain": 1,
+       "on": "turn_end",
+       "estimated": true
+      }
+     }
     },
     "s3": {
      "rate": null,
@@ -3559,6 +3606,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "enemy_turn_end",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -3756,6 +3807,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "death",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -3855,7 +3910,10 @@
      ],
      "trigger": {
       "event": "turn_start",
-      "chance": 1.0
+      "chance": 1.0,
+      "condition": {
+       "kind": "no_debuff"
+      }
      },
      "aoe": false
     }
@@ -4003,6 +4061,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "ally_turn_end",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -5321,9 +5383,17 @@
       }
      ],
      "trigger": {
-      "event": "battle_start",
+      "event": "resource",
       "chance": 1.0,
-      "every": 2
+      "every": 2,
+      "resource": {
+       "kind": "spirit",
+       "need": 100,
+       "start": 50,
+       "gain": 10,
+       "on": "attacked",
+       "estimated": true
+      }
      }
     },
     "s3": {
@@ -5822,6 +5892,11 @@
        "estimated": false
       }
      ],
+     "trigger": {
+      "event": "death",
+      "chance": 1.0,
+      "every": 4
+     },
      "aoe": false
     }
    },
@@ -6175,6 +6250,11 @@
        "turns": 1
       }
      ],
+     "trigger": {
+      "event": "lethal",
+      "chance": 1.0,
+      "every": 5
+     },
      "aoe": false
     }
    }
@@ -6441,7 +6521,12 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 1.0,
+      "every": 99
+     }
     },
     "s3": {
      "rate": 1,
@@ -6911,6 +6996,11 @@
        "estimated": false
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 99
+     },
      "aoe": false
     }
    },
@@ -7017,6 +7107,14 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "condition": {
+       "kind": "hp_below",
+       "value": 0.5
+      }
+     },
      "aoe": false
     }
    }
@@ -7804,7 +7902,10 @@
      "effects": [],
      "trigger": {
       "event": "counter",
-      "chance": 1.0
+      "chance": 1.0,
+      "condition": {
+       "kind": "has_debuff"
+      }
      },
      "aoe": false
     }
@@ -7968,7 +8069,11 @@
        "target": "target",
        "all": true
       }
-     ]
+     ],
+     "trigger": {
+      "event": "death",
+      "chance": 1.0
+     }
     }
    }
   },
@@ -8479,7 +8584,8 @@
      ],
      "trigger": {
       "event": "battle_start",
-      "chance": 1.0
+      "chance": 1.0,
+      "every": 99
      },
      "aoe": false
     },
@@ -8597,7 +8703,11 @@
        "target": "target",
        "all": true
       }
-     ]
+     ],
+     "trigger": {
+      "event": "death",
+      "chance": 1.0
+     }
     }
    }
   },
@@ -9343,8 +9453,16 @@
       }
      ],
      "trigger": {
-      "event": "battle_start",
-      "chance": 1.0
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "spirit",
+       "need": 100,
+       "start": 60,
+       "gain": 20,
+       "on": "attacked",
+       "estimated": false
+      }
      }
     },
     "s3": {
@@ -9696,6 +9814,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -9916,6 +10038,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -10112,7 +10238,7 @@
       }
      ],
      "trigger": {
-      "event": "attacked",
+      "event": "enemy_skill",
       "chance": 1.0
      },
      "aoe": false
@@ -10242,6 +10368,17 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "spirit",
+       "need": 100,
+       "gain": 10,
+       "on": "enemy_turn_end",
+       "estimated": false
+      }
+     },
      "aoe": false
     }
    }
@@ -10889,6 +11026,11 @@
        "estimated": false
       }
      ],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 0.35,
+      "every": 3
+     },
      "aoe": false
     }
    },
@@ -11178,6 +11320,11 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 1.0,
+      "every": 99
+     },
      "aoe": false
     }
    }
@@ -11472,7 +11619,11 @@
      ],
      "trigger": {
       "event": "attacked",
-      "chance": 1.0
+      "chance": 1.0,
+      "every": 99,
+      "condition": {
+       "kind": "has_debuff"
+      }
      }
     },
     "s3": {
@@ -11594,6 +11745,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -11938,6 +12093,11 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0,
+      "every": 2
+     },
      "aoe": true
     }
    }
@@ -12757,8 +12917,9 @@
       }
      ],
      "trigger": {
-      "event": "after_attack",
-      "chance": 1.0
+      "event": "ally_attacked",
+      "chance": 1.0,
+      "every": 99
      }
     },
     "s3": {
@@ -13230,7 +13391,7 @@
       }
      ],
      "trigger": {
-      "event": "attacked",
+      "event": "battle_start",
       "chance": 1.0,
       "every": 2
      }
@@ -14399,7 +14560,11 @@
      "name": "Precise Attack",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [],
+     "trigger": {
+      "event": "death",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": null,
@@ -14601,6 +14766,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -15293,6 +15462,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -16000,7 +16173,10 @@
      "trigger": {
       "event": "counter",
       "chance": 1.0,
-      "every": 2
+      "every": 2,
+      "condition": {
+       "kind": "has_debuff"
+      }
      }
     },
     "s3": {
@@ -16118,6 +16294,13 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "enemy_skill",
+      "chance": 1.0,
+      "condition": {
+       "kind": "non_attack"
+      }
+     },
      "aoe": false
     }
    }
@@ -16201,7 +16384,10 @@
      ],
      "trigger": {
       "event": "turn_start",
-      "chance": 1.0
+      "chance": 1.0,
+      "condition": {
+       "kind": "no_debuff"
+      }
      },
      "aoe": false
     }
@@ -16958,7 +17144,7 @@
       }
      ],
      "trigger": {
-      "event": "turn_start",
+      "event": "any_turn_end",
       "chance": 1.0
      },
      "aoe": false
@@ -17183,6 +17369,10 @@
        "turns": 2
       }
      ],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 0.35
+     },
      "aoe": false
     }
    }
@@ -17435,9 +17625,13 @@
       }
      ],
      "trigger": {
-      "event": "attacked",
+      "event": "lethal",
       "chance": 1.0,
-      "every": 5
+      "every": 5,
+      "condition": {
+       "kind": "hp_below",
+       "value": 0.5
+      }
      },
      "aoe": false
     }
@@ -17589,6 +17783,10 @@
        "turns": 1
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -17778,6 +17976,11 @@
        "turns": 1
       }
      ],
+     "trigger": {
+      "event": "lethal",
+      "chance": 1.0,
+      "every": 6
+     },
      "aoe": false
     }
    }
@@ -17997,8 +18200,15 @@
       }
      ],
      "trigger": {
-      "event": "battle_start",
-      "chance": 1.0
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "spirit",
+       "need": 10,
+       "gain": 10,
+       "on": "attacked",
+       "estimated": true
+      }
      }
     }
    }
@@ -18140,6 +18350,11 @@
        "turns": 1
       }
      ],
+     "trigger": {
+      "event": "lethal",
+      "chance": 1.0,
+      "every": 6
+     },
      "aoe": false
     }
    }
@@ -18453,7 +18668,10 @@
      "trigger": {
       "event": "attacked",
       "chance": 1.0,
-      "every": 2
+      "every": 2,
+      "condition": {
+       "kind": "has_debuff"
+      }
      },
      "aoe": false
     }
@@ -19328,8 +19546,16 @@
       }
      ],
      "trigger": {
-      "event": "battle_start",
-      "chance": 1.0
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "spirit",
+       "need": 100,
+       "start": 50,
+       "gain": 10,
+       "on": "turn_start",
+       "estimated": false
+      }
      },
      "aoe": false
     }
@@ -19539,7 +19765,8 @@
      ],
      "trigger": {
       "event": "attacked",
-      "chance": 1.0
+      "chance": 1.0,
+      "every": 99
      },
      "aoe": false
     }
@@ -20091,6 +20318,14 @@
        "all": false
       }
      ],
+     "trigger": {
+      "event": "enemy_skill",
+      "chance": 1.0,
+      "every": 2,
+      "condition": {
+       "kind": "non_attack"
+      }
+     },
      "aoe": false
     }
    }
@@ -20376,6 +20611,11 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 1.0,
+      "every": 2
+     },
      "aoe": false
     }
    }
@@ -20662,8 +20902,15 @@
       }
      ],
      "trigger": {
-      "event": "after_attack",
-      "chance": 1.0
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "spirit",
+       "need": 100,
+       "gain": 20,
+       "on": "ally_attacked",
+       "estimated": false
+      }
      }
     },
     "s3": {
@@ -22414,7 +22661,11 @@
      "trigger": {
       "event": "battle_start",
       "chance": 1.0,
-      "every": 3
+      "every": 3,
+      "condition": {
+       "kind": "target_hp_below",
+       "value": 0.5
+      }
      },
      "aoe": false
     }
@@ -22509,8 +22760,15 @@
      "passive": true,
      "effects": [],
      "trigger": {
-      "event": "battle_start",
-      "chance": 1.0
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "focus",
+       "need": 5,
+       "gain": 1,
+       "on": "turn_end",
+       "estimated": true
+      }
      }
     },
     "s3": {
@@ -22624,6 +22882,10 @@
        "turns": 2
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -23779,6 +24041,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "any_turn_end",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -24043,7 +24309,22 @@
        "target": "enemies",
        "all": false
       }
-     ]
+     ],
+     "trigger": {
+      "event": "resource",
+      "chance": 1.0,
+      "every": 2,
+      "condition": {
+       "kind": "non_attack"
+      },
+      "resource": {
+       "kind": "focus",
+       "need": 5,
+       "gain": 2,
+       "on": "enemy_skill",
+       "estimated": false
+      }
+     }
     },
     "s3": {
      "rate": null,
@@ -24233,7 +24514,10 @@
      "trigger": {
       "event": "turn_start",
       "chance": 1.0,
-      "every": 1
+      "every": 1,
+      "condition": {
+       "kind": "full_hp"
+      }
      },
      "aoe": false
     }
@@ -24837,7 +25121,7 @@
       }
      ],
      "trigger": {
-      "event": "attacked",
+      "event": "enemy_turn_start",
       "chance": 1.0
      },
      "aoe": false
@@ -25100,7 +25384,15 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "trigger": {
+      "event": "enemy_skill",
+      "chance": 1.0,
+      "every": 2,
+      "condition": {
+       "kind": "non_attack"
+      }
+     }
     },
     "s3": {
      "rate": 1,
@@ -25329,6 +25621,10 @@
        "turns": 2
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -25766,8 +26062,9 @@
       }
      ],
      "trigger": {
-      "event": "attacked",
-      "chance": 1.0
+      "event": "battle_start",
+      "chance": 1.0,
+      "every": 99
      },
      "aoe": false
     }
@@ -26089,6 +26386,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -26381,6 +26682,11 @@
        "estimated": false
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 99
+     },
      "aoe": false
     }
    },
@@ -26449,7 +26755,7 @@
      "passive": true,
      "effects": [],
      "trigger": {
-      "event": "turn_start",
+      "event": "death",
       "chance": 1.0
      },
      "aoe": false
@@ -27399,6 +27705,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -28224,7 +28534,11 @@
      "name": "Eye of Death",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [],
+     "trigger": {
+      "event": "death",
+      "chance": 1.0
+     }
     }
    }
   },
@@ -28368,7 +28682,18 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "trigger": {
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "focus",
+       "need": 5,
+       "gain": 2,
+       "on": "turn_end",
+       "estimated": false
+      }
+     }
     },
     "s3": {
      "rate": null,
@@ -28552,6 +28877,11 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "ally_attacked",
+      "chance": 1.0,
+      "every": 1
+     },
      "aoe": false
     }
    },
@@ -28765,6 +29095,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "crit",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -28968,6 +29302,10 @@
        "turns": 2
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -29492,7 +29830,18 @@
        "chance": 0.75,
        "ignore_resist": false
       }
-     ]
+     ],
+     "trigger": {
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "focus",
+       "need": 5,
+       "gain": 1,
+       "on": "ally_attacked",
+       "estimated": false
+      }
+     }
     },
     "s3": {
      "rate": 1.2,
@@ -29684,8 +30033,15 @@
       }
      ],
      "trigger": {
-      "event": "after_attack",
-      "chance": 1.0
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "focus",
+       "need": 5,
+       "gain": 1,
+       "on": "turn_end",
+       "estimated": false
+      }
      }
     },
     "s3": {
@@ -29882,8 +30238,15 @@
       }
      ],
      "trigger": {
-      "event": "after_attack",
-      "chance": 1.0
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "spirit",
+       "need": 100,
+       "gain": 10,
+       "on": "attacked",
+       "estimated": true
+      }
      }
     },
     "s3": {
@@ -30007,7 +30370,11 @@
      "trigger": {
       "event": "attacked",
       "chance": 1.0,
-      "every": 3
+      "every": 3,
+      "condition": {
+       "kind": "target_hp_below",
+       "value": 0.3
+      }
      },
      "aoe": true
     }
@@ -30364,8 +30731,8 @@
       }
      ],
      "trigger": {
-      "event": "turn_end",
-      "chance": 1.0
+      "event": "enemy_turn_end",
+      "chance": 0.05
      },
      "aoe": false
     }
@@ -30536,8 +30903,15 @@
       }
      ],
      "trigger": {
-      "event": "turn_start",
-      "chance": 1.0
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "focus",
+       "need": 2,
+       "gain": 1,
+       "on": "turn_start",
+       "estimated": false
+      }
      }
     },
     "s3": {
@@ -30825,7 +31199,15 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "trigger": {
+      "event": "enemy_skill",
+      "chance": 1.0,
+      "every": 2,
+      "condition": {
+       "kind": "non_attack"
+      }
+     }
     },
     "s3": {
      "rate": 1.6,
@@ -31317,6 +31699,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "death",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -31405,7 +31791,18 @@
        "target": "target",
        "chance": 1.0
       }
-     ]
+     ],
+     "trigger": {
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "spirit",
+       "need": 100,
+       "gain": 10,
+       "on": "ally_attacked",
+       "estimated": false
+      }
+     }
     },
     "s3": {
      "rate": 0.7,
@@ -31586,6 +31983,17 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "spirit",
+       "need": 100,
+       "gain": 10,
+       "on": "attacked",
+       "estimated": true
+      }
+     },
      "aoe": false
     },
     "s3": {
@@ -32110,6 +32518,11 @@
        "turns": 1
       }
      ],
+     "trigger": {
+      "event": "lethal",
+      "chance": 1.0,
+      "every": 4
+     },
      "aoe": false
     }
    }
@@ -32288,8 +32701,16 @@
      "passive": true,
      "effects": [],
      "trigger": {
-      "event": "battle_start",
-      "chance": 1.0
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "focus",
+       "need": 3,
+       "start": 3,
+       "gain": 1,
+       "on": "turn_end",
+       "estimated": true
+      }
      },
      "aoe": false
     }
@@ -32492,6 +32913,14 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "enemy_skill",
+      "chance": 1.0,
+      "every": 3,
+      "condition": {
+       "kind": "non_attack"
+      }
+     },
      "aoe": false
     }
    }
@@ -33037,6 +33466,15 @@
        "all": false
       }
      ],
+     "trigger": {
+      "event": "enemy_turn_end",
+      "chance": 1.0,
+      "every": 99,
+      "condition": {
+       "kind": "hp_below",
+       "value": 0.7
+      }
+     },
      "aoe": false
     }
    }
@@ -33686,9 +34124,16 @@
       }
      ],
      "trigger": {
-      "event": "battle_start",
+      "event": "resource",
       "chance": 1.0,
-      "every": 3
+      "every": 3,
+      "resource": {
+       "kind": "spirit",
+       "need": 100,
+       "gain": 10,
+       "on": "enemy_turn_end",
+       "estimated": false
+      }
      },
      "aoe": false
     }
@@ -34074,7 +34519,18 @@
        "ratio": 0.15,
        "estimated": true
       }
-     ]
+     ],
+     "trigger": {
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "focus",
+       "need": 5,
+       "gain": 1,
+       "on": "turn_end",
+       "estimated": true
+      }
+     }
     },
     "s2": {
      "rate": null,
@@ -34085,8 +34541,16 @@
      "passive": true,
      "effects": [],
      "trigger": {
-      "event": "battle_start",
-      "chance": 1.0
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "focus",
+       "need": 5,
+       "start": 1,
+       "gain": 1,
+       "on": "turn_start",
+       "estimated": false
+      }
      },
      "aoe": false
     }
@@ -34324,7 +34788,7 @@
       }
      ],
      "trigger": {
-      "event": "turn_start",
+      "event": "any_turn_end",
       "chance": 1.0
      },
      "aoe": false
@@ -34484,7 +34948,11 @@
      "name": "Precise Attack",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [],
+     "trigger": {
+      "event": "death",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": null,
@@ -35602,8 +36070,16 @@
       }
      ],
      "trigger": {
-      "event": "battle_start",
-      "chance": 1.0
+      "event": "resource",
+      "chance": 1.0,
+      "resource": {
+       "kind": "spirit",
+       "need": 100,
+       "start": 40,
+       "gain": 20,
+       "on": "attacked",
+       "estimated": false
+      }
      }
     },
     "s3": {
@@ -35827,7 +36303,11 @@
      "trigger": {
       "event": "attacked",
       "chance": 1.0,
-      "every": 5
+      "every": 5,
+      "condition": {
+       "kind": "hp_below",
+       "value": 0.3
+      }
      },
      "aoe": false
     }
@@ -36185,6 +36665,13 @@
        "turns": 2
       }
      ],
+     "trigger": {
+      "event": "enemy_skill",
+      "chance": 1.0,
+      "condition": {
+       "kind": "non_attack"
+      }
+     },
      "aoe": false
     }
    }

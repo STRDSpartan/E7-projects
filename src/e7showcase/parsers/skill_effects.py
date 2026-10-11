@@ -234,37 +234,131 @@ def parse_effects(
 # déclencheurs des passifs, du plus spécifique au plus général (premier trouvé retenu)
 TRIGGERS = (
     ("counter", r"chance to counterattack|attacked, counterattacks?\b"),
-    ("revive", r"upon receiving lethal damage, revives?"),
-    ("battle_start", r"at the start of (the first )?battle"),
+    ("revive", r"upon receiving lethal damage, (revives?|regenerates?)"),
+    ("lethal", r"(upon|when the caster) receiv\w* lethal damage"),
+    ("battle_start", r"at the start of (the first )?battle|starts the first battle"),
+    ("ally_attacked", r"\b(when|after) (an|any) ally (except for the caster )?(is|suffers an?) "),
+    ("enemy_skill", r"\b(when|after) (an|the) enemy uses an?( non-attack)? skill"),
+    ("enemy_turn_start", r"at the start of an enemy's turn"),
+    ("enemy_turn_end", r"at the end of an enemy's turn|when an enemy's turn ends"),
+    ("ally_turn_end", r"at the end of (an|every \d+) ally'?s? turns?"),
+    ("any_turn_end", r"at the end of (someone's|a) turn"),
+    ("death", r"when (the enemy is defeated|somebody dies|an? (ally|enemy) dies)"),
+    ("crit", r"after delivering a critical hit|when (the caster )?(makes|lands) a critical hit"),
     ("turn_start", r"at the (start|beginning) of (the |each |the caster's )?turn"),
     ("turn_end", r"at the end of (the |each |the caster's )?turn"),
-    ("attacked", r"\bwhen (the caster is )?attacked\b|\bafter being attacked\b"),
-    ("after_attack", r"\bafter attacking\b|\ba successful attack\b"),
+    (
+        "attacked",
+        r"\b(when|after|at the moment) (the caster is )?(being )?attacked\b"
+        r"|\bafter being attacked\b|\bwhen suffering an attack\b",
+    ),
+    ("after_attack", r"\bafter (attacking|using a (basic )?skill)\b|\ba successful attack\b"),
 )
+RESOURCES = {"focus": (r"focus", 5, 1), "spirit": (r"fighting spirit", 100, 10)}
+
+
+def _event(text: str, passive: bool) -> tuple[str, str] | None:
+    """Premier déclencheur reconnu dans `text` : (événement, phrase)."""
+    low = text.lower()
+    for event, pattern in TRIGGERS:
+        if not re.search(pattern, low) or (event != "counter" and not passive):
+            continue
+        sentence = next((s for s in _sentences(text) if re.search(pattern, s.lower())), text)
+        return event, sentence
+    return None
+
+
+def _condition(text: str) -> dict[str, Any] | None:
+    low = text.lower()
+    m = re.search(
+        r"when (?:the caster's )?health (?:of the caster )?is (\d+)% or (less|lower)", low
+    )
+    if m:
+        return {"kind": "hp_below", "value": int(m.group(1)) / 100}
+    m = re.search(r"when (?:the )?target's health is (\d+)% or (less|lower)", low)
+    if m:
+        return {"kind": "target_hp_below", "value": int(m.group(1)) / 100}
+    if re.search(r"(caster|ally) is at max health|health is full", low):
+        return {"kind": "full_hp"}
+    if re.search(r"caster does not have a debuff|caster is free of debuffs", low):
+        return {"kind": "no_debuff"}
+    if re.search(r"caster (has a debuff|is debuffed)", low):
+        return {"kind": "has_debuff"}
+    if "non-attack skill" in low:
+        return {"kind": "non_attack"}
+    return None
+
+
+def _resource(text: str, passive: bool) -> dict[str, Any] | None:
+    """Jauge (Concentration, Esprit combatif) qui active le passif une fois pleine."""
+    low = text.lower()
+    for kind, (word, full, default_gain) in RESOURCES.items():
+        need = re.search(
+            rf"when (?:the caster's )?(?:stacked )?{word} is (full|(\d+) or higher|(\d+)\b)", low
+        )
+        if not need:
+            continue
+        value = need.group(2) or need.group(3)
+        res: dict[str, Any] = {"kind": kind, "need": int(value) if value else full}
+        start = re.search(
+            rf"(?:starts the first battle with|gains) (\d+) {word}[^.]*first battle"
+            rf"|first battle, (?:gains|fully recovers) (\d+)? ?{word}",
+            low,
+        )
+        if start:
+            res["start"] = int(start.group(1) or start.group(2) or res["need"])
+        gain = next(
+            (
+                (s, g)
+                for s in _sentences(text)
+                if (g := re.search(rf"gains? (\d+) {word}", s.lower()))
+                and "first battle" not in s.lower()
+            ),
+            None,
+        )
+        found = _event(gain[0], passive) if gain else None
+        res["gain"] = int(gain[1].group(1)) if gain else default_gain
+        # sans gain explicite : Concentration à chaque tour, Esprit quand on est attaqué (estimé)
+        res["on"] = found[0] if found else ("turn_end" if kind == "focus" else "attacked")
+        res["estimated"] = gain is None
+        return res
+    return None
 
 
 def parse_trigger(text: str, *, passive: bool) -> dict[str, Any] | None:
     """Déclencheur d'une compétence passive ou de contre-attaque (`None` si non reconnu).
 
     `event` : counter (contre-attaque avec cette compétence si elle inflige des dégâts, sinon
-    S1), revive, battle_start, turn_start, turn_end, attacked, after_attack. `chance` : « has a
-    30% chance » ; `every` : « can only be activated once every 3 turns » (99 = une fois par
-    combat) ; `health` : PV rendus à la résurrection.
+    S1), revive, lethal (dégâts mortels), battle_start, turn_start, turn_end (tour du porteur),
+    attacked, after_attack, ally_attacked, enemy_skill, enemy_turn_start, enemy_turn_end,
+    ally_turn_end, any_turn_end, death, crit, resource (jauge pleine). `chance` : « has a 30%
+    chance » ; `every` : « once every 3 turns » (99 = une fois par combat) ; `health` : PV
+    rendus à la résurrection ; `condition` : seuil de PV, débuff... ; `resource` : jauge
+    (Concentration ou Esprit combatif) remplie par l'événement `on`.
     """
+    resource = _resource(text, passive) if passive else None
+    found = _event(text, passive)
+    if found is None and resource is None:
+        return None
+    event, sentence = found if found else ("resource", text)
     low = text.lower()
-    for event, pattern in TRIGGERS:
-        found = re.search(pattern, low)
-        if not found or (event != "counter" and not passive):
-            continue
-        sentence = next((s for s in _sentences(text) if re.search(pattern, s.lower())), text)
-        trigger: dict[str, Any] = {"event": event, "chance": _chance(sentence)}
-        every = re.search(r"once every (\d+) t", low)
-        if every:
-            trigger["every"] = int(every.group(1))
-        elif "once per battle" in low or event == "revive":
-            trigger["every"] = 99
-        if event == "revive":
-            hp = re.search(r"revives? with (\d+)% (?:of )?(?:max )?health", low)
-            trigger["health"] = int(hp.group(1)) / 100 if hp else 0.5
-        return trigger
-    return None
+    trigger: dict[str, Any] = {"event": event, "chance": _chance(sentence)}
+    every = re.search(r"once every (\d+) t", low)
+    if every:
+        trigger["every"] = int(every.group(1))
+    elif re.search(r"once per battle|only be activated once\b", low) or event == "revive":
+        trigger["every"] = 99
+    if event == "revive":
+        hp = re.search(r"(?:revives?|regenerates?) (?:with|to) (\d+)% (?:of )?(?:max )?health", low)
+        trigger["health"] = int(hp.group(1)) / 100 if hp else 0.5
+    whole = _condition(text)
+    condition = _condition(sentence) if found else whole
+    if condition is None and whole is not None and whole["kind"].endswith("hp_below"):
+        condition = whole  # seuil de PV énoncé dans une autre phrase
+    if condition is not None:
+        trigger["condition"] = condition
+    if resource is not None and event not in ("counter", "revive", "lethal"):
+        trigger["event"] = "resource"
+        trigger["resource"] = resource
+        trigger["chance"] = 1.0
+    return trigger

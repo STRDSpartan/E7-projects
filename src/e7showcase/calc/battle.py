@@ -23,8 +23,11 @@ Modèle :
 - durées : décomptées à la fin du tour de celui qui porte l'effet (un effet reçu pendant son
   propre tour n'est pas décompté ce tour-là), comme en jeu.
 
-Non simulé : passifs à conditions (Concentration, Esprit combatif, seuils de PV...),
-bonus de stats permanents des passifs (déjà dans les stats affichées en jeu), artefacts,
+- passifs à conditions : seuils de PV, débuffs, allié attaqué, tours et compétences ennemies,
+  morts, critiques, dégâts mortels, jauges de Concentration et d'Esprit combatif.
+
+Non simulé : bonus de stats permanents des passifs (déjà dans les stats affichées),
+artefacts,
 esquive, âme brûlée, effets propres à un héros. Le montant des soins et de certaines
 barrières n'est pas chiffré dans les textes du jeu : valeur type (signalée
 `estimated` dans les données). Le résultat reste un ordre de grandeur.
@@ -83,6 +86,7 @@ class _Unit:
     fresh: set[str] = field(default_factory=set)  # effets reçus pendant son propre tour
     turns: int = 0  # tours joués
     last_fired: dict[str, int] = field(default_factory=dict)  # passif → tour de déclenchement
+    stacks: dict[str, float] = field(default_factory=dict)  # passif → jauge (Concentration...)
 
     @property
     def alive(self) -> bool:
@@ -139,6 +143,13 @@ class _Battle:
             "passives": 0.0,
         }
         self.actions = 0
+        self.deaths: list[_Unit] = []
+        self.crits: list[_Unit] = []
+        for u in self.units:  # jauges de départ (« starts the first battle with 50 ... »)
+            for sid, skill in u.fighter.skills.items():
+                res = (skill.get("trigger") or {}).get("resource")
+                if res:
+                    u.stacks[sid] = float(res.get("start", 0))
         self.current: _Unit | None = None
         for u in self.units:  # départ : jauge aléatoire entre 0 et 5 % (comme en jeu)
             u.gauge = rng.uniform(0, 5)
@@ -211,27 +222,64 @@ class _Battle:
         return [t for t in hit if t.alive] or ([self.main_target(actor, foes)] if foes else [])
 
     # --- passifs et contre-attaques
-    def triggered(self, u: _Unit, event: str) -> list[tuple[str, dict[str, Any]]]:
-        """Compétences de `u` déclenchées par `event` (chance et recharge vérifiées)."""
+    def condition_met(
+        self, u: _Unit, cond: dict[str, Any] | None, other: _Unit | None, non_attack: bool
+    ) -> bool:
+        if not cond:
+            return True
+        kind = cond["kind"]
+        if kind == "hp_below":
+            return u.hp <= float(cond["value"]) * u.fighter.hp
+        if kind == "target_hp_below":
+            return other is not None and other.hp <= float(cond["value"]) * other.fighter.hp
+        if kind == "full_hp":
+            return u.hp >= u.fighter.hp
+        if kind == "no_debuff":
+            return not u.debuffs
+        if kind == "has_debuff":
+            return bool(u.debuffs)
+        if kind == "non_attack":
+            return non_attack
+        return True
+
+    def triggered(
+        self, u: _Unit, event: str, other: _Unit | None = None, non_attack: bool = False
+    ) -> list[tuple[str, dict[str, Any]]]:
+        """Compétences de `u` déclenchées par `event` (condition, jauge, chance, recharge)."""
         out = []
         for sid, skill in u.fighter.skills.items():
             trig = skill.get("trigger")
-            if not trig or trig["event"] != event:
+            if not trig:
+                continue
+            res = trig.get("resource")
+            if trig["event"] == "resource" and res and res["on"] == event:
+                if not self.condition_met(u, trig.get("condition"), other, non_attack):
+                    continue
+                u.stacks[sid] = min(u.stacks.get(sid, 0) + res["gain"], res["need"])
+                if u.stacks[sid] < res["need"]:
+                    continue
+            elif trig["event"] != event or not self.condition_met(
+                u, trig.get("condition"), other, non_attack
+            ):
                 continue
             last = u.last_fired.get(sid)
             if last is not None and u.turns - last < int(trig.get("every", 0)):
                 continue
-            if event != "revive" and self.rng.random() >= trig.get("chance", 1):
+            if self.rng.random() >= trig.get("chance", 1):
                 continue
+            if res:
+                u.stacks[sid] = 0  # jauge consommée
             u.last_fired[sid] = u.turns
             out.append((sid, skill))
         return out
 
-    def fire(self, u: _Unit, event: str, other: _Unit | None = None) -> None:
+    def fire(
+        self, u: _Unit, event: str, other: _Unit | None = None, non_attack: bool = False
+    ) -> None:
         """Joue les passifs de `u` déclenchés par `event` (`other` : attaquant ou cible)."""
         if not u.alive:
             return
-        for sid, skill in self.triggered(u, event):
+        for sid, skill in self.triggered(u, event, other, non_attack):
             foes = self.foes(u)
             if not foes:
                 return
@@ -358,20 +406,38 @@ class _Battle:
             return f"{target.name} invincible"
         absorbed = min(target.barrier, amount)
         target.barrier -= absorbed
+        if target.hp - (amount - absorbed) <= 0 and "immortal" not in target.buffs:
+            self.fire(target, "lethal", actor)  # ex. immortalité sur dégâts mortels
         target.hp = max(1.0 if "immortal" in target.buffs else 0.0, target.hp - (amount - absorbed))
+        if crit:
+            self.crits.append(actor)
         if target.hp <= 0:
             for _sid, skill in self.triggered(target, "revive"):
                 target.hp = target.fighter.hp * float(skill["trigger"].get("health", 0.5))
                 self.stats["passives"] += 1
                 return f"{target.name} −{_fmt(amount)}, ressuscite ({_fmt(target.hp)} PV)"
             target.barrier = 0
+            self.deaths.append(target)
         text = f"{target.name} −{_fmt(amount)}" + (" (critique)" if crit else "")
         if absorbed:
             text += f" [barrière −{_fmt(absorbed)}]"
         return text + (" ✝" if not target.alive else "")
 
+    def after_events(self) -> None:
+        """Passifs déclenchés par les coups critiques et les morts de l'action."""
+        crits, self.crits = list({id(u): u for u in self.crits}.values()), []
+        for u in crits:
+            self.fire(u, "crit")
+        while self.deaths:
+            dead = self.deaths.pop(0)
+            for u in [x for x in self.units if x.alive and x is not dead]:
+                self.fire(u, "death", dead)
+
     def end_turn(self, u: _Unit) -> None:
         self.fire(u, "turn_end")
+        for other in [x for x in self.units if x.alive and x is not u]:
+            self.fire(other, "any_turn_end", u)
+            self.fire(other, "ally_turn_end" if other.team == u.team else "enemy_turn_end", u)
         for bag, prefix in ((u.buffs, "buff:"), (u.debuffs, "debuff:")):
             for name in list(bag):
                 if prefix + name in u.fresh:
@@ -404,6 +470,8 @@ class _Battle:
             actor.turns += 1
             notes = len(self.log)
             self.fire(actor, "turn_start")
+            for f in self.foes(actor):
+                self.fire(f, "enemy_turn_start", actor)
             if {"stun", "sleep"} & set(actor.debuffs):
                 self.note(f"{actor.name} ne peut pas agir", at=notes)
                 self.end_turn(actor)
@@ -428,9 +496,14 @@ class _Battle:
             if hit:
                 for t in hit:
                     self.fire(t, "attacked", actor)
+                for ally in {id(a): a for t in hit for a in self.allies(t)}.values():
+                    self.fire(ally, "ally_attacked", actor)
                 for t in hit:
                     self.counter(t, actor)
                 self.fire(actor, "after_attack", hit[0])
+            for f in self.foes(actor):
+                self.fire(f, "enemy_skill", actor, non_attack=skill.get("rate") is None)
+            self.after_events()
             self.end_turn(actor)
         teams = {u.team for u in self.units if u.alive}
         return BattleResult(

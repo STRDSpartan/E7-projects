@@ -52,12 +52,21 @@ buffs, débuffs) et journal d'un combat type.
 avoir été attaqué), `after_attack` (après avoir attaqué : attaque supplémentaire si le passif
 inflige des dégâts), `revive` (résurrection une fois par combat, PV du texte) et `counter`
 (« X % de chances de contre-attaquer »). Chance et « une fois tous les N tours » sont respectées.
+Événements aussi reconnus : allié attaqué, compétence ennemie (ou seulement non offensive),
+début de tour ennemi, fin de tour d'un allié / d'un ennemi / de n'importe qui, mort d'un héros,
+coup critique porté, dégâts mortels (ex. immortalité).
+**Passifs à conditions** (`condition`) : PV du porteur ≤ X %, PV de la cible ≤ X %, PV pleins,
+avec ou sans débuff, compétence ennemie non offensive.
+**Jauges** (`resource`) : Concentration (pleine = 5) et Esprit combatif (plein = 100), remplies
+du montant du texte par l'événement indiqué (« when an ally is attacked, gains 10 Fighting
+Spirit »), valeur de départ comprise (« starts the first battle with 50 ») ; le passif se joue
+et vide la jauge quand elle est pleine. Sans gain écrit : +1 Concentration par tour, +10 Esprit
+par attaque subie (`estimated`). ~185 des 264 passifs ont un déclencheur reconnu.
 Les effets du passif (`effects`) sont joués au déclenchement.
 Contre-attaque : passif ou **set Contre** (30 %), après une attaque subie pendant le tour de
 l'adversaire, sauf étourdi ou endormi ; frappe avec la compétence du passif si elle a un taux,
 sinon S1 ; pas de contre-attaque d'une contre-attaque. Le journal les affiche sous l'action
 (« ↳ »), le bilan moyen compte contre-attaques et passifs déclenchés.
 
-**Non simulés** : passifs à conditions (Concentration, Esprit combatif, seuils de PV, alliés
-attaqués...), bonus de stats permanents des passifs (déjà inclus dans les stats affichées en
+**Non simulés** : mécaniques propres à un héros (Âmes, balles, marques, rang arrière...), bonus de stats permanents des passifs (déjà inclus dans les stats affichées en
 jeu), dégâts fixes, artefacts, esquive, âme brûlée, mécaniques propres à un héros.

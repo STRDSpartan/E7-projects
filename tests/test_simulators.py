@@ -266,3 +266,70 @@ def test_passive_triggers_revive_and_battle_start() -> None:
     assert "ressuscite" in battle.hit(foe, killer.skills["s1"], bird) and bird.hp == 500
     battle.hit(foe, killer.skills["s1"], bird)
     assert not bird.alive  # une seule fois par combat
+
+
+def test_parse_trigger_conditions_and_resources() -> None:
+    from e7showcase.parsers.skill_effects import parse_trigger
+
+    stark = parse_trigger(
+        "When an ally is attacked, gains 10 Fighting Spirit, and when Fighting Spirit is full, "
+        "activates Warrior's Strike on the attacker.",
+        passive=True,
+    )
+    assert stark is not None and stark["event"] == "resource"
+    assert stark["resource"] == {
+        "kind": "spirit",
+        "need": 100,
+        "gain": 10,
+        "on": "ally_attacked",
+        "estimated": False,
+    }
+    jenua = parse_trigger(
+        "After being attacked, when Health is 50% or less, activates Plan A.", passive=True
+    )
+    assert jenua == {
+        "event": "attacked",
+        "chance": 1.0,
+        "condition": {"kind": "hp_below", "value": 0.5},
+    }
+    hurado = parse_trigger("When the enemy uses a non-attack skill, increases CR.", passive=True)
+    assert hurado is not None and hurado["event"] == "enemy_skill"
+    assert hurado["condition"] == {"kind": "non_attack"}
+
+
+def test_conditional_passives_resource_lethal_and_ally_attacked() -> None:
+    guard = _skill(1.0)
+    guard.update(
+        passive=True,
+        trigger={
+            "event": "resource",
+            "chance": 1.0,
+            "resource": {
+                "kind": "spirit",
+                "need": 100,
+                "start": 80,
+                "gain": 10,
+                "on": "ally_attacked",
+            },
+        },
+    )
+    last = _skill(None, {"type": "buff", "effect": "immortal", "target": "self", "turns": 1})
+    last.update(passive=True, trigger={"event": "lethal", "chance": 1.0, "every": 99})
+    knight = Fighter(
+        "Gardien", 1000, 5000, 0, 1, 0, 150, None, {"s1": _skill(1.0), "s2": guard, "s3": last}
+    )
+    ally = Fighter("Allié", 1000, 10**6, 1000, 1, 0, 150, None, {"s1": _skill(1.0)})
+    foe = Fighter("Ennemi", 50000, 10**6, 1000, 300, 0, 150, None, {"s1": _skill(1.0)})
+    battle = _Battle([knight, ally], [foe], random.Random(1), {}, Options(), True)
+    me, friend, enemy = battle.units
+    assert me.stacks["s2"] == 80
+    battle.fire(me, "ally_attacked", enemy)
+    assert me.stacks["s2"] == 90 and battle.stats["passives"] == 0
+    battle.fire(me, "ally_attacked", enemy)
+    assert me.stacks["s2"] == 0 and battle.stats["passives"] == 1  # jauge pleine : activée
+    battle.hit(enemy, foe.skills["s1"], me)
+    assert me.hp == 1 and "immortal" in me.buffs  # immortalité sur dégâts mortels
+    me.buffs.clear()
+    battle.hit(enemy, foe.skills["s1"], me)
+    assert not me.alive  # une fois par combat
+    assert friend.alive
