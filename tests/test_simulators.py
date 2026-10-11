@@ -3,6 +3,7 @@
 import json
 import random
 import urllib.request
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -210,3 +211,58 @@ def test_reference_skills_have_cooldowns_and_effects() -> None:
     assert any(e["type"] == "heal" for e in achates["s3"]["effects"])
     with_effects = sum(1 for h in heroes.values() for s in h["skills"].values() if s.get("effects"))
     assert with_effects > 600
+
+
+def test_parse_trigger_counter_revive_and_turn_events() -> None:
+    from e7showcase.parsers.skill_effects import parse_trigger
+
+    assert parse_trigger("When attacked, has a 30% chance to counterattack .", passive=True) == {
+        "event": "counter",
+        "chance": 0.3,
+    }
+    revive = parse_trigger("Upon receiving lethal damage, revives with 50% Health.", passive=True)
+    assert revive == {"event": "revive", "chance": 1.0, "every": 99, "health": 0.5}
+    start = parse_trigger(
+        "At the start of the turn, increases Attack. Can only be activated once every 3 turns.",
+        passive=True,
+    )
+    assert start == {"event": "turn_start", "chance": 1.0, "every": 3}
+    assert parse_trigger("At the start of battle, grants a barrier.", passive=False) is None
+    assert parse_trigger("Increases Critical Hit Chance by 30%.", passive=True) is None
+
+
+def test_counterattack_passive_and_counter_set() -> None:
+    counter = _skill(None)
+    counter.update(passive=True, trigger={"event": "counter", "chance": 1.0})
+    wall = Fighter("Mur", 1000, 10**6, 1000, 1, 0, 150, None, {"s1": _skill(1.0), "s2": counter})
+    striker = Fighter("Frappeur", 1000, 10**6, 1000, 300, 0, 150, None, {"s1": _skill(1.0)})
+    res = fight([wall], [striker], keep_log=True)
+    assert "  ↳ Mur contre-attaque → Frappeur" in res.log[1]
+    assert res.stats["counters"] >= 1
+    plain = replace(wall, skills={"s1": _skill(1.0)})
+    assert fight([plain], [striker]).stats["counters"] == 0
+    with_set = replace(plain, counter_chance=100)
+    assert fight([with_set], [striker]).stats["counters"] >= 1
+    # pas de contre-attaque d'une contre-attaque
+    both = replace(striker, counter_chance=100)
+    battle = _Battle([with_set], [both], random.Random(1), {}, Options(), True)
+    battle.counter(battle.units[0], battle.units[1])
+    assert battle.stats["counters"] == 1
+
+
+def test_passive_triggers_revive_and_battle_start() -> None:
+    revive = _skill(None)
+    revive.update(passive=True, trigger={"event": "revive", "every": 99, "health": 0.5})
+    opening = _skill(None, {"type": "buff", "effect": "atk_up", "target": "self", "turns": 2})
+    opening.update(passive=True, trigger={"event": "battle_start", "chance": 1.0})
+    phoenix = Fighter(
+        "Phénix", 1000, 1000, 0, 1, 0, 150, None, {"s1": _skill(1.0), "s2": revive, "s3": opening}
+    )
+    killer = Fighter("Tueur", 50000, 10**6, 1000, 300, 0, 150, None, {"s1": _skill(1.0)})
+    battle = _Battle([phoenix], [killer], random.Random(1), {}, Options(), True)
+    bird, foe = battle.units
+    battle.fire(bird, "battle_start")
+    assert "atk_up" in bird.buffs
+    assert "ressuscite" in battle.hit(foe, killer.skills["s1"], bird) and bird.hp == 500
+    battle.hit(foe, killer.skills["s1"], bird)
+    assert not bird.alive  # une seule fois par combat

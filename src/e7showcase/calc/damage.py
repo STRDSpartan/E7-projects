@@ -70,6 +70,7 @@ class Fighter:
     skills: dict[str, Any] = field(default_factory=dict)
     effectiveness: float = 0  # %
     effect_res: float = 0  # %
+    counter_chance: float = 0  # % (set Contre)
 
 
 @dataclass

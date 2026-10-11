@@ -12,6 +12,7 @@ from e7showcase.models.hero import Hero
 
 MAX_TEAM = 4
 MAX_RUNS = 5000
+COUNTER_SET_CHANCE = 30  # % (data/reference/sets.json : « 30% chance to counterattack »)
 
 
 class SimError(ValueError):
@@ -33,6 +34,7 @@ def fighter(hero: Hero) -> Fighter:
         skills=data.get("skills", {}),
         effectiveness=s.effectiveness,
         effect_res=s.effect_res,
+        counter_chance=COUNTER_SET_CHANCE if "counter" in hero.sets else 0,
     )
 
 

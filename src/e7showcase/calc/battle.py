@@ -2,7 +2,7 @@
 
 Modèle :
 - jauge de combat : chaque héros avance de sa vitesse ; il joue quand elle atteint 100 % ;
-- compétences actives (S1 et compétences avec recharge ; les passifs ne sont pas joués) :
+- compétences actives (S1 et compétences avec recharge) :
   soin prioritaire si un allié est sous 50 % de PV, sinon S3, S2, puis S1. Recharges réelles
   (base E7GW, améliorations comprises), sinon S2 = 3 et S3 = 4 tours ;
 - dégâts : formule de calc/damage.py, critique tiré selon les chances de critique ; la
@@ -13,12 +13,20 @@ Modèle :
   débuffs (défense −70 %, attaque −50 %, vitesse −30 %, étourdissement, sommeil, silence,
   provocation, anti-soin) avec chance de réussite selon efficacité / résistance, jauge de
   combat (+/−), retrait de buffs et de débuffs ;
+- passifs à déclencheur (`trigger` dans skills.json) : début de combat, début et fin du tour du
+  porteur, après avoir été attaqué, après avoir attaqué (attaque supplémentaire si le passif
+  inflige des dégâts), résurrection une fois par combat ; chance et « une fois tous les N
+  tours » respectées ;
+- contre-attaques : passif « X % de chances de contre-attaquer » et set Contre, après une
+  attaque subie sur le tour de l'adversaire (pas de contre-attaque d'une contre-attaque) ;
+  frappe avec la compétence du passif si elle inflige des dégâts, sinon S1 ;
 - durées : décomptées à la fin du tour de celui qui porte l'effet (un effet reçu pendant son
   propre tour n'est pas décompté ce tour-là), comme en jeu.
 
-Non simulé : passifs et déclencheurs (contre-attaque, attaque supplémentaire, résurrection),
-artefacts, esquive, âme brûlée, effets propres à un héros. Le montant des soins et de
-certaines barrières n'est pas chiffré dans les textes du jeu : valeur type (signalée
+Non simulé : passifs à conditions (Concentration, Esprit combatif, seuils de PV...),
+bonus de stats permanents des passifs (déjà dans les stats affichées en jeu), artefacts,
+esquive, âme brûlée, effets propres à un héros. Le montant des soins et de certaines
+barrières n'est pas chiffré dans les textes du jeu : valeur type (signalée
 `estimated` dans les données). Le résultat reste un ordre de grandeur.
 """
 
@@ -73,6 +81,8 @@ class _Unit:
     barrier_turns: int = 0
     provoker: _Unit | None = None
     fresh: set[str] = field(default_factory=set)  # effets reçus pendant son propre tour
+    turns: int = 0  # tours joués
+    last_fired: dict[str, int] = field(default_factory=dict)  # passif → tour de déclenchement
 
     @property
     def alive(self) -> bool:
@@ -120,7 +130,15 @@ class _Battle:
         self.units = [_Unit(f, 0, f.hp) for f in team_a] + [_Unit(f, 1, f.hp) for f in team_b]
         self.rng, self.cds, self.opts, self.keep_log = rng, cooldowns, options, keep_log
         self.log: list[str] = []
-        self.stats = {"healed": 0.0, "shielded": 0.0, "buffs": 0.0, "debuffs": 0.0}
+        self.stats = {
+            "healed": 0.0,
+            "shielded": 0.0,
+            "buffs": 0.0,
+            "debuffs": 0.0,
+            "counters": 0.0,
+            "passives": 0.0,
+        }
+        self.actions = 0
         self.current: _Unit | None = None
         for u in self.units:  # départ : jauge aléatoire entre 0 et 5 % (comme en jeu)
             u.gauge = rng.uniform(0, 5)
@@ -191,6 +209,60 @@ class _Battle:
         if who == "enemies":
             return foes
         return [t for t in hit if t.alive] or ([self.main_target(actor, foes)] if foes else [])
+
+    # --- passifs et contre-attaques
+    def triggered(self, u: _Unit, event: str) -> list[tuple[str, dict[str, Any]]]:
+        """Compétences de `u` déclenchées par `event` (chance et recharge vérifiées)."""
+        out = []
+        for sid, skill in u.fighter.skills.items():
+            trig = skill.get("trigger")
+            if not trig or trig["event"] != event:
+                continue
+            last = u.last_fired.get(sid)
+            if last is not None and u.turns - last < int(trig.get("every", 0)):
+                continue
+            if event != "revive" and self.rng.random() >= trig.get("chance", 1):
+                continue
+            u.last_fired[sid] = u.turns
+            out.append((sid, skill))
+        return out
+
+    def fire(self, u: _Unit, event: str, other: _Unit | None = None) -> None:
+        """Joue les passifs de `u` déclenchés par `event` (`other` : attaquant ou cible)."""
+        if not u.alive:
+            return
+        for sid, skill in self.triggered(u, event):
+            foes = self.foes(u)
+            if not foes:
+                return
+            hit: list[_Unit] = []
+            parts: list[str] = []
+            if skill.get("rate") is not None:
+                target = other if other is not None and other.alive else None
+                hit = foes if skill.get("aoe") else [target or self.main_target(u, foes)]
+                parts += [self.hit(u, skill, t) for t in hit]
+            for effect in skill.get("effects", []):
+                parts += self.apply(u, effect, hit or ([other] if other else []))
+            if parts:
+                self.stats["passives"] += 1
+                self.note(f"  ↳ {u.name} passif {sid.upper()} → " + ", ".join(parts))
+
+    def counter(self, u: _Unit, attacker: _Unit) -> None:
+        """Contre-attaque de `u` (passif ou set Contre) sur `attacker`."""
+        if not (u.alive and attacker.alive) or {"stun", "sleep"} & set(u.debuffs):
+            return
+        passives = self.triggered(u, "counter")
+        if not passives and self.rng.random() >= u.fighter.counter_chance / 100:
+            return
+        passive = passives[0][1] if passives else {}
+        skill = passive if passive.get("rate") is not None else u.fighter.skills.get("s1")
+        if not skill or skill.get("rate") is None:
+            return
+        self.stats["counters"] += 1
+        parts = [self.hit(u, skill, attacker)]
+        for effect in skill.get("effects", []) if skill is passive else []:
+            parts += self.apply(u, effect, [attacker])
+        self.note(f"  ↳ {u.name} contre-attaque → " + ", ".join(parts))
 
     # --- effets
     def mark(self, target: _Unit, name: str) -> None:
@@ -288,6 +360,10 @@ class _Battle:
         target.barrier -= absorbed
         target.hp = max(1.0 if "immortal" in target.buffs else 0.0, target.hp - (amount - absorbed))
         if target.hp <= 0:
+            for _sid, skill in self.triggered(target, "revive"):
+                target.hp = target.fighter.hp * float(skill["trigger"].get("health", 0.5))
+                self.stats["passives"] += 1
+                return f"{target.name} −{_fmt(amount)}, ressuscite ({_fmt(target.hp)} PV)"
             target.barrier = 0
         text = f"{target.name} −{_fmt(amount)}" + (" (critique)" if crit else "")
         if absorbed:
@@ -295,6 +371,7 @@ class _Battle:
         return text + (" ✝" if not target.alive else "")
 
     def end_turn(self, u: _Unit) -> None:
+        self.fire(u, "turn_end")
         for bag, prefix in ((u.buffs, "buff:"), (u.debuffs, "debuff:")):
             for name in list(bag):
                 if prefix + name in u.fresh:
@@ -311,8 +388,9 @@ class _Battle:
             u.provoker = None
 
     def run(self) -> BattleResult:
-        actions = 0
-        while actions < MAX_ACTIONS:
+        for u in self.units:
+            self.fire(u, "battle_start")
+        while self.actions < MAX_ACTIONS:
             alive = [u for u in self.units if u.alive]
             if len({u.team for u in alive}) < 2:
                 break
@@ -321,10 +399,13 @@ class _Battle:
             for u in alive:
                 u.gauge = min(u.gauge + u.speed * wait, 100)
             actor.gauge = 0
-            actions += 1
+            self.actions += 1
             self.current = actor
+            actor.turns += 1
+            notes = len(self.log)
+            self.fire(actor, "turn_start")
             if {"stun", "sleep"} & set(actor.debuffs):
-                self.note(actions, f"{actor.name} ne peut pas agir")
+                self.note(f"{actor.name} ne peut pas agir", at=notes)
                 self.end_turn(actor)
                 continue
             sid = self.choose(actor)
@@ -343,20 +424,29 @@ class _Battle:
             for k in actor.cooldowns:
                 actor.cooldowns[k] = max(0, actor.cooldowns[k] - 1)
             actor.cooldowns[sid] = self.cooldown(sid, skill)
-            self.note(actions, f"{actor.name} ({sid.upper()}) → " + (", ".join(parts) or "—"))
+            self.note(f"{actor.name} ({sid.upper()}) → " + (", ".join(parts) or "—"), at=notes)
+            if hit:
+                for t in hit:
+                    self.fire(t, "attacked", actor)
+                for t in hit:
+                    self.counter(t, actor)
+                self.fire(actor, "after_attack", hit[0])
             self.end_turn(actor)
         teams = {u.team for u in self.units if u.alive}
         return BattleResult(
             winner=teams.pop() if len(teams) == 1 else None,
-            actions=actions,
+            actions=self.actions,
             log=self.log,
             remaining_hp=[[round(u.hp) for u in self.units if u.team == t] for t in (0, 1)],
             stats=self.stats,
         )
 
-    def note(self, n: int, text: str) -> None:
-        if self.keep_log:
-            self.log.append(f"{n:>3}. {text}")
+    def note(self, text: str, at: int | None = None) -> None:
+        """Ligne du journal ; `at` : position (l'action avant les passifs qu'elle déclenche)."""
+        if not self.keep_log:
+            return
+        line = text if text.startswith("  ↳") else f"{self.actions:>3}. {text}"
+        self.log.insert(len(self.log) if at is None else at, line)
 
 
 def fight(
@@ -391,7 +481,7 @@ def simulate(
     wins = [0, 0]
     draws = 0
     total_actions = 0
-    totals = {"healed": 0.0, "shielded": 0.0, "buffs": 0.0, "debuffs": 0.0}
+    totals = {k: 0.0 for k in ("healed", "shielded", "buffs", "debuffs", "counters", "passives")}
     for _ in range(runs):
         res = fight(team_a, team_b, rng=rng, cooldowns=cooldowns, options=options, keep_log=False)
         total_actions += res.actions

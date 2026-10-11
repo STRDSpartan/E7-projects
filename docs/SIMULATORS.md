@@ -46,5 +46,18 @@ réussite × (1 − (résistance − efficacité)), au moins 15 %, jauge ±, ret
 débuffs. Durées décomptées à la fin du tour du porteur (pas le tour où l'effet est reçu).
 Taux de victoire sur des milliers de combats (graine fixe), bilan moyen (soins, barrières,
 buffs, débuffs) et journal d'un combat type.
-**Non simulés** : passifs et déclencheurs (contre-attaques, attaques supplémentaires,
-résurrection), dégâts fixes, artefacts, esquive, âme brûlée, mécaniques propres à un héros.
+### Passifs et contre-attaques
+`parsers/skill_effects.parse_trigger` lit le déclencheur de chaque passif (champ `trigger`) :
+`battle_start` (début de combat), `turn_start` / `turn_end` (tour du porteur), `attacked` (après
+avoir été attaqué), `after_attack` (après avoir attaqué : attaque supplémentaire si le passif
+inflige des dégâts), `revive` (résurrection une fois par combat, PV du texte) et `counter`
+(« X % de chances de contre-attaquer »). Chance et « une fois tous les N tours » sont respectées.
+Les effets du passif (`effects`) sont joués au déclenchement.
+Contre-attaque : passif ou **set Contre** (30 %), après une attaque subie pendant le tour de
+l'adversaire, sauf étourdi ou endormi ; frappe avec la compétence du passif si elle a un taux,
+sinon S1 ; pas de contre-attaque d'une contre-attaque. Le journal les affiche sous l'action
+(« ↳ »), le bilan moyen compte contre-attaques et passifs déclenchés.
+
+**Non simulés** : passifs à conditions (Concentration, Esprit combatif, seuils de PV, alliés
+attaqués...), bonus de stats permanents des passifs (déjà inclus dans les stats affichées en
+jeu), dégâts fixes, artefacts, esquive, âme brûlée, mécaniques propres à un héros.

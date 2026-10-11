@@ -229,3 +229,42 @@ def parse_effects(
             {"type": "cleanse", "target": _target(s, "allies"), "all": "all debuff" in s.lower()}
         )
     return effects
+
+
+# déclencheurs des passifs, du plus spécifique au plus général (premier trouvé retenu)
+TRIGGERS = (
+    ("counter", r"chance to counterattack|attacked, counterattacks?\b"),
+    ("revive", r"upon receiving lethal damage, revives?"),
+    ("battle_start", r"at the start of (the first )?battle"),
+    ("turn_start", r"at the (start|beginning) of (the |each |the caster's )?turn"),
+    ("turn_end", r"at the end of (the |each |the caster's )?turn"),
+    ("attacked", r"\bwhen (the caster is )?attacked\b|\bafter being attacked\b"),
+    ("after_attack", r"\bafter attacking\b|\ba successful attack\b"),
+)
+
+
+def parse_trigger(text: str, *, passive: bool) -> dict[str, Any] | None:
+    """Déclencheur d'une compétence passive ou de contre-attaque (`None` si non reconnu).
+
+    `event` : counter (contre-attaque avec cette compétence si elle inflige des dégâts, sinon
+    S1), revive, battle_start, turn_start, turn_end, attacked, after_attack. `chance` : « has a
+    30% chance » ; `every` : « can only be activated once every 3 turns » (99 = une fois par
+    combat) ; `health` : PV rendus à la résurrection.
+    """
+    low = text.lower()
+    for event, pattern in TRIGGERS:
+        found = re.search(pattern, low)
+        if not found or (event != "counter" and not passive):
+            continue
+        sentence = next((s for s in _sentences(text) if re.search(pattern, s.lower())), text)
+        trigger: dict[str, Any] = {"event": event, "chance": _chance(sentence)}
+        every = re.search(r"once every (\d+) t", low)
+        if every:
+            trigger["every"] = int(every.group(1))
+        elif "once per battle" in low or event == "revive":
+            trigger["every"] = 99
+        if event == "revive":
+            hp = re.search(r"revives? with (\d+)% (?:of )?(?:max )?health", low)
+            trigger["health"] = int(hp.group(1)) / 100 if hp else 0.5
+        return trigger
+    return None

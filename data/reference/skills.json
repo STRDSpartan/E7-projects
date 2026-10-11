@@ -91,6 +91,11 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0,
+      "every": 4
+     },
      "aoe": false
     }
    }
@@ -196,6 +201,10 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "counter",
+      "chance": 0.3
+     },
      "aoe": false
     }
    }
@@ -693,6 +702,10 @@
        "all": false
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -797,6 +810,11 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 3
+     },
      "aoe": false
     }
    }
@@ -1004,6 +1022,11 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "turn_end",
+      "chance": 1.0,
+      "every": 2
+     },
      "aoe": false
     }
    }
@@ -1102,6 +1125,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -1191,6 +1218,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "turn_end",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -1280,6 +1311,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "turn_end",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -1359,6 +1394,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "counter",
+      "chance": 0.5
+     },
      "aoe": false
     }
    }
@@ -1598,6 +1637,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -1808,7 +1851,11 @@
      "name": "Noble Blood",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": 0.5,
@@ -2009,6 +2056,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -2681,6 +2732,10 @@
        "turns": 3
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -3273,6 +3328,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "counter",
+      "chance": 0.15
+     },
      "aoe": false
     },
     "s3": {
@@ -3404,6 +3463,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -3790,6 +3853,10 @@
        "turns": 1
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -3863,6 +3930,11 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0,
+      "every": 4
+     },
      "aoe": false
     }
    }
@@ -4403,6 +4475,10 @@
        "turns": 1
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 0.5
+     },
      "aoe": false
     }
    },
@@ -4804,6 +4880,10 @@
        "ignore_resist": false
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -4995,6 +5075,10 @@
        "turns": 1
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -5235,7 +5319,12 @@
        "target": "self",
        "all": true
       }
-     ]
+     ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0,
+      "every": 2
+     }
     },
     "s3": {
      "rate": 2,
@@ -5320,6 +5409,10 @@
        "estimated": false
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -5991,6 +6084,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -6438,6 +6535,11 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0,
+      "every": 3
+     },
      "aoe": false
     }
    }
@@ -7325,7 +7427,12 @@
        "target": "self",
        "all": true
       }
-     ]
+     ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0,
+      "every": 2
+     }
     },
     "s3": {
      "rate": 1.8,
@@ -7576,6 +7683,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -7691,6 +7802,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "counter",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -8110,6 +8225,10 @@
        "estimated": false
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -8295,7 +8414,11 @@
      "name": "Help Me, Cream!",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "trigger": {
+      "event": "counter",
+      "chance": 0.2
+     }
     }
    }
   },
@@ -8354,6 +8477,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -8890,6 +9017,11 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0,
+      "every": 2
+     },
      "aoe": false
     }
    }
@@ -9209,7 +9341,11 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": 0.85,
@@ -9405,6 +9541,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -9680,6 +9820,11 @@
        "estimated": false
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 2
+     },
      "aoe": false
     }
    },
@@ -9966,6 +10111,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -10441,6 +10590,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -10905,6 +11058,11 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 3
+     },
      "aoe": false
     }
    },
@@ -11311,7 +11469,11 @@
        "target": "self",
        "all": false
       }
-     ]
+     ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": 1.2,
@@ -12253,6 +12415,10 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -12589,7 +12755,11 @@
        "chance": 1.0,
        "ignore_resist": false
       }
-     ]
+     ],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": 1,
@@ -12876,6 +13046,10 @@
        "estimated": false
       }
      ],
+     "trigger": {
+      "event": "turn_end",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -12973,6 +13147,12 @@
        "estimated": false
       }
      ],
+     "trigger": {
+      "event": "revive",
+      "chance": 1.0,
+      "every": 99,
+      "health": 0.5
+     },
      "aoe": false
     }
    },
@@ -13048,7 +13228,12 @@
        "target": "enemies",
        "all": false
       }
-     ]
+     ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 2
+     }
     },
     "s3": {
      "rate": 1.3,
@@ -13166,6 +13351,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -13371,6 +13560,10 @@
        "all": false
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -13634,6 +13827,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -13764,6 +13961,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -13867,6 +14068,11 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0,
+      "every": 4
+     },
      "aoe": false
     }
    }
@@ -14040,6 +14246,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -14121,7 +14331,11 @@
      "name": "Goddess's Judgment",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     }
     }
    }
   },
@@ -14800,6 +15014,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -14896,6 +15114,10 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -15613,6 +15835,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -15770,7 +15996,12 @@
        "target": "self",
        "turns": 1
       }
-     ]
+     ],
+     "trigger": {
+      "event": "counter",
+      "chance": 1.0,
+      "every": 2
+     }
     },
     "s3": {
      "rate": 1.8,
@@ -15968,6 +16199,10 @@
        "turns": 1
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -16244,6 +16479,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -16718,6 +16957,10 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -17006,6 +17249,10 @@
        "all": false
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -17187,6 +17434,11 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 5
+     },
      "aoe": false
     }
    }
@@ -17428,6 +17680,11 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0,
+      "every": 2
+     },
      "aoe": false
     }
    }
@@ -17738,7 +17995,11 @@
        "target": "self",
        "turns": 2
       }
-     ]
+     ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     }
     }
    }
   },
@@ -18189,6 +18450,11 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 2
+     },
      "aoe": false
     }
    }
@@ -18262,6 +18528,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -18576,6 +18846,10 @@
        "estimated": true
       }
      ],
+     "trigger": {
+      "event": "turn_end",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -18845,6 +19119,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -19049,6 +19327,10 @@
        "turns": 1
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -19255,6 +19537,10 @@
        "estimated": false
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -19330,7 +19616,11 @@
        "target": "allies",
        "turns": 2
       }
-     ]
+     ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": null,
@@ -20145,6 +20435,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -20366,7 +20660,11 @@
        "target": "enemies",
        "chance": 1.0
       }
-     ]
+     ],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": 1.6,
@@ -20451,6 +20749,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -21213,6 +21515,10 @@
        "estimated": true
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -21291,7 +21597,11 @@
      "name": "Dragon Flame",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": 1.1,
@@ -21723,6 +22033,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "turn_end",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -22097,6 +22411,11 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0,
+      "every": 3
+     },
      "aoe": false
     }
    }
@@ -22188,7 +22507,11 @@
      "name": "Dragon Eye (Milim Eye)",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": 1.7,
@@ -22466,7 +22789,11 @@
        "turns": 2,
        "estimated": true
       }
-     ]
+     ],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": 0.3,
@@ -22755,6 +23082,11 @@
        "turns": 2
       }
      ],
+     "trigger": {
+      "event": "counter",
+      "chance": 0.2,
+      "every": 3
+     },
      "aoe": false
     }
    },
@@ -23076,7 +23408,12 @@
        "target": "allies",
        "chance": 1.0
       }
-     ]
+     ],
+     "trigger": {
+      "event": "counter",
+      "chance": 1.0,
+      "every": 2
+     }
     },
     "s3": {
      "rate": 1,
@@ -23258,7 +23595,11 @@
      "name": "Ruler of the Sea",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": 1,
@@ -23889,6 +24230,11 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0,
+      "every": 1
+     },
      "aoe": false
     }
    }
@@ -24490,6 +24836,10 @@
        "all": false
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -24850,7 +25200,11 @@
        "chance": 0.15,
        "ignore_resist": false
       }
-     ]
+     ],
+     "trigger": {
+      "event": "counter",
+      "chance": 0.3
+     }
     },
     "s3": {
      "rate": 0.8,
@@ -25058,6 +25412,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -25381,7 +25739,11 @@
        "chance": 0.75,
        "ignore_resist": false
       }
-     ]
+     ],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     }
     },
     "s2": {
      "rate": null,
@@ -25403,6 +25765,10 @@
        "all": false
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -25551,7 +25917,12 @@
        "target": "self",
        "all": true
       }
-     ]
+     ],
+     "trigger": {
+      "event": "counter",
+      "chance": 0.2,
+      "every": 5
+     }
     },
     "s3": {
      "rate": 1,
@@ -25643,6 +26014,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -26073,6 +26448,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -26824,7 +27203,12 @@
        "target": "self",
        "all": true
       }
-     ]
+     ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 3
+     }
     },
     "s3": {
      "rate": null,
@@ -27506,6 +27890,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -28275,6 +28663,10 @@
        "all": false
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -28440,7 +28832,12 @@
        "turns": 2,
        "estimated": false
       }
-     ]
+     ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 2
+     }
     },
     "s3": {
      "rate": 1.5,
@@ -28755,6 +29152,10 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -29030,6 +29431,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -29176,6 +29581,10 @@
        "turns": 1
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -29273,7 +29682,11 @@
        "chance": 0.5,
        "ignore_resist": false
       }
-     ]
+     ],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": 1.3,
@@ -29467,7 +29880,11 @@
        "target": "enemies",
        "chance": 1.0
       }
-     ]
+     ],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": null,
@@ -29587,6 +30004,11 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 3
+     },
      "aoe": true
     }
    }
@@ -29832,6 +30254,10 @@
        "turns": 1
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -29937,6 +30363,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "turn_end",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -30104,7 +30534,11 @@
        "target": "target",
        "all": false
       }
-     ]
+     ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": 0.95,
@@ -30230,6 +30664,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -30535,6 +30973,10 @@
        "ignore_resist": false
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 2.0
+     },
      "aoe": false
     }
    },
@@ -31256,6 +31698,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -31569,6 +32015,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -31750,6 +32200,10 @@
        "all": false
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -31833,6 +32287,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -32114,6 +32572,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "counter",
+      "chance": 0.4
+     },
      "aoe": false
     }
    }
@@ -32776,6 +33238,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -32848,6 +33314,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -32994,6 +33464,11 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 0.2,
+      "every": 2
+     },
      "aoe": false
     },
     "s3": {
@@ -33084,6 +33559,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "counter",
+      "chance": 0.35
+     },
      "aoe": false
     },
     "s3": {
@@ -33206,6 +33685,11 @@
        "all": false
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0,
+      "every": 3
+     },
      "aoe": false
     }
    },
@@ -33307,6 +33791,11 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 2
+     },
      "aoe": false
     }
    },
@@ -33417,6 +33906,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    },
@@ -33499,6 +33992,10 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -33587,6 +34084,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -33822,6 +34323,10 @@
        "all": false
       }
      ],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -34365,6 +34870,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "turn_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -34716,6 +35225,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }
@@ -34885,6 +35398,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -34997,6 +35514,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "after_attack",
+      "chance": 1.0
+     },
      "aoe": false
     },
     "s3": {
@@ -35079,7 +35600,11 @@
        "target": "self",
        "all": true
       }
-     ]
+     ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     }
     },
     "s3": {
      "rate": null,
@@ -35299,6 +35824,11 @@
        "all": true
       }
      ],
+     "trigger": {
+      "event": "attacked",
+      "chance": 1.0,
+      "every": 5
+     },
      "aoe": false
     }
    },
@@ -35847,6 +36377,10 @@
        "chance": 1.0
       }
      ],
+     "trigger": {
+      "event": "battle_start",
+      "chance": 1.0
+     },
      "aoe": false
     }
    }

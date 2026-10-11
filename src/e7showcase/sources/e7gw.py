@@ -119,7 +119,7 @@ def merge_skills(
     Les compétences sans dégâts (soins, buffs) absentes d'E7Calc sont ajoutées sans taux.
     Renvoie (héros enrichis, compétences avec au moins un effet).
     """
-    from e7showcase.parsers.skill_effects import parse_effects
+    from e7showcase.parsers.skill_effects import parse_effects, parse_trigger
 
     by_key = {key(k.replace("_", " ")): v for k, v in calc_heroes.items()}
     heroes = with_effects = 0
@@ -134,12 +134,15 @@ def merge_skills(
             aoe = "AoE" in sk["tags"] or bool(entry.get("aoe"))
             ratios = barrier.get("ratios") if barrier.get("skill") in (None, sk["id"]) else None
             effects = parse_effects(sk["text"], sk["tags"], aoe=aoe, barrier=ratios)
+            passive = sk["id"] != "s1" and sk["cooldown"] == 0
             entry.update(
                 name=sk["name"],
                 cooldown=sk["cooldown"],
-                passive=sk["id"] != "s1" and sk["cooldown"] == 0,
+                passive=passive,
                 effects=effects,
             )
+            if trigger := parse_trigger(sk["text"], passive=passive):
+                entry["trigger"] = trigger
             entry.setdefault("aoe", aoe)
             with_effects += bool(effects)
     return heroes, with_effects
