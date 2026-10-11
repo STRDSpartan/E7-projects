@@ -1,3 +1,3 @@
 """E7 Showcase — scanner de roster Epic Seven et générateur de vitrines Discord."""
 
-__version__ = "0.11.0"
+__version__ = "0.12.0"

@@ -93,6 +93,7 @@ def _sentence_for(text: str, keyword: str, verbs: str) -> str | None:
 
 
 TARGETS = (
+    (r"\b(the )?ally in the back row\b|\bback row ally\b", "back_row"),
     (r"\ball allies\b|\ballies\b", "allies"),
     (r"\b(an ally|the ally|ally with|an ally's)\b", "ally"),
     (r"\ball enemies\b", "enemies"),
@@ -115,6 +116,11 @@ def _target(sentence: str, default: str, keyword: str | None = None) -> str:
             if best is None or dist < best[0]:
                 best = (dist, name)
     return best[1] if best else default
+
+
+def _buff_target(target: str) -> str:
+    """Un buff ne vise jamais l'ennemi : « attaque tous les ennemis et augmente l'Attaque »."""
+    return "self" if target in ("enemies", "target") else target
 
 
 def _turns(sentence: str, default: int) -> int:
@@ -151,7 +157,7 @@ def parse_effects(
             {
                 "type": "buff",
                 "effect": name,
-                "target": _target(s, "self", KEYWORDS[name]),
+                "target": _buff_target(_target(s, "self", KEYWORDS[name])),
                 "turns": _turns(s, 2),
             }
         )
@@ -284,6 +290,32 @@ def parse_effects(
     if "Damage Taken Cap" in tagset:
         m = re.search(r"exceed (\d+)% of max health", text.lower())
         effects.append({"type": "damage_cap", "value": int(m.group(1)) / 100 if m else 0.5})
+    if "Immune to Debuffs Which Prevent Movement" in tagset:
+        effects.append({"type": "static_immune", "effects": ["stun", "sleep"]})
+    if "Injury" in tagset:
+        m = re.search(r"up to (\d+)% injur", text.lower())
+        effects.append(
+            {"type": "injury", "max": int(m.group(1)) / 100 if m else 0.15, "estimated": m is None}
+        )
+    if "Detonate" in tagset:
+        s = _sentence_for(text, r"detonat", r"detonat") or text
+        what = [d for d in ("burn", "bleed", "bomb") if d in s.lower()] or ["burn", "bleed"]
+        effects.append({"type": "detonate", "what": what})
+    if "Extinction" in tagset:
+        effects.append({"type": "extinction"})
+    if {"Fixed Damage", "Additional Damage"} & tagset:
+        m = re.search(r"(\d[\d,]*) (?:fixed|additional) damage", text.lower())
+        if m:
+            s = _sentence_for(text, re.escape(m.group(0)), r"damage") or text
+            low = s.lower()
+            effects.append(
+                {
+                    "type": "fixed",
+                    "amount": int(m.group(1).replace(",", "")),
+                    "per_debuff": "for each debuff" in low,
+                    "on_crit": "critical hit" in low,
+                }
+            )
     if "Debuff Dispel (Cleanse)" in tagset:
         s = _sentence_for(text, r"remov|dispel", r"debuff") or text
         effects.append(

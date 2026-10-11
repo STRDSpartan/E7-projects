@@ -24,12 +24,13 @@ Modèle :
   propre tour n'est pas décompté ce tour-là), comme en jeu ;
 - mécaniques propres aux héros : tour supplémentaire, attaque double, recharges ±, brûlure,
   saignement, poison, esquive, précision −, annulation, buffs interdits, vol de vie (et set
-  Vampire), critique garanti, réduction et plafond de dégâts (voir docs/SIMULATORS.md) ;
+  Vampire), critique garanti, réduction et plafond de dégâts, Âmes et âme brûlée, blessures,
+  explosion, extinction, dégâts fixes, rang arrière (voir docs/SIMULATORS.md) ;
 - passifs à conditions : seuils de PV, débuffs, allié attaqué, tours et compétences ennemies,
   morts, critiques, dégâts mortels, jauges de Concentration et d'Esprit combatif.
 
 Non simulé : bonus de stats permanents des passifs (déjà dans les stats affichées),
-artefacts, âme brûlée, Injures, Explosion, rang arrière, mécaniques uniques d'un héros.
+artefacts, mécaniques uniques absentes de hero_mechanics.json, Bombes, partage de dégâts.
 Le montant des soins et de certaines barrières n'est pas chiffré dans les textes du jeu :
 valeur type (signalée `estimated` dans les données). Le résultat reste un ordre de grandeur.
 """
@@ -76,6 +77,17 @@ DEBUFF_NAMES = {
 # dégâts sur la durée, au début du tour du porteur (valeurs communautaires approchées)
 DOT = {"burn": ("atk", 0.6), "bleed": ("atk", 0.3), "poison": ("hp", 0.05)}
 MISS_CHANCE = 0.5  # esquive + ou précision − : 50 % de coups ratés (dégâts × 0,75)
+# types d'effets connus du moteur (les règles par héros sont validées contre cette liste)
+EFFECT_TYPES = frozenset(
+    {
+        "heal", "barrier", "buff", "debuff", "gauge", "strip", "cleanse", "extra_turn", "dual",
+        "cooldown", "lifesteal", "damage_reduction", "damage_cap", "injury", "detonate",
+        "extinction", "fixed", "static_buff", "static_debuff", "static_immune",
+    }
+)  # fmt: skip
+PERMANENT = 10**6  # durée d'un statut permanent
+SOUL_MAX = 20
+SOULBURN_COST = 20  # par défaut, sinon « (-10 souls) » du texte
 MAX_RESIST = 85  # % : un débuff a toujours au moins 15 % de chances de passer
 
 
@@ -106,6 +118,14 @@ class _Unit:
     dot_atk: dict[str, float] = field(default_factory=dict)  # brûlure... → attaque du lanceur
     reduction: float = 0.0  # réduction de dégâts des passifs
     cap: float = 0.0  # plafond de dégâts par coup (part des PV max)
+    injury: float = 0.0  # blessures : PV max perdus
+    extinct: bool = False  # extinction : ne peut plus ressusciter
+    immune: set[str] = field(default_factory=set)  # débuffs auxquels le héros est insensible
+
+    @property
+    def max_hp(self) -> float:
+        """PV max diminués des blessures."""
+        return max(self.fighter.hp - self.injury, 1)
 
     @property
     def alive(self) -> bool:
@@ -174,6 +194,16 @@ class _Battle:
                         u.reduction = max(u.reduction, float(e["value"]))
                     elif e["type"] == "damage_cap":
                         u.cap = float(e["value"]) if not u.cap else min(u.cap, float(e["value"]))
+        self.souls = [0, 0]
+        for u in self.units:  # statuts permanents (règles par héros : hero_mechanics.json)
+            for skill in u.fighter.skills.values():
+                for e in skill.get("effects", []):
+                    if e["type"] == "static_buff":
+                        u.buffs[e["effect"]] = PERMANENT
+                    elif e["type"] == "static_debuff":
+                        u.debuffs[e["effect"]] = PERMANENT
+                    elif e["type"] == "static_immune":
+                        u.immune.update(e["effects"])
         for u in self.units:  # jauges de départ (« starts the first battle with 50 ... »)
             for sid, skill in u.fighter.skills.items():
                 res = (skill.get("trigger") or {}).get("resource")
@@ -204,14 +234,14 @@ class _Battle:
             and (sid == "s1" or not ({"silence", "provoke"} & set(u.debuffs)))
         ]
         allies = self.allies(u)
-        hurt = any(a.hp < 0.5 * a.fighter.hp for a in allies)
+        hurt = any(a.hp < 0.5 * a.max_hp for a in allies)
 
         def worth(sid: str) -> bool:
             skill = u.fighter.skills[sid]
             if skill.get("rate") is not None:
                 return True
             for e in skill.get("effects", []):
-                if e["type"] == "heal" and any(a.hp < 0.8 * a.fighter.hp for a in allies):
+                if e["type"] == "heal" and any(a.hp < 0.8 * a.max_hp for a in allies):
                     return True
                 if e["type"] == "cleanse" and any(a.debuffs for a in allies):
                     return True
@@ -241,13 +271,16 @@ class _Battle:
         if who == "ally":
             pool = [a for a in allies if a is not actor] or allies
             key = (
-                (lambda a: a.hp / a.fighter.hp)
+                (lambda a: a.hp / a.max_hp)
                 if kind in ("heal", "barrier")
                 else (lambda a: -a.fighter.atk)
             )
             return [min(pool, key=key)] if pool else []
         if who == "enemies":
             return foes
+        if who == "back_row":  # dernier emplacement de l'équipe
+            pool = [a for a in allies if a is not actor] or allies
+            return pool[-1:]
         return [t for t in hit if t.alive] or ([self.main_target(actor, foes)] if foes else [])
 
     # --- passifs et contre-attaques
@@ -262,7 +295,7 @@ class _Battle:
         if kind == "target_hp_below":
             return other is not None and other.hp <= float(cond["value"]) * other.fighter.hp
         if kind == "full_hp":
-            return u.hp >= u.fighter.hp
+            return u.hp >= u.max_hp
         if kind == "no_debuff":
             return not u.debuffs
         if kind == "has_debuff":
@@ -354,7 +387,7 @@ class _Battle:
             if kind == "heal":
                 if "unhealable" in t.debuffs:
                     continue
-                amount = min(effect["ratio"] * stats[effect["stat"]], t.fighter.hp - t.hp)
+                amount = min(effect["ratio"] * stats[effect["stat"]], t.max_hp - t.hp)
                 if amount > 0:
                     t.hp += amount
                     self.stats["healed"] += amount
@@ -376,7 +409,7 @@ class _Battle:
                 notes.append(f"{BUFF_NAMES.get(name, name)} → {t.name}")
             elif kind == "debuff":
                 name = effect["effect"]
-                if "immunity" in t.buffs:
+                if "immunity" in t.buffs or name in t.immune:
                     notes.append(f"{t.name} immunisé")
                     continue
                 resist = 0.0
@@ -421,9 +454,12 @@ class _Battle:
                 notes.append(f"débuffs retirés ({t.name})")
         return notes
 
-    def hit(self, actor: _Unit, skill: dict[str, Any], target: _Unit) -> str:
+    def hit(
+        self, actor: _Unit, skill: dict[str, Any], target: _Unit, soulburn: bool = False
+    ) -> str:
         opts = replace(
             self.opts,
+            soulburn=soulburn,
             attack_buff="great"
             if "atk_up_great" in actor.buffs and "atk_down" not in actor.debuffs
             else "up"
@@ -467,20 +503,38 @@ class _Battle:
         target.hp = max(1.0 if "immortal" in target.buffs else 0.0, target.hp - (amount - absorbed))
         if crit:
             self.crits.append(actor)
+        if target.hp <= 0 and any(e["type"] == "extinction" for e in skill.get("effects", [])):
+            target.extinct = True
         if target.hp <= 0:
-            for _sid, passive in self.triggered(target, "revive"):
+            for _sid, passive in [] if target.extinct else self.triggered(target, "revive"):
                 target.hp = target.fighter.hp * float(passive["trigger"].get("health", 0.5))
+                for effect in passive.get("effects", []):
+                    self.apply(target, effect, [])
                 self.stats["passives"] += 1
                 return f"{target.name} −{_fmt(amount)}, ressuscite ({_fmt(target.hp)} PV)"
             target.barrier = 0
             self.deaths.append(target)
+        effects = skill.get("effects", [])
+        for e in effects:
+            if e["type"] == "injury" and target.alive:  # gravité ∝ dégâts (estimée à 25 %)
+                room = float(e["max"]) * target.fighter.hp - target.injury
+                target.injury += max(min(0.25 * amount, room), 0)
+                target.hp = min(target.hp, target.max_hp)
+            elif e["type"] == "fixed" and target.alive and (crit or not e.get("on_crit")):
+                fixed = float(e["amount"]) * (len(target.debuffs) if e.get("per_debuff") else 1)
+                if fixed:
+                    target.hp = max(1.0 if "immortal" in target.buffs else 0.0, target.hp - fixed)
+                    amount += fixed
+                    if not target.alive:
+                        target.barrier = 0
+                        self.deaths.append(target)
         text = f"{target.name} −{_fmt(amount)}" + (
             " (critique)" if crit else " (raté)" if miss else ""
         )
-        steal = sum(e["ratio"] for e in skill.get("effects", []) if e["type"] == "lifesteal")
+        steal = sum(e["ratio"] for e in effects if e["type"] == "lifesteal")
         steal += actor.fighter.lifesteal / 100
         if steal and actor.alive and "unhealable" not in actor.debuffs:
-            healed = min(steal * amount, actor.fighter.hp - actor.hp)
+            healed = min(steal * amount, actor.max_hp - actor.hp)
             if healed > 0:
                 actor.hp += healed
                 self.stats["healed"] += healed
@@ -511,14 +565,38 @@ class _Battle:
                 self.note(f"  ↳ {actor.name} rejoue (tour supplémentaire)")
                 break
 
+    def dot_amount(self, u: _Unit, name: str) -> float:
+        stat, ratio = DOT[name]
+        base = u.fighter.hp if stat == "hp" else u.dot_atk.get(name, 0)
+        return ratio * base * (1 - u.reduction)
+
+    def detonate(self, skill: dict[str, Any], hit: list[_Unit]) -> None:
+        """Explosion : les dégâts restants des brûlures / saignements tombent d'un coup."""
+        for e in skill.get("effects", []):
+            if e["type"] != "detonate":
+                continue
+            for t in hit:
+                if not t.alive or "invincible" in t.buffs:
+                    continue
+                total = 0.0
+                for name in e.get("what", []):
+                    if name in DOT and name in t.debuffs:
+                        total += self.dot_amount(t, name) * t.debuffs.pop(name)
+                if total:
+                    t.hp = max(1.0 if "immortal" in t.buffs else 0.0, t.hp - total)
+                    dead = " ✝" if not t.alive else ""
+                    self.note(f"  ↳ explosion sur {t.name} −{_fmt(total)}{dead}")
+                    if not t.alive:
+                        self.deaths.append(t)
+        self.after_events()
+
     def dots(self, u: _Unit) -> None:
         """Brûlure, saignement, poison : dégâts au début du tour du porteur."""
         parts = []
-        for name, (stat, ratio) in DOT.items():
+        for name in DOT:
             if name not in u.debuffs:
                 continue
-            base = u.fighter.hp if stat == "hp" else u.dot_atk.get(name, 0)
-            amount = ratio * base * (1 - u.reduction)
+            amount = self.dot_amount(u, name)
             if "invincible" in u.buffs:
                 continue
             u.hp = max(1.0 if "immortal" in u.buffs else 0.0, u.hp - amount)
@@ -594,9 +672,19 @@ class _Battle:
             skill = actor.fighter.skills[sid]
             parts: list[str] = []
             hit: list[_Unit] = []
+            cost = int(skill.get("soulburn_cost", SOULBURN_COST))
+            burn = (
+                sid != "s1" and skill.get("rate_sb") is not None and self.souls[actor.team] >= cost
+            )
+            if burn:
+                self.souls[actor.team] -= cost
+                parts.append("âme brûlée")
+            self.souls[actor.team] = min(
+                self.souls[actor.team] + (1 if sid == "s1" else 2), SOUL_MAX
+            )
             if skill.get("rate") is not None:
                 hit = foes if skill.get("aoe") else [self.main_target(actor, foes)]
-                parts += [self.hit(actor, skill, t) for t in hit]
+                parts += [self.hit(actor, skill, t, soulburn=burn) for t in hit]
             for effect in skill.get("effects", []):
                 parts += self.apply(actor, effect, hit)
             for k in actor.cooldowns:
@@ -614,6 +702,7 @@ class _Battle:
             for f in self.foes(actor):
                 self.fire(f, "enemy_skill", actor, non_attack=skill.get("rate") is None)
             self.specials(actor, skill, hit)
+            self.detonate(skill, hit)
             self.after_events()
             self.end_turn(actor)
         teams = {u.team for u in self.units if u.alive}

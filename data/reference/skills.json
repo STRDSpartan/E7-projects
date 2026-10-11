@@ -82,12 +82,12 @@
       {
        "type": "buff",
        "effect": "immortal",
-       "target": "target",
+       "target": "self",
        "turns": 1
       },
       {
        "type": "cleanse",
-       "target": "ally",
+       "target": "back_row",
        "all": true
       }
      ],
@@ -685,7 +685,8 @@
        "target": "target",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 2,
@@ -708,7 +709,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "target",
+       "target": "self",
        "turns": 2
       }
      ]
@@ -1018,6 +1019,12 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "fixed",
+       "amount": 5000,
+       "per_debuff": false,
+       "on_crit": true
       }
      ]
     },
@@ -1238,7 +1245,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "enemies",
+       "target": "self",
        "turns": 2
       },
       {
@@ -1438,7 +1445,8 @@
        "chance": 1.0,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -1666,6 +1674,12 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": true
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn"
+       ]
       }
      ]
     },
@@ -1702,6 +1716,12 @@
        "type": "strip",
        "target": "target",
        "all": true
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn"
+       ]
       }
      ]
     },
@@ -1945,7 +1965,13 @@
      "name": "Noble Blood",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
+      }
+     ],
      "trigger": {
       "event": "turn_start",
       "chance": 1.0
@@ -2403,7 +2429,8 @@
      "name": "Avenger's Sword",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -2763,8 +2790,14 @@
        "type": "lifesteal",
        "ratio": 0.2,
        "estimated": true
+      },
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
       }
-     ]
+     ],
+     "soulburn_cost": 20
     },
     "s3": {
      "rate": 1.3,
@@ -2983,7 +3016,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "enemies",
+       "target": "self",
        "turns": 2
       },
       {
@@ -3120,7 +3153,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "enemies",
+       "target": "self",
        "turns": 2
       },
       {
@@ -3137,7 +3170,8 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -3280,7 +3314,11 @@
      "name": "Eliminating the Target.",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extinction"
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -3293,7 +3331,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "target",
+       "target": "self",
        "turns": 2
       },
       {
@@ -3399,10 +3437,11 @@
       {
        "type": "gauge",
        "amount": 50,
-       "target": "ally",
+       "target": "back_row",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     }
    }
   },
@@ -3685,7 +3724,7 @@
       {
        "type": "buff",
        "effect": "def_up",
-       "target": "target",
+       "target": "self",
        "turns": 1
       },
       {
@@ -4014,7 +4053,8 @@
        "target": "target",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -4115,7 +4155,8 @@
        "chance": 1.0,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 20
     },
     "s2": {
      "rate": null,
@@ -4261,6 +4302,12 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "fixed",
+       "amount": 1000,
+       "per_debuff": false,
+       "on_crit": false
       }
      ]
     },
@@ -4471,7 +4518,8 @@
        "chance": 1.55,
        "on_kill": false
       }
-     ]
+     ],
+     "soulburn_cost": 20
     },
     "s2": {
      "rate": null,
@@ -4913,8 +4961,15 @@
        "amount": 25,
        "target": "target",
        "chance": 1.0
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "bleed"
+       ]
       }
-     ]
+     ],
+     "soulburn_cost": 10
     }
    }
   },
@@ -5281,6 +5336,12 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn"
+       ]
       }
      ]
     },
@@ -5461,7 +5522,7 @@
       {
        "type": "buff",
        "effect": "cc_up",
-       "target": "target",
+       "target": "self",
        "turns": 1
       }
      ],
@@ -5682,7 +5743,8 @@
      "name": "Move Out of the Way",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": 1.2,
@@ -6090,7 +6152,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "enemies",
+       "target": "self",
        "turns": 2
       },
       {
@@ -6099,7 +6161,8 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -6802,7 +6865,8 @@
      "name": "Hack",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -6995,7 +7059,8 @@
      "name": "Sura: Reave the Skies",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -7004,7 +7069,15 @@
      "name": "Divine Vessel",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep"
+       ]
+      }
+     ],
      "trigger": {
       "event": "battle_start",
       "chance": 1.0,
@@ -7285,7 +7358,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "target",
+       "target": "self",
        "turns": 2
       },
       {
@@ -7341,6 +7414,12 @@
        "turns": 2,
        "chance": 0.5,
        "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn"
+       ]
       }
      ]
     },
@@ -7509,7 +7588,8 @@
        "chance": 1.0,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -7727,7 +7807,8 @@
        "target": "enemies",
        "chance": 0.85
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": null,
@@ -8005,7 +8086,8 @@
        "turns": 2,
        "estimated": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     }
    },
    "barrier": {
@@ -8185,7 +8267,8 @@
      "name": "All-In!",
      "cooldown": 5,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -8239,7 +8322,8 @@
      "name": "Electrocute",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 20
     },
     "s2": {
      "rate": null,
@@ -8372,7 +8456,15 @@
      "name": "Iron Will",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep"
+       ]
+      }
+     ],
      "trigger": {
       "event": "counter",
       "chance": 1.0,
@@ -8452,7 +8544,8 @@
        "ratio": 0.2,
        "estimated": true
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -8499,7 +8592,13 @@
      "name": "Disconnect",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.1,
+       "estimated": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.7,
@@ -8529,6 +8628,11 @@
        "amount": -1,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": false
       }
      ]
     },
@@ -8737,7 +8841,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "enemies",
+       "target": "self",
        "turns": 2
       }
      ]
@@ -8948,7 +9052,8 @@
        "chance": 1.0,
        "ignore_resist": true
       }
-     ]
+     ],
+     "soulburn_cost": 20
     }
    }
   },
@@ -9181,6 +9286,11 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "injury",
+       "max": 0.1,
+       "estimated": false
       }
      ]
     },
@@ -9203,7 +9313,13 @@
      "name": "Attack Chain",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": false
+      }
+     ]
     },
     "s3": {
      "rate": 1,
@@ -9380,7 +9496,8 @@
        "chance": 1.0,
        "on_kill": true
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -9504,7 +9621,8 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     }
    }
   },
@@ -9677,7 +9795,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "enemies",
+       "target": "self",
        "turns": 2
       },
       {
@@ -9686,7 +9804,8 @@
        "target": "allies",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -9772,6 +9891,13 @@
        "effect": "stealth",
        "target": "self",
        "turns": 2
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "bleed",
+        "bomb"
+       ]
       }
      ]
     },
@@ -10089,7 +10215,8 @@
      "name": "Die, You Fly",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     }
    }
   },
@@ -10543,7 +10670,8 @@
        "target": "enemies",
        "chance": 0.75
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -10654,7 +10782,12 @@
      "name": "Devil's Descent",
      "cooldown": 7,
      "passive": false,
-     "effects": [],
+     "effects": [
+      {
+       "type": "extinction"
+      }
+     ],
+     "soulburn_cost": 10,
      "full_cd_start": true
     },
     "s2": {
@@ -10670,6 +10803,13 @@
        "amount": -1,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep"
+       ]
       }
      ],
      "trigger": {
@@ -11358,6 +11498,11 @@
        "amount": 15,
        "target": "target",
        "chance": 1.0
+      },
+      {
+       "type": "injury",
+       "max": 0.1,
+       "estimated": false
       }
      ],
      "always_crit": true
@@ -11397,6 +11542,7 @@
      "cooldown": 3,
      "passive": false,
      "effects": [],
+     "soulburn_cost": 10,
      "always_crit": true
     },
     "s2": {
@@ -11887,7 +12033,8 @@
      "name": "Overcoming Hardship",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -11913,7 +12060,7 @@
       },
       {
        "type": "cleanse",
-       "target": "ally",
+       "target": "back_row",
        "all": true
       }
      ],
@@ -12030,6 +12177,13 @@
        "amount": 40,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep"
+       ]
       },
       {
        "type": "cleanse",
@@ -12991,7 +13145,14 @@
      "name": "Sword of Punishment",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
+      }
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1,
@@ -13013,7 +13174,13 @@
      "name": "Unyielding Blow",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -13198,7 +13365,8 @@
        "target": "target",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1.6,
@@ -13294,6 +13462,11 @@
        "amount": 35,
        "target": "allies",
        "chance": 1.0
+      },
+      {
+       "type": "injury",
+       "max": 0.1,
+       "estimated": false
       }
      ],
      "always_crit": true
@@ -13343,6 +13516,11 @@
        "amount": -1,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "injury",
+       "max": 0.2,
+       "estimated": false
       }
      ],
      "always_crit": true
@@ -13405,7 +13583,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "target",
+       "target": "self",
        "turns": 1
       },
       {
@@ -13436,7 +13614,7 @@
       {
        "type": "buff",
        "effect": "nullifier",
-       "target": "target",
+       "target": "self",
        "turns": 2
       },
       {
@@ -13597,6 +13775,12 @@
        "turns": 1,
        "chance": 0.75,
        "ignore_resist": false
+      },
+      {
+       "type": "fixed",
+       "amount": 1000,
+       "per_debuff": true,
+       "on_crit": false
       }
      ]
     },
@@ -13652,6 +13836,12 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "fixed",
+       "amount": 1500,
+       "per_debuff": true,
+       "on_crit": false
       }
      ],
      "aoe": true
@@ -13857,7 +14047,7 @@
       {
        "type": "buff",
        "effect": "stealth",
-       "target": "target",
+       "target": "self",
        "turns": 2
       },
       {
@@ -14210,10 +14400,11 @@
       {
        "type": "buff",
        "effect": "spd_up",
-       "target": "target",
+       "target": "self",
        "turns": 1
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": 0.7,
@@ -14812,7 +15003,8 @@
        "chance": 1.0,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     }
    }
   },
@@ -14953,7 +15145,8 @@
        "target": "self",
        "turns": 1
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s1_bis": {
      "rate": 1,
@@ -15094,6 +15287,12 @@
        "amount": 1,
        "target": "target",
        "chance": 1.0
+      },
+      {
+       "type": "fixed",
+       "amount": 3000,
+       "per_debuff": false,
+       "on_crit": false
       }
      ]
     },
@@ -15205,7 +15404,8 @@
        "chance": 1.0,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -15479,7 +15679,11 @@
      "name": "Precise Attack",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "extinction"
+      }
+     ],
      "trigger": {
       "event": "death",
       "chance": 1.0
@@ -15565,7 +15769,8 @@
        "target": "enemies",
        "all": true
       }
-     ]
+     ],
+     "soulburn_cost": 20
     },
     "s2": {
      "rate": null,
@@ -15574,7 +15779,15 @@
      "name": "Ill Will",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep"
+       ]
+      }
+     ],
      "aoe": false
     }
    }
@@ -15696,7 +15909,8 @@
      "name": "Vertical Cut",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -15850,7 +16064,8 @@
        "ratio": 0.2,
        "estimated": true
       }
-     ]
+     ],
+     "soulburn_cost": 10
     }
    }
   },
@@ -16030,7 +16245,8 @@
        "chance": 1.0,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -16412,6 +16628,12 @@
        "type": "extra_turn",
        "chance": 1.0,
        "on_kill": false
+      },
+      {
+       "type": "fixed",
+       "amount": 500,
+       "per_debuff": false,
+       "on_crit": false
       }
      ]
     },
@@ -16450,6 +16672,12 @@
        "amount": -1,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "fixed",
+       "amount": 500,
+       "per_debuff": false,
+       "on_crit": false
       }
      ]
     },
@@ -16555,7 +16783,8 @@
        "ratio": 0.2,
        "estimated": true
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1.2,
@@ -17544,7 +17773,8 @@
        "target": "enemies",
        "all": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -17626,7 +17856,14 @@
      "name": "Punish",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
+      }
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 0.7,
@@ -17654,6 +17891,11 @@
        "effect": "cd_up",
        "target": "allies",
        "turns": 2
+      },
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
       }
      ]
     }
@@ -17826,6 +18068,12 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": true
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn"
+       ]
       }
      ]
     },
@@ -18077,7 +18325,8 @@
      "name": "Strike of Vengeance",
      "cooldown": 5,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s3_splash": {
      "rate": 0,
@@ -18160,7 +18409,8 @@
        "chance": 0.5,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 2,
@@ -18417,7 +18667,7 @@
       {
        "type": "debuff",
        "effect": "stun",
-       "target": "ally",
+       "target": "back_row",
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
@@ -18425,7 +18675,7 @@
       {
        "type": "debuff",
        "effect": "hit_down",
-       "target": "ally",
+       "target": "back_row",
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
@@ -18508,7 +18758,8 @@
        "chance": 1.0,
        "ignore_resist": true
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -18734,13 +18985,13 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "target",
+       "target": "self",
        "turns": 1
       },
       {
        "type": "buff",
        "effect": "atk_up_great",
-       "target": "target",
+       "target": "self",
        "turns": 1
       }
      ]
@@ -18764,7 +19015,11 @@
      "name": "Bite",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extinction"
+      }
+     ]
     },
     "s3_splash": {
      "rate": 0,
@@ -19169,7 +19424,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "target",
+       "target": "self",
        "turns": 2
       }
      ]
@@ -19330,7 +19585,8 @@
      "name": "Blade Art: Thunder",
      "cooldown": 6,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     }
    }
   },
@@ -19390,7 +19646,7 @@
       {
        "type": "buff",
        "effect": "stealth",
-       "target": "target",
+       "target": "self",
        "turns": 2
       },
       {
@@ -19551,7 +19807,8 @@
        "chance": 0.5,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1.7,
@@ -19802,7 +20059,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "enemies",
+       "target": "self",
        "turns": 2
       },
       {
@@ -20037,7 +20294,8 @@
        "chance": 0.75,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -20303,7 +20561,8 @@
        "chance": 0.8,
        "ignore_resist": true
       }
-     ]
+     ],
+     "soulburn_cost": 20
     },
     "s3": {
      "rate": null,
@@ -20594,7 +20853,8 @@
      "name": "Summon Ziegfried",
      "cooldown": 5,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 20
     }
    }
   },
@@ -20769,6 +21029,7 @@
        "chance": 1.0
       }
      ],
+     "soulburn_cost": 10,
      "full_cd_start": true
     },
     "s2": {
@@ -20953,7 +21214,8 @@
        "target": "target",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": 1.65,
@@ -21294,7 +21556,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "enemies",
+       "target": "self",
        "turns": 2
       },
       {
@@ -21303,7 +21565,8 @@
        "target": "enemies",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -21457,6 +21720,9 @@
        "amount": 50,
        "target": "allies",
        "chance": 1.0
+      },
+      {
+       "type": "extinction"
       }
      ]
     },
@@ -21537,6 +21803,12 @@
        "turns": 1,
        "chance": 0.8,
        "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "bleed"
+       ]
       }
      ]
     },
@@ -21806,6 +22078,9 @@
        "effect": "nullifier",
        "target": "self",
        "turns": 2
+      },
+      {
+       "type": "extinction"
       }
      ]
     }
@@ -21953,7 +22228,8 @@
        "target": "self",
        "turns": 1
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 0.5,
@@ -22164,7 +22440,11 @@
      "name": "The Will of La Mare",
      "cooldown": 3,
      "passive": false,
-     "effects": [],
+     "effects": [
+      {
+       "type": "extinction"
+      }
+     ],
      "always_crit": true
     },
     "s3_splash": {
@@ -22193,6 +22473,13 @@
       {
        "type": "damage_reduction",
        "value": 0.3
+      },
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep"
+       ]
       }
      ],
      "aoe": false
@@ -22291,8 +22578,14 @@
        "type": "lifesteal",
        "ratio": 0.2,
        "estimated": true
+      },
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
       }
      ],
+     "soulburn_cost": 10,
      "always_crit": true
     },
     "s2": {
@@ -22324,6 +22617,11 @@
        "amount": 20,
        "target": "enemies",
        "chance": 1.0
+      },
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
       }
      ],
      "always_crit": true,
@@ -22360,7 +22658,7 @@
       {
        "type": "buff",
        "effect": "immunity",
-       "target": "target",
+       "target": "self",
        "turns": 2
       }
      ],
@@ -22406,7 +22704,8 @@
        "chance": 0.75,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -23035,7 +23334,8 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1.1,
@@ -23291,6 +23591,7 @@
        "ignore_resist": false
       }
      ],
+     "soulburn_cost": 10,
      "always_crit": true
     },
     "s2": {
@@ -23421,13 +23722,13 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "target",
+       "target": "self",
        "turns": 1
       },
       {
        "type": "buff",
        "effect": "atk_up_great",
-       "target": "target",
+       "target": "self",
        "turns": 1
       },
       {
@@ -23954,7 +24255,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "enemies",
+       "target": "self",
        "turns": 2
       }
      ]
@@ -24096,6 +24397,7 @@
        "estimated": true
       }
      ],
+     "soulburn_cost": 10,
      "always_crit": true
     },
     "s3": {
@@ -24230,7 +24532,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "target",
+       "target": "self",
        "turns": 1
       },
       {
@@ -24292,6 +24594,9 @@
        "effect": "evasion",
        "target": "self",
        "turns": 3
+      },
+      {
+       "type": "extinction"
       }
      ]
     }
@@ -24370,7 +24675,8 @@
        "chance": 1.0,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -24506,7 +24812,8 @@
        "ratio": 0.15,
        "estimated": true
       }
-     ]
+     ],
+     "soulburn_cost": 10
     }
    }
   },
@@ -24545,6 +24852,11 @@
        "amount": 20,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "injury",
+       "max": 0.25,
+       "estimated": false
       }
      ]
     },
@@ -24590,6 +24902,11 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "injury",
+       "max": 0.25,
+       "estimated": false
+      },
       {
        "type": "cleanse",
        "target": "self",
@@ -24865,6 +25182,13 @@
        "effect": "spd_up",
        "target": "self",
        "turns": 2
+      },
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep"
+       ]
       }
      ],
      "trigger": {
@@ -25262,7 +25586,8 @@
        "chance": 0.75,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     }
    }
   },
@@ -25420,7 +25745,15 @@
      "name": "Ruler of the Sea",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep"
+       ]
+      }
+     ],
      "trigger": {
       "event": "battle_start",
       "chance": 1.0
@@ -25522,7 +25855,8 @@
        "target": "target",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": null,
@@ -25573,7 +25907,13 @@
      "name": "An Opening!",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
+      }
+     ]
     },
     "s3": {
      "rate": 1.4,
@@ -25595,7 +25935,13 @@
      "name": "Scattering Petals, Falling Leaves",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -25796,7 +26142,8 @@
      "name": "Blaze of Battle",
      "cooldown": 2,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": null,
@@ -26002,7 +26349,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "target",
+       "target": "self",
        "turns": 2
       },
       {
@@ -26038,7 +26385,8 @@
        "target": "allies",
        "turns": 2
       }
-     ]
+     ],
+     "soulburn_cost": 10
     }
    }
   },
@@ -26630,7 +26978,8 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1.8,
@@ -26776,7 +27125,15 @@
      "name": "Aura de la Mort",
      "cooldown": 3,
      "passive": false,
-     "effects": [],
+     "effects": [
+      {
+       "type": "detonate",
+       "what": [
+        "burn",
+        "bleed"
+       ]
+      }
+     ],
      "aoe": false
     }
    },
@@ -26931,6 +27288,13 @@
        "type": "extra_turn",
        "chance": 1.0,
        "on_kill": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn",
+        "bomb"
+       ]
       }
      ]
     },
@@ -27204,7 +27568,8 @@
        "chance": 0.5,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     }
    }
   },
@@ -27712,6 +28077,7 @@
        "estimated": true
       }
      ],
+     "soulburn_cost": 20,
      "always_crit": true
     },
     "s3": {
@@ -27739,6 +28105,11 @@
        "turns": 1,
        "chance": 0.75,
        "ignore_resist": false
+      },
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
       }
      ],
      "always_crit": true,
@@ -28120,7 +28491,15 @@
      "name": "Black Rose",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep"
+       ]
+      }
+     ],
      "trigger": {
       "event": "after_attack",
       "chance": 1.0
@@ -28304,7 +28683,8 @@
        "chance": 1.0,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -28370,6 +28750,12 @@
        "turns": 2,
        "chance": 0.5,
        "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn"
+       ]
       }
      ]
     },
@@ -28515,7 +28901,8 @@
      "name": "Strike Target",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -28571,6 +28958,13 @@
        "type": "lifesteal",
        "ratio": 0.2,
        "estimated": true
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn",
+        "bleed"
+       ]
       }
      ]
     },
@@ -28658,7 +29052,7 @@
       {
        "type": "buff",
        "effect": "evasion",
-       "target": "enemies",
+       "target": "self",
        "turns": 1
       },
       {
@@ -28973,13 +29367,13 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "target",
+       "target": "self",
        "turns": 1
       },
       {
        "type": "buff",
        "effect": "immunity",
-       "target": "target",
+       "target": "self",
        "turns": 1
       }
      ]
@@ -29030,7 +29424,14 @@
      "name": "Devour It, Black Flame!",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "fixed",
+       "amount": 10000,
+       "per_debuff": false,
+       "on_crit": false
+      }
+     ]
     }
    }
   },
@@ -29267,6 +29668,12 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": true
+      },
+      {
+       "type": "fixed",
+       "amount": 7000,
+       "per_debuff": false,
+       "on_crit": false
       }
      ]
     }
@@ -29702,8 +30109,16 @@
        "type": "extra_turn",
        "chance": 1.0,
        "on_kill": true
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn",
+        "bleed"
+       ]
       }
-     ]
+     ],
+     "soulburn_cost": 10
     }
    }
   },
@@ -30703,7 +31118,11 @@
      "name": "Smite of Salvation",
      "cooldown": 5,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extinction"
+      }
+     ]
     }
    }
   },
@@ -30774,6 +31193,12 @@
        "ratio": 0.15,
        "turns": 2,
        "estimated": false
+      },
+      {
+       "type": "fixed",
+       "amount": 4000,
+       "per_debuff": false,
+       "on_crit": false
       }
      ]
     },
@@ -30904,6 +31329,12 @@
        "turns": 2,
        "chance": 0.65,
        "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "bleed"
+       ]
       }
      ]
     },
@@ -31388,6 +31819,7 @@
        "type": "dual"
       }
      ],
+     "soulburn_cost": 20,
      "always_crit": true
     },
     "s3": {
@@ -31697,6 +32129,12 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": true
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "bleed"
+       ]
       }
      ]
     },
@@ -32169,7 +32607,8 @@
        "target": "self",
        "chance": 0.75
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1.8,
@@ -32239,7 +32678,8 @@
        "ratio": 0.2,
        "estimated": true
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": 0.9,
@@ -32389,7 +32829,12 @@
      "name": "Conviction",
      "cooldown": 5,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extinction"
+      }
+     ],
+     "soulburn_cost": 20
     },
     "s3_splash": {
      "rate": 0,
@@ -32631,7 +33076,14 @@
      "name": "Summon Household",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
+      }
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1.9,
@@ -32763,19 +33215,19 @@
       {
        "type": "buff",
        "effect": "spd_up",
-       "target": "target",
+       "target": "self",
        "turns": 2
       },
       {
        "type": "buff",
        "effect": "cd_up",
-       "target": "target",
+       "target": "self",
        "turns": 2
       },
       {
        "type": "buff",
        "effect": "immunity",
-       "target": "target",
+       "target": "self",
        "turns": 2
       },
       {
@@ -32902,7 +33354,11 @@
      "name": "Guillotine",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extinction"
+      }
+     ]
     }
    }
   },
@@ -33068,6 +33524,12 @@
        "turns": 1,
        "chance": 0.75,
        "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn"
+       ]
       }
      ]
     },
@@ -33654,7 +34116,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "enemies",
+       "target": "self",
        "turns": 1
       },
       {
@@ -33665,7 +34127,8 @@
        "chance": 0.6,
        "ignore_resist": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1.5,
@@ -33701,6 +34164,9 @@
        "type": "lifesteal",
        "ratio": 0.2,
        "estimated": true
+      },
+      {
+       "type": "extinction"
       }
      ]
     }
@@ -33849,7 +34315,8 @@
        "ratio": 0.2,
        "estimated": true
       }
-     ]
+     ],
+     "soulburn_cost": 20
     },
     "s1_bis": {
      "rate": 1,
@@ -34021,7 +34488,8 @@
      "name": "Lightning Strike",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     }
    }
   },
@@ -34452,6 +34920,12 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "bomb"
+       ]
       }
      ]
     },
@@ -34993,6 +35467,12 @@
        "turns": 2,
        "chance": 0.8,
        "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "bleed"
+       ]
       }
      ]
     },
@@ -35055,6 +35535,12 @@
        "type": "strip",
        "target": "self",
        "all": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "bomb"
+       ]
       }
      ]
     }
@@ -35100,7 +35586,8 @@
        "target": "target",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s1_bis": {
      "rate": 1.2,
@@ -35244,7 +35731,8 @@
      "name": "Soulful Strike",
      "cooldown": 5,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -35652,7 +36140,8 @@
        "target": "target",
        "all": true
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -35874,7 +36363,8 @@
        "target": "enemies",
        "all": false
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1.1,
@@ -36075,7 +36565,8 @@
        "chance": 1.0,
        "on_kill": false
       }
-     ]
+     ],
+     "soulburn_cost": 20
     },
     "s2": {
      "rate": null,
@@ -36171,6 +36662,9 @@
        "amount": -1,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "extinction"
       }
      ]
     },
@@ -36243,7 +36737,8 @@
        "turns": 1,
        "estimated": false
       }
-     ]
+     ],
+     "soulburn_cost": 20
     },
     "s2": {
      "rate": null,
@@ -36425,8 +36920,14 @@
        "ratio": 0.12,
        "turns": 1,
        "estimated": false
+      },
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s1_bis": {
      "rate": 1,
@@ -36592,6 +37093,13 @@
        "turns": 2
       },
       {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep"
+       ]
+      },
+      {
        "type": "cleanse",
        "target": "ally",
        "all": true
@@ -36679,7 +37187,7 @@
       {
        "type": "buff",
        "effect": "def_up",
-       "target": "target",
+       "target": "self",
        "turns": 1
       },
       {
@@ -36788,6 +37296,12 @@
        "amount": 1,
        "target": "enemies",
        "chance": 1.0
+      },
+      {
+       "type": "fixed",
+       "amount": 3000,
+       "per_debuff": false,
+       "on_crit": false
       }
      ]
     },
@@ -36891,6 +37405,11 @@
        "stat": "hp",
        "ratio": 0.15,
        "estimated": true
+      },
+      {
+       "type": "injury",
+       "max": 0.25,
+       "estimated": false
       }
      ],
      "trigger": {
@@ -37133,6 +37652,12 @@
        "amount": 15,
        "target": "target",
        "chance": 1.0
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "bomb"
+       ]
       }
      ]
     },
@@ -37347,7 +37872,11 @@
      "name": "Precise Attack",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "extinction"
+      }
+     ],
      "trigger": {
       "event": "death",
       "chance": 1.0
@@ -37466,7 +37995,8 @@
      "name": "Blade Ascent",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     }
    }
   },
@@ -37634,7 +38164,8 @@
      "name": "Thunder God's Cry",
      "cooldown": 2,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s2_wave_2": {
      "rate": 0.55,
@@ -38083,6 +38614,12 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn"
+       ]
       }
      ]
     },
@@ -38126,6 +38663,13 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "burn",
+        "bomb"
+       ]
       }
      ]
     },
@@ -38754,7 +39298,8 @@
      "name": "Symphony of Agony",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s2": {
      "rate": null,
@@ -38839,7 +39384,8 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1.5,
@@ -38920,7 +39466,8 @@
      "name": "Vulnerability Exposed",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1.9,
@@ -38945,6 +39492,11 @@
        "effect": "invincible",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "injury",
+       "max": 0.15,
+       "estimated": true
       }
      ]
     },
@@ -39073,7 +39625,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "target",
+       "target": "self",
        "turns": 2
       },
       {
@@ -39254,7 +39806,8 @@
        "target": "target",
        "chance": 1.0
       }
-     ]
+     ],
+     "soulburn_cost": 10
     },
     "s3": {
      "rate": 1,
@@ -39318,7 +39871,7 @@
       {
        "type": "buff",
        "effect": "atk_up",
-       "target": "target",
+       "target": "self",
        "turns": 1
       },
       {

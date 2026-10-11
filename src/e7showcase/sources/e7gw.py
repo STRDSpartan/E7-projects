@@ -141,6 +141,9 @@ def merge_skills(
                 passive=passive,
                 effects=effects,
             )
+            cost = re.search(r"-(\d+) souls?", sk.get("soulburn") or "")
+            if cost and entry.get("rate_sb") is not None:
+                entry["soulburn_cost"] = int(cost.group(1))
             if "Always Results in a Critical Hit" in sk["tags"]:
                 entry["always_crit"] = True
             if "Begins Battle With Full Skill Cooldown" in sk["tags"]:

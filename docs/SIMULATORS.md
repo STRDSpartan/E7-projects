@@ -82,7 +82,29 @@ Lues dans les étiquettes E7GW de chaque compétence (`parse_effects`) :
 - **critique garanti** ; **réduction de dégâts** permanente et **plafond de dégâts par coup**
   (« does not exceed 35% of max Health ») des passifs.
 
-**Non simulés** : Âmes et âme brûlée, Injures, Explosion (Detonate), Extinction, rang arrière,
-dégâts fixes ou additionnels, transferts, artefacts, mécaniques uniques d'un seul héros
-(balles de Renoa...), bonus de stats permanents des passifs (déjà inclus dans les stats
-affichées en jeu).
+- **Âmes et âme brûlée** : chaque équipe gagne 1 Âme par S1 et 2 par autre compétence
+  (estimé, max 20) ; une S2/S3 qui a une version âme brûlée la joue dès que l'équipe a le coût
+  (« -10 souls » du texte, sinon 20) ;
+- **blessures** : PV max réduits de 25 % des dégâts (estimé), jusqu'au plafond du texte
+  (« up to 15% injuries ») ; les soins ne dépassent pas les PV max blessés ;
+- **explosion** : les tours restants de brûlure / saignement infligent leurs dégâts d'un coup ;
+- **extinction** : la cible tuée ne peut plus ressusciter ;
+- **dégâts fixes** (« 1,500 fixed damage », par débuff ou sur critique), sans défense ;
+- **rang arrière** : le dernier héros de l'équipe ;
+- **insensible aux débuffs d'immobilisation** (étourdissement, sommeil).
+
+Correction : un buff n'est plus jamais appliqué aux ennemis (« attaque tous les ennemis et
+augmente l'Attaque » visait les ennemis, ex. Arbiter Vildred S3).
+
+### Règles par héros (`data/reference/hero_mechanics.json`)
+Ce que les textes ne permettent pas de déduire s'ajoute héros par héros, sans toucher au
+moteur. Clé = clé du héros dans `skills.json` ; par compétence : `set` (champs remplacés :
+`trigger`, `no_crit`, `aoe`...), `effects` (liste remplacée), `effects_add` (effets ajoutés),
+et obligatoirement `source` (le texte du jeu traduit). Effets disponibles :
+`calc/battle.EFFECT_TYPES`, dont `static_buff` / `static_debuff` / `static_immune` (statuts
+permanents). Un test vérifie chaque règle (héros existant, types connus, source présente).
+Exemples : Aki (ne peut pas être soignée), Schuri Exécuteur du Vent d'Ouest (pas de critique).
+
+**Non simulés** : mécaniques uniques non encore décrites dans `hero_mechanics.json` (balles de
+Renoa, vitesse fixe de Harsetti, marques...), Bombes, partage de dégâts, transferts, artefacts,
+bonus de stats permanents des passifs (déjà inclus dans les stats affichées en jeu).

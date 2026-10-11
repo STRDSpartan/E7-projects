@@ -14,6 +14,7 @@ buff, PV restants...) ne sont pas appliqués : la compétence est alors marquée
 
 from __future__ import annotations
 
+import copy
 import re
 import unicodedata
 from dataclasses import dataclass, field
@@ -41,9 +42,32 @@ def _key(text: str) -> str:
 ALIASES = {"summersdisciplealexa": "summerdisciplealexa", "elphelt": "elpheltvalentine"}
 
 
+def apply_mechanics(heroes: dict[str, Any], rules: dict[str, Any]) -> dict[str, Any]:
+    """Applique les règles propres à chaque héros (data/reference/hero_mechanics.json).
+
+    Par compétence : `set` (champs remplacés, ex. `trigger`), `effects` (liste remplacée),
+    `effects_add` (effets ajoutés). Une compétence absente est créée (passif sans dégâts).
+    """
+    out = copy.deepcopy(heroes)
+    for hero_key, rule in rules.items():
+        hero = out.get(hero_key)
+        if hero is None:
+            continue
+        for sid, change in rule.get("skills", {}).items():
+            skill = hero["skills"].setdefault(
+                sid, {"rate": None, "pow": 1, "enhance": [], "passive": True, "effects": []}
+            )
+            skill.update(copy.deepcopy(change.get("set", {})))
+            if "effects" in change:
+                skill["effects"] = copy.deepcopy(change["effects"])
+            skill.setdefault("effects", []).extend(copy.deepcopy(change.get("effects_add", [])))
+    return out
+
+
 @cache
 def _skills_by_key() -> dict[str, dict[str, Any]]:
-    return {_key(k): v for k, v in load("skills")["heroes"].items()}
+    heroes = apply_mechanics(load("skills")["heroes"], load("hero_mechanics")["heroes"])
+    return {_key(k): v for k, v in heroes.items()}
 
 
 def hero_skills(name: str) -> dict[str, Any] | None:

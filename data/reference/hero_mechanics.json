@@ -1,0 +1,20 @@
+{
+ "_comment": "Règles propres à chaque héros, appliquées par-dessus skills.json (calc/damage.apply_mechanics). Clé = clé du héros dans skills.json. Par compétence : 'set' (champs remplacés : trigger, no_crit, aoe...), 'effects' (liste remplacée), 'effects_add' (effets ajoutés). Types d'effets : calc/battle.EFFECT_TYPES. Chaque règle cite le texte du jeu qu'elle traduit ('source') ; voir docs/SIMULATORS.md.",
+ "heroes": {
+  "aki": {
+   "skills": {
+    "s2": {
+     "source": "Cannot receive recover Health effects and damage sharing effects.",
+     "effects_add": [{"type": "static_debuff", "effect": "unhealable"}]
+    }
+   }
+  },
+  "westwind_executioner_schuri": {
+   "skills": {
+    "s1": {"source": "When attacking, cannot trigger a critical hit.", "set": {"no_crit": true}},
+    "s1_bis": {"source": "When attacking, cannot trigger a critical hit.", "set": {"no_crit": true}},
+    "s3": {"source": "When attacking, cannot trigger a critical hit.", "set": {"no_crit": true}}
+   }
+  }
+ }
+}

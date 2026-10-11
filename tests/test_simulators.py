@@ -379,3 +379,70 @@ def test_hero_mechanics_in_battle() -> None:
     battle.specials(me, _skill(1.0, {"type": "extra_turn", "chance": 1.0}), [foe])
     assert me.gauge == 100 and battle.stats["extra_turns"] == 1
     battle.apply(me, {"type": "cooldown", "amount": 1, "target": "self"}, [])
+
+
+def test_hero_mechanics_rules_are_valid_and_applied() -> None:
+    from e7showcase.calc.battle import EFFECT_TYPES
+    from e7showcase.calc.damage import apply_mechanics
+
+    heroes = load("skills")["heroes"]
+    rules = load("hero_mechanics")["heroes"]
+    for key, rule in rules.items():
+        assert key in heroes, key
+        for sid, change in rule["skills"].items():
+            assert change.get("source"), f"{key} {sid} : texte du jeu manquant"
+            assert set(change) <= {"source", "set", "effects", "effects_add"}
+            for e in change.get("effects", []) + change.get("effects_add", []):
+                assert e["type"] in EFFECT_TYPES, (key, e)
+    aki = hero_skills("Aki")
+    assert aki is not None
+    assert {"type": "static_debuff", "effect": "unhealable"} in aki["skills"]["s2"]["effects"]
+    out = apply_mechanics({"x": {"skills": {}}}, {"x": {"skills": {"s2": {"effects_add": [1]}}}})
+    assert out["x"]["skills"]["s2"]["effects"] == [1] and out["x"]["skills"]["s2"]["passive"]
+
+
+def test_parse_generic_mechanics() -> None:
+    effects = parse_effects(
+        "Attacks the enemy, inflicting up to 10% injuries. A successful attack deals 1,500 fixed "
+        "damage for each debuff inflicted on the target. At the end of the turn, detonates burn "
+        "effects inflicted on the target.",
+        ["Injury", "Fixed Damage", "Detonate", "Extinction"],
+    )
+    assert {"type": "injury", "max": 0.1, "estimated": False} in effects
+    assert {"type": "fixed", "amount": 1500, "per_debuff": True, "on_crit": False} in effects
+    assert {"type": "detonate", "what": ["burn"]} in effects
+    assert {"type": "extinction"} in effects
+    buff = parse_effects("Attacks all enemies and increases Attack.", ["Increase Attack"], aoe=True)
+    assert buff[0]["target"] == "self"
+
+
+def test_generic_mechanics_in_battle() -> None:
+    dummy = Fighter("Cible", 0, 10**5, 1000, 1, 0, 150, None, {"s1": _skill(None)})
+    pyro = Fighter("Pyro", 2000, 10**5, 1000, 100, 0, 150, None, {"s1": _skill(1.0)})
+    back = Fighter("Arrière", 1000, 10**5, 1000, 100, 0, 150, None, {"s1": _skill(1.0)})
+    battle = _Battle([pyro, back], [dummy], random.Random(1), {}, Options(), True)
+    me, rear, foe = battle.units
+    assert battle.resolve(me, "back_row", [], "buff") == [rear]
+    # blessures : PV max réduits
+    battle.hit(me, _skill(1.0, {"type": "injury", "max": 0.1}), foe)
+    assert 0 < foe.injury <= 10**4 and foe.max_hp == 10**5 - foe.injury
+    # explosion : 2 tours de brûlure tombent d'un coup
+    foe.debuffs["burn"], foe.dot_atk["burn"] = 2, 2000
+    hp = foe.hp
+    battle.detonate(_skill(1.0, {"type": "detonate", "what": ["burn"]}), [foe])
+    assert hp - foe.hp == pytest.approx(2400) and "burn" not in foe.debuffs
+    # dégâts fixes par débuff
+    foe.injury = 0
+    hp = foe.hp
+    battle.hit(me, pyro.skills["s1"], foe)
+    plain, hp = hp - foe.hp, foe.hp
+    foe.debuffs = {"stun": 1, "silence": 1}
+    battle.hit(me, _skill(1.0, {"type": "fixed", "amount": 1000, "per_debuff": True}), foe)
+    assert hp - foe.hp == pytest.approx(plain + 2000)
+    # extinction : pas de résurrection
+    revive = _skill(None)
+    revive.update(passive=True, trigger={"event": "revive", "every": 99, "health": 0.5})
+    foe.fighter.skills["s2"] = revive
+    foe.hp = 10
+    battle.hit(me, _skill(1.0, {"type": "extinction"}), foe)
+    assert not foe.alive and foe.extinct
