@@ -68,6 +68,8 @@ class Fighter:
     crit_dmg: float = 150  # %
     element: str | None = None
     skills: dict[str, Any] = field(default_factory=dict)
+    effectiveness: float = 0  # %
+    effect_res: float = 0  # %
 
 
 @dataclass
@@ -107,7 +109,7 @@ def skill_damage(
     advantage = (
         o.elemental_advantage
         if o.elemental_advantage is not None
-        else ADVANTAGE.get(attacker.element or "") == target.element
+        else target.element is not None and ADVANTAGE.get(attacker.element or "") == target.element
     )
     bonus = 1 + o.damage_increase / 100 + (0.3 if o.rage_set else 0) + (0.1 if o.torrent_set else 0)
     offensive = (
@@ -143,6 +145,8 @@ def damage_table(
     o = opts or Options()
     rows: list[dict[str, Any]] = []
     for sid, skill in sorted(attacker.skills.items()):
+        if skill.get("rate") is None:
+            continue  # compétence sans dégâts (soin, buff...)
         variants = [False, True] if skill.get("rate_sb") is not None else [False]
         for burn in variants:
             opt = Options(**{**o.__dict__, "soulburn": burn})

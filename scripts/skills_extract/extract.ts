@@ -39,7 +39,21 @@ for (const [key, hero] of Object.entries(Heroes as any)) {
     if (e.rate === null) bad++;
     skills[sid] = e;
   }
-  out[key] = { element: h.element, class: h.class, base: { atk: h.baseAttack, hp: h.baseHP, def: h.baseDefense }, skills };
+  // Barrière : coefficient par statistique (attaque, PV max, défense) et compétence qui l'accorde
+  let barrier: any = null;
+  if (typeof h.barrier === "function") {
+    const ratios: any = {};
+    for (const [label, stat] of [["atk", "attack"], ["hp", "casterFinalMaxHP"], ["def", "casterFinalDefense"]]) {
+      for (const k of Object.keys(stats)) delete stats[k];
+      if (stat !== "attack") stats[stat] = 1000;
+      const fakeHero: any = { getAttack: () => (stat === "attack" ? 1000 : 0), baseAttack: 0 };
+      const v = call(() => h.barrier(fakeHero, null, art, iv, 0, false));
+      if (v) ratios[label] = Math.round(v / 1000 * 1e6) / 1e6;
+    }
+    for (const k of Object.keys(stats)) delete stats[k];
+    if (Object.keys(ratios).length) barrier = { ratios, skill: (h.barrierEnhance || (h.barrierSkills || [])[0] || "").toString().slice(0, 2).toLowerCase() || null };
+  }
+  out[key] = { element: h.element, class: h.class, base: { atk: h.baseAttack, hp: h.baseHP, def: h.baseDefense }, skills, ...(barrier ? { barrier } : {}) };
 }
 console.error("héros", Object.keys(out).length, "compétences sans taux lisible", bad);
 console.log(JSON.stringify(out));

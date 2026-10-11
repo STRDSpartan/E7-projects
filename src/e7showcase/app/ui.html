@@ -339,7 +339,8 @@ function battlePage(body, heroes) {
   const a = team("Équipe A"), b = team("Équipe B");
   b[0].selectedIndex = Math.min(1, b[0].options.length - 1);
   const runs = el("input", { type: "number", value: "1000", min: "1", max: "5000" });
-  const cd2 = el("input", { type: "number", value: "3", min: "0", max: "10" }), cd3 = el("input", { type: "number", value: "4", min: "0", max: "10" });
+  const cd2 = el("input", { type: "number", value: "3", min: "0", max: "10", title: "Utilisé seulement si la recharge réelle du héros est inconnue" }),
+        cd3 = el("input", { type: "number", value: "4", min: "0", max: "10", title: "Utilisé seulement si la recharge réelle du héros est inconnue" });
   const out = el("div", {});
   const opts = optionsCard();
   const run = async () => {
@@ -353,16 +354,17 @@ function battlePage(body, heroes) {
           el("div", { style: `width:${r.draws}%;background:#555` }, r.draws >= 8 ? `Nul ${r.draws} %` : ""),
           el("div", { style: `width:${wb}%;background:#b33f3f` }, wb >= 8 ? `B ${wb} %` : "")),
         el("p", {}, `Équipe A (${r.teams[0].join(", ")}) : ${wa} % de victoires · Équipe B (${r.teams[1].join(", ")}) : ${wb} % · ${r.avg_actions} actions en moyenne.`),
+        el("p", { class: "note" }, `Par combat, en moyenne : ${fmtN(r.avg.healed)} PV soignés · ${fmtN(r.avg.shielded)} de barrières · ${r.avg.buffs} buffs · ${r.avg.debuffs} débuffs appliqués.`),
         el("h3", { style: "margin-top:12px" }, "Déroulé d'un combat type"),
         el("div", { class: "log" }, r.sample.log.join("\n") || "—"),
-        el("p", { class: "note" }, "Modèle simplifié : jauge de combat selon la vitesse, S3 puis S2 puis S1 selon les temps de recharge, cible aux PV les plus bas, critiques tirés au hasard. Soins, barrières, buffs/débuffs des compétences, passifs, artefacts, esquive et contre-attaques ne sont pas simulés.")));
+        el("p", { class: "note" }, "Simulés : jauge selon la vitesse, recharges réelles, soins (montant type si le jeu ne le chiffre pas), barrières, buffs (attaque, défense, vitesse, critiques, immunité, invincibilité, camouflage, immortalité), débuffs (défense, attaque, vitesse, étourdissement, sommeil, silence, provocation, anti-soin) selon efficacité/résistance, jauge, retraits de buffs et débuffs. Non simulés : passifs et déclencheurs (contre-attaques, attaques supplémentaires, résurrection), artefacts, esquive, âme brûlée.")));
     } catch (e) { out.replaceChildren(el("p", { class: "note", style: "color:var(--danger)" }, e.message)); }
   };
   body.append(el("div", { class: "grid2" },
       el("div", { class: "card" }, el("h3", {}, "Équipe A"), ...a.map((s, i) => field(`Héros ${i + 1}`, s))),
       el("div", { class: "card" }, el("h3", {}, "Équipe B"), ...b.map((s, i) => field(`Héros ${i + 1}`, s)))),
     el("div", { class: "card" }, el("h3", {}, "Paramètres"),
-      el("div", { class: "grid2" }, field("Nombre de combats simulés", runs), field("Recharge S2 (tours)", cd2), field("Recharge S3 (tours)", cd3)),
+      el("div", { class: "grid2" }, field("Nombre de combats simulés", runs), field("Recharge S2 par défaut (tours)", cd2), field("Recharge S3 par défaut (tours)", cd3)),
       el("div", { style: "margin-top:12px" }, el("button", { onclick: run }, "Lancer la simulation"))), opts, out);
 }
 $("#sims").onclick = () => simulators();

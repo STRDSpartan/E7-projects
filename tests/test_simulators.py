@@ -1,6 +1,7 @@
 """Simulateurs de dégâts et de combat : formule, données des compétences, API."""
 
 import json
+import random
 import urllib.request
 from pathlib import Path
 
@@ -91,3 +92,121 @@ def test_sim_api_requires_token(tmp_path: Path) -> None:
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(base + "/api/sim/heroes")
     server.shutdown()
+
+
+# --- effets des compétences (soins, barrières, buffs, débuffs)
+from e7showcase.calc.battle import _Battle  # noqa: E402
+from e7showcase.parsers.skill_effects import parse_effects  # noqa: E402
+
+
+def test_parse_effects_targets_turns_and_chances() -> None:
+    ras = parse_effects(
+        "Strongly attacks all enemies, before recovering the caster's Health and increasing "
+        "Defense of all allies for 2 turns. Amount recovered increases proportional to the "
+        "caster's Attack .",
+        ["AoE", "Heal", "Increase Defense"],
+        aoe=True,
+    )
+    assert {"type": "buff", "effect": "def_up", "target": "allies", "turns": 2} in ras
+    heal = next(e for e in ras if e["type"] == "heal")
+    assert heal["target"] == "self" and heal["stat"] == "atk" and heal["estimated"]
+    stun = parse_effects("Attacks the enemy, with a 75% chance to stun for 1 turn.", ["Stun"])
+    assert stun[0]["target"] == "target" and stun[0]["chance"] == 0.75 and stun[0]["turns"] == 1
+    barrier = parse_effects(
+        "Grants a barrier to the caster for 2 turns.", ["Barrier"], barrier={"atk": 0.65}
+    )
+    assert barrier[0]["ratio"] == 0.65 and not barrier[0]["estimated"]
+    gauge = parse_effects(
+        "Attacks the enemy, decreasing Combat Readiness by 30%. Increases Combat Readiness of "
+        "the caster by 20%.",
+        ["Increase Combat Readiness", "Decrease Combat Readiness"],
+    )
+    assert {(g["amount"], g["target"]) for g in gauge} == {(20, "self"), (-30, "target")}
+
+
+def _skill(rate: float | None, *effects: dict[str, object], cooldown: int = 0) -> dict[str, object]:
+    return {"rate": rate, "pow": 1, "enhance": [], "cooldown": cooldown, "effects": list(effects)}
+
+
+def test_barrier_absorbs_heal_restores_and_stun_skips_turn() -> None:
+    tank = Fighter(
+        "Tank",
+        1000,
+        20000,
+        1000,
+        100,
+        0,
+        150,
+        None,
+        {
+            "s1": _skill(1.0),
+            "s2": _skill(
+                None,
+                {"type": "barrier", "target": "self", "stat": "hp", "ratio": 0.2, "turns": 2},
+                cooldown=3,
+            ),
+        },
+    )
+    striker = Fighter(
+        "Frappeur",
+        3000,
+        10000,
+        500,
+        300,
+        0,
+        150,
+        None,
+        {
+            "s1": _skill(
+                1.0,
+                {
+                    "type": "debuff",
+                    "effect": "stun",
+                    "target": "target",
+                    "turns": 1,
+                    "chance": 1.0,
+                    "ignore_resist": True,
+                },
+            ),
+        },
+    )
+    res = fight([tank], [striker], keep_log=True)
+    log = "\n".join(res.log)
+    assert "Étourdi → Tank" in log and "Tank ne peut pas agir" in log
+    battle = _Battle([tank], [striker], random.Random(1), {"s2": 3, "s3": 4}, Options(), True)
+    unit = battle.units[0]
+    battle.apply(unit, tank.skills["s2"]["effects"][0], [])  # barrière de 4000
+    assert unit.barrier == 4000
+    battle.hit(battle.units[1], striker.skills["s1"], unit)
+    assert unit.hp == 20000 and unit.barrier == pytest.approx(4000 - 1295, abs=2)
+    unit.hp = 5000
+    battle.apply(unit, {"type": "heal", "target": "self", "stat": "hp", "ratio": 0.15}, [])
+    assert unit.hp == 8000
+
+
+def test_attack_buff_raises_damage_and_expires() -> None:
+    buffer = Fighter("Buff", 3000, 20000, 1000, 200, 0, 150, None, {"s1": _skill(1.0)})
+    dummy = Fighter("Cible", 0, 10**6, 1000, 1, 0, 150, None, {"s1": _skill(None)})
+    battle = _Battle([buffer], [dummy], random.Random(1), {}, Options(), True)
+    me, foe = battle.units
+    base = foe.hp
+    battle.hit(me, buffer.skills["s1"], foe)
+    plain = base - foe.hp
+    battle.current = me
+    battle.apply(me, {"type": "buff", "effect": "atk_up", "target": "self", "turns": 1}, [])
+    before = foe.hp
+    battle.hit(me, buffer.skills["s1"], foe)
+    assert before - foe.hp == pytest.approx(plain * 1.5, rel=0.01)
+    battle.end_turn(me)  # reçu pendant son tour : pas décompté
+    assert "atk_up" in me.buffs
+    battle.end_turn(me)
+    assert "atk_up" not in me.buffs
+
+
+def test_reference_skills_have_cooldowns_and_effects() -> None:
+    heroes = load("skills")["heroes"]
+    achates = heroes["achates"]["skills"]
+    assert achates["s2"]["cooldown"] >= 1 and achates["s2"]["rate"] is None
+    assert any(e["type"] == "heal" for e in achates["s3"]["effects"])
+    with_effects = sum(1 for h in heroes.values() for s in h["skills"].values() if s.get("effects"))
+    assert with_effects > 600

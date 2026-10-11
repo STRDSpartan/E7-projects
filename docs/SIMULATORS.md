@@ -23,10 +23,28 @@ critique = normal × min(dégâts critiques, 350 %) ; écrasant ×1,3 ; raté ×
 ```
 Vérifié à la main (Kise S3, 4 088 ATQ, 290 % DC, cible 1 000 DÉF : 3 671 / 10 647).
 
+## Effets des compétences
+`skills.json` contient aussi, par compétence, `cooldown` (recharge réelle après améliorations),
+`passive` et `effects`, tirés des pages héros de la base publique **E7GW** (https://e7gw.xyz,
+`/hero` autorisé par son robots.txt) et analysés par `parsers/skill_effects.py` : les
+étiquettes d'effets (« Heal », « Increase Attack », « Stun »...) disent quels effets existent,
+le texte donne la cible, la durée et la probabilité. 384 héros, 868 compétences avec effets.
+Les barrières reprennent les coefficients d'E7Calc (70 héros, ex. Kise : 65 % de l'attaque) ;
+les soins et les autres barrières ne sont pas chiffrés dans les textes du jeu → valeur type
+(15 % des PV max, 60 % de l'attaque ou 80 % de la défense), marquée `estimated`.
+
 ## Combat (`calc/battle.py`)
-Modèle simplifié, 1 à 4 héros par équipe : jauge de combat selon la vitesse, S3 puis S2 puis S1
-selon les temps de recharge (S2 = 3, S3 = 4 tours par défaut, modifiables), cible aux PV les plus
-bas, compétences de zone sur toute l'équipe, critiques tirés au hasard. Des milliers de combats
-(graine fixe) donnent un taux de victoire reproductible et le journal d'un combat type.
-**Non simulés** : soins, barrières, buffs/débuffs appliqués par les compétences, passifs,
-artefacts, esquive, contre-attaques, gain/vol de jauge. C'est un ordre de grandeur.
+1 à 4 héros par équipe, jauge de combat selon la vitesse. Compétences actives seulement (S1 et
+compétences avec recharge) : soin prioritaire si un allié est sous 50 % de PV, sinon S3, S2,
+S1 ; une compétence de soutien n'est jouée que si elle sert. Recharges réelles, sinon S2 = 3 et
+S3 = 4 tours. Cible aux PV les plus bas (hors camouflage, ou le provocateur).
+Effets appliqués : soins (bloqués par l'anti-soin), barrières (absorbent avant les PV), buffs
+(attaque +50 %, défense +60 %, vitesse +30 %, critique +30 %, dégâts critiques +50 %,
+immunité, invincibilité, camouflage, immortalité), débuffs (défense −70 %, attaque −50 %,
+vitesse −30 %, étourdissement, sommeil, silence, provocation, anti-soin) avec chance de
+réussite × (1 − (résistance − efficacité)), au moins 15 %, jauge ±, retrait de buffs et de
+débuffs. Durées décomptées à la fin du tour du porteur (pas le tour où l'effet est reçu).
+Taux de victoire sur des milliers de combats (graine fixe), bilan moyen (soins, barrières,
+buffs, débuffs) et journal d'un combat type.
+**Non simulés** : passifs et déclencheurs (contre-attaques, attaques supplémentaires,
+résurrection), dégâts fixes, artefacts, esquive, âme brûlée, mécaniques propres à un héros.

@@ -31,6 +31,8 @@ def fighter(hero: Hero) -> Fighter:
         crit_dmg=s.crit_dmg or 150,
         element=hero.element or data.get("element"),
         skills=data.get("skills", {}),
+        effectiveness=s.effectiveness,
+        effect_res=s.effect_res,
     )
 
 
