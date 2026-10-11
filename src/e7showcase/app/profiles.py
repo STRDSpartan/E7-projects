@@ -25,6 +25,9 @@ from e7showcase.models.roster import Roster
 
 ID_RE = re.compile(r"^[a-z0-9-]{1,60}$")
 PORTRAIT_MAX = (640, 900)
+ICON_MAX = (160, 160)
+# Icônes découpées dans la capture : les 6 pièces portées et le blason de l'artefact
+ICON_KINDS = ("weapon", "helmet", "armor", "necklace", "ring", "boots", "artifact")
 
 
 def image_key(hero_name: str) -> str:
@@ -107,18 +110,28 @@ class ProfileStore:
         shutil.rmtree(self.path(profile_id))
 
     # --- héros et poses
-    def add_hero(self, profile_id: str, hero: Hero, portrait: Image.Image | None) -> None:
+    def add_hero(
+        self,
+        profile_id: str,
+        hero: Hero,
+        portrait: Image.Image | None,
+        icons: dict[str, Image.Image] | None = None,
+    ) -> None:
         roster = self.load(profile_id)
         roster.upsert(hero)
         self.save(profile_id, roster)
         if portrait is not None:
             self.save_portrait(profile_id, hero.name, portrait)
+        for kind, icon in (icons or {}).items():
+            self.save_icon(profile_id, hero.name, kind, icon)
 
     def remove_hero(self, profile_id: str, hero_name: str) -> None:
         roster = self.load(profile_id)
         roster.heroes = [h for h in roster.heroes if h.name.casefold() != hero_name.casefold()]
         self.save(profile_id, roster)
         self.portrait_path(profile_id, hero_name).unlink(missing_ok=True)
+        for kind in ICON_KINDS:
+            self.icon_path(profile_id, hero_name, kind).unlink(missing_ok=True)
 
     def portrait_path(self, profile_id: str, hero_name: str) -> Path:
         return self.path(profile_id) / "images" / f"{image_key(hero_name)}.webp"
@@ -132,6 +145,22 @@ class ProfileStore:
 
     def portrait_bytes(self, profile_id: str, hero_name: str) -> bytes | None:
         path = self.portrait_path(profile_id, hero_name)
+        return path.read_bytes() if path.is_file() else None
+
+    def icon_path(self, profile_id: str, hero_name: str, kind: str) -> Path:
+        if kind not in ICON_KINDS:
+            raise KeyError(kind)
+        return self.path(profile_id) / "images" / f"{image_key(hero_name)}.{kind}.webp"
+
+    def save_icon(self, profile_id: str, hero_name: str, kind: str, image: Image.Image) -> None:
+        img = image.convert("RGB")
+        img.thumbnail(ICON_MAX, Image.Resampling.LANCZOS)
+        target = self.icon_path(profile_id, hero_name, kind)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        img.save(target, "WEBP", quality=85)
+
+    def icon_bytes(self, profile_id: str, hero_name: str, kind: str) -> bytes | None:
+        path = self.icon_path(profile_id, hero_name, kind)
         return path.read_bytes() if path.is_file() else None
 
 

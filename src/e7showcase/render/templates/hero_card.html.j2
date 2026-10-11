@@ -20,7 +20,7 @@
     {% if h.artifact %}<div class="score artifact">{% if h.artifact_image %}<img src="{{ h.artifact_image }}" alt="">{% endif %}<span>Artefact : {{ h.artifact }}</span></div>{% endif %}
     {% if h.imprint_bonus %}<div class="score">Empreinte : {{ h.imprint_bonus }}</div>{% endif %}
     {% if h.gear_score_avg %}<div class="score">Score moyen en jeu <b>{{ h.gear_score_avg }}</b></div>{% endif %}
-    <div class="score">Gear score (Fribbels) <b>{{ h.total_score }}</b></div>
+    <div class="score">Gear score <b>{{ h.total_score }}</b></div>
   </div>
   <div class="gear">
     {% for g in h.gear %}

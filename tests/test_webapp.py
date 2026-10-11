@@ -12,7 +12,7 @@ from e7showcase.assets import AssetStore
 from e7showcase.importers.fribbels import import_file
 from e7showcase.models.hero import Hero
 from e7showcase.models.roster import Roster
-from e7showcase.render.webapp import build_payload, render_webapp, safe_json
+from e7showcase.render.webapp import GEAR_ICONS, build_payload, render_webapp, safe_json
 
 FIXTURE = Path(__file__).parent / "fixtures" / "fribbels_export.json"
 EVIL = "</script><script>alert('xss')</script>"
@@ -31,7 +31,7 @@ def test_payload_contains_sortable_values_and_labels() -> None:
     assert payload["members"][0]["player"] == "Testeur" and payload["members"][0]["count"] == 2
     ras = payload["heroes"][0]
     assert ras["spd_value"] == 250 and ras["element_key"] == "fire"
-    assert set(ras["images"]) == {"face", "portrait", "artifact", "anim"}
+    assert set(ras["images"]) == {"face", "portrait", "artifact", "anim", *GEAR_ICONS}
     assert payload["heroes"][1]["power_value"] == 205138
 
 

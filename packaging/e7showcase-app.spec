@@ -14,6 +14,7 @@ datas = [
     (str(ROOT / "data" / "reference"), "e7showcase/_reference"),
     (str(SRC / "render" / "templates"), "e7showcase/render/templates"),
     (str(SRC / "app" / "ui.html"), "e7showcase/app"),
+    (str(SRC / "app" / "anim.html"), "e7showcase/app"),
 ]
 binaries = []
 hiddenimports = ["e7showcase.scanner.hero_scanner", "e7showcase.vision.ocr", "httpx"]

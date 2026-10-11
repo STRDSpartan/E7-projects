@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Modèle animé</title>
+<style>
+  html, body { margin: 0; height: 100%; background: transparent; color-scheme: dark; overflow: hidden; }
+  #stage { position: absolute; inset: 0; }
+  .spine-player { position: relative; width: 100%; height: 100%; background: transparent !important; }
+  .spine-player canvas { display: block; width: 100%; height: 100%; }
+  .spine-player-controls, .spine-player-popup, .spine-player-error { display: none !important; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+  // Modèle animé du héros, rendu en direct depuis les fichiers publics d'E7 Codex
+  // (lecteur Spine du site, qui reproduit aussi les anciens modèles 2.1).
+  // Cadre isolé (sandbox, origine opaque) : aucun accès à l'application.
+  const CODE = "__CODE__";
+  const BASE = "https://e7codex.com/assets/" + CODE + "/" + CODE;
+  const tell = (state) => parent.postMessage({ e7anim: state, code: CODE }, "*");
+  // Cadrage sur le corps : les effets (lumières additives, décors géants) faussent le cadre
+  // automatique et rapetissent le personnage. On garde les éléments en mélange normal de taille
+  // raisonnable, puis les centiles 3–97 % de leurs sommets.
+  function bodyViewport(sk) {
+    sk.setToSetupPose(); sk.updateWorldTransform();
+    const boxes = [];
+    for (const slot of sk.slots) {
+      const at = slot.getAttachment();
+      if (!at || !at.computeWorldVertices || slot.data.blendMode !== 0 || slot.color.a < 0.05) continue;
+      const n = at.worldVerticesLength || 8, v = new Float32Array(n);
+      try { at.computeWorldVertices(slot, 0, n, v, 0, 2); } catch (e) { continue; }
+      boxes.push(v);
+    }
+    if (!boxes.length) return null;
+    const area = (v) => { let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+      for (let i = 0; i < v.length; i += 2) { x0 = Math.min(x0, v[i]); x1 = Math.max(x1, v[i]); y0 = Math.min(y0, v[i + 1]); y1 = Math.max(y1, v[i + 1]); }
+      return (x1 - x0) * (y1 - y0); };
+    const areas = boxes.map(area), sorted = [...areas].sort((a, b) => a - b);
+    const limit = sorted[Math.floor(sorted.length / 2)] * 40;
+    const xs = [], ys = [];
+    boxes.forEach((v, k) => { if (areas[k] <= limit) for (let i = 0; i < v.length; i += 2) { xs.push(v[i]); ys.push(v[i + 1]); } });
+    if (xs.length < 8) return null;
+    const pct = (a, q) => { const s = [...a].sort((x, y) => x - y); return s[Math.floor(q * (s.length - 1))]; };
+    const x0 = pct(xs, 0.03), x1 = pct(xs, 0.97), y0 = pct(ys, 0.03), y1 = pct(ys, 0.97);
+    return { x: x0, y: y0, width: x1 - x0, height: y1 - y0 };
+  }
+  function start() {
+    try {
+      new spine.SpinePlayer("stage", {
+        jsonUrl: BASE + ".json",
+        atlasUrl: BASE + ".atlas",
+        backgroundColor: "#00000000",
+        alpha: true,
+        premultipliedAlpha: true,
+        showControls: false,
+        viewport: { padLeft: 40, padRight: 40, padTop: 30, padBottom: 20 },
+        success: (p) => {
+          const data = p.skeleton.data;
+          const names = data.animations.filter((a) => a.duration > 0).map((a) => a.name);
+          const anim = names.find((n) => /^idle$/i.test(n)) || names.find((n) => /idle/i.test(n)) || names[0];
+          // corps (« default ») + visage au repos (« normal », avec le clignement des yeux)
+          const parts = ["default", "normal"].map((n) => data.findSkin(n)).filter(Boolean);
+          if (parts.length > 1 && spine.Skin.prototype.addSkin) {
+            const skin = new spine.Skin("vitrine");
+            parts.forEach((s) => skin.addSkin(s));
+            p.skeleton.setSkin(skin);
+            p.skeleton.setSlotsToSetupPose();
+          }
+          let vp = null;
+          try { vp = bodyViewport(p.skeleton); } catch (e) { vp = null; }  // cadre automatique
+          if (vp) p.config.viewport = Object.assign({}, p.config.viewport, { transitionTime: 0 }, vp);
+          if (anim) p.setAnimation(anim, true);
+          tell("ready");
+        },
+        error: () => tell("failed"),
+      });
+    } catch (e) { tell("failed"); }
+  }
+  const s = document.createElement("script");
+  s.src = "https://e7codex.com/spine-player.js";
+  s.onload = start;
+  s.onerror = () => tell("failed");
+  document.head.appendChild(s);
+</script>
+</body>
+</html>

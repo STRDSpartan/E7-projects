@@ -24,6 +24,7 @@ la même application sur son ordinateur.
 | `launcher.py` | point d'entrée `e7showcase-app [fichier.e7v]` : serveur local + fenêtre native (pywebview + WebView2), pas de version navigateur |
 | `server.py` | serveur HTTP local (127.0.0.1, port aléatoire), API JSON, jeton de session + contrôle de l'en-tête Host ; import en arrière-plan suivi par `/api/jobs/<id>` (barre de progression) |
 | `ui.html` | interface (HTML/JS sans dépendance) |
+| `anim.html` | modèle animé du héros dans la fiche : rendu en direct depuis les fichiers publics d'E7 Codex (lecteur Spine du site), dans un cadre isolé (`sandbox`, CSP limitée à e7codex.com) sans accès à l'application ; la pose de la capture reste affichée hors ligne |
 | `profiles.py` | profils dans `<données>/profiles/<id>/` (`profile.json` = Roster, `images/*.webp`) |
 | `importer.py` | reconnaissance des captures (moteur `scanner/` calibré : 100 % sur captures PC réelles) |
 | `viewer.py` | page vitrine = vitrine web existante (`render/webapp.py`) + poses issues des captures |

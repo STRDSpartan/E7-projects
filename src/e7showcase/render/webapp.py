@@ -36,7 +36,8 @@ from e7showcase.render.viewmodel import ELEMENT_COLORS, ELEMENT_FR, ROLE_FR, bui
 PAYLOAD_VERSION = 2
 ANIM_MAX_HEIGHT = 400  # modèle animé réduit pour garder un fichier partageable
 ANIM_BUDGET = 1_500_000  # octets par modèle animé intégré
-IMAGE_KINDS = ("face", "portrait", "artifact", "anim")
+GEAR_ICONS = ("weapon", "helmet", "armor", "necklace", "ring", "boots")
+IMAGE_KINDS = ("face", "portrait", "artifact", "anim", *GEAR_ICONS)
 
 
 def anim_data_uri(
@@ -112,8 +113,21 @@ def hero_payload(
         if anim_path not in cache:
             cache[anim_path] = anim_data_uri(anim_path)
         anim_uri = cache[anim_path]
+    from e7showcase.reference import artifact_info, hero_info
+
+    art = artifact_info(hero.artifact) if hero.artifact else None
     data.update(
         key=(AssetStore.hero_keys(hero) or [hero.name])[0],
+        anim_code=hero.skin or hero.code or (hero_info(hero.name) or {}).get("code"),
+        artifact_level=hero.artifact_level,
+        artifact_info={
+            "stars": art.get("stars"),
+            "role": ROLE_FR.get(art.get("role") or "", art.get("role")),
+            "stats": art.get("stats"),
+            "effect": art.get("effect_fr") or art.get("effect_en"),
+        }
+        if art
+        else None,
         element_key=hero.element,
         role_key=hero.role,
         set_keys=hero.sets,

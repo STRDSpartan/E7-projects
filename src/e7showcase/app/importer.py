@@ -49,6 +49,22 @@ class ImportReport:
         }
 
 
+def crop_item_icons(image: Image.Image, profile: dict[str, Any]) -> dict[str, Image.Image]:
+    """Icônes des pièces portées et blason de l'artefact, découpés dans la capture du joueur."""
+    from e7showcase.vision.regions import crop
+
+    d = profile["detail"]
+    lay = d["gear_layout"]
+    left, top = lay["level"][0], lay["enhance"][1]
+    icons = {
+        slot: crop(image, [ax + left, ay + top, -left - 0.002, lay["score"][1] - top])
+        for slot, (ax, ay) in d["gear"].items()
+    }
+    if box := d.get("artifact_icon"):
+        icons["artifact"] = crop(image, box)
+    return icons
+
+
 def crop_portrait(image: Image.Image, profile: dict[str, Any]) -> Image.Image | None:
     box = profile["detail"].get("portrait")
     if not box:
@@ -190,7 +206,12 @@ class ScreenshotImporter:
             if not hero.name:
                 report.ignored.append(name)
                 continue
-            store.add_hero(profile_id, hero, crop_portrait(image, used.regions))
+            store.add_hero(
+                profile_id,
+                hero,
+                crop_portrait(image, used.regions),
+                crop_item_icons(image, used.regions),
+            )
             report.heroes.append(hero.name)
             notify(step, total, f"{hero.name} ajouté")
             missing = [s.value for s, g in hero.gear.items() if g.set is None]

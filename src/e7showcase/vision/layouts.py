@@ -17,6 +17,7 @@ from PIL import Image
 # Ancrage horizontal de chaque zone (défaut : gauche)
 ANCHORS = {
     "detail.artifact": "right",
+    "detail.artifact_icon": "right",
     "detail.portrait": "center",
     "detail.gear_score": "right",
     "detail.gear": "right",

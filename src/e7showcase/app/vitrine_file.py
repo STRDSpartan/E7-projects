@@ -4,7 +4,9 @@ Archive ZIP lisible par n'importe quelle installation d'E7 Showcase :
 
     manifest.json   {"format": "e7showcase-vitrine", "version": 1, "player", "exported_at", ...}
     profile.json    roster (format d'échange Roster, voir models/roster.py)
-    images/<clé>.webp  poses des héros
+    images/<clé>.webp         poses des héros
+    images/<clé>.<pièce>.webp icônes des pièces portées et de l'artefact (facultatives :
+                              les versions précédentes de l'app les ignorent)
 
 À l'ouverture, le contenu est traité comme NON FIABLE : noms de fichiers en liste blanche,
 tailles plafonnées, roster validé par Pydantic, images décodées puis ré-encodées.
@@ -12,6 +14,7 @@ tailles plafonnées, roster validé par Pydantic, images décodées puis ré-enc
 
 from __future__ import annotations
 
+import contextlib
 import io
 import json
 import zipfile
@@ -19,7 +22,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from e7showcase import __version__
-from e7showcase.app.profiles import ID_RE, ProfileStore, image_key, reencode_webp
+from e7showcase.app.profiles import (
+    ICON_KINDS,
+    ICON_MAX,
+    ID_RE,
+    ProfileStore,
+    image_key,
+    reencode_webp,
+)
 from e7showcase.models.roster import Roster
 
 FORMAT = "e7showcase-vitrine"
@@ -51,6 +61,10 @@ def export_profile(store: ProfileStore, profile_id: str) -> bytes:
         for hero in roster.heroes:
             if data := store.portrait_bytes(profile_id, hero.name):
                 zf.writestr(f"images/{image_key(hero.name)}.webp", data, zipfile.ZIP_STORED)
+            for kind in ICON_KINDS:
+                if data := store.icon_bytes(profile_id, hero.name, kind):
+                    name = f"images/{image_key(hero.name)}.{kind}.webp"
+                    zf.writestr(name, data, zipfile.ZIP_STORED)
     return buf.getvalue()
 
 
@@ -96,12 +110,19 @@ def import_vitrine(store: ProfileStore, data: bytes) -> str:
         for hero in roster.heroes:
             name = f"images/{image_key(hero.name)}.webp"
             if name in entries and ID_RE.fullmatch(image_key(hero.name)):
-                try:
+                # image invalide : le héros reste affiché sans pose
+                with contextlib.suppress(OSError, ValueError):
                     store.save_portrait(
                         profile_id, hero.name, reencode_webp(_read(zf, entries[name]))
                     )
-                except (OSError, ValueError):
-                    continue  # image invalide : le héros reste affiché sans pose
+            for kind in ICON_KINDS:
+                name = f"images/{image_key(hero.name)}.{kind}.webp"
+                if name in entries and ID_RE.fullmatch(image_key(hero.name)):
+                    try:
+                        icon = reencode_webp(_read(zf, entries[name]), ICON_MAX)
+                        store.save_icon(profile_id, hero.name, kind, icon)
+                    except (OSError, ValueError):
+                        continue  # icône invalide : ignorée
     return profile_id
 
 

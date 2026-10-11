@@ -37,6 +37,16 @@ UI = Path(__file__).resolve().parent / "ui.html"
 MAX_BODY = 400 * 1024 * 1024
 
 
+ANIM_PAGE = Path(__file__).with_name("anim.html")
+ANIM_RE = re.compile(r"/anim/(c\d{4}(?:_[a-z0-9]{1,8}){0,2})")
+# Page du modèle animé : seuls le lecteur et les fichiers publics d'E7 Codex sont autorisés
+ANIM_CSP = (
+    "default-src 'none'; script-src 'unsafe-inline' https://e7codex.com; "
+    "connect-src https://e7codex.com; img-src https://e7codex.com data: blob:; "
+    "style-src 'unsafe-inline'"
+)
+
+
 class AppState:
     def __init__(self, data_root: Path, importer: ScreenshotImporter | None = None):
         self.store = ProfileStore(data_root / "profiles")
@@ -151,6 +161,14 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                         raise ApiError(404, "profil introuvable")
                     page = profile_page(state.store, m[1], state.assets)
                     self._send(200, page.encode(), "text/html; charset=utf-8")
+                elif method == "GET" and (m := ANIM_RE.fullmatch(path)):
+                    html = ANIM_PAGE.read_text(encoding="utf-8").replace("__CODE__", m[1])
+                    self._send(
+                        200,
+                        html.encode(),
+                        "text/html; charset=utf-8",
+                        {"Content-Security-Policy": ANIM_CSP},
+                    )
                 elif path.startswith("/api/"):
                     if not secrets.compare_digest(self.headers.get("X-E7-Token", ""), state.token):
                         raise ApiError(403, "jeton de session invalide")

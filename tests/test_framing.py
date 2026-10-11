@@ -98,3 +98,33 @@ def test_native_aspect_capture_is_never_reframed(tmp_path: Path) -> None:
     importer._ocr = object()  # noqa: SLF001 - aucune lecture ne doit avoir lieu
     phone = Image.new("RGB", (2000, 900))
     assert importer._frame(phone) is phone  # noqa: SLF001
+
+
+def _rank_icon(color: tuple[int, int, int], letters: int) -> Image.Image:
+    """Icône d'empreinte simulée : lettres colorées avec un reflet clair chacune."""
+    from PIL import ImageDraw
+
+    icon = Image.new("RGB", (60, 70), (12, 14, 20))
+    draw = ImageDraw.Draw(icon)
+    draw.ellipse((10, 5, 50, 40), fill=tuple(c // 2 for c in color))
+    for k in range(letters):
+        x = 52 - 12 * (letters - k)
+        draw.rectangle((x, 40, x + 10, 66), fill=color)
+        draw.rectangle((x + 3, 43, x + 4, 44), fill=(255, 235, 235))
+    return icon
+
+
+@pytest.mark.parametrize(
+    ("color", "letters", "rank"),
+    [
+        ((230, 40, 40), 1, "S"),
+        ((230, 40, 40), 2, "SS"),
+        ((230, 40, 40), 3, "SSS"),
+        ((170, 80, 240), 1, "A"),
+    ],
+)
+def test_imprint_rank(color: tuple[int, int, int], letters: int, rank: str) -> None:
+    from e7showcase.vision.imprint import imprint_rank
+
+    assert imprint_rank(_rank_icon(color, letters)) == rank
+    assert imprint_rank(Image.new("RGB", (60, 70), (90, 90, 90))) is None  # cadenas gris

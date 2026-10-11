@@ -12,6 +12,7 @@ Aucune interaction avec le jeu ici : capturer ≠ comprendre.
 from __future__ import annotations
 
 import logging
+import re
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
@@ -229,6 +230,13 @@ class HeroScanner:
                 return str(info.get(self.lang) or info["fr"])
         return candidates[0] if candidates else None
 
+    def _artifact_level(self, icon: Image.Image) -> int | None:
+        """Amélioration de l'artefact : pastille « +21 » en haut à droite du blason."""
+        for line in self.ocr.read_lines(icon):
+            if (m := re.search(r"\+\s*(\d{1,2})", line.text)) and int(m.group(1)) <= 30:
+                return int(m.group(1))
+        return None
+
     def read_detail(self, image: Image.Image) -> Hero:
         self.issues = []
         d = self.regions["detail"]
@@ -254,6 +262,12 @@ class HeroScanner:
             if gear := self.read_gear(image, slot, icons):
                 hero.gear[slot] = gear
         hero.artifact = self._artifact(image)
+        if box := d.get("artifact_icon"):
+            hero.artifact_level = self._artifact_level(self._box(image, box))
+        if box := d.get("imprint_icon"):
+            from e7showcase.vision.imprint import imprint_rank
+
+            hero.imprint = imprint_rank(self._box(image, box)) if hero.imprint_bonus else None
         for issue in self.issues:
             log.warning("%s : %s — %s", hero.name, issue.field, issue.message)
         return hero

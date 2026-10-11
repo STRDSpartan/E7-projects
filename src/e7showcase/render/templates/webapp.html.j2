@@ -81,11 +81,32 @@ dialog::backdrop { background: rgba(4, 6, 12, .72); backdrop-filter: blur(3px); 
   display: flex; align-items: flex-end; justify-content: center; min-height: 420px; overflow: hidden; }
 .media img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
 .media img.portrait { width: 100%; height: 100%; object-fit: cover; object-position: 50% 10%; position: absolute; inset: 0; }
+.media iframe.anim { color-scheme: dark; background: transparent; position: absolute; inset: 0; width: 100%; height: 100%; border: 0; opacity: 0; transition: opacity .5s ease; }
+.media.live iframe.anim { opacity: 1; }
+.media.live img.portrait { opacity: 0; transition: opacity .5s ease; }
 .media .noimg { align-self: center; color: var(--muted); font-size: 13px; padding: 20px; text-align: center; }
 .body { padding: 18px 20px 20px; overflow-y: auto; }
 .head { display: flex; gap: 12px; align-items: flex-start; }
 .head h2 { font-size: 24px; color: var(--el); line-height: 1.15; }
 .head .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.arti { position: relative; flex: none; margin-left: 6px; outline: none; }
+.arti img { width: 58px; height: 64px; object-fit: contain; display: block; }
+.arti .noart { width: 58px; height: 64px; border-radius: 10px; border: 1px solid var(--line-2); display: grid; place-items: center;
+  color: var(--muted); font-size: 11px; text-align: center; }
+.arti .lv { position: absolute; top: -4px; right: -6px; background: #c0392b; color: #fff; font-weight: 700; font-size: 11px;
+  border-radius: 999px; padding: 1px 6px; border: 2px solid var(--panel); }
+.arti .tip { position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); width: 260px; z-index: 5;
+  background: #0d121c; border: 1px solid var(--gold); border-radius: 10px; padding: 10px 12px; font-size: 12.5px;
+  box-shadow: var(--shadow); visibility: hidden; opacity: 0; transition: opacity .15s ease; pointer-events: none; }
+.arti:hover .tip, .arti:focus .tip, .arti:focus-within .tip { visibility: visible; opacity: 1; }
+.arti .tip b { color: var(--gold); font-size: 13.5px; }
+.arti .tip .muted { color: var(--muted); }
+.arti .tip .eff { margin-top: 6px; color: #d7deea; line-height: 1.35; }
+.rank { display: inline-block; min-width: 24px; text-align: center; font-weight: 800; border-radius: 6px; padding: 0 5px; margin-right: 4px;
+  background: rgba(226, 96, 96, .18); color: #ff7b7b; }
+.rank.r-A { background: rgba(170, 110, 255, .18); color: #c39bff; }
+.rank.r-B { background: rgba(80, 150, 255, .18); color: #8fbaff; }
+.rank.r-C { background: rgba(90, 200, 120, .18); color: #8fe0a7; }
 .head .actions { margin-left: auto; display: flex; gap: 6px; flex: none; }
 .iconbtn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--panel); cursor: pointer; font-size: 16px; }
 .iconbtn:hover { border-color: var(--gold); }
@@ -103,6 +124,9 @@ table.stats td:last-child { text-align: right; font-weight: 600; font-variant-nu
 .gear { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-content: start; }
 .piece { background: #10151f; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 13px; min-width: 0; }
 .piece.empty { opacity: .35; }
+.piece .top { display: flex; gap: 8px; align-items: flex-start; }
+.piece .top > div { flex: 1; min-width: 0; }
+.piece .icon { width: 44px; height: 50px; border-radius: 8px; object-fit: cover; flex: none; border: 1px solid var(--line-2); }
 .piece .ph { display: flex; justify-content: space-between; gap: 6px; color: var(--muted); margin-bottom: 4px; font-size: 12.5px; }
 .piece .ph span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 .piece .ph .lvl { white-space: nowrap; flex: none; }
@@ -367,12 +391,17 @@ footer { color: var(--muted); font-size: 12px; text-align: center; padding: 18px
 
   // Fiche détaillée d'un héros
   const dlg = $("detail");
-  function piece(g) {
+  const GEAR_ICONS = ["weapon", "helmet", "armor", "necklace", "ring", "boots"];
+  function piece(g, i, h) {
+    const icon = h ? img(h, GEAR_ICONS[i]) : null;
     return el("div", { class: "piece" + (g.empty ? " empty" : "") },
-      el("div", { class: "ph" }, el("span", { text: g.slot }),
-        el("span", { class: "lvl" }, g.level ? g.level + " " : "", g.enhance ? el("span", { class: "enh", text: "+" + g.enhance }) : "")),
-      g.empty ? null : el("div", { class: "set", text: g.set_name }),
-      el("div", { class: "main", text: g.main }),
+      el("div", { class: "top" },
+        icon ? el("img", { class: "icon", src: icon, alt: "" }) : null,
+        el("div", {},
+          el("div", { class: "ph" }, el("span", { text: g.slot }),
+            icon ? null : el("span", { class: "lvl" }, g.level ? g.level + " " : "", g.enhance ? el("span", { class: "enh", text: "+" + g.enhance }) : "")),
+          g.empty ? null : el("div", { class: "set", text: g.set_name }),
+          el("div", { class: "main", text: g.main }))),
       el("div", { class: "subs" }, g.substats.map(([l, v]) => el("div", {}, el("span", { text: l }), el("span", { text: v })))),
       g.empty ? null : el("div", { class: "gs" }, g.ingame_score ? el("span", { class: "ig", text: "Score " + g.ingame_score }) : null,
                                                   el("span", { text: "GS " + g.score })));
@@ -387,23 +416,47 @@ footer { color: var(--muted); font-size: 12px; text-align: center; padding: 18px
     if (!h) return;
     const media = el("div", { class: "media" });
     const anim = img(h, "anim"), portrait = img(h, "portrait"), art = img(h, "artifact");
-    if (anim) media.append(el("img", { src: anim, alt: `Modèle animé de ${h.name}` }));
+    if (DATA.live_anim && h.anim_code) {
+      // modèle animé rendu en direct (cadre isolé) ; la pose reste affichée en attendant
+      if (portrait) media.append(el("img", { class: "portrait", src: portrait, alt: `Illustration de ${h.name}` }));
+      const frame = el("iframe", { class: "anim", sandbox: "allow-scripts", title: `Modèle animé de ${h.name}`,
+                                   src: "/anim/" + encodeURIComponent(h.anim_code) });
+      const onMsg = (e) => {
+        if (e.source !== frame.contentWindow || !e.data || e.data.code !== h.anim_code) return;
+        if (e.data.e7anim === "ready") media.classList.add("live");
+        if (e.data.e7anim === "failed") frame.remove();
+      };
+      addEventListener("message", onMsg);
+      dlg.addEventListener("close", () => removeEventListener("message", onMsg), { once: true });
+      media.append(frame);
+    } else if (anim) media.append(el("img", { src: anim, alt: `Modèle animé de ${h.name}` }));
     else if (portrait) media.append(el("img", { class: "portrait", src: portrait, alt: `Illustration de ${h.name}` }));
     else media.append(el("p", { class: "noimg", text: "Pas d'illustration locale (e7showcase assets sync)." }));
     const list = fromGroup ? groups(visible).find((g) => g.key === fromGroup)?.list || visible : (visible.length ? visible : heroes);
     const nav = (d) => { const j = (list.findIndex((x) => x.id === h.id) + d + list.length) % list.length; openHero(list[j].id, fromGroup); };
     const info = el("div", { class: "info" },
-      h.artifact ? el("div", { class: "artifact" }, art ? el("img", { src: art, alt: "" }) : null,
-                      el("span", {}, "Artefact : ", el("b", { text: h.artifact }))) : null,
-      h.imprint_bonus ? el("div", {}, "Empreinte : ", el("b", { text: h.imprint_bonus })) : null,
+      h.imprint_bonus ? el("div", {}, "Empreinte : ",
+        h.imprint ? el("span", { class: "rank r-" + h.imprint[0], title: "Rang d'empreinte", text: h.imprint }) : null,
+        el("b", { text: h.imprint_bonus })) : null,
       h.gear_score_avg ? el("div", {}, "Score moyen en jeu : ", el("span", { class: "score", text: h.gear_score_avg })) : null,
-      el("div", {}, "Gear score (Fribbels) : ", el("span", { class: "score", text: h.total_score })));
+      el("div", {}, "Gear score : ", el("span", { class: "score", text: h.total_score })));
+    const ai = h.artifact_info || {};
+    const artifact = h.artifact ? el("div", { class: "arti", tabindex: "0", "aria-label": "Artefact : " + h.artifact },
+      art ? el("img", { src: art, alt: "" }) : el("div", { class: "noart", text: "Artefact" }),
+      h.artifact_level != null ? el("span", { class: "lv", text: "+" + h.artifact_level }) : null,
+      el("div", { class: "tip", role: "tooltip" },
+        el("b", { text: h.artifact }),
+        el("div", { class: "muted", text: [ai.stars ? "★".repeat(ai.stars) : "", h.artifact_level != null ? "Amélioration +" + h.artifact_level : "",
+                                          ai.role ? "Classe : " + ai.role : ""].filter(Boolean).join(" · ") }),
+        ai.stats ? el("div", { class: "eff" }, Object.entries(ai.stats).map(([k, v]) => el("div", { text: k + " : " + v }))) : null,
+        el("div", { class: "eff", text: ai.effect || "Statistiques et effet : données pas encore disponibles." }))) : null;
     const sheet = el("article", { class: "sheet", style: `--el:${h.color}` },
       media,
       el("div", { class: "body" },
         el("div", { class: "head" },
           el("div", {}, el("h2", { id: "d-name", text: h.name }),
             el("div", { class: "sub", text: [GUILD ? "👤 " + owner(h) : "", h.level ? "Niv. " + h.level : "", h.element, h.role].filter(Boolean).join(" · ") })),
+          artifact,
           el("div", { class: "actions" },
             fromGroup ? el("button", { class: "iconbtn back", type: "button", "aria-label": "Retour à la comparaison", text: "↩",
                                        onclick: () => openGroup(fromGroup) }) : null,
@@ -414,7 +467,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; padding: 18px
         pills(h),
         el("div", { class: "cols" },
           el("div", {}, el("table", { class: "stats" }, el("tbody", {}, h.stats.map(([l, v]) => el("tr", {}, el("td", { text: l }), el("td", { text: v }))))), info),
-          el("div", { class: "gear" }, h.gear.map(piece)))));
+          el("div", { class: "gear" }, h.gear.map((g, i) => piece(g, i, h))))));
     showDialog(sheet, encodeURIComponent(h.key) + (GUILD ? "@" + encodeURIComponent(owner(h)) : ""));
   }
 

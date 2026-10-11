@@ -230,3 +230,34 @@ def test_closing_window_really_ends_the_process(monkeypatch: pytest.MonkeyPatch)
     monkeypatch.setattr(launcher.os, "_exit", fake_exit)
     launcher._quit(FakeServer())  # noqa: SLF001
     assert "close" in calls and calls[-1] == "exit 0"
+
+
+def test_item_icons_follow_the_hero_into_the_vitrine(tmp_path: Path) -> None:
+    store = ProfileStore(tmp_path / "profiles")
+    pid = store.create("Spartan")
+    icons = {"weapon": pose((200, 40, 40)), "artifact": pose((40, 200, 40))}
+    store.add_hero(pid, Hero(name="Kise", code="c1006", artifact_level=27), pose(), icons)
+    rid = import_vitrine(ProfileStore(tmp_path / "ailleurs"), export_profile(store, pid))
+    other = ProfileStore(tmp_path / "ailleurs")
+    assert other.icon_bytes(rid, "Kise", "weapon") and other.icon_bytes(rid, "Kise", "artifact")
+    assert other.icon_bytes(rid, "Kise", "boots") is None
+    payload = profile_payload(other, rid)
+    hero = payload["heroes"][0]
+    assert payload["live_anim"] and hero["anim_code"] == "c1006" and hero["artifact_level"] == 27
+    assert hero["images"]["weapon"] and hero["images"]["artifact"] and not hero["images"]["boots"]
+    with pytest.raises(KeyError):
+        store.icon_path(pid, "Kise", "../evil")
+    store.remove_hero(pid, "Kise")
+    assert store.icon_bytes(pid, "Kise", "weapon") is None
+
+
+def test_anim_page_is_locked_down(app: Any) -> None:
+    _, base = app
+    with urllib.request.urlopen(base + "/anim/c5147_1") as res:
+        csp = res.headers["Content-Security-Policy"]
+        page = res.read().decode()
+    assert '"c5147_1"' in page and "default-src 'none'" in csp and "https://e7codex.com" in csp
+    for bad in ("/anim/evil", "/anim/c1006%22%3E", "/anim/c1006/../x"):
+        with pytest.raises(urllib.error.HTTPError) as err:
+            urllib.request.urlopen(base + bad)
+        assert err.value.code == 404
