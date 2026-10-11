@@ -5,15 +5,737 @@
    "skills": {
     "s2": {
      "source": "Cannot receive recover Health effects and damage sharing effects.",
-     "effects_add": [{"type": "static_debuff", "effect": "unhealable"}]
+     "effects_add": [
+      {
+       "type": "static_debuff",
+       "effect": "unhealable"
+      }
+     ]
     }
    }
   },
   "westwind_executioner_schuri": {
    "skills": {
-    "s1": {"source": "When attacking, cannot trigger a critical hit.", "set": {"no_crit": true}},
-    "s1_bis": {"source": "When attacking, cannot trigger a critical hit.", "set": {"no_crit": true}},
-    "s3": {"source": "When attacking, cannot trigger a critical hit.", "set": {"no_crit": true}}
+    "s1": {
+     "source": "When attacking, cannot trigger a critical hit.",
+     "set": {
+      "no_crit": true
+     }
+    },
+    "s1_bis": {
+     "source": "When attacking, cannot trigger a critical hit.",
+     "set": {
+      "no_crit": true
+     }
+    },
+    "s3": {
+     "source": "When attacking, cannot trigger a critical hit.",
+     "set": {
+      "no_crit": true
+     }
+    }
+   }
+  },
+  "school_nurse_yulha": {
+   "lot": 1,
+   "skills": {
+    "s2": {
+     "source": "At the start of an ally's turn, dispels one debuff from the target and recovers Health proportional to the caster's max Health.",
+     "set": {
+      "trigger": {
+       "event": "ally_turn_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "target",
+       "all": false
+      },
+      {
+       "type": "heal",
+       "target": "target",
+       "stat": "hp",
+       "ratio": 0.05,
+       "estimated": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Dispels all debuffs from an ally except for the caster before fully recovering Health. Grants superhumanization to the target for 3 turns and increases Combat Readiness by 50%. When the target is already dead, revives them with 100% Health.",
+     "effects": [
+      {
+       "type": "revive_ally",
+       "ratio": 1.0
+      },
+      {
+       "type": "cleanse",
+       "target": "last",
+       "all": true
+      },
+      {
+       "type": "buff",
+       "effect": "superhuman",
+       "target": "last",
+       "turns": 3
+      },
+      {
+       "type": "gauge",
+       "amount": 50,
+       "target": "last",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "estelle": {
+   "lot": 1,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy, inflicting up to 10% injuries and recovering the caster's Health. When it is not the caster's turn, damage dealt and injuries are doubled.",
+     "set": {
+      "off_turn_mult": 2
+     },
+     "effects": [
+      {
+       "type": "heal",
+       "target": "self",
+       "stat": "hp",
+       "ratio": 0.05,
+       "estimated": true
+      },
+      {
+       "type": "injury",
+       "max": 0.1,
+       "estimated": false
+      }
+     ]
+    },
+    "s1_wind": {
+     "source": "After attacking, when Fighting Spirit is full, consumes all Fighting Spirit to activate Wind of Protection: grants a barrier (proportional to the caster's max Health) to all allies for 2 turns, and increases Combat Readiness of the caster by 35%. (s2) At the start of the first battle, gains 50 Fighting Spirit.",
+     "set": {
+      "trigger": {
+       "event": "resource",
+       "chance": 1.0,
+       "resource": {
+        "kind": "spirit",
+        "need": 100,
+        "start": 50,
+        "gain": 10,
+        "on": "attacked",
+        "estimated": true
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "barrier",
+       "target": "allies",
+       "stat": "hp",
+       "ratio": 0.2,
+       "turns": 2,
+       "estimated": false
+      },
+      {
+       "type": "gauge",
+       "amount": 35,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2": {
+     "source": "Grants 40% damage sharing from the damage received by the ally. After an ally except for the caster is attacked, when the damage suffered is 20% or more of max Health, dispels all debuffs and counterattacks.",
+     "set": {
+      "trigger": {
+       "event": "ally_attacked",
+       "chance": 1.0,
+       "counter": true
+      }
+     },
+     "effects": [
+      {
+       "type": "static_share",
+       "value": 0.4
+      },
+      {
+       "type": "cleanse",
+       "target": "self",
+       "all": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks the enemy with a shield, inflicting up to 20% injuries. (La réduction de recharge n'existe qu'en âme brûlée.)",
+     "effects": [
+      {
+       "type": "heal",
+       "target": "self",
+       "stat": "hp",
+       "ratio": 0.05,
+       "estimated": true
+      },
+      {
+       "type": "injury",
+       "max": 0.2,
+       "estimated": false
+      }
+     ]
+    }
+   }
+  },
+  "rhianna_and_luciella": {
+   "lot": 1,
+   "skills": {
+    "s1": {
+     "source": "(Rhianna) inflicting erosion for 2 turns. A critical hit will detonate erosion effects. (Luciella) After granting increased Attack to the caster for 1 turn, attacks the enemy and absorbs some of the damage dealt as health. (Érosion non définie par E7GW : non simulée.)",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "self",
+       "turns": 1
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Luciella attacks all enemies and ignores damage sharing. Rhianna dispels two buffs from all enemies, before inflicting fear for 1 turn.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "debuff",
+       "effect": "fear",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
+    }
+   }
+  },
+  "boss_arunka": {
+   "lot": 1,
+   "skills": {
+    "s2": {
+     "source": "After being attacked, increases Combat Readiness by 20%.",
+     "set": {
+      "trigger": {
+       "event": "attacked",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s2_stand": {
+     "source": "At the start of battle, when the caster is in the front row, grants Ferocious Stand for 1 turn (allies except for the bearer cannot be selected as a target).",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0,
+       "condition": {
+        "kind": "front_row"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "ferocious",
+       "target": "self",
+       "turns": 1
+      }
+     ]
+    },
+    "s2_stand_end": {
+     "source": "At the end of the turn, when the caster is in the front row, grants Ferocious Stand for 1 turn.",
+     "set": {
+      "trigger": {
+       "event": "turn_end",
+       "chance": 1.0,
+       "condition": {
+        "kind": "front_row"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "ferocious",
+       "target": "self",
+       "turns": 1
+      }
+     ]
+    }
+   }
+  },
+  "lady_of_the_scales": {
+   "lot": 1,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy and has a 75% chance to inflict fear for 1 turn, before recovering Health of all allies proportional to the target's max Health.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "fear",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      },
+      {
+       "type": "heal",
+       "target": "allies",
+       "stat": "hp",
+       "ratio": 0.05,
+       "estimated": true
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the start of battle, grants offering to the foremost ally (70% damage sharing of the damage received by all allies; immortality once upon lethal damage).",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "offering",
+       "target": "front",
+       "turns": 99
+      }
+     ]
+    },
+    "s2_death": {
+     "source": "When the ally granted offering dies, recovers Health of all allies by 50%.",
+     "set": {
+      "trigger": {
+       "event": "death",
+       "chance": 1.0,
+       "condition": {
+        "kind": "other_has",
+        "buff": "offering"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "heal",
+       "target": "allies",
+       "stat": "max",
+       "ratio": 0.5
+      }
+     ]
+    },
+    "s3": {
+     "source": "Dispels all debuffs from all allies before increasing Combat Readiness by 25%. Consumes 20% of the current Health of the ally granted offering, granting abundance to all other allies for 2 turns (after attacking, 2,000 additional damage).",
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": true
+      },
+      {
+       "type": "gauge",
+       "amount": 25,
+       "target": "allies",
+       "chance": 1.0
+      },
+      {
+       "type": "buff",
+       "effect": "abundance",
+       "target": "allies",
+       "turns": 2
+      }
+     ]
+    }
+   }
+  },
+  "arbiter_vildred": {
+   "lot": 1,
+   "skills": {
+    "s1": {
+     "source": "Rapidly attacks two enemies with a swordstorm, with a 50% chance to decrease their Combat Readiness by 15%.",
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": -15,
+       "target": "target",
+       "chance": 0.5
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks all enemies, decreasing Hit Chance for 2 turns. When the enemy is defeated with this skill, cooldown does not occur.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0,
+       "on_kill": true
+      }
+     ]
+    }
+   }
+  },
+  "shepherd_of_the_dark_diene": {
+   "lot": 1,
+   "skills": {
+    "s1": {
+     "source": "After inflicting rupture on the enemy for 1 turn, attacks the enemy. When the caster is granted immortality, triggers a Dual Attack from the ally with the highest Attack.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "rupture",
+       "target": "target",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "dual",
+       "if_buff": "immortal"
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the start of battle, grants immortality for 1 turn. When granted immortality, increases Effect Resistance by 200%.",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "immortal",
+       "target": "self",
+       "turns": 1
+      },
+      {
+       "type": "static_stat",
+       "stat": "effect_res",
+       "value": 200,
+       "while": "immortal"
+      }
+     ]
+    },
+    "s2_dark_moon": {
+     "source": "When someone uses a Soulburn, dispels all debuffs from the caster before activating Dark Moon: dispels two buffs from all enemies, before granting immortality to the caster for 3 turns and increasing Combat Readiness by 35%.",
+     "set": {
+      "trigger": {
+       "event": "soulburn",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "self",
+       "all": true
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "buff",
+       "effect": "immortal",
+       "target": "self",
+       "turns": 3
+      },
+      {
+       "type": "gauge",
+       "amount": 35,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "perfumer_byblis": {
+   "lot": 1,
+   "skills": {
+    "s2": {
+     "source": "When an ally's Health is 50% or less after being attacked, activates La Vie en Rose: dispels two debuffs from all allies and recovers Health before granting a barrier for 2 turns (proportional to the caster's max Health). (Parfum persistant non défini par E7GW : non simulé.)",
+     "set": {
+      "trigger": {
+       "event": "ally_attacked",
+       "chance": 1.0,
+       "condition": {
+        "kind": "target_hp_below",
+        "value": 0.5
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": false
+      },
+      {
+       "type": "cleanse",
+       "target": "allies",
+       "all": false
+      },
+      {
+       "type": "heal",
+       "target": "allies",
+       "stat": "hp",
+       "ratio": 0.1,
+       "estimated": true
+      },
+      {
+       "type": "barrier",
+       "target": "allies",
+       "stat": "hp",
+       "ratio": 0.1,
+       "turns": 2,
+       "estimated": false
+      }
+     ]
+    },
+    "s3": {
+     "source": "After granting increased Effectiveness to the caster for 3 turns, with a 100% chance to inflict two venom effects on all enemies for 2 turns. At the end of the turn, detonates venom effects inflicted on the target.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "eff_up",
+       "target": "self",
+       "turns": 3
+      },
+      {
+       "type": "debuff",
+       "effect": "venom",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "venom",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "venom"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "haru": {
+   "lot": 1,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with an anchor, and grants a barrier to all allies for 1 turn. (Le tour supplémentaire n'appartient qu'à Power Strike.)",
+     "effects": [
+      {
+       "type": "barrier",
+       "target": "allies",
+       "stat": "hp",
+       "ratio": 0.09,
+       "turns": 1,
+       "estimated": false
+      }
+     ]
+    },
+    "s1_power": {
+     "source": "At the start of the turn, when Focus is full, changes to Power Strike (Consume 5 Focus): attacks the enemy, and grants an extra turn to the caster. Penetrates the target's Defense. (s2) At the start of battle, gains 3 Focus. (Gain de Concentration non précisé : +1 par tour, estimé.)",
+     "set": {
+      "rate": 1,
+      "pow": 1,
+      "enhance": [],
+      "pen": 1,
+      "flat": {
+       "caster_MaxHP": 0.1
+      },
+      "aoe": false,
+      "trigger": {
+       "event": "resource",
+       "chance": 1.0,
+       "resource": {
+        "kind": "focus",
+        "need": 5,
+        "start": 3,
+        "gain": 1,
+        "on": "turn_start",
+        "estimated": true
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the start of battle, gains 3 Focus, and has a 70% (max 100%) chance to grant indomitable to all allies for 1 turn.",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "indomitable",
+       "target": "allies",
+       "turns": 1
+      }
+     ]
+    },
+    "s2_reset": {
+     "source": "At the start of the turn, when the caster has a buff, dispels all debuffs from the caster and resets skill cooldown of Anchor Shot.",
+     "set": {
+      "trigger": {
+       "event": "turn_start",
+       "chance": 1.0,
+       "condition": {
+        "kind": "has_buff"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "cleanse",
+       "target": "self",
+       "all": true
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks the enemy with an anchor, absorbing some of the damage dealt as Health, and granting morale to all allies for 2 turns. (Compétence active : E7GW n'indique pas de recharge, valeur par défaut.)",
+     "set": {
+      "passive": false
+     }
+    }
+   }
+  },
+  "kawerik": {
+   "lot": 1,
+   "skills": {
+    "s2": {
+     "source": "Attacks the enemy in a dimensional corridor, with a 75% (max 100%) chance each to dispel two buffs before fully increasing skill cooldowns. (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false
+     },
+     "effects": [
+      {
+       "type": "strip",
+       "target": "target",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "target",
+       "all": false
+      },
+      {
+       "type": "cooldown",
+       "amount": 99,
+       "target": "target",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks all enemies with an explosion and grants increased Speed to the caster for 2 turns. (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false,
+      "trigger": null
+     }
+    },
+    "s1_subspace": {
+     "source": "When the caster is granted mana field (Fighting Spirit 10 or more), consumes 10 Fighting Spirit to attack a random enemy with the same skill as an extra attack. (s3) At the start of the first battle, gains maximum Fighting Spirit.",
+     "set": {
+      "rate": 1.2,
+      "pow": 1,
+      "enhance": [],
+      "pen": 0,
+      "aoe": false,
+      "trigger": {
+       "event": "resource",
+       "chance": 1.0,
+       "resource": {
+        "kind": "spirit",
+        "need": 10,
+        "start": 100,
+        "gain": 0,
+        "cost": 10,
+        "on": "after_attack"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 15,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    }
    }
   }
  }

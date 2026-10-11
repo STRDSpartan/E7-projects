@@ -365,7 +365,7 @@ def test_hero_mechanics_in_battle() -> None:
         [foe],
     )
     battle.dots(foe)
-    assert foe.hp == 10**6 - 1200  # 60 % de l'attaque du lanceur
+    assert foe.hp == 10**6 - 700  # 70 % de l'attaque, 70 % de la défense ignorée
     foe.cap = 0.0005  # plafond : 500 PV par coup
     before = foe.hp
     battle.hit(me, pyro.skills["s1"], foe)
@@ -389,6 +389,7 @@ def test_hero_mechanics_rules_are_valid_and_applied() -> None:
     rules = load("hero_mechanics")["heroes"]
     for key, rule in rules.items():
         assert key in heroes, key
+        assert set(rule) <= {"skills", "lot"}
         for sid, change in rule["skills"].items():
             assert change.get("source"), f"{key} {sid} : texte du jeu manquant"
             assert set(change) <= {"source", "set", "effects", "effects_add"}
@@ -430,7 +431,7 @@ def test_generic_mechanics_in_battle() -> None:
     foe.debuffs["burn"], foe.dot_atk["burn"] = 2, 2000
     hp = foe.hp
     battle.detonate(_skill(1.0, {"type": "detonate", "what": ["burn"]}), [foe])
-    assert hp - foe.hp == pytest.approx(2400) and "burn" not in foe.debuffs
+    assert hp - foe.hp == pytest.approx(1400) and "burn" not in foe.debuffs
     # dégâts fixes par débuff
     foe.injury = 0
     hp = foe.hp
@@ -446,3 +447,69 @@ def test_generic_mechanics_in_battle() -> None:
     foe.hp = 10
     battle.hit(me, _skill(1.0, {"type": "extinction"}), foe)
     assert not foe.alive and foe.extinct
+
+
+def _hero(name: str, **kw: float) -> Fighter:
+    data = hero_skills(name)
+    assert data is not None, name
+    stats = {"effectiveness": 80.0, "effect_res": 60.0, **kw}
+    return Fighter(name, 3000, 18000, 1300, 230, 60, 250, data["element"], data["skills"], **stats)
+
+
+LOT1 = [
+    "School Nurse Yulha",
+    "Estelle",
+    "Rhianna and Luciella",
+    "Boss Arunka",
+    "Lady of the Scales",
+    "Arbiter Vildred",
+    "Shepherd of the Dark Diene",
+    "Perfumer Byblis",
+    "Haru",
+    "Kawerik",
+]
+
+
+def test_lot1_arena_heroes_have_rules_and_fight() -> None:
+    rules = load("hero_mechanics")["heroes"]
+    assert sum(1 for r in rules.values() if r.get("lot") == 1) == 10
+    teams = [[_hero(n) for n in LOT1[:4]], [_hero(n) for n in LOT1[4:8]]]
+    res = simulate(teams[0], teams[1], runs=50)
+    assert sum(res["win_rate"]) + res["draws"] == pytest.approx(100)
+    duo = simulate([_hero("Perfumer Byblis"), _hero("Haru")], [_hero("Kawerik")], runs=20)
+    assert duo["avg_actions"] > 0
+
+
+def test_lot1_unique_mechanics() -> None:
+    yulha, arunka, foe = _hero("School Nurse Yulha"), _hero("Boss Arunka"), _hero("Estelle")
+    battle = _Battle([arunka, yulha], [foe], random.Random(1), {}, Options(), True)
+    tank, nurse, enemy = battle.units
+    # posture féroce : seule Boss Arunka peut être ciblée
+    tank.buffs["ferocious"] = 1
+    assert battle.main_target(enemy, [tank, nurse]) is tank
+    # infirmière : ressuscite l'allié mort avec 100 % de PV et la surhumanisation
+    tank.hp = 0
+    for effect in yulha.skills["s3"]["effects"]:
+        battle.apply(nurse, effect, [])
+    assert tank.hp == tank.max_hp == 2 * arunka.hp and "superhuman" in tank.buffs
+    # Estelle : 40 % de partage des dégâts reçus par ses alliés
+    battle2 = _Battle([foe, _hero("Haru")], [arunka], random.Random(1), {}, Options(), True)
+    est, mate, atk = battle2.units
+    assert est.share == 0.4
+    hp = est.hp
+    battle2.hit(atk, arunka.skills["s1"], mate)
+    assert est.hp < hp  # Estelle a pris sa part
+    # Diene : Lune noire quand quelqu'un brûle son âme ; Kawerik : attaques via l'Esprit
+    diene = _Battle(
+        [_hero("Shepherd of the Dark Diene")], [arunka], random.Random(1), {}, Options(), True
+    )
+    shep, other = diene.units
+    diene.fire(shep, "soulburn", other)
+    assert shep.buffs.get("immortal") == 3
+    kaw = _Battle([_hero("Kawerik")], [arunka], random.Random(1), {}, Options(), True)
+    k, _ = kaw.units
+    assert k.stacks["s1_subspace"] == 100
+    kaw.fire(k, "after_attack")
+    assert k.stacks["s1_subspace"] == 90
+    # l'attaque double de Boss Arunka n'existe qu'en âme brûlée
+    assert not any(e["type"] == "dual" for e in arunka.skills["s1"]["effects"])

@@ -29,6 +29,10 @@ BUFFS = {
     "Increase Attack (Greater)": "atk_up_great",
     "Increase Evasion": "evasion",
     "Skill Nullifier": "nullifier",
+    "Increase Effectiveness": "eff_up",
+    "Indomitable (Undispellable)": "indomitable",
+    "Superhumanization (Undispellable)": "superhuman",
+    "Morale": "morale",
 }
 DEBUFFS = {
     "Decrease Defense": "def_down",
@@ -44,6 +48,11 @@ DEBUFFS = {
     "Poison": "poison",
     "Decrease Hit Chance": "hit_down",
     "Cannot Buff": "no_buff",
+    "Fear": "fear",
+    "Bind": "bind",
+    "Rupture": "rupture",
+    "Seal": "seal",
+    "Venom": "venom",
 }
 KEYWORDS = {
     "atk_up": r"attack",
@@ -71,6 +80,15 @@ KEYWORDS = {
     "poison": r"poison",
     "hit_down": r"hit chance",
     "no_buff": r"unable to be buffed|cannot be buffed|buff",
+    "eff_up": r"effectiveness",
+    "indomitable": r"indomitable",
+    "superhuman": r"superhuman",
+    "morale": r"morale",
+    "fear": r"fear",
+    "bind": r"bind",
+    "rupture": r"rupture",
+    "seal": r"seal",
+    "venom": r"venom",
 }
 # coefficients types quand le texte ne chiffre pas le montant (signalés comme estimés)
 HEAL_DEFAULT = {"hp": 0.15, "atk": 0.6, "def": 0.8}
@@ -256,7 +274,7 @@ def parse_effects(
                     "on_kill": bool(re.search(r"defeat|kill", low)),
                 }
             )
-    if "Dual Attack" in tagset:
+    if "Dual Attack" in tagset and "dual attack" in text.lower():  # sinon : âme brûlée
         effects.append({"type": "dual"})
     for tag, sign in (("Decrease Skill Cooldown (Self)", -1), ("Increase Skill Cooldown", 1)):
         if tag not in tagset:
@@ -292,6 +310,10 @@ def parse_effects(
         effects.append({"type": "damage_cap", "value": int(m.group(1)) / 100 if m else 0.5})
     if "Immune to Debuffs Which Prevent Movement" in tagset:
         effects.append({"type": "static_immune", "effects": ["stun", "sleep"]})
+    if "Damage Share" in tagset:
+        m = re.search(r"(\d+)% damage sharing", text.lower())
+        if m:
+            effects.append({"type": "static_share", "value": int(m.group(1)) / 100})
     if "Injury" in tagset:
         m = re.search(r"up to (\d+)% injur", text.lower())
         effects.append(

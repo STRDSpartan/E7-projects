@@ -105,6 +105,29 @@ et obligatoirement `source` (le texte du jeu traduit). Effets disponibles :
 permanents). Un test vérifie chaque règle (héros existant, types connus, source présente).
 Exemples : Aki (ne peut pas être soignée), Schuri Exécuteur du Vent d'Ouest (pas de critique).
 
+Définitions des effets : infobulles officielles des pages E7GW (`data-fx-desc`). Elles fixent
+saignement (40 % de l'attaque) et brûlure (70 %) en ignorant 70 % de la défense, venin (10 % des
+PV max + blessures), peur (pas d'action, 40 % de chances de disparaître au début du tour),
+entrave (ni contre-attaque, ni attaque double, ni attaque supplémentaire hors de son tour),
+sceau (passifs inactifs), rupture (dégâts additionnels ∝ PV max, part estimée à 5 %),
+surhumanisation (PV max et vitesse +100 %), indomptable (défense et résistance +30 %), moral
+(+10 % de dégâts), efficacité + (+50), posture féroce (seul le porteur peut être ciblé),
+offrande (70 % de partage des dégâts des alliés, immortalité une fois), abondance (+2 000
+dégâts après une attaque), partage de dégâts. Autres nouveautés du moteur : attaques sur
+plusieurs cibles, résurrection d'un allié, événements « début du tour d'un allié » et « âme
+brûlée utilisée », conditions de position (premier emplacement) et de buff, jauges à coût
+partiel, contre-attaque quand un allié est attaqué, dégâts doublés hors de son tour.
+
+#### Lots de héros (classement RTA Champion+, epic7rtastats.com, 3–10 oct. 2026)
+- **Lot 1** (fait) : School Nurse Yulha, Estelle, Rhianna and Luciella, Boss Arunka, Lady of
+  the Scales, Arbiter Vildred, Shepherd of the Dark Diene, Perfumer Byblis, Haru, Kawerik.
+  Non simulés pour eux : l'érosion de Rhianna (non définie par E7GW), le parfum persistant de
+  Byblis, la recopie de jauge de la Dame de la Balance, le seuil « 20 % des PV » de la
+  contre-attaque d'Estelle, les gains d'attaque ∝ PV de l'infirmière Yulha ; montants de soin
+  non chiffrés par le jeu marqués `estimated`.
+- **Lot 2** (à faire) : Zio, Renoa, Eye of the Abyss Fumyr, Belian, Monarch of the Sword
+  Iseria, Notos, Tidal Rift Elvira, Rinak, Frieren, Aubade Ludwig.
+
 **Non simulés** : mécaniques uniques non encore décrites dans `hero_mechanics.json` (balles de
 Renoa, vitesse fixe de Harsetti, marques...), Bombes, partage de dégâts, transferts, artefacts,
 bonus de stats permanents des passifs (déjà inclus dans les stats affichées en jeu).

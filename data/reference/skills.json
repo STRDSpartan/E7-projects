@@ -712,7 +712,8 @@
        "target": "self",
        "turns": 2
       }
-     ]
+     ],
+     "ignore_share": true
     },
     "s2": {
      "rate": null,
@@ -2930,6 +2931,12 @@
        "effect": "immunity",
        "target": "allies",
        "turns": 3
+      },
+      {
+       "type": "buff",
+       "effect": "eff_up",
+       "target": "allies",
+       "turns": 3
       }
      ],
      "trigger": {
@@ -3124,7 +3131,8 @@
      "name": "Sweep",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "targets": 2
     },
     "s3": {
      "rate": 1.04,
@@ -3318,7 +3326,8 @@
       {
        "type": "extinction"
       }
-     ]
+     ],
+     "ignore_share": true
     },
     "s2": {
      "rate": null,
@@ -3490,7 +3499,8 @@
        "chance": 0.5,
        "on_kill": false
       }
-     ]
+     ],
+     "targets": 2
     },
     "s2": {
      "rate": 0.7,
@@ -4681,7 +4691,8 @@
        "chance": 1.0,
        "ignore_resist": false
       }
-     ]
+     ],
+     "targets": 2
     },
     "s2": {
      "rate": 1.1,
@@ -5524,6 +5535,12 @@
        "effect": "cc_up",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "buff",
+       "effect": "eff_up",
+       "target": "self",
+       "turns": 1
       }
      ],
      "trigger": {
@@ -5971,6 +5988,14 @@
      "cooldown": 5,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "bind",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
       {
        "type": "strip",
        "target": "target",
@@ -6519,9 +6544,6 @@
        "turns": 1,
        "chance": 0.6,
        "ignore_resist": false
-      },
-      {
-       "type": "dual"
       }
      ]
     },
@@ -7060,7 +7082,8 @@
      "cooldown": 3,
      "passive": false,
      "effects": [],
-     "soulburn_cost": 10
+     "soulburn_cost": 10,
+     "ignore_share": true
     },
     "s2": {
      "rate": null,
@@ -7864,7 +7887,8 @@
      "name": "Divine Bolt",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "targets": 2
     },
     "s2": {
      "rate": 0.9,
@@ -8087,7 +8111,8 @@
        "estimated": false
       }
      ],
-     "soulburn_cost": 10
+     "soulburn_cost": 10,
+     "ignore_share": true
     }
    },
    "barrier": {
@@ -8404,7 +8429,8 @@
        "ratio": 0.6,
        "estimated": true
       }
-     ]
+     ],
+     "targets": 2
     },
     "s3": {
      "rate": 1,
@@ -9530,6 +9556,12 @@
        "effect": "evasion",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "buff",
+       "effect": "eff_up",
+       "target": "self",
+       "turns": 1
       }
      ],
      "aoe": false
@@ -10396,6 +10428,12 @@
      "passive": true,
      "effects": [
       {
+       "type": "buff",
+       "effect": "indomitable",
+       "target": "self",
+       "turns": 3
+      },
+      {
        "type": "extra_turn",
        "chance": 1.0,
        "on_kill": false
@@ -10788,6 +10826,7 @@
       }
      ],
      "soulburn_cost": 10,
+     "ignore_share": true,
      "full_cd_start": true
     },
     "s2": {
@@ -10920,6 +10959,12 @@
      "passive": false,
      "effects": [
       {
+       "type": "buff",
+       "effect": "eff_up",
+       "target": "allies",
+       "turns": 2
+      },
+      {
        "type": "gauge",
        "amount": 20,
        "target": "allies",
@@ -10939,6 +10984,14 @@
       {
        "type": "debuff",
        "effect": "sleep",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "venom",
        "target": "enemies",
        "turns": 1,
        "chance": 1.0,
@@ -12540,7 +12593,8 @@
      "name": "I'll Show You Our Difference!",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "ignore_share": true
     }
    },
    "barrier": {
@@ -13176,6 +13230,12 @@
      "passive": true,
      "effects": [
       {
+       "type": "buff",
+       "effect": "indomitable",
+       "target": "allies",
+       "turns": 2
+      },
+      {
        "type": "injury",
        "max": 0.15,
        "estimated": true
@@ -13533,6 +13593,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "static_share",
+       "value": 0.4
+      },
       {
        "type": "cleanse",
        "target": "ally",
@@ -15581,6 +15645,14 @@
      "passive": false,
      "effects": [
       {
+       "type": "debuff",
+       "effect": "seal",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
+      {
        "type": "extra_turn",
        "chance": 1.0,
        "on_kill": false
@@ -16459,6 +16531,12 @@
      "passive": true,
      "effects": [
       {
+       "type": "buff",
+       "effect": "morale",
+       "target": "allies",
+       "turns": 2
+      },
+      {
        "type": "lifesteal",
        "ratio": 0.2,
        "estimated": true
@@ -16473,6 +16551,12 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "buff",
+       "effect": "indomitable",
+       "target": "allies",
+       "turns": 1
+      },
       {
        "type": "cooldown",
        "amount": -99,
@@ -20886,6 +20970,14 @@
      "passive": false,
      "effects": [
       {
+       "type": "debuff",
+       "effect": "fear",
+       "target": "allies",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      },
+      {
        "type": "heal",
        "target": "allies",
        "stat": "hp",
@@ -21278,6 +21370,7 @@
        "turns": 3
       }
      ],
+     "ignore_share": true,
      "aoe": false
     }
    },
@@ -21830,6 +21923,14 @@
      "cooldown": 3,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "bind",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
       {
        "type": "gauge",
        "amount": 25,
@@ -24207,7 +24308,8 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "targets": 2
     },
     "s2": {
      "rate": 0.75,
@@ -24347,6 +24449,12 @@
       {
        "type": "buff",
        "effect": "atk_up",
+       "target": "allies",
+       "turns": 2
+      },
+      {
+       "type": "buff",
+       "effect": "eff_up",
        "target": "allies",
        "turns": 2
       },
@@ -25161,6 +25269,14 @@
      "passive": false,
      "effects": [
       {
+       "type": "debuff",
+       "effect": "fear",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
+      {
        "type": "heal",
        "target": "self",
        "stat": "atk",
@@ -25656,6 +25772,14 @@
        "effect": "spd_up",
        "target": "self",
        "turns": 2
+      },
+      {
+       "type": "debuff",
+       "effect": "seal",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
       }
      ]
     },
@@ -25677,6 +25801,14 @@
      "cooldown": 4,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "bind",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
       {
        "type": "strip",
        "target": "enemies",
@@ -26066,6 +26198,14 @@
      "cooldown": 4,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "seal",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
       {
        "type": "strip",
        "target": "enemies",
@@ -26644,7 +26784,8 @@
      "name": "Destructive Pursuit",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "ignore_share": true
     }
    }
   },
@@ -27077,9 +27218,6 @@
        "turns": 1,
        "chance": 0.75,
        "ignore_resist": false
-      },
-      {
-       "type": "dual"
       }
      ]
     },
@@ -27126,6 +27264,20 @@
      "cooldown": 3,
      "passive": false,
      "effects": [
+      {
+       "type": "buff",
+       "effect": "eff_up",
+       "target": "self",
+       "turns": 3
+      },
+      {
+       "type": "debuff",
+       "effect": "venom",
+       "target": "enemies",
+       "turns": 3,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
       {
        "type": "detonate",
        "what": [
@@ -29008,6 +29160,14 @@
        "ignore_resist": true
       },
       {
+       "type": "debuff",
+       "effect": "bind",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
+      {
        "type": "strip",
        "target": "target",
        "all": false
@@ -29056,11 +29216,20 @@
        "turns": 1
       },
       {
+       "type": "debuff",
+       "effect": "fear",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
        "type": "strip",
        "target": "enemies",
        "all": false
       }
-     ]
+     ],
+     "ignore_share": true
     }
    },
    "barrier": {
@@ -30974,7 +31143,8 @@
        "target": "target",
        "all": false
       }
-     ]
+     ],
+     "targets": 2
     },
     "s2": {
      "rate": 1.4,
@@ -31217,6 +31387,12 @@
        "turns": 1
       },
       {
+       "type": "buff",
+       "effect": "indomitable",
+       "target": "ally",
+       "turns": 1
+      },
+      {
        "type": "cooldown",
        "amount": -99,
        "target": "self",
@@ -31373,6 +31549,12 @@
      "cooldown": 7,
      "passive": false,
      "effects": [
+      {
+       "type": "buff",
+       "effect": "superhuman",
+       "target": "self",
+       "turns": 3
+      },
       {
        "type": "heal",
        "target": "self",
@@ -31816,6 +31998,14 @@
      "passive": false,
      "effects": [
       {
+       "type": "debuff",
+       "effect": "rupture",
+       "target": "target",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
        "type": "dual"
       }
      ],
@@ -31843,6 +32033,14 @@
      "cooldown": 5,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "seal",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
       {
        "type": "gauge",
        "amount": -30,
@@ -33165,6 +33363,14 @@
      "passive": false,
      "effects": [
       {
+       "type": "debuff",
+       "effect": "venom",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      },
+      {
        "type": "cooldown",
        "amount": 1,
        "target": "target",
@@ -33190,6 +33396,14 @@
      "cooldown": 4,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "venom",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
       {
        "type": "gauge",
        "amount": 50,
@@ -34213,7 +34427,8 @@
        "chance": 0.7,
        "on_kill": true
       }
-     ]
+     ],
+     "targets": 2
     },
     "s3": {
      "rate": 1.8,
@@ -35316,6 +35531,14 @@
        "turns": 2
       },
       {
+       "type": "debuff",
+       "effect": "fear",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 0.95,
+       "ignore_resist": false
+      },
+      {
        "type": "strip",
        "target": "enemies",
        "all": false
@@ -36314,7 +36537,8 @@
        "chance": 0.7,
        "ignore_resist": false
       }
-     ]
+     ],
+     "targets": 2
     },
     "s2": {
      "rate": 0.8,
@@ -36439,6 +36663,22 @@
      "cooldown": 0,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "fear",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 0.35,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "seal",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.85,
+       "ignore_resist": false
+      },
       {
        "type": "lifesteal",
        "ratio": 0.2,
@@ -36617,7 +36857,8 @@
      "name": "Energy Blast",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "ignore_share": true
     },
     "s3": {
      "rate": 0.7,
@@ -37936,7 +38177,8 @@
      "name": "Sweep",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "targets": 2
     },
     "s2": {
      "rate": 0.5,
@@ -38777,6 +39019,14 @@
        "turns": 2
       },
       {
+       "type": "debuff",
+       "effect": "rupture",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
        "type": "barrier",
        "target": "self",
        "stat": "hp",
@@ -39299,7 +39549,8 @@
      "cooldown": 4,
      "passive": false,
      "effects": [],
-     "soulburn_cost": 10
+     "soulburn_cost": 10,
+     "ignore_share": true
     },
     "s2": {
      "rate": null,
@@ -39709,6 +39960,14 @@
      "cooldown": 4,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "rupture",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 0.8,
+       "ignore_resist": true
+      },
       {
        "type": "strip",
        "target": "enemies",

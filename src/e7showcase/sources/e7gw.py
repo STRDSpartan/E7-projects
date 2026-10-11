@@ -144,6 +144,11 @@ def merge_skills(
             cost = re.search(r"-(\d+) souls?", sk.get("soulburn") or "")
             if cost and entry.get("rate_sb") is not None:
                 entry["soulburn_cost"] = int(cost.group(1))
+            if "Multiple Targets" in sk["tags"]:
+                count = re.search(r"\b(two|three) enemies", sk["text"].lower())
+                entry["targets"] = {"two": 2, "three": 3}[count.group(1)] if count else 2
+            if "Ignore Damage Sharing" in sk["tags"]:
+                entry["ignore_share"] = True
             if "Always Results in a Critical Hit" in sk["tags"]:
                 entry["always_crit"] = True
             if "Begins Battle With Full Skill Cooldown" in sk["tags"]:
