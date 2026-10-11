@@ -16,7 +16,7 @@ e7showcase app                    # application de bureau (fenêtre native)
 
 ## Carte du code (`src/e7showcase/`)
 `models/` Pydantic (Roster = format d'échange, `SCHEMA_VERSION`) · `reference.py` + `data/reference/`
-· `calc/` gear score & sets · `parsers/` texte OCR → modèles (purs, très testés) · `capture/` fenêtre
+· `calc/` gear score & sets, simulateurs de dégâts/combat (`docs/SIMULATORS.md`) · `parsers/` texte OCR → modèles (purs, très testés) · `capture/` fenêtre
 + capture (Windows) · `vision/` ROI normalisées, prétraitement, OCR · `scanner/` orchestration ·
 `importers/fribbels.py` · `storage/` JSON · `assets.py` portraits locaux · `sources/e7codex.py` référentiel & sync · `render/` Jinja2 → PNG Playwright · `publish/` webhook & bot
 · `cli.py` Typer.

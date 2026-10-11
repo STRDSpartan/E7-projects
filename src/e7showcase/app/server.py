@@ -191,6 +191,19 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 if method == "POST":
                     pid = store.create(str(self._body().get("player", "")))
                     return self._json({"id": pid}, 201)
+            if path.startswith("/sim/"):
+                from e7showcase.app import simulator
+
+                try:
+                    if path == "/sim/heroes" and method == "GET":
+                        return self._json(simulator.catalog(store))
+                    if path == "/sim/damage" and method == "POST":
+                        return self._json(simulator.damage(store, self._body()))
+                    if path == "/sim/battle" and method == "POST":
+                        return self._json(simulator.battle(store, self._body()))
+                except simulator.SimError as exc:
+                    raise ApiError(400, str(exc)) from exc
+                raise ApiError(404, "introuvable")
             if (j := re.fullmatch(r"/jobs/([0-9a-f]+)", path)) and method == "GET":
                 job = state.jobs.get(j[1])
                 if job is None:

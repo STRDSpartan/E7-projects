@@ -56,6 +56,24 @@ main { display:flex; flex-direction:column; min-height:0; }
 iframe { flex:1; border:0; width:100%; margin-top:10px; background:var(--bg); }
 .empty { margin:auto; text-align:center; color:var(--muted); max-width:520px; padding:24px; }
 .empty h2 { color:var(--text); }
+.sim { padding:16px; overflow:auto; display:grid; gap:14px; align-content:start; }
+.tabs { display:flex; gap:6px; } .tabs button { background:var(--panel-2); color:var(--text); font-weight:500; }
+.tabs button[aria-pressed="true"] { background:var(--gold); color:#1d1606; font-weight:700; }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; }
+.card h3 { margin:0 0 10px; font-size:15px; color:var(--gold); }
+.grid2 { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px; }
+.field { display:grid; gap:4px; font-size:13px; color:var(--muted); }
+.field select, .field input { width:100%; min-width:0; background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:7px; font:inherit; }
+.checks { display:flex; flex-wrap:wrap; gap:12px; font-size:13px; }
+table.res { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
+table.res th, table.res td { padding:7px 10px; border-bottom:1px solid var(--line); text-align:right; }
+table.res th:first-child, table.res td:first-child { text-align:left; }
+table.res td.crit { color:var(--gold); font-weight:700; } table.res td.exp { color:var(--ok); font-weight:700; }
+.note { font-size:12px; color:var(--muted); }
+.wins { display:flex; height:28px; border-radius:8px; overflow:hidden; font-weight:700; font-size:13px; }
+.wins div { display:grid; place-items:center; min-width:0; overflow:hidden; white-space:nowrap; }
+.log { font:12.5px/1.6 ui-monospace, Consolas, monospace; background:#0d111a; border:1px solid var(--line); border-radius:8px;
+  padding:10px; max-height:360px; overflow:auto; white-space:pre-wrap; }
 .empty ol { text-align:left; }
 dialog { background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:12px; padding:18px; }
 dialog input { width:100%; background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:8px; margin:10px 0; font:inherit; }
@@ -67,6 +85,7 @@ dialog input { width:100%; background:var(--panel-2); color:var(--text); border:
   <div class="brand">E7 SHOWCASE<small>Vitrines Epic Seven</small></div>
   <div class="list" id="list"></div>
   <div class="side-actions">
+    <button class="ghost" id="sims">⚔ Simulateurs</button>
     <button id="new">+ Nouveau profil</button>
     <button class="ghost" id="open">Ouvrir une vitrine (.e7v)</button>
     <input type="file" id="open-file" accept=".e7v" hidden>
@@ -249,6 +268,104 @@ async function removeProfile(id, player) {
   if (!confirm(`Supprimer le profil « ${player} » de cet ordinateur ?`)) return;
   await api("DELETE", "/profiles/" + id); current = null; refresh();
 }
+
+// --- Simulateurs (dégâts, combat) : calculs côté application (calc/damage.py, calc/battle.py)
+const fmtN = (n) => n == null ? "—" : Math.round(n).toLocaleString("fr-FR");
+const pick = (heroes, label, empty) => el("select", { "aria-label": label },
+  empty ? el("option", { value: "" }, empty) : "",
+  ...heroes.map((h) => el("option", { value: h.ref, ...(h.simulable ? {} : { disabled: "" }) },
+    `${h.name} — ${h.profile}${h.simulable ? "" : " (non simulable)"}`)));
+const field = (label, input) => el("label", { class: "field" }, label, input);
+const check = (label, key) => { const c = el("input", { type: "checkbox", "data-k": key }); return el("label", {}, c, " " + label); };
+function readOptions(root) {
+  const o = { molagoras: true };
+  root.querySelectorAll("[data-k]").forEach((n) => { o[n.dataset.k] = n.type === "checkbox" ? n.checked : n.value; });
+  if (o.elemental_advantage === "auto") delete o.elemental_advantage; else if ("elemental_advantage" in o) o.elemental_advantage = o.elemental_advantage === "yes";
+  return o;
+}
+function optionsCard() {
+  const sel = (key, entries) => el("select", { "data-k": key }, ...entries.map(([v, t]) => el("option", { value: v }, t)));
+  return el("div", { class: "card" }, el("h3", {}, "Conditions"),
+    el("div", { class: "grid2" },
+      field("Buff d'attaque", sel("attack_buff", [["none", "Aucun"], ["up", "Attaque +50 %"], ["great", "Attaque +75 %"], ["down", "Attaque réduite −50 %"]])),
+      field("Défense de la cible", sel("target_defense_buff", [["none", "Normale"], ["up", "Défense +60 %"], ["down", "Défense réduite −70 %"]])),
+      field("Avantage élémentaire", sel("elemental_advantage", [["auto", "Selon les éléments"], ["yes", "Oui (+10 %)"], ["no", "Non"]])),
+      field("Bonus de dégâts (%)", el("input", { type: "number", value: "0", "data-k": "damage_increase" })),
+      field("Réduction de dégâts de la cible (%)", el("input", { type: "number", value: "0", min: "0", max: "100", "data-k": "damage_reduction" }))),
+    el("div", { class: "checks", style: "margin-top:10px" }, check("Set Pénétration", "penetration_set"), check("Set Rage (cible affaiblie)", "rage_set"),
+      check("Set Tumulte", "torrent_set")));
+}
+async function simulators(tab = "damage") {
+  current = null;
+  document.querySelectorAll(".item").forEach((b) => b.classList.remove("active"));
+  const heroes = await json("GET", "/sim/heroes");
+  const usable = heroes.filter((h) => h.simulable);
+  const tabs = el("div", { class: "tabs" },
+    el("button", { "aria-pressed": String(tab === "damage"), onclick: () => simulators("damage") }, "Simulateur de dégâts"),
+    el("button", { "aria-pressed": String(tab === "battle"), onclick: () => simulators("battle") }, "Simulateur de combat"));
+  const bar = el("div", { class: "bar" }, el("h1", {}, "Simulateurs"), tabs);
+  const body = el("div", { class: "sim" });
+  if (!usable.length) body.append(el("div", { class: "empty" }, "Ajoutez d'abord des héros à un profil : leurs stats servent aux simulations."));
+  else if (tab === "damage") damagePage(body, heroes); else battlePage(body, heroes);
+  $("#main").replaceChildren(bar, body);
+}
+function damagePage(body, heroes) {
+  const attacker = pick(heroes, "Attaquant");
+  const target = pick(heroes, "Cible", "Cible personnalisée (défense et PV ci-dessous)");
+  const def = el("input", { type: "number", value: "1000", min: "0" }), hp = el("input", { type: "number", value: "20000", min: "1" });
+  const out = el("div", {});
+  const opts = optionsCard();
+  const run = async () => {
+    out.replaceChildren(el("p", { class: "note" }, "Calcul…"));
+    try {
+      const r = await json("POST", "/sim/damage", { attacker: attacker.value, options: readOptions(opts),
+        target: target.value ? { ref: target.value } : { def: def.value, hp: hp.value } });
+      const cond = r.rows.filter((x) => x.conditional.length);
+      out.replaceChildren(el("div", { class: "card" }, el("h3", {}, `${r.attacker} → ${r.target}`),
+        el("table", { class: "res" }, el("thead", {}, el("tr", {}, ...["Compétence", "Normal", "Critique", "Écrasant", "Raté", "Moyenne*"].map((t) => el("th", {}, t)))),
+          el("tbody", {}, ...r.rows.map((x) => el("tr", {}, el("td", {}, x.skill + (x.aoe ? " · zone" : "") + (x.conditional.length ? " †" : "")),
+            el("td", {}, fmtN(x.normal)), el("td", { class: "crit" }, fmtN(x.crit)), el("td", {}, fmtN(x.crush)), el("td", {}, fmtN(x.miss)), el("td", { class: "exp" }, fmtN(x.expected)))))),
+        el("p", { class: "note" }, "* Moyenne pondérée par les chances de critique de l'attaquant. Compétences améliorées au maximum (molagoras)."),
+        cond.length ? el("p", { class: "note" }, "† Bonus conditionnel propre au héros non appliqué (" + [...new Set(cond.flatMap((x) => x.conditional))].join(", ") + ") : les dégâts réels peuvent être plus élevés.") : ""));
+    } catch (e) { out.replaceChildren(el("p", { class: "note", style: "color:var(--danger)" }, e.message)); }
+  };
+  body.append(el("div", { class: "card" }, el("h3", {}, "Combattants"),
+    el("div", { class: "grid2" }, field("Attaquant (stats de son profil)", attacker), field("Cible", target),
+      field("Défense de la cible personnalisée", def), field("PV de la cible personnalisée", hp)),
+    el("div", { style: "margin-top:12px" }, el("button", { onclick: run }, "Calculer les dégâts"))), opts, out);
+}
+function battlePage(body, heroes) {
+  const team = (label) => [0, 1, 2, 3].map((i) => pick(heroes, `${label} ${i + 1}`, i ? "—" : null));
+  const a = team("Équipe A"), b = team("Équipe B");
+  b[0].selectedIndex = Math.min(1, b[0].options.length - 1);
+  const runs = el("input", { type: "number", value: "1000", min: "1", max: "5000" });
+  const cd2 = el("input", { type: "number", value: "3", min: "0", max: "10" }), cd3 = el("input", { type: "number", value: "4", min: "0", max: "10" });
+  const out = el("div", {});
+  const opts = optionsCard();
+  const run = async () => {
+    out.replaceChildren(el("p", { class: "note" }, "Simulation…"));
+    try {
+      const r = await json("POST", "/sim/battle", { team_a: a.map((s) => s.value).filter(Boolean), team_b: b.map((s) => s.value).filter(Boolean),
+        runs: runs.value, cooldowns: { s2: cd2.value, s3: cd3.value }, options: readOptions(opts) });
+      const [wa, wb] = r.win_rate;
+      out.replaceChildren(el("div", { class: "card" }, el("h3", {}, `Résultat sur ${fmtN(r.runs)} combats`),
+        el("div", { class: "wins" }, el("div", { style: `width:${wa}%;background:#2f6fb3` }, wa >= 8 ? `A ${wa} %` : ""),
+          el("div", { style: `width:${r.draws}%;background:#555` }, r.draws >= 8 ? `Nul ${r.draws} %` : ""),
+          el("div", { style: `width:${wb}%;background:#b33f3f` }, wb >= 8 ? `B ${wb} %` : "")),
+        el("p", {}, `Équipe A (${r.teams[0].join(", ")}) : ${wa} % de victoires · Équipe B (${r.teams[1].join(", ")}) : ${wb} % · ${r.avg_actions} actions en moyenne.`),
+        el("h3", { style: "margin-top:12px" }, "Déroulé d'un combat type"),
+        el("div", { class: "log" }, r.sample.log.join("\n") || "—"),
+        el("p", { class: "note" }, "Modèle simplifié : jauge de combat selon la vitesse, S3 puis S2 puis S1 selon les temps de recharge, cible aux PV les plus bas, critiques tirés au hasard. Soins, barrières, buffs/débuffs des compétences, passifs, artefacts, esquive et contre-attaques ne sont pas simulés.")));
+    } catch (e) { out.replaceChildren(el("p", { class: "note", style: "color:var(--danger)" }, e.message)); }
+  };
+  body.append(el("div", { class: "grid2" },
+      el("div", { class: "card" }, el("h3", {}, "Équipe A"), ...a.map((s, i) => field(`Héros ${i + 1}`, s))),
+      el("div", { class: "card" }, el("h3", {}, "Équipe B"), ...b.map((s, i) => field(`Héros ${i + 1}`, s)))),
+    el("div", { class: "card" }, el("h3", {}, "Paramètres"),
+      el("div", { class: "grid2" }, field("Nombre de combats simulés", runs), field("Recharge S2 (tours)", cd2), field("Recharge S3 (tours)", cd3)),
+      el("div", { style: "margin-top:12px" }, el("button", { onclick: run }, "Lancer la simulation"))), opts, out);
+}
+$("#sims").onclick = () => simulators();
 
 $("#new").onclick = () => { $("#dlg-name").value = ""; $("#dlg").showModal(); };
 $("#dlg-cancel").onclick = () => $("#dlg").close();
