@@ -210,3 +210,23 @@ def test_window_api_exposes_only_its_functions(tmp_path: Path) -> None:
     api._window = object()
     public = [n for n in dir(api) if not n.startswith("_")]
     assert all(callable(getattr(api, n)) for n in public), public
+
+
+def test_closing_window_really_ends_the_process(monkeypatch: pytest.MonkeyPatch) -> None:
+    from e7showcase.app import launcher
+
+    calls: list[str] = []
+
+    class FakeServer:
+        def shutdown(self) -> None:
+            calls.append("shutdown")
+
+        def server_close(self) -> None:
+            calls.append("close")
+
+    def fake_exit(code: int) -> None:
+        calls.append(f"exit {code}")
+
+    monkeypatch.setattr(launcher.os, "_exit", fake_exit)
+    launcher._quit(FakeServer())  # noqa: SLF001
+    assert "close" in calls and calls[-1] == "exit 0"

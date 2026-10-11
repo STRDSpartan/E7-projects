@@ -8,8 +8,11 @@ directement.
 
 from __future__ import annotations
 
+import contextlib
 import logging
+import os
 import sys
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -91,6 +94,7 @@ def main(argv: list[str] | None = None) -> int:
     window = webview.create_window("E7 Showcase", url, js_api=api, width=1360, height=860)
     api._window = window  # noqa: SLF001 - jamais exposé à JavaScript
     window.events.loaded += lambda: log.info("Fenêtre chargée [window-loaded]")
+    window.events.closed += lambda: _quit(server)
     try:
         webview.start()
     except Exception:  # noqa: BLE001 - composant d'affichage absent (WebView2)
@@ -102,8 +106,25 @@ def main(argv: list[str] | None = None) -> int:
             "https://go.microsoft.com/fwlink/p/?LinkId=2124703 puis relancez l'application."
         )
         return 1
-    server.shutdown()
+    _quit(server)
     return 0
+
+
+def _quit(server: Any) -> None:
+    """Termine VRAIMENT le processus à la fermeture de la fenêtre.
+
+    Sans cela, l'arrêt normal de Python peut rester bloqué (runtime .NET de pywebview,
+    threads du moteur OCR) et laisser E7Showcase.exe tourner en arrière-plan.
+    Toutes les écritures de profils sont synchrones : rien n'est perdu.
+    """
+    log.info("Fermeture de l'application [app-closed]")
+    with contextlib.suppress(Exception):
+        threading.Thread(target=server.shutdown, daemon=True).start()
+        server.server_close()
+    logging.shutdown()
+    with contextlib.suppress(Exception):
+        sys.stdout and sys.stdout.flush()
+    os._exit(0)
 
 
 def _fatal(message: str) -> None:

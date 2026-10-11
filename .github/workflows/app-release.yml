@@ -40,12 +40,23 @@ jobs:
             if ((Test-Path $log) -and (Select-String -Path $log -Pattern "window-loaded" -Quiet)) { $ok = $true; break }
             if ($p.HasExited) { break }
           }
-          Get-Content $log -ErrorAction SilentlyContinue
           $alive = -not $p.HasExited
-          if ($alive) { Stop-Process -Id $p.Id -Force }
           if (-not $ok -or -not $alive) {
+            if ($alive) { Stop-Process -Id $p.Id -Force }
             Get-Content $log -ErrorAction SilentlyContinue | Select-Object -Last 20 | ForEach-Object { Write-Host "::error::log: $_" }
             Write-Host "::error::la fenêtre de l'application ne s'est pas chargée"
+            exit 1
+          }
+          # Fermeture comme un utilisateur (bouton ✕) : tous les processus doivent s'arrêter
+          Start-Sleep -Seconds 3
+          $p.Refresh(); $null = $p.CloseMainWindow()
+          $closed = $p.WaitForExit(20000)
+          Get-Content $log -ErrorAction SilentlyContinue
+          $left = Get-Process -Name E7Showcase -ErrorAction SilentlyContinue
+          if (-not $closed -or $left) {
+            $left | Stop-Process -Force -ErrorAction SilentlyContinue
+            if (-not $closed) { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue }
+            Write-Host "::error::le processus reste actif après la fermeture de la fenêtre"
             exit 1
           }
       - name: Installateur (Inno Setup)
