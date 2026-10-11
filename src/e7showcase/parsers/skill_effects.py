@@ -26,6 +26,9 @@ BUFFS = {
     "Invincible": "invincible",
     "Stealth": "stealth",
     "Immortal": "immortal",
+    "Increase Attack (Greater)": "atk_up_great",
+    "Increase Evasion": "evasion",
+    "Skill Nullifier": "nullifier",
 }
 DEBUFFS = {
     "Decrease Defense": "def_down",
@@ -36,6 +39,11 @@ DEBUFFS = {
     "Silence": "silence",
     "Provoke": "provoke",
     "Unhealable": "unhealable",
+    "Burn": "burn",
+    "Bleed": "bleed",
+    "Poison": "poison",
+    "Decrease Hit Chance": "hit_down",
+    "Cannot Buff": "no_buff",
 }
 KEYWORDS = {
     "atk_up": r"attack",
@@ -55,6 +63,14 @@ KEYWORDS = {
     "silence": r"silence",
     "provoke": r"provok",
     "unhealable": r"unhealable",
+    "atk_up_great": r"attack",
+    "evasion": r"evasion",
+    "nullifier": r"nullifier",
+    "burn": r"burn",
+    "bleed": r"bleed",
+    "poison": r"poison",
+    "hit_down": r"hit chance",
+    "no_buff": r"unable to be buffed|cannot be buffed|buff",
 }
 # coefficients types quand le texte ne chiffre pas le montant (signalés comme estimés)
 HEAL_DEFAULT = {"hp": 0.15, "atk": 0.6, "def": 0.8}
@@ -223,6 +239,51 @@ def parse_effects(
                 "all": "all buff" in s.lower(),
             }
         )
+    if "Extra Turn" in tagset:
+        s = _sentence_for(text, r"extra turn", r"grant|extra turn") or text
+        low = s.lower()
+        if "soulburn" not in low:  # tour supplémentaire de l'âme brûlée : non simulé
+            effects.append(
+                {
+                    "type": "extra_turn",
+                    "chance": _chance(s),
+                    "on_kill": bool(re.search(r"defeat|kill", low)),
+                }
+            )
+    if "Dual Attack" in tagset:
+        effects.append({"type": "dual"})
+    for tag, sign in (("Decrease Skill Cooldown (Self)", -1), ("Increase Skill Cooldown", 1)):
+        if tag not in tagset:
+            continue
+        s = _sentence_for(text, r"cooldown", r"decreas|increas|reset") or text
+        low = s.lower()
+        m = re.search(r"cooldowns? (?:of [^.]*?)?by (\d+) turn", low)
+        amount = 99 if re.search(r"reset|fully", low) else (int(m.group(1)) if m else 1)
+        effects.append(
+            {
+                "type": "cooldown",
+                "amount": sign * amount,
+                "target": "self" if sign < 0 else ("enemies" if aoe else "target"),
+                "chance": min(_chance(s), 1.0),
+            }
+        )
+    if "Lifesteal" in tagset:
+        s = _sentence_for(text, r"damage dealt|absorb|proportional to damage", r"health") or text
+        m = re.search(r"(\d+)% of (?:the )?damage", s.lower())
+        effects.append(
+            {
+                "type": "lifesteal",
+                "ratio": int(m.group(1)) / 100 if m else 0.2,
+                "estimated": m is None,
+            }
+        )
+    if "Damage Reduction" in tagset:
+        s = _sentence_for(text, r"damage suffered|damage reduction", r"decreas|grant") or text
+        m = re.search(r"(?:by |grants )(\d+)%", s.lower())
+        effects.append({"type": "damage_reduction", "value": int(m.group(1)) / 100 if m else 0.2})
+    if "Damage Taken Cap" in tagset:
+        m = re.search(r"exceed (\d+)% of max health", text.lower())
+        effects.append({"type": "damage_cap", "value": int(m.group(1)) / 100 if m else 0.5})
     if "Debuff Dispel (Cleanse)" in tagset:
         s = _sentence_for(text, r"remov|dispel", r"debuff") or text
         effects.append(

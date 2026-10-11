@@ -333,6 +333,12 @@
        "ratio": 0.15,
        "turns": 1,
        "estimated": true
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
      ],
      "aoe": false
@@ -417,7 +423,16 @@
      "name": "Blade Gust",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 0.8,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": 1.8,
@@ -508,6 +523,12 @@
        "type": "strip",
        "target": "enemies",
        "all": false
+      },
+      {
+       "type": "cooldown",
+       "amount": 1,
+       "target": "enemies",
+       "chance": 1.0
       }
      ]
     },
@@ -582,7 +603,11 @@
      "name": "Command Strike",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "dual"
+      }
+     ]
     },
     "s3": {
      "rate": 0.9,
@@ -1017,6 +1042,12 @@
        "turns": 1
       },
       {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
        "type": "cleanse",
        "target": "self",
        "all": true
@@ -1068,7 +1099,8 @@
        "chance": 0.4,
        "ignore_resist": false
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s1_bis": {
      "rate": 0.7,
@@ -1111,7 +1143,8 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s2": {
      "rate": null,
@@ -1122,10 +1155,19 @@
      "passive": true,
      "effects": [
       {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      },
+      {
        "type": "gauge",
        "amount": 25,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "dual"
       }
      ],
      "trigger": {
@@ -1356,7 +1398,8 @@
      "name": "Gazelle Punch",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "always_crit": true
     },
     "s1_crit": {
      "rate": 1,
@@ -1615,7 +1658,16 @@
      "name": "Baptism of Fire",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": true
+      }
+     ]
     },
     "s3": {
      "rate": 0.2,
@@ -1639,6 +1691,14 @@
      "passive": false,
      "effects": [
       {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
+      {
        "type": "strip",
        "target": "target",
        "all": true
@@ -1652,7 +1712,12 @@
      "name": "Final Radiance",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "damage_cap",
+       "value": 0.51
+      }
+     ],
      "trigger": {
       "event": "attacked",
       "chance": 1.0
@@ -1803,6 +1868,14 @@
       {
        "type": "debuff",
        "effect": "def_down",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
        "target": "target",
        "turns": 2,
        "chance": 1.0,
@@ -1968,6 +2041,14 @@
      "cooldown": 3,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "poison",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
       {
        "type": "gauge",
        "amount": 30,
@@ -2154,6 +2235,12 @@
        "turns": 1,
        "chance": 0.8,
        "ignore_resist": true
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 0.8
       }
      ]
     },
@@ -2221,10 +2308,21 @@
      "passive": false,
      "effects": [
       {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "allies",
+       "turns": 2
+      },
+      {
        "type": "gauge",
        "amount": 25,
        "target": "allies",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -2326,6 +2424,12 @@
        "effect": "immortal",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "cooldown",
+       "amount": 99,
+       "target": "target",
+       "chance": 1.0
       }
      ],
      "aoe": false
@@ -2378,6 +2482,12 @@
      "passive": true,
      "effects": [
       {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "allies",
+       "turns": 2
+      },
+      {
        "type": "gauge",
        "amount": 8,
        "target": "self",
@@ -2407,6 +2517,14 @@
       {
        "type": "debuff",
        "effect": "silence",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
        "target": "enemies",
        "turns": 2,
        "chance": 1.0,
@@ -2640,7 +2758,13 @@
      "name": "Spectral Axe",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s3": {
      "rate": 1.3,
@@ -2663,7 +2787,20 @@
      "name": "Deliverance: Soul Exchange",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "ally",
+       "turns": 2
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -2815,7 +2952,16 @@
      "name": "Ignite",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.9,
@@ -2884,6 +3030,14 @@
       {
        "type": "debuff",
        "effect": "stun",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.7,
+       "ignore_resist": true
+      },
+      {
+       "type": "debuff",
+       "effect": "burn",
        "target": "enemies",
        "turns": 2,
        "chance": 1.7,
@@ -2968,6 +3122,20 @@
        "effect": "atk_up",
        "target": "enemies",
        "turns": 2
+      },
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
      ]
     },
@@ -2982,6 +3150,12 @@
       {
        "type": "gauge",
        "amount": 100,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
        "target": "self",
        "chance": 1.0
       }
@@ -3126,6 +3300,11 @@
        "type": "strip",
        "target": "target",
        "all": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
       }
      ],
      "aoe": false
@@ -3189,6 +3368,11 @@
        "amount": 20,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -3253,7 +3437,21 @@
      "name": "Shadow Call",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.5,
+       "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 0.5,
+       "on_kill": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.7,
@@ -3374,7 +3572,12 @@
      "name": "Protect",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "damage_reduction",
+       "value": 0.3
+      }
+     ],
      "trigger": {
       "event": "counter",
       "chance": 0.15
@@ -3552,6 +3755,14 @@
      "passive": false,
      "effects": [
       {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      },
+      {
        "type": "heal",
        "target": "target",
        "stat": "atk",
@@ -3589,7 +3800,14 @@
      "name": "A Thrashing In The Prairie",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -3694,6 +3912,12 @@
      "passive": true,
      "effects": [
       {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "allies",
+       "turns": 2
+      },
+      {
        "type": "gauge",
        "amount": 15,
        "target": "self",
@@ -3770,6 +3994,12 @@
      "cooldown": 3,
      "passive": false,
      "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 1
+      },
       {
        "type": "debuff",
        "effect": "silence",
@@ -4144,7 +4374,19 @@
      "name": "Film Fiesta",
      "cooldown": 3,
      "passive": false,
-     "effects": [],
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "self",
+       "turns": 2
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
+      }
+     ],
      "aoe": false
     },
     "s3": {
@@ -4223,6 +4465,11 @@
        "turns": 2,
        "chance": 1.55,
        "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.55,
+       "on_kill": false
       }
      ]
     },
@@ -4377,7 +4624,16 @@
      "name": "Ghost Haunt",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "poison",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 1.1,
@@ -4402,7 +4658,14 @@
      "name": "Dark Cloud",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
     },
     "s3": {
      "rate": 0.8,
@@ -4577,7 +4840,22 @@
      "name": "Tatami Gaeshi",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.7,
+       "ignore_resist": false
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
     },
     "s2": {
      "rate": 1.2,
@@ -4596,7 +4874,16 @@
      "name": "Tsurane Sanzu-watashi",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.8,
+       "ignore_resist": true
+      }
+     ]
     },
     "s3": {
      "rate": 1.6,
@@ -4713,6 +5000,14 @@
       {
        "type": "debuff",
        "effect": "atk_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 0.75,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "hit_down",
        "target": "enemies",
        "turns": 2,
        "chance": 0.75,
@@ -4978,7 +5273,16 @@
      "name": "Scorching Flare",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     },
     "s1_bis": {
      "rate": 1.2,
@@ -5010,6 +5314,22 @@
      "cooldown": 4,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
       {
        "type": "gauge",
        "amount": 50,
@@ -5061,6 +5381,14 @@
       {
        "type": "debuff",
        "effect": "spd_down",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "hit_down",
        "target": "enemies",
        "turns": 1,
        "chance": 1.0,
@@ -5174,7 +5502,13 @@
      "name": "Windbreak Fan",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
     },
     "s2": {
      "rate": 1.2,
@@ -5682,6 +6016,11 @@
        "stat": "atk",
        "ratio": 0.6,
        "estimated": true
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -5720,6 +6059,11 @@
        "amount": 15,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
       }
      ]
     },
@@ -5967,7 +6311,16 @@
      "name": "Seductive Scent",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": 0.5,
@@ -5989,7 +6342,14 @@
      "name": "Fruit of Ecstasy",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "self",
+       "turns": 2
+      }
+     ]
     }
    }
   },
@@ -6096,6 +6456,9 @@
        "turns": 1,
        "chance": 0.6,
        "ignore_resist": false
+      },
+      {
+       "type": "dual"
       }
      ]
     },
@@ -6228,6 +6591,14 @@
      "cooldown": 4,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
       {
        "type": "strip",
        "target": "enemies",
@@ -6440,7 +6811,12 @@
      "name": "Butcher Corps Gear",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "damage_cap",
+       "value": 0.35
+      }
+     ],
      "aoe": false
     }
    }
@@ -6545,7 +6921,16 @@
      "name": "A Larunda's Hospitality",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     }
    }
   },
@@ -6671,6 +7056,9 @@
        "turns": 2,
        "chance": 0.5,
        "ignore_resist": false
+      },
+      {
+       "type": "dual"
       }
      ]
     },
@@ -6703,6 +7091,10 @@
        "stat": "hp",
        "ratio": 0.15,
        "estimated": true
+      },
+      {
+       "type": "damage_reduction",
+       "value": 0.3
       }
      ]
     },
@@ -6838,7 +7230,13 @@
      "name": "Vampirism",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s2": {
      "rate": 1.5,
@@ -6967,9 +7365,22 @@
      "passive": false,
      "effects": [
       {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 0.7,
+       "ignore_resist": false
+      },
+      {
        "type": "strip",
        "target": "enemies",
        "all": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 0.7,
+       "on_kill": false
       }
      ]
     },
@@ -6986,6 +7397,14 @@
        "effect": "atk_up",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
       },
       {
        "type": "barrier",
@@ -7269,7 +7688,16 @@
      "name": "Precision Fire",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 1,
@@ -7315,6 +7743,11 @@
        "stat": "hp",
        "ratio": 0.15,
        "estimated": true
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -7372,7 +7805,13 @@
      "name": "Dimensional Rupture",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s3": {
      "rate": 1.2,
@@ -7553,6 +7992,12 @@
      "passive": false,
      "effects": [
       {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      },
+      {
        "type": "barrier",
        "target": "self",
        "stat": "atk",
@@ -7602,6 +8047,9 @@
        "amount": 15,
        "target": "target",
        "chance": 1.0
+      },
+      {
+       "type": "dual"
       }
      ]
     },
@@ -7626,6 +8074,14 @@
       {
        "type": "debuff",
        "effect": "stun",
+       "target": "target",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
        "target": "target",
        "turns": 1,
        "chance": 1.0,
@@ -7738,7 +8194,19 @@
      "name": "Hot Streak!",
      "cooldown": 4,
      "passive": false,
-     "effects": [],
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      }
+     ],
      "aoe": false
     }
    }
@@ -7806,6 +8274,11 @@
        "amount": 20,
        "target": "allies",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -7973,7 +8446,13 @@
      "name": "Preach",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -7982,7 +8461,12 @@
      "name": "Butcher Corps Gear",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "damage_cap",
+       "value": 0.35
+      }
+     ],
      "aoe": false
     }
    }
@@ -8039,7 +8523,14 @@
      "name": "Attack Chain",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
     },
     "s3": {
      "rate": 1,
@@ -8068,6 +8559,18 @@
        "type": "strip",
        "target": "target",
        "all": true
+      },
+      {
+       "type": "cooldown",
+       "amount": -2,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "cooldown",
+       "amount": 2,
+       "target": "target",
+       "chance": 1.0
       }
      ],
      "trigger": {
@@ -8202,6 +8705,11 @@
        "amount": 20,
        "target": "target",
        "chance": 1.0
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
       }
      ]
     },
@@ -8280,7 +8788,8 @@
        "target": "self",
        "chance": 1.0
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s3": {
      "rate": 0.85,
@@ -8328,6 +8837,10 @@
        "ratio": 0.5,
        "turns": 1,
        "estimated": false
+      },
+      {
+       "type": "damage_reduction",
+       "value": 0.2
       }
      ],
      "trigger": {
@@ -8475,6 +8988,11 @@
        "amount": 20,
        "target": "target",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -8496,7 +9014,19 @@
      "name": "Fwoooosh!",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s3": {
      "rate": 0.5,
@@ -8702,6 +9232,12 @@
        "type": "strip",
        "target": "target",
        "all": true
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
       }
      ],
      "trigger": {
@@ -8838,7 +9374,13 @@
      "name": "Hack",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -8863,6 +9405,12 @@
       {
        "type": "buff",
        "effect": "immunity",
+       "target": "self",
+       "turns": 1
+      },
+      {
+       "type": "buff",
+       "effect": "evasion",
        "target": "self",
        "turns": 1
       }
@@ -8949,7 +9497,14 @@
      "name": "Hysteric",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
     }
    }
   },
@@ -8981,7 +9536,16 @@
      "name": "View Obstruction",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 1,
@@ -9064,7 +9628,19 @@
      "name": "Elimination",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s1_alt": {
      "rate": 1.4,
@@ -9120,6 +9696,12 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 1
+      },
       {
        "type": "gauge",
        "amount": 50,
@@ -9212,6 +9794,14 @@
      "passive": false,
      "effects": [
       {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
+      {
        "type": "gauge",
        "amount": 50,
        "target": "self",
@@ -9284,6 +9874,11 @@
        "amount": -15,
        "target": "target",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -9379,7 +9974,17 @@
      "name": "Strike Order",
      "cooldown": 3,
      "passive": false,
-     "effects": [],
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up_great",
+       "target": "ally",
+       "turns": 2
+      },
+      {
+       "type": "dual"
+      }
+     ],
      "aoe": false
     }
    }
@@ -9515,7 +10120,11 @@
      "name": "Kneel Down",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "dual"
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -9658,7 +10267,13 @@
      "name": "Fury's Advent",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ],
      "trigger": {
       "event": "attacked",
       "chance": 1.0
@@ -9729,6 +10344,12 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
      ]
     },
@@ -9813,7 +10434,12 @@
      "name": "Security State",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "damage_reduction",
+       "value": 0.15
+      }
+     ],
      "trigger": {
       "event": "ally_attacked",
       "chance": 1.0
@@ -10028,7 +10654,8 @@
      "name": "Devil's Descent",
      "cooldown": 7,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "full_cd_start": true
     },
     "s2": {
      "rate": null,
@@ -10037,7 +10664,14 @@
      "name": "Ruin's Advent",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      }
+     ],
      "trigger": {
       "event": "attacked",
       "chance": 1.0
@@ -10235,6 +10869,10 @@
        "amount": -20,
        "target": "enemies",
        "chance": 1.0
+      },
+      {
+       "type": "damage_reduction",
+       "value": 0.25
       }
      ],
      "trigger": {
@@ -10562,6 +11200,12 @@
        "chance": 1.0
       },
       {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
        "type": "cleanse",
        "target": "allies",
        "all": false
@@ -10598,7 +11242,21 @@
      "name": "Prep Ingredients",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 0.5,
+       "on_kill": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.8,
@@ -10619,7 +11277,21 @@
      "name": "Quick Grill",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s3": {
      "rate": null,
@@ -10634,6 +11306,12 @@
        "effect": "cc_up",
        "target": "allies",
        "turns": 2
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       },
       {
        "type": "cleanse",
@@ -10681,7 +11359,8 @@
        "target": "target",
        "chance": 1.0
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s1_bis": {
      "rate": 0.75,
@@ -10717,7 +11396,8 @@
      "name": "Purge",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "always_crit": true
     },
     "s2": {
      "rate": null,
@@ -10833,6 +11513,19 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     }
@@ -10865,7 +11558,16 @@
      "name": "Chaos Strike",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.6,
@@ -11067,7 +11769,16 @@
      "name": "Mana Bullet",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -11193,6 +11904,12 @@
        "ratio": 0.3,
        "turns": 2,
        "estimated": false
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
       },
       {
        "type": "cleanse",
@@ -11467,6 +12184,12 @@
      "passive": false,
      "effects": [
       {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "self",
+       "turns": 2
+      },
+      {
        "type": "gauge",
        "amount": -20,
        "target": "enemies",
@@ -11476,6 +12199,11 @@
        "type": "strip",
        "target": "enemies",
        "all": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
       }
      ]
     },
@@ -11595,6 +12323,14 @@
       {
        "type": "debuff",
        "effect": "provoke",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "hit_down",
        "target": "enemies",
        "turns": 2,
        "chance": 1.0,
@@ -11743,6 +12479,10 @@
        "amount": 30,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "damage_reduction",
+       "value": 0.25
       }
      ],
      "trigger": {
@@ -11784,7 +12524,11 @@
      "name": "Point-Blank Shot",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "dual"
+      }
+     ]
     },
     "s2": {
      "rate": 1.4,
@@ -11800,7 +12544,14 @@
      "name": "The Cleaner",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up_great",
+       "target": "self",
+       "turns": 2
+      }
+     ]
     },
     "s3": {
      "rate": 1.2,
@@ -12034,6 +12785,11 @@
        "type": "strip",
        "target": "target",
        "all": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 0.75,
+       "on_kill": false
       }
      ]
     },
@@ -12307,7 +13063,16 @@
      "name": "Smash",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 1.5,
@@ -12330,6 +13095,14 @@
       {
        "type": "debuff",
        "effect": "def_down",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.75,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
        "target": "target",
        "turns": 2,
        "chance": 0.75,
@@ -12455,6 +13228,11 @@
        "ratio": 1.2,
        "turns": 2,
        "estimated": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
       }
      ]
     }
@@ -12517,7 +13295,8 @@
        "target": "allies",
        "chance": 1.0
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s1_counter": {
      "rate": 1,
@@ -12558,8 +13337,15 @@
        "stat": "hp",
        "ratio": 0.15,
        "estimated": true
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s2": {
      "rate": null,
@@ -12621,6 +13407,11 @@
        "effect": "atk_up",
        "target": "target",
        "turns": 1
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -12641,7 +13432,19 @@
      "name": "Let's Have Some Fun",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "target",
+       "turns": 2
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
     },
     "s3": {
      "rate": 1,
@@ -12727,6 +13530,11 @@
        "type": "strip",
        "target": "enemies",
        "all": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -12836,6 +13644,14 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
       }
      ],
      "aoe": true
@@ -12868,7 +13684,13 @@
      "name": "One Pair",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 0.75,
+       "on_kill": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.8,
@@ -12939,7 +13761,16 @@
      "name": "Tea Party",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     }
    }
   },
@@ -13030,9 +13861,21 @@
        "turns": 2
       },
       {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "allies",
+       "turns": 2
+      },
+      {
        "type": "gauge",
        "amount": 25,
        "target": "allies",
+       "chance": 1.0
+      },
+      {
+       "type": "cooldown",
+       "amount": 1,
+       "target": "target",
        "chance": 1.0
       }
      ]
@@ -13184,6 +14027,12 @@
      "passive": false,
      "effects": [
       {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "allies",
+       "turns": 2
+      },
+      {
        "type": "strip",
        "target": "enemies",
        "all": true
@@ -13289,7 +14138,13 @@
      "name": "Love Bite",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -13470,6 +14325,12 @@
        "effect": "atk_up",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
      ]
     },
@@ -13502,7 +14363,8 @@
        "target": "self",
        "turns": 1
       }
-     ]
+     ],
+     "full_cd_start": true
     },
     "s2": {
      "rate": null,
@@ -13511,7 +14373,20 @@
      "name": "Exceptional Magical Talent",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      }
+     ],
      "trigger": {
       "event": "battle_start",
       "chance": 1.0
@@ -13699,7 +14574,13 @@
      "name": "Finishing Attack",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -13818,6 +14699,11 @@
        "amount": -15,
        "target": "enemies",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -13879,7 +14765,13 @@
      "name": "Energy Wave",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s3": {
      "rate": 1.6,
@@ -14196,6 +15088,12 @@
        "type": "strip",
        "target": "target",
        "all": false
+      },
+      {
+       "type": "cooldown",
+       "amount": 1,
+       "target": "target",
+       "chance": 1.0
       }
      ]
     },
@@ -14266,7 +15164,16 @@
      "name": "Quickdraw",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.35,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": 1.65,
@@ -14389,6 +15296,12 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
      ]
     },
@@ -14466,7 +15379,13 @@
      "name": "Chains of Sealing",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
     },
     "s3": {
      "rate": 0.1,
@@ -14573,7 +15492,14 @@
      "name": "Focused Fire",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up_great",
+       "target": "self",
+       "turns": 2
+      }
+     ],
      "aoe": false
     }
    }
@@ -14605,7 +15531,13 @@
      "name": "Wail",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 0.15,
+       "on_kill": false
+      }
+     ]
     },
     "s3": {
      "rate": 0.7,
@@ -14704,6 +15636,14 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
       }
      ]
     },
@@ -14785,6 +15725,11 @@
        "effect": "spd_up",
        "target": "allies",
        "turns": 2
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       },
       {
        "type": "cleanse",
@@ -14899,7 +15844,13 @@
      "name": "Scorching Flare",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     }
    }
   },
@@ -15040,7 +15991,16 @@
      "name": "Spirited Blow",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": 2.2,
@@ -15173,7 +16133,16 @@
      "name": "Checkmate",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -15228,6 +16197,11 @@
        "ratio": 0.09,
        "turns": 1,
        "estimated": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -15267,7 +16241,13 @@
      "name": "Anchor Shot",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -15277,6 +16257,12 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      },
       {
        "type": "cleanse",
        "target": "self",
@@ -15328,7 +16314,16 @@
      "name": "Knee Smash",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.8,
+       "ignore_resist": true
+      }
+     ]
     },
     "s2": {
      "rate": 1.3,
@@ -15412,6 +16407,11 @@
        "stat": "atk",
        "ratio": 0.6,
        "estimated": true
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -15444,6 +16444,12 @@
        "effect": "def_up",
        "target": "allies",
        "turns": 3
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
      ]
     },
@@ -15460,6 +16466,10 @@
        "amount": 25,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "damage_reduction",
+       "value": 0.25
       }
      ],
      "trigger": {
@@ -15539,6 +16549,11 @@
        "stat": "atk",
        "ratio": 0.6,
        "estimated": true
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
       }
      ]
     },
@@ -15566,6 +16581,14 @@
       {
        "type": "debuff",
        "effect": "def_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.85,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "bleed",
        "target": "enemies",
        "turns": 2,
        "chance": 1.85,
@@ -15709,6 +16732,12 @@
        "amount": 20,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "cooldown",
+       "amount": -2,
+       "target": "self",
+       "chance": 1.0
       }
      ]
     },
@@ -15744,8 +16773,15 @@
        "effect": "atk_up",
        "target": "self",
        "turns": 3
+      },
+      {
+       "type": "buff",
+       "effect": "atk_up_great",
+       "target": "self",
+       "turns": 3
       }
-     ]
+     ],
+     "full_cd_start": true
     },
     "s2": {
      "rate": null,
@@ -15850,6 +16886,12 @@
        "effect": "spd_up",
        "target": "allies",
        "turns": 3
+      },
+      {
+       "type": "cooldown",
+       "amount": -2,
+       "target": "self",
+       "chance": 1.0
       }
      ],
      "aoe": false
@@ -16067,7 +17109,16 @@
      "name": "Just One Bite! ♡",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": 1,
@@ -16107,7 +17158,14 @@
      "name": "Let's Eat Together!",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      }
+     ],
      "aoe": false
     }
    }
@@ -16147,6 +17205,11 @@
        "target": "ally",
        "stat": "atk",
        "ratio": 0.6,
+       "estimated": true
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
        "estimated": true
       }
      ]
@@ -16276,6 +17339,11 @@
        "type": "strip",
        "target": "enemies",
        "all": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -16380,6 +17448,12 @@
        "effect": "atk_up",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 1
       }
      ],
      "trigger": {
@@ -16458,6 +17532,14 @@
      "passive": false,
      "effects": [
       {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
        "type": "strip",
        "target": "enemies",
        "all": false
@@ -16477,6 +17559,11 @@
        "effect": "atk_up",
        "target": "allies",
        "turns": 2
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -16706,7 +17793,16 @@
      "name": "Jealous Strike",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": true
+      }
+     ]
     },
     "s3": {
      "rate": 0.7,
@@ -16722,7 +17818,16 @@
      "name": "Flames of Destruction",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -16744,6 +17849,10 @@
        "amount": 25,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "damage_cap",
+       "value": 0.5
       },
       {
        "type": "cleanse",
@@ -16865,6 +17974,12 @@
       {
        "type": "buff",
        "effect": "stealth",
+       "target": "allies",
+       "turns": 2
+      },
+      {
+       "type": "buff",
+       "effect": "atk_up_great",
        "target": "allies",
        "turns": 2
       },
@@ -16994,6 +18109,12 @@
        "effect": "immortal",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "cooldown",
+       "amount": 99,
+       "target": "target",
+       "chance": 1.0
       }
      ],
      "aoe": false
@@ -17069,6 +18190,14 @@
        "ignore_resist": false
       },
       {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
        "type": "strip",
        "target": "target",
        "all": true
@@ -17082,7 +18211,14 @@
      "name": "Oathkeeper",
      "cooldown": 5,
      "passive": false,
-     "effects": [],
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up_great",
+       "target": "ally",
+       "turns": 2
+      }
+     ],
      "aoe": false
     }
    }
@@ -17136,6 +18272,10 @@
        "amount": 50,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "damage_reduction",
+       "value": 0.5
       },
       {
        "type": "cleanse",
@@ -17283,6 +18423,22 @@
        "ignore_resist": false
       },
       {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "ally",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
        "type": "gauge",
        "amount": 30,
        "target": "target",
@@ -17402,7 +18558,16 @@
      "name": "Staff Assault",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": 0.9,
@@ -17526,7 +18691,13 @@
      "name": "Coerce",
      "cooldown": 3,
      "passive": false,
-     "effects": [],
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ],
      "aoe": false
     }
    }
@@ -17563,6 +18734,12 @@
       {
        "type": "buff",
        "effect": "atk_up",
+       "target": "target",
+       "turns": 1
+      },
+      {
+       "type": "buff",
+       "effect": "atk_up_great",
        "target": "target",
        "turns": 1
       }
@@ -17690,6 +18867,14 @@
        "ignore_resist": false
       },
       {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.75,
+       "ignore_resist": false
+      },
+      {
        "type": "gauge",
        "amount": 25,
        "target": "self",
@@ -17721,7 +18906,14 @@
      "name": "Wave of Light",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": 1,
+       "target": "enemies",
+       "chance": 1.0
+      }
+     ]
     }
    }
   },
@@ -17802,6 +18994,11 @@
        "amount": 30,
        "target": "allies",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -17867,6 +19064,14 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
       }
      ]
     },
@@ -17914,6 +19119,14 @@
      "cooldown": 0,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
       {
        "type": "gauge",
        "amount": 15,
@@ -17974,6 +19187,12 @@
        "effect": "immortal",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
       }
      ],
      "trigger": {
@@ -18054,7 +19273,14 @@
      "name": "Sequential Cutter",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
     },
     "s2": {
      "rate": 1,
@@ -18171,6 +19397,12 @@
        "type": "strip",
        "target": "target",
        "all": false
+      },
+      {
+       "type": "cooldown",
+       "amount": 99,
+       "target": "target",
+       "chance": 1.0
       }
      ]
     },
@@ -18310,7 +19542,16 @@
      "name": "Void Slash",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "self",
+       "turns": 1,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": 1.7,
@@ -18333,7 +19574,13 @@
      "name": "Apocalypse",
      "cooldown": 5,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -18348,6 +19595,18 @@
        "effect": "immortal",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 1
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
       }
      ],
      "trigger": {
@@ -18397,6 +19656,14 @@
        "turns": 2,
        "chance": 0.5,
        "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
       }
      ]
     },
@@ -18432,6 +19699,11 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": true
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -18495,7 +19767,16 @@
      "name": "Hey There!",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.9,
@@ -18523,6 +19804,17 @@
        "effect": "atk_up",
        "target": "enemies",
        "turns": 2
+      },
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "allies",
+       "turns": 2
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
       }
      ]
     },
@@ -18736,7 +20028,16 @@
      "name": "Cleaning Mode",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -18782,7 +20083,16 @@
      "name": "Venomous Arrow",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "poison",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.7,
@@ -18957,7 +20267,11 @@
      "name": "Get Away, Meow!",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "dual"
+      }
+     ]
     },
     "s2": {
      "rate": 0.8,
@@ -19004,6 +20318,11 @@
        "effect": "immunity",
        "target": "self",
        "turns": 3
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -19402,6 +20721,9 @@
        "amount": 15,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "dual"
       }
      ]
     },
@@ -19434,8 +20756,20 @@
        "stat": "hp",
        "ratio": 0.15,
        "estimated": true
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
-     ]
+     ],
+     "full_cd_start": true
     },
     "s2": {
      "rate": null,
@@ -19527,6 +20861,11 @@
        "amount": 15,
        "target": "enemies",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -19543,6 +20882,12 @@
        "effect": "stealth",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
       }
      ],
      "trigger": {
@@ -19744,7 +21089,14 @@
      "name": "Mobile Weapon Ziegfried",
      "cooldown": 8,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -19761,6 +21113,12 @@
        "ratio": 0.14,
        "turns": 2,
        "estimated": false
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
      ],
      "trigger": {
@@ -19862,6 +21220,11 @@
        "effect": "cd_up",
        "target": "allies",
        "turns": 2
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -20130,7 +21493,13 @@
      "name": "Freeze Over",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
     }
    }
   },
@@ -20160,7 +21529,16 @@
      "name": "Wild Rose",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.8,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.7,
@@ -20212,6 +21590,12 @@
      "passive": false,
      "effects": [
       {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "allies",
+       "turns": 2
+      },
+      {
        "type": "debuff",
        "effect": "def_down",
        "target": "target",
@@ -20259,7 +21643,16 @@
      "name": "Follow Me! Charge!",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      },
+      {
+       "type": "dual"
+      }
+     ]
     },
     "s3": {
      "rate": 1,
@@ -20407,7 +21800,14 @@
      "name": "Soul Cutter",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "self",
+       "turns": 2
+      }
+     ]
     }
    }
   },
@@ -20577,7 +21977,8 @@
      "name": "I Am The Victor!",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "full_cd_start": true
     },
     "s2": {
      "rate": null,
@@ -20602,6 +22003,12 @@
       {
        "type": "gauge",
        "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
        "target": "self",
        "chance": 1.0
       },
@@ -20734,7 +22141,8 @@
        "target": "self",
        "turns": 1
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s3": {
      "rate": 1.65,
@@ -20756,7 +22164,8 @@
      "name": "The Will of La Mare",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [],
+     "always_crit": true
     },
     "s3_splash": {
      "rate": 0,
@@ -20780,6 +22189,10 @@
        "amount": 15,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "damage_reduction",
+       "value": 0.3
       }
      ],
      "aoe": false
@@ -20873,8 +22286,14 @@
        "effect": "immunity",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s2": {
      "rate": 0.8,
@@ -20895,12 +22314,19 @@
      "passive": true,
      "effects": [
       {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      },
+      {
        "type": "gauge",
        "amount": 20,
        "target": "enemies",
        "chance": 1.0
       }
      ],
+     "always_crit": true,
      "trigger": {
       "event": "resource",
       "chance": 1.0,
@@ -20937,7 +22363,8 @@
        "target": "target",
        "turns": 2
       }
-     ]
+     ],
+     "always_crit": true
     }
    }
   },
@@ -20989,6 +22416,12 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      },
       {
        "type": "gauge",
        "amount": 10,
@@ -21071,7 +22504,13 @@
      "name": "Resolve",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -21264,6 +22703,12 @@
        "type": "strip",
        "target": "enemies",
        "all": false
+      },
+      {
+       "type": "cooldown",
+       "amount": 1,
+       "target": "target",
+       "chance": 1.0
       }
      ],
      "aoe": false
@@ -21583,7 +23028,14 @@
      "name": "Infinity Slash",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
     },
     "s3": {
      "rate": 1.1,
@@ -21651,7 +23103,16 @@
      "name": "Mana Bullet",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -21743,6 +23204,11 @@
        "amount": 15,
        "target": "allies",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 0.4,
+       "on_kill": false
       }
      ]
     },
@@ -21824,7 +23290,8 @@
        "chance": 1.0,
        "ignore_resist": false
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s2": {
      "rate": 0.95,
@@ -21845,6 +23312,7 @@
      "cooldown": 0,
      "passive": true,
      "effects": [],
+     "always_crit": true,
      "trigger": {
       "event": "battle_start",
       "chance": 1.0
@@ -21877,7 +23345,8 @@
        "chance": 0.8,
        "ignore_resist": false
       }
-     ]
+     ],
+     "always_crit": true
     }
    }
   },
@@ -21952,6 +23421,12 @@
       {
        "type": "buff",
        "effect": "atk_up",
+       "target": "target",
+       "turns": 1
+      },
+      {
+       "type": "buff",
+       "effect": "atk_up_great",
        "target": "target",
        "turns": 1
       },
@@ -22235,7 +23710,8 @@
        "chance": 0.4,
        "ignore_resist": false
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s3": {
      "rate": 1,
@@ -22278,6 +23754,10 @@
        "amount": 15,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "damage_reduction",
+       "value": 0.5
       }
      ],
      "trigger": {
@@ -22357,6 +23837,12 @@
        "effect": "immortal",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
       }
      ]
     },
@@ -22609,7 +24095,8 @@
        "ratio": 0.6,
        "estimated": true
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s3": {
      "rate": 0.5,
@@ -22635,7 +24122,8 @@
        "target": "self",
        "turns": 2
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s2": {
      "rate": null,
@@ -22744,6 +24232,16 @@
        "effect": "atk_up",
        "target": "target",
        "turns": 1
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
       }
      ]
     },
@@ -22788,7 +24286,14 @@
      "name": "Dragon Fear",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 3
+      }
+     ]
     }
    }
   },
@@ -22880,6 +24385,18 @@
        "effect": "spd_up",
        "target": "self",
        "turns": 2
+      },
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
       }
      ],
      "trigger": {
@@ -23221,6 +24738,12 @@
      "passive": false,
      "effects": [
       {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "allies",
+       "turns": 2
+      },
+      {
        "type": "gauge",
        "amount": 20,
        "target": "allies",
@@ -23425,6 +24948,11 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -23489,6 +25017,14 @@
       {
        "type": "debuff",
        "effect": "stun",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.3,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "bleed",
        "target": "enemies",
        "turns": 2,
        "chance": 1.3,
@@ -23559,7 +25095,14 @@
      "name": "Quick Shot",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
     },
     "s2": {
      "rate": 1.3,
@@ -23588,6 +25131,11 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -23636,7 +25184,16 @@
      "name": "Leap Strike",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.8,
@@ -23799,6 +25356,12 @@
        "type": "strip",
        "target": "enemies",
        "all": true
+      },
+      {
+       "type": "cooldown",
+       "amount": 1,
+       "target": "enemies",
+       "chance": 1.0
       }
      ]
     }
@@ -23946,6 +25509,14 @@
      "passive": false,
      "effects": [
       {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
        "type": "gauge",
        "amount": -30,
        "target": "target",
@@ -24034,6 +25605,12 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 1
+      },
       {
        "type": "gauge",
        "amount": 10,
@@ -24237,6 +25814,7 @@
        "estimated": true
       }
      ],
+     "full_cd_start": true,
      "aoe": false
     }
    }
@@ -24299,6 +25877,14 @@
        "ignore_resist": false
       },
       {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 0.85,
+       "ignore_resist": false
+      },
+      {
        "type": "gauge",
        "amount": 25,
        "target": "self",
@@ -24308,6 +25894,12 @@
        "type": "strip",
        "target": "enemies",
        "all": false
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 0.85
       }
      ],
      "trigger": {
@@ -24412,6 +26004,11 @@
        "effect": "atk_up",
        "target": "target",
        "turns": 2
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
       }
      ]
     },
@@ -24601,7 +26198,12 @@
      "name": "Area Defense",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "damage_reduction",
+       "value": 0.2
+      }
+     ],
      "aoe": false
     }
    }
@@ -24635,7 +26237,16 @@
      "name": "Hurricane Sword",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.8,
@@ -24657,7 +26268,13 @@
      "name": "Storm Bullet",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
+      }
+     ]
     },
     "s3": {
      "rate": 1.6,
@@ -24799,7 +26416,16 @@
      "name": "Chaos Strike",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.6,
@@ -24917,7 +26543,16 @@
      "name": "Punishing Blade",
      "cooldown": 5,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": null,
@@ -25048,6 +26683,11 @@
        "ratio": 0.6,
        "turns": 3,
        "estimated": true
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -25088,6 +26728,9 @@
        "turns": 1,
        "chance": 0.75,
        "ignore_resist": false
+      },
+      {
+       "type": "dual"
       }
      ]
     },
@@ -25180,6 +26823,9 @@
        "turns": 2,
        "chance": 0.5,
        "ignore_resist": false
+      },
+      {
+       "type": "dual"
       }
      ]
     },
@@ -25230,6 +26876,11 @@
        "estimated": false
       },
       {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      },
+      {
        "type": "cleanse",
        "target": "target",
        "all": false
@@ -25275,7 +26926,13 @@
      "name": "Execution",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
     },
     "s3": {
      "rate": 0.8,
@@ -25317,6 +26974,10 @@
        "amount": 15,
        "target": "allies",
        "chance": 1.0
+      },
+      {
+       "type": "damage_reduction",
+       "value": 0.3
       }
      ],
      "aoe": false
@@ -25357,6 +27018,11 @@
        "turns": 1,
        "chance": 0.4,
        "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 0.4,
+       "on_kill": false
       }
      ]
     },
@@ -25411,7 +27077,16 @@
      "name": "Starfall",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     }
    }
   },
@@ -25662,6 +27337,9 @@
        "stat": "atk",
        "ratio": 0.6,
        "estimated": true
+      },
+      {
+       "type": "dual"
       }
      ]
     },
@@ -25690,6 +27368,11 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -25885,6 +27568,17 @@
        "effect": "immunity",
        "target": "allies",
        "turns": 2
+      },
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "allies",
+       "turns": 2
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -25939,7 +27633,11 @@
      "name": "Command Strike",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "dual"
+      }
+     ]
     },
     "s3": {
      "rate": 0.9,
@@ -26007,7 +27705,14 @@
      "name": "Slaughter",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ],
+     "always_crit": true
     },
     "s3": {
      "rate": 1.2,
@@ -26036,6 +27741,7 @@
        "ignore_resist": false
       }
      ],
+     "always_crit": true,
      "trigger": {
       "event": "after_attack",
       "chance": 1.0
@@ -26244,6 +27950,14 @@
        "effect": "atk_up",
        "target": "self",
        "turns": 3
+      },
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 3,
+       "chance": 1.0,
+       "ignore_resist": false
       }
      ]
     }
@@ -26275,7 +27989,21 @@
      "name": "Sword Flash",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 0.75,
+       "on_kill": false
+      }
+     ]
     },
     "s3": {
      "rate": 1.5,
@@ -26310,7 +28038,14 @@
      "name": "Concentration",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      }
+     ],
      "trigger": {
       "event": "after_attack",
       "chance": 1.0
@@ -26476,6 +28211,12 @@
        "type": "strip",
        "target": "enemies",
        "all": false
+      },
+      {
+       "type": "cooldown",
+       "amount": 1,
+       "target": "enemies",
+       "chance": 1.0
       }
      ]
     },
@@ -26653,9 +28394,22 @@
      "passive": false,
      "effects": [
       {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      },
+      {
        "type": "strip",
        "target": "enemies",
        "all": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 0.75,
+       "on_kill": false
       }
      ]
     },
@@ -26672,6 +28426,14 @@
        "effect": "atk_up",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
       },
       {
        "type": "barrier",
@@ -26723,7 +28485,16 @@
      "name": "Infiltration",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "poison",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": 1.5,
@@ -26795,6 +28566,11 @@
        "effect": "atk_up",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
       }
      ]
     },
@@ -26841,6 +28617,11 @@
        "type": "strip",
        "target": "target",
        "all": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -26874,6 +28655,12 @@
      "cooldown": 4,
      "passive": false,
      "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "enemies",
+       "turns": 1
+      },
       {
        "type": "strip",
        "target": "enemies",
@@ -26975,6 +28762,11 @@
        "amount": 20,
        "target": "allies",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -27095,7 +28887,14 @@
      "name": "Quick Shot",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
     },
     "s2": {
      "rate": 1.3,
@@ -27124,6 +28923,11 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -27339,6 +29143,18 @@
        "turns": 3
       },
       {
+       "type": "buff",
+       "effect": "atk_up_great",
+       "target": "allies",
+       "turns": 3
+      },
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "allies",
+       "turns": 3
+      },
+      {
        "type": "heal",
        "target": "allies",
        "stat": "hp",
@@ -27415,6 +29231,11 @@
        "type": "strip",
        "target": "target",
        "all": true
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -27504,6 +29325,10 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "damage_reduction",
+       "value": 0.3
+      },
       {
        "type": "cleanse",
        "target": "self",
@@ -27611,6 +29436,17 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
      ]
     },
@@ -27633,12 +29469,23 @@
      "passive": false,
      "effects": [
       {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "self",
+       "turns": 2
+      },
+      {
        "type": "debuff",
        "effect": "spd_down",
        "target": "enemies",
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
       }
      ]
     }
@@ -27764,7 +29611,16 @@
      "name": "Neutralize",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.9,
@@ -27784,6 +29640,14 @@
      "cooldown": 4,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
       {
        "type": "gauge",
        "amount": 50,
@@ -27833,6 +29697,11 @@
        "amount": 25,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
       }
      ]
     }
@@ -28022,6 +29891,11 @@
        "amount": 20,
        "target": "allies",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -28167,6 +30041,11 @@
        "amount": 15,
        "target": "target",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
       }
      ]
     },
@@ -28199,7 +30078,12 @@
      "name": "Hero of Ishval",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "damage_cap",
+       "value": 0.51
+      }
+     ],
      "trigger": {
       "event": "battle_start",
       "chance": 1.0
@@ -28507,6 +30391,11 @@
        "type": "strip",
        "target": "enemies",
        "all": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
       }
      ]
     },
@@ -28573,7 +30462,11 @@
      "name": "Corrupted Divinity",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "dual"
+      }
+     ]
     },
     "s3": {
      "rate": 0.7,
@@ -28615,7 +30508,19 @@
      "name": "Salvation",
      "cooldown": 4,
      "passive": false,
-     "effects": [],
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "self",
+       "turns": 1
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ],
      "aoe": false
     }
    }
@@ -28740,7 +30645,16 @@
      "name": "Ankle Cut",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.85,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.7,
@@ -28754,6 +30668,12 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      },
       {
        "type": "strip",
        "target": "enemies",
@@ -28872,6 +30792,12 @@
        "turns": 1
       },
       {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
        "type": "cleanse",
        "target": "ally",
        "all": true
@@ -28970,7 +30896,16 @@
      "name": "This'll Sting!",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.65,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -29078,7 +31013,13 @@
      "name": "Rifle Shot",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -29194,6 +31135,14 @@
       {
        "type": "debuff",
        "effect": "provoke",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.85,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "hit_down",
        "target": "enemies",
        "turns": 2,
        "chance": 1.85,
@@ -29392,7 +31341,13 @@
      "name": "Coerce",
      "cooldown": 3,
      "passive": false,
-     "effects": [],
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ],
      "aoe": false
     }
    }
@@ -29428,7 +31383,12 @@
      "name": "Crimson Claws",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "dual"
+      }
+     ],
+     "always_crit": true
     },
     "s3": {
      "rate": 0.5,
@@ -29457,7 +31417,8 @@
        "target": "enemies",
        "chance": 1.0
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s2": {
      "rate": null,
@@ -29525,7 +31486,16 @@
      "name": "Magic Design",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -29546,6 +31516,11 @@
        "effect": "immortal",
        "target": "ally",
        "turns": 1
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -29714,6 +31689,14 @@
        "turns": 1,
        "chance": 0.6,
        "ignore_resist": true
+      },
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
       }
      ]
     },
@@ -29746,7 +31729,21 @@
      "name": "Unexpected Accident",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -29829,6 +31826,10 @@
        "turns": 2,
        "chance": 0.75,
        "ignore_resist": false
+      },
+      {
+       "type": "damage_reduction",
+       "value": 0.1
       }
      ],
      "trigger": {
@@ -29865,6 +31866,14 @@
       {
        "type": "debuff",
        "effect": "unhealable",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
        "target": "enemies",
        "turns": 2,
        "chance": 1.0,
@@ -29912,6 +31921,9 @@
        "type": "strip",
        "target": "target",
        "all": false
+      },
+      {
+       "type": "dual"
       }
      ]
     },
@@ -30150,6 +32162,12 @@
        "turns": 2,
        "chance": 0.75,
        "ignore_resist": false
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 0.75
       }
      ]
     },
@@ -30170,7 +32188,16 @@
      "name": "Flame Kiss",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     }
    }
   },
@@ -30206,7 +32233,13 @@
      "name": "Horizontal Slash",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s2": {
      "rate": 0.9,
@@ -30230,6 +32263,12 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "allies",
+       "turns": 2
+      },
       {
        "type": "gauge",
        "amount": 50,
@@ -30256,7 +32295,16 @@
      "name": "Rouge Aroma",
      "cooldown": 3,
      "passive": false,
-     "effects": [],
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      }
+     ],
      "aoe": false
     }
    },
@@ -30365,6 +32413,10 @@
        "amount": 30,
        "target": "enemies",
        "chance": 1.0
+      },
+      {
+       "type": "damage_cap",
+       "value": 0.51
       }
      ],
      "trigger": {
@@ -30619,6 +32671,10 @@
        "effect": "stealth",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "damage_cap",
+       "value": 0.51
       }
      ],
      "trigger": {
@@ -30655,7 +32711,14 @@
      "name": "How Fragile",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": 1,
+       "target": "target",
+       "chance": 1.0
+      }
+     ]
     },
     "s3": {
      "rate": 1,
@@ -30770,7 +32833,16 @@
      "name": "Sever",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 1.25,
@@ -30797,6 +32869,19 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -30975,7 +33060,16 @@
      "name": "Flame Friction",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
     },
     "s1_bis": {
      "rate": 0.5,
@@ -31010,6 +33104,14 @@
       {
        "type": "debuff",
        "effect": "stun",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "burn",
        "target": "enemies",
        "turns": 2,
        "chance": 1.0,
@@ -31082,6 +33184,9 @@
        "turns": 1,
        "chance": 0.75,
        "ignore_resist": false
+      },
+      {
+       "type": "dual"
       }
      ]
     },
@@ -31162,7 +33267,13 @@
      "name": "Gunflame",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
     },
     "s2": {
      "rate": 0.7,
@@ -31321,6 +33432,11 @@
        "amount": -30,
        "target": "target",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -31349,6 +33465,22 @@
       {
        "type": "debuff",
        "effect": "spd_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 2.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 2.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
        "target": "target",
        "turns": 1,
        "chance": 2.0,
@@ -31552,7 +33684,25 @@
      "name": "Light Storm",
      "cooldown": 5,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     }
    }
   },
@@ -31583,7 +33733,21 @@
      "name": "Poison Blast",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "poison",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.7,
+       "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 0.7,
+       "on_kill": true
+      }
+     ]
     },
     "s3": {
      "rate": 1.8,
@@ -31674,6 +33838,16 @@
        "effect": "atk_up",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
       }
      ]
     },
@@ -31698,7 +33872,18 @@
      "name": "Sixth Sense",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "damage_cap",
+       "value": 0.51
+      }
+     ],
      "trigger": {
       "event": "death",
       "chance": 1.0
@@ -31789,6 +33974,12 @@
        "type": "gauge",
        "amount": 50,
        "target": "target",
+       "chance": 1.0
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
        "chance": 1.0
       }
      ],
@@ -31957,7 +34148,8 @@
        "target": "target",
        "chance": 1.0
       }
-     ]
+     ],
+     "always_crit": true
     },
     "s1_bis": {
      "rate": 1.85,
@@ -32016,6 +34208,11 @@
        "type": "strip",
        "target": "enemies",
        "all": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -32219,6 +34416,11 @@
        "type": "strip",
        "target": "target",
        "all": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 0.75,
+       "on_kill": false
       }
      ]
     },
@@ -32298,7 +34500,16 @@
      "name": "Chain Dagger",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 1.4,
@@ -32321,6 +34532,14 @@
       {
        "type": "debuff",
        "effect": "atk_down",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "bleed",
        "target": "target",
        "turns": 2,
        "chance": 1.0,
@@ -32385,7 +34604,16 @@
      "name": "Shadow Tracking",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": 1.5,
@@ -32608,6 +34836,12 @@
        "turns": 2
       },
       {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      },
+      {
        "type": "strip",
        "target": "enemies",
        "all": false
@@ -32699,7 +34933,12 @@
      "name": "Insight",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "damage_reduction",
+       "value": 0.7
+      }
+     ],
      "trigger": {
       "event": "resource",
       "chance": 1.0,
@@ -32746,7 +34985,16 @@
      "name": "Sweep",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.8,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": 1,
@@ -32896,6 +35144,12 @@
        "type": "strip",
        "target": "enemies",
        "all": true
+      },
+      {
+       "type": "cooldown",
+       "amount": 1,
+       "target": "enemies",
+       "chance": 1.0
       }
      ]
     },
@@ -32907,6 +35161,12 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "buff",
+       "effect": "nullifier",
+       "target": "self",
+       "turns": 3
+      },
       {
        "type": "cleanse",
        "target": "self",
@@ -32999,6 +35259,12 @@
        "amount": 100,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
       }
      ],
      "trigger": {
@@ -33068,6 +35334,14 @@
      "cooldown": 3,
      "passive": false,
      "effects": [
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true
+      },
       {
        "type": "strip",
        "target": "target",
@@ -33148,6 +35422,15 @@
        "type": "strip",
        "target": "ally",
        "all": true
+      },
+      {
+       "type": "dual"
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
      ]
     },
@@ -33177,6 +35460,12 @@
        "amount": 50,
        "target": "allies",
        "chance": 1.0
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
      ],
      "aoe": false
@@ -33202,6 +35491,7 @@
        "all": true
       }
      ],
+     "full_cd_start": true,
      "aoe": false
     }
    }
@@ -33405,7 +35695,16 @@
      "name": "Lunge",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "bleed",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.5,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": 1,
@@ -33437,6 +35736,14 @@
        "turns": 2,
        "chance": 0.85,
        "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 0.85,
+       "ignore_resist": false
       }
      ]
     },
@@ -33464,6 +35771,10 @@
        "type": "strip",
        "target": "self",
        "all": false
+      },
+      {
+       "type": "damage_cap",
+       "value": 0.51
       }
      ],
      "trigger": {
@@ -33539,6 +35850,14 @@
       {
        "type": "debuff",
        "effect": "spd_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "no_buff",
        "target": "enemies",
        "turns": 2,
        "chance": 1.0,
@@ -33629,7 +35948,13 @@
      "name": "Rift Cleave",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s1_extra": {
      "rate": 0.3,
@@ -33709,7 +36034,16 @@
      "name": "Demon Cutter",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": 1.2,
@@ -33735,7 +36069,13 @@
      "name": "Soul Break",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -33825,6 +36165,12 @@
        "ratio": 1,
        "turns": 3,
        "estimated": false
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
       }
      ]
     },
@@ -33841,6 +36187,11 @@
        "amount": 20,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -33901,7 +36252,12 @@
      "name": "Delusional Runway",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "damage_cap",
+       "value": 0.51
+      }
+     ],
      "trigger": {
       "event": "turn_start",
       "chance": 0.2,
@@ -34101,7 +36457,12 @@
      "name": "Sword of Requiem",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "damage_reduction",
+       "value": 0.3
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -34421,7 +36782,14 @@
      "name": "Light Piercing the End",
      "cooldown": 0,
      "passive": true,
-     "effects": []
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": 1,
+       "target": "enemies",
+       "chance": 1.0
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -34431,6 +36799,11 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      },
       {
        "type": "cleanse",
        "target": "self",
@@ -34539,7 +36912,14 @@
      "name": "Wild Charge",
      "cooldown": 0,
      "passive": true,
-     "effects": [],
+     "effects": [
+      {
+       "type": "cooldown",
+       "amount": -99,
+       "target": "self",
+       "chance": 1.0
+      }
+     ],
      "trigger": {
       "event": "resource",
       "chance": 1.0,
@@ -34669,7 +37049,16 @@
      "name": "Blade Gust",
      "cooldown": 3,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 0.8,
+       "ignore_resist": false
+      }
+     ]
     },
     "s3": {
      "rate": 1.8,
@@ -34699,6 +37088,11 @@
        "turns": 2,
        "chance": 1.0,
        "ignore_resist": true
+      },
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
       }
      ]
     }
@@ -34764,6 +37158,11 @@
        "type": "strip",
        "target": "target",
        "all": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -34967,6 +37366,12 @@
        "effect": "cc_up",
        "target": "self",
        "turns": 2
+      },
+      {
+       "type": "buff",
+       "effect": "atk_up_great",
+       "target": "self",
+       "turns": 2
       }
      ],
      "aoe": false
@@ -35132,7 +37537,14 @@
      "name": "Butterfly Cut",
      "cooldown": 5,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "evasion",
+       "target": "self",
+       "turns": 2
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -35148,6 +37560,11 @@
        "stat": "hp",
        "ratio": 0.15,
        "estimated": true
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       },
       {
        "type": "cleanse",
@@ -35255,6 +37672,12 @@
        "type": "buff",
        "effect": "immunity",
        "target": "allies",
+       "turns": 3
+      },
+      {
+       "type": "buff",
+       "effect": "atk_up_great",
+       "target": "self",
        "turns": 3
       }
      ],
@@ -35396,6 +37819,9 @@
        "type": "strip",
        "target": "target",
        "all": false
+      },
+      {
+       "type": "dual"
       }
      ]
     },
@@ -35649,7 +38075,16 @@
      "name": "Overpower",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "target",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     },
     "s1_bis": {
      "rate": 1,
@@ -35683,7 +38118,16 @@
      "name": "Merciless Execution",
      "cooldown": 4,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "burn",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
     },
     "s2": {
      "rate": null,
@@ -35744,6 +38188,22 @@
        "turns": 1,
        "chance": 1.0,
        "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "poison",
+       "target": "target",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      },
+      {
+       "type": "dual"
       }
      ]
     },
@@ -35855,6 +38315,11 @@
        "effect": "stealth",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ]
     },
@@ -35894,6 +38359,12 @@
        "ratio": 0.2,
        "turns": 2,
        "estimated": false
+      },
+      {
+       "type": "cooldown",
+       "amount": -2,
+       "target": "self",
+       "chance": 1.0
       },
       {
        "type": "cleanse",
@@ -36045,6 +38516,9 @@
        "amount": 15,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "dual"
       }
      ]
     },
@@ -36063,6 +38537,11 @@
      "cooldown": 0,
      "passive": true,
      "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      },
       {
        "type": "cleanse",
        "target": "self",
@@ -36212,6 +38691,11 @@
        "amount": 20,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": true
       }
      ]
     }
@@ -36394,6 +38878,11 @@
        "effect": "atk_up",
        "target": "allies",
        "turns": 3
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
       }
      ],
      "aoe": false
@@ -36480,6 +38969,11 @@
        "chance": 1.0
       },
       {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      },
+      {
        "type": "cleanse",
        "target": "ally",
        "all": false
@@ -36518,7 +39012,13 @@
      "name": "Vampirism",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      }
+     ]
     },
     "s2": {
      "rate": 1.5,
@@ -36583,6 +39083,14 @@
        "turns": 2
       },
       {
+       "type": "debuff",
+       "effect": "no_buff",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
        "type": "strip",
        "target": "target",
        "all": true
@@ -36620,7 +39128,13 @@
      "name": "Black Thorn",
      "cooldown": 0,
      "passive": false,
-     "effects": []
+     "effects": [
+      {
+       "type": "extra_turn",
+       "chance": 0.35,
+       "on_kill": false
+      }
+     ]
     },
     "s3": {
      "rate": 1,

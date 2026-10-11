@@ -71,6 +71,7 @@ class Fighter:
     effectiveness: float = 0  # %
     effect_res: float = 0  # %
     counter_chance: float = 0  # % (set Contre)
+    lifesteal: float = 0  # % des dégâts infligés rendus en PV (set Vampire)
 
 
 @dataclass

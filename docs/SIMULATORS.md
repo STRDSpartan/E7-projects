@@ -68,5 +68,21 @@ l'adversaire, sauf étourdi ou endormi ; frappe avec la compétence du passif si
 sinon S1 ; pas de contre-attaque d'une contre-attaque. Le journal les affiche sous l'action
 (« ↳ »), le bilan moyen compte contre-attaques et passifs déclenchés.
 
-**Non simulés** : mécaniques propres à un héros (Âmes, balles, marques, rang arrière...), bonus de stats permanents des passifs (déjà inclus dans les stats affichées en
-jeu), dégâts fixes, artefacts, esquive, âme brûlée, mécaniques propres à un héros.
+### Mécaniques propres aux héros
+Lues dans les étiquettes E7GW de chaque compétence (`parse_effects`) :
+- **tour supplémentaire** (toujours, sur chance, ou si la cible meurt ; pas celui de l'âme
+  brûlée) et **attaque double** (S1 de l'allié à la plus forte attaque) ;
+- **recharges** : réduction sur soi (−N tours, remise à zéro) et augmentation chez l'ennemi ;
+  recharge pleine au départ (« Begins Battle With Full Skill Cooldown ») ;
+- **brûlure** (60 % de l'attaque du lanceur), **saignement** (30 %), **poison** (5 % des PV
+  max), au début du tour du porteur, sans défense (valeurs communautaires approchées) ;
+- **esquive +** et **précision −** : 50 % de coups ratés (dégâts × 0,75) ;
+- **attaque ++** (+75 %), **annulation** (le prochain coup ne fait rien), **buffs interdits** ;
+- **vol de vie** de la compétence (taux du texte, sinon 20 % estimé) et **set Vampire** (20 %) ;
+- **critique garanti** ; **réduction de dégâts** permanente et **plafond de dégâts par coup**
+  (« does not exceed 35% of max Health ») des passifs.
+
+**Non simulés** : Âmes et âme brûlée, Injures, Explosion (Detonate), Extinction, rang arrière,
+dégâts fixes ou additionnels, transferts, artefacts, mécaniques uniques d'un seul héros
+(balles de Renoa...), bonus de stats permanents des passifs (déjà inclus dans les stats
+affichées en jeu).

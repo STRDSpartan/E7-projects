@@ -12,6 +12,7 @@ from e7showcase.models.hero import Hero
 
 MAX_TEAM = 4
 MAX_RUNS = 5000
+LIFESTEAL_SET = 20  # % (sets.json : « Absorbs 20% of damage dealt as Health »)
 COUNTER_SET_CHANCE = 30  # % (data/reference/sets.json : « 30% chance to counterattack »)
 
 
@@ -35,6 +36,7 @@ def fighter(hero: Hero) -> Fighter:
         effectiveness=s.effectiveness,
         effect_res=s.effect_res,
         counter_chance=COUNTER_SET_CHANCE if "counter" in hero.sets else 0,
+        lifesteal=LIFESTEAL_SET if "lifesteal" in hero.sets else 0,
     )
 
 

@@ -141,6 +141,10 @@ def merge_skills(
                 passive=passive,
                 effects=effects,
             )
+            if "Always Results in a Critical Hit" in sk["tags"]:
+                entry["always_crit"] = True
+            if "Begins Battle With Full Skill Cooldown" in sk["tags"]:
+                entry["full_cd_start"] = True
             if trigger := parse_trigger(sk["text"], passive=passive):
                 entry["trigger"] = trigger
             entry.setdefault("aoe", aoe)

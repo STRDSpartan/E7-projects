@@ -333,3 +333,49 @@ def test_conditional_passives_resource_lethal_and_ally_attacked() -> None:
     battle.hit(enemy, foe.skills["s1"], me)
     assert not me.alive  # une fois par combat
     assert friend.alive
+
+
+def test_parse_hero_mechanics() -> None:
+    effects = parse_effects(
+        "Attacks the enemy, with a 100% chance to inflict burn for 2 turns. When the enemy is "
+        "defeated, grants an extra turn. Decreases skill cooldown by 2 turns.",
+        ["Burn", "Extra Turn", "Decrease Skill Cooldown (Self)"],
+    )
+    types = {e["type"]: e for e in effects}
+    assert types["debuff"]["effect"] == "burn" and types["debuff"]["turns"] == 2
+    assert types["extra_turn"] == {"type": "extra_turn", "chance": 1.0, "on_kill": True}
+    assert types["cooldown"]["amount"] == -2 and types["cooldown"]["target"] == "self"
+    cap = parse_effects(
+        "When attacked, damage suffered in one attack does not exceed 35% of max Health.",
+        ["Damage Taken Cap"],
+    )
+    assert cap == [{"type": "damage_cap", "value": 0.35}]
+    burn = parse_effects("Grants an extra turn when using Soulburn.", ["Extra Turn"])
+    assert burn == []
+
+
+def test_hero_mechanics_in_battle() -> None:
+    dummy = Fighter("Cible", 0, 10**6, 1000, 1, 0, 150, None, {"s1": _skill(None)})
+    pyro = Fighter("Pyro", 2000, 10**5, 1000, 100, 0, 150, None, {"s1": _skill(1.0)})
+    battle = _Battle([pyro], [dummy], random.Random(1), {}, Options(), True)
+    me, foe = battle.units
+    battle.apply(
+        me,
+        {"type": "debuff", "effect": "burn", "target": "target", "turns": 2, "ignore_resist": True},
+        [foe],
+    )
+    battle.dots(foe)
+    assert foe.hp == 10**6 - 1200  # 60 % de l'attaque du lanceur
+    foe.cap = 0.0005  # plafond : 500 PV par coup
+    before = foe.hp
+    battle.hit(me, pyro.skills["s1"], foe)
+    assert before - foe.hp == pytest.approx(500)
+    foe.buffs["nullifier"] = 1
+    assert "annule" in battle.hit(me, pyro.skills["s1"], foe) and "nullifier" not in foe.buffs
+    # vol de vie, critique garanti, tour supplémentaire
+    me.hp = 50000
+    vamp = {**_skill(1.0, {"type": "lifesteal", "ratio": 0.5}), "always_crit": True}
+    assert "(critique)" in battle.hit(me, vamp, foe) and me.hp > 50000
+    battle.specials(me, _skill(1.0, {"type": "extra_turn", "chance": 1.0}), [foe])
+    assert me.gauge == 100 and battle.stats["extra_turns"] == 1
+    battle.apply(me, {"type": "cooldown", "amount": 1, "target": "self"}, [])

@@ -354,7 +354,7 @@ function battlePage(body, heroes) {
           el("div", { style: `width:${r.draws}%;background:#555` }, r.draws >= 8 ? `Nul ${r.draws} %` : ""),
           el("div", { style: `width:${wb}%;background:#b33f3f` }, wb >= 8 ? `B ${wb} %` : "")),
         el("p", {}, `Équipe A (${r.teams[0].join(", ")}) : ${wa} % de victoires · Équipe B (${r.teams[1].join(", ")}) : ${wb} % · ${r.avg_actions} actions en moyenne.`),
-        el("p", { class: "note" }, `Par combat, en moyenne : ${fmtN(r.avg.healed)} PV soignés · ${fmtN(r.avg.shielded)} de barrières · ${r.avg.buffs} buffs · ${r.avg.debuffs} débuffs appliqués · ${r.avg.counters} contre-attaques · ${r.avg.passives} passifs déclenchés.`),
+        el("p", { class: "note" }, `Par combat, en moyenne : ${fmtN(r.avg.healed)} PV soignés · ${fmtN(r.avg.shielded)} de barrières · ${r.avg.buffs} buffs · ${r.avg.debuffs} débuffs appliqués · ${r.avg.counters} contre-attaques · ${r.avg.passives} passifs déclenchés · ${r.avg.extra_turns} tours supplémentaires.`),
         el("h3", { style: "margin-top:12px" }, "Déroulé d'un combat type"),
         el("div", { class: "log" }, r.sample.log.join("\n") || "—"),
         el("p", { class: "note" }, "Simulés : jauge selon la vitesse, recharges réelles, soins (montant type si le jeu ne le chiffre pas), barrières, buffs (attaque, défense, vitesse, critiques, immunité, invincibilité, camouflage, immortalité), débuffs (défense, attaque, vitesse, étourdissement, sommeil, silence, provocation, anti-soin) selon efficacité/résistance, jauge, retraits de buffs et débuffs. Non simulés : passifs et déclencheurs (contre-attaques, attaques supplémentaires, résurrection), artefacts, esquive, âme brûlée.")));
