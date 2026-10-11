@@ -125,8 +125,23 @@ partiel, contre-attaque quand un allié est attaqué, dégâts doublés hors de 
   Byblis, la recopie de jauge de la Dame de la Balance, le seuil « 20 % des PV » de la
   contre-attaque d'Estelle, les gains d'attaque ∝ PV de l'infirmière Yulha ; montants de soin
   non chiffrés par le jeu marqués `estimated`.
-- **Lot 2** (à faire) : Zio, Renoa, Eye of the Abyss Fumyr, Belian, Monarch of the Sword
-  Iseria, Notos, Tidal Rift Elvira, Rinak, Frieren, Aubade Ludwig.
+- **Lot 2** (fait) : Zio, Renoa, Eye of the Abyss Fumyr, Belian, Monarch of the Sword Iseria,
+  Notos, Tidal Rift Elvira, Rinak, Frieren, Aubade Ludwig. Mécaniques ajoutées (définitions
+  E7GW) : attaques supplémentaires conditionnelles (`extra_attack` : chance, pendant son tour,
+  une fois par tour, si un buff est actif, effets si la cible meurt), déification (critique
+  +50 %, dégâts subis −50 %), Dieu de la guerre (stats doublées) et Sanctuaire (aucun buff ni
+  débuff), marques cumulables Fracture / Butin / Pillage, balles funèbres de Renoa, détention
+  (retiré du combat), malédiction (60 % des dégâts des alliés), engloutissement et cascade
+  (+4 000 dégâts fixes), aube (Âmes ×2, 25 % d'étourdir), magie défensive (4 Âmes pour annuler
+  un coup), blocage, soin continu (15 % des PV max), buff aléatoire, dégâts fixes de zone,
+  insensible aux Âmes ennemies, jauge figée, contre-attaques doublées et en chaîne.
+  Estimations : une attaque par balle funèbre (5 au plus) avec les multiplicateurs de la S1,
+  1 000 dégâts par Âme consommée (Lumière de la condamnation), recharges par défaut des S3 de
+  Renoa et Iseria, barrières non chiffrées. Non simulés : jauge recopiée par Elvira après les
+  compétences alliées, dégâts ∝ PV de la cible de Zio, ressources +40 % de Frieren.
+- **Correction** : Critique + vaut +50 % (infobulle officielle), et l'insensibilité aux
+  débuffs d'immobilisation couvre aussi la peur.
+- **Lot 3** (à faire) : héros suivants du classement RTA.
 
 **Non simulés** : mécaniques uniques non encore décrites dans `hero_mechanics.json` (balles de
 Renoa, vitesse fixe de Harsetti, marques...), Bombes, partage de dégâts, transferts, artefacts,

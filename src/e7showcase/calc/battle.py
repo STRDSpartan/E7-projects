@@ -65,6 +65,13 @@ BUFF_NAMES = {
     "ferocious": "Posture féroce",
     "abundance": "Abondance",
     "offering": "Offrande",
+    "deify": "Déification",
+    "god": "Dieu de la guerre",
+    "continuous_heal": "Soin continu",
+    "cascade": "Cascade",
+    "dawn": "Aube",
+    "engulf": "Engloutissement",
+    "def_magic": "Magie défensive",
 }
 DEBUFF_NAMES = {
     "def_down": "Défense −",
@@ -85,6 +92,9 @@ DEBUFF_NAMES = {
     "rupture": "Rupture",
     "seal": "Sceau",
     "venom": "Venin",
+    "block": "Blocage",
+    "curse": "Malédiction",
+    "detain": "Détention",
 }
 # dégâts sur la durée au début du tour du porteur (définitions E7GW) : saignement 40 % et
 # brûlure 70 % de l'attaque du lanceur en ignorant 70 % de la défense, poison 5 % et venin 10 %
@@ -94,6 +104,17 @@ DOT_DEF_IGNORED = 0.7
 FEAR_DISPEL = 0.4  # « at the start of the turn, has a 40% chance to be dispelled »
 RUPTURE = 0.05  # rupture : dégâts additionnels en part des PV max (non chiffré : estimé)
 ABUNDANCE = 2000  # « after attacking, inflicts 2,000 additional damage »
+CURSE = 0.6  # « deals additional damage equivalent to 60% of damage dealt to the bearer »
+CASCADE = 4000  # « after attacking, deals 4,000 fixed damage per target »
+CONTINUOUS_HEAL = 0.15  # « recovers 15% of max Health at the start of every turn »
+DEFENSIVE_MAGIC_SOULS = 4
+# marques cumulables (définitions E7GW) : stat → bonus par marque, et plafond
+MARKS = {
+    "fracture": ({"atk": 0.2, "defense": -0.05}, 10),
+    "spoils": ({"atk": 0.2, "hp": 0.2, "defense": 0.2}, 4),
+    "pilfer": ({"atk": -0.2, "hp": -0.2, "defense": -0.2}, 1),
+    "dirge": ({}, 10),
+}
 OFFERING_SHARE = 0.7  # « grants 70% damage sharing of the damage received by all allies »
 MISS_CHANCE = 0.5  # esquive + ou précision − : 50 % de coups ratés (dégâts × 0,75)
 # types d'effets connus du moteur (les règles par héros sont validées contre cette liste)
@@ -102,7 +123,8 @@ EFFECT_TYPES = frozenset(
         "heal", "barrier", "buff", "debuff", "gauge", "strip", "cleanse", "extra_turn", "dual",
         "cooldown", "lifesteal", "damage_reduction", "damage_cap", "injury", "detonate",
         "extinction", "fixed", "static_buff", "static_debuff", "static_immune",
-        "static_stat", "static_share", "revive_ally",
+        "static_stat", "static_share", "revive_ally", "static_flag", "mark", "fixed_hit",
+        "random_buff", "extra_attack", "soul_damage",
     }
 )  # fmt: skip
 PERMANENT = 10**6  # durée d'un statut permanent
@@ -143,12 +165,18 @@ class _Unit:
     immune: set[str] = field(default_factory=set)  # débuffs auxquels le héros est insensible
     share: float = 0.0  # partage de dégâts : part des dégâts des alliés prise par ce héros
     bonus: list[dict[str, Any]] = field(default_factory=list)  # stats tant qu'un buff est actif
+    marks: dict[str, int] = field(default_factory=dict)  # Fracture, Butin, Pillage, balles...
+    flags: set[str] = field(default_factory=set)  # mécaniques permanentes (static_flag)
 
     @property
     def max_hp(self) -> float:
         """PV max diminués des blessures (doublés par la surhumanisation)."""
         base = self.fighter.hp * (2 if "superhuman" in self.buffs else 1)
+        base *= (2 if "god" in self.buffs else 1) * self.mark_mult("hp")
         return max(base - self.injury, 1)
+
+    def mark_mult(self, stat: str) -> float:
+        return 1 + sum(MARKS[m][0].get(stat, 0) * n for m, n in self.marks.items() if m in MARKS)
 
     def stat(self, name: str) -> float:
         """Statistique avec les bonus conditionnels (`static_stat`) et les buffs à pourcentage."""
@@ -162,6 +190,12 @@ class _Unit:
             value += 30
         if name == "defense" and "indomitable" in self.buffs:
             value *= 1.3
+        if name == "effectiveness" and "engulf" in self.buffs:
+            value += 100
+        if name in ("atk", "defense"):
+            value *= self.mark_mult(name)
+        if "god" in self.buffs and name in ("atk", "defense", "effectiveness", "effect_res"):
+            value *= 2  # Dieu de la guerre : toutes les stats doublées
         return value
 
     @property
@@ -179,15 +213,21 @@ class _Unit:
             + (0.3 if "spd_up" in self.buffs else 0)
             - (0.3 if "spd_down" in self.debuffs else 0)
             + (1.0 if "superhuman" in self.buffs else 0)
+            + (0.2 if self.marks.get("dirge") else 0)
         )
-        return max(self.fighter.spd * mult, 1)
+        return max(self.fighter.spd * mult * (2 if "god" in self.buffs else 1), 1)
 
     def attacker_view(self) -> Fighter:
         """Combattant avec ses buffs de critique appliqués."""
         return replace(
             self.fighter,
-            crit_chance=self.fighter.crit_chance + (30 if "cc_up" in self.buffs else 0),
-            crit_dmg=self.fighter.crit_dmg + (50 if "cd_up" in self.buffs else 0),
+            atk=self.stat("atk"),
+            crit_chance=self.fighter.crit_chance
+            + (50 if "cc_up" in self.buffs else 0)
+            + (50 if "deify" in self.buffs else 0),
+            crit_dmg=self.fighter.crit_dmg
+            + (50 if "cd_up" in self.buffs else 0)
+            + (20 if self.marks.get("dirge") else 0),
         )
 
 
@@ -225,6 +265,7 @@ class _Battle:
         self.actions = 0
         self.deaths: list[_Unit] = []
         self.last_targets: list[_Unit] = []
+        self.soul_bonus = 0.0  # dégâts additionnels payés en Âmes (Aubade Ludwig)
         self.crits: list[_Unit] = []
         for u in self.units:  # mécaniques permanentes des passifs, recharges pleines au départ
             for sid, skill in u.fighter.skills.items():
@@ -249,6 +290,8 @@ class _Battle:
                         u.bonus.append(e)
                     elif e["type"] == "static_share":
                         u.share = max(u.share, float(e["value"]))
+                    elif e["type"] == "static_flag":
+                        u.flags.add(e["flag"])
         for u in self.units:  # jauges de départ (« starts the first battle with 50 ... »)
             for sid, skill in u.fighter.skills.items():
                 res = (skill.get("trigger") or {}).get("resource")
@@ -263,7 +306,8 @@ class _Battle:
         return [x for x in self.units if x.alive and x.team == u.team]
 
     def foes(self, u: _Unit) -> list[_Unit]:
-        return [x for x in self.units if x.alive and x.team != u.team]
+        """Ennemis en jeu (un héros en détention est retiré du champ de bataille)."""
+        return [x for x in self.units if x.alive and x.team != u.team and "detain" not in x.debuffs]
 
     def cooldown(self, sid: str, skill: dict[str, Any]) -> int:
         cd = skill.get("cooldown")
@@ -340,10 +384,14 @@ class _Battle:
             return [min(pool, key=key)] if pool else []
         if who == "enemies":
             return foes
+        if who == "enemy_front":  # premier ennemi
+            return foes[:1]
         if who == "front":  # premier emplacement de l'équipe
             return allies[:1]
         if who == "last":  # cible de l'effet précédent
             return [t for t in self.last_targets if t.alive]
+        if who == "other_enemies":  # tous les ennemis sauf la cible
+            return [f for f in foes if f not in hit] or foes
         if who == "back_row":  # dernier emplacement de l'équipe
             pool = [a for a in allies if a is not actor] or allies
             return pool[-1:]
@@ -372,6 +420,8 @@ class _Battle:
             return self.allies(u)[:1] == [u]
         if kind == "has_buff":
             return cond.get("buff") in u.buffs if cond.get("buff") else bool(u.buffs)
+        if kind == "souls_at_least":
+            return self.souls[u.team] >= int(cond["value"])
         if kind == "other_has":
             return other is not None and cond["buff"] in other.buffs
         return True
@@ -440,12 +490,17 @@ class _Battle:
                 self.stats["passives"] += 1
                 self.note(f"  ↳ {u.name} passif {sid.upper()} → " + ", ".join(parts))
 
-    def counter(self, u: _Unit, attacker: _Unit, forced: bool = False) -> None:
+    def counter(self, u: _Unit, attacker: _Unit, forced: bool = False, chain: bool = True) -> None:
         """Contre-attaque de `u` (passif ou set Contre) sur `attacker`."""
         if not (u.alive and attacker.alive) or {"stun", "sleep", "fear", "bind"} & set(u.debuffs):
             return
         passives = [] if forced else self.triggered(u, "counter")
-        if not forced and not passives and self.rng.random() >= u.fighter.counter_chance / 100:
+        mult = 2 if "counter_x2" in u.flags else 1  # « all counterattack chances are doubled »
+        if (
+            not forced
+            and not passives
+            and self.rng.random() >= mult * u.fighter.counter_chance / 100
+        ):
             return
         passive = passives[0][1] if passives else {}
         basic = u.fighter.skills.get("s1_counter") or u.fighter.skills.get("s1")
@@ -454,9 +509,13 @@ class _Battle:
             return
         self.stats["counters"] += 1
         parts = [self.hit(u, skill, attacker)]
-        for effect in skill.get("effects", []) if skill is passive else []:
+        own = skill is passive or skill is u.fighter.skills.get("s1_counter")
+        for effect in skill.get("effects", []) if own else []:
             parts += self.apply(u, effect, [attacker])
         self.note(f"  ↳ {u.name} contre-attaque → " + ", ".join(parts))
+        front = self.allies(u)[:1]
+        if chain and "counter_chain" in u.flags and front and front[0] is not u:
+            self.counter(front[0], attacker, forced=True, chain=False)  # contre-attaque en chaîne
 
     # --- effets
     def mark(self, target: _Unit, name: str) -> None:
@@ -489,9 +548,14 @@ class _Battle:
                 self.mark(t, "barrier")
                 self.stats["shielded"] += amount
                 notes.append(f"barrière {t.name} {_fmt(amount)}")
+            elif kind in ("buff", "debuff") and self.sanctuary() and not effect.get("unique"):
+                notes.append(f"{t.name} : Sanctuaire")  # tous insensibles aux buffs et débuffs
+            elif kind in ("buff", "debuff") and "bullets" in t.flags and t is not actor:
+                t.marks["dirge"] = min(t.marks.get("dirge", 0) + 1, MARKS["dirge"][1])
+                notes.append(f"balle funèbre → {t.name}")  # Renoa : effets changés en balles
             elif kind == "buff":
                 name = effect["effect"]
-                if "no_buff" in t.debuffs:
+                if "no_buff" in t.debuffs or ("block" in t.debuffs and t is not actor):
                     continue
                 if name == "superhuman" and name not in t.buffs:
                     t.hp *= 2  # PV max doublés : PV actuels relevés d'autant (proportionnel)
@@ -509,7 +573,12 @@ class _Battle:
                     resist = min(
                         max(t.stat("effect_res") - actor.stat("effectiveness"), 0), MAX_RESIST
                     )
-                if self.rng.random() >= effect.get("chance", 1) * (1 - resist / 100):
+                chance = effect.get("chance", 1)
+                if effect.get("chance_x2_if") in actor.buffs:
+                    chance *= (
+                        2  # ex. « when the caster is granted engulf, effect chance is doubled »
+                    )
+                if self.rng.random() >= chance * (1 - resist / 100):
                     notes.append(f"{DEBUFF_NAMES.get(name, name)} résisté ({t.name})")
                     continue
                 t.debuffs[name] = max(t.debuffs.get(name, 0), int(effect.get("turns", 2)))
@@ -522,7 +591,9 @@ class _Battle:
                 notes.append(f"{DEBUFF_NAMES.get(name, name)} → {t.name}")
             elif kind == "gauge":
                 amount = float(effect["amount"])
-                if amount < 0 and self.rng.random() >= effect.get("chance", 1):
+                if "cr_lock" in t.flags or (
+                    amount < 0 and self.rng.random() >= effect.get("chance", 1)
+                ):
                     continue
                 t.gauge = min(max(t.gauge + amount, 0), 100)
                 notes.append(f"jauge {t.name} {'+' if amount > 0 else '−'}{abs(amount):.0f} %")
@@ -541,12 +612,38 @@ class _Battle:
                 for b in gone:
                     t.buffs.pop(b, None)
                 notes.append(f"buffs retirés ({t.name})")
+            elif kind == "mark":
+                name = effect["mark"]
+                t.marks[name] = min(
+                    t.marks.get(name, 0) + int(effect.get("count", 1)), MARKS[name][1]
+                )
+                notes.append(f"{name} ×{t.marks[name]} ({t.name})")
+                if name == "pilfer":  # le pillage donne un butin à l'attaquant
+                    actor.marks["spoils"] = min(
+                        actor.marks.get("spoils", 0) + 1, MARKS["spoils"][1]
+                    )
+            elif kind == "fixed_hit" and "invincible" not in t.buffs:
+                amount = float(effect["amount"])
+                t.hp = max(1.0 if "immortal" in t.buffs else 0.0, t.hp - amount)
+                notes.append(f"{t.name} −{_fmt(amount)} (fixes)" + (" ✝" if not t.alive else ""))
+                if not t.alive:
+                    self.deaths.append(t)
+            elif kind == "random_buff":
+                pick = self.rng.choice(effect["choices"])
+                notes += self.apply(actor, {"type": "buff", "effect": pick, "target": "self",
+                                            "turns": effect.get("turns", 1)}, hit)  # fmt: skip
             elif kind == "cleanse" and t.debuffs:
+                if "block" in t.debuffs and t is not actor:
+                    continue  # blocage : pas de dissipation venant d'un autre
                 gone = list(t.debuffs) if effect.get("all") else [next(iter(t.debuffs))]
                 for d in gone:
                     t.debuffs.pop(d, None)
                 notes.append(f"débuffs retirés ({t.name})")
         return notes
+
+    def sanctuary(self) -> bool:
+        """Sanctuaire de la guerre (Notos) : actif tant qu'un héros a Dieu de la guerre."""
+        return any(u.alive and "god" in u.buffs for u in self.units)
 
     def revive_ally(self, actor: _Unit, effect: dict[str, Any]) -> list[str]:
         """Ressuscite un allié mort (sinon soigne l'allié le plus blessé) ; cible de « last »."""
@@ -597,6 +694,9 @@ class _Battle:
         if "nullifier" in target.buffs:
             del target.buffs["nullifier"]
             return f"{target.name} annule la compétence"
+        if "def_magic" in target.flags and self.souls[target.team] >= DEFENSIVE_MAGIC_SOULS:
+            self.souls[target.team] -= DEFENSIVE_MAGIC_SOULS  # Magie défensive : 4 Âmes
+            return f"{target.name} annule la compétence (magie défensive)"
         miss = ("evasion" in target.buffs or "hit_down" in actor.debuffs) and (
             self.rng.random() < MISS_CHANCE
         )
@@ -608,7 +708,11 @@ class _Battle:
             amount += RUPTURE * target.max_hp
         if "abundance" in actor.buffs:
             amount += ABUNDANCE
-        amount *= 1 - target.reduction
+        if "cascade" in actor.buffs:
+            amount += CASCADE
+        amount += self.soul_bonus
+        reduction = max(target.reduction, 0.5 if "deify" in target.buffs else 0)
+        amount *= 1 - reduction
         if not skill.get("ignore_share"):
             amount -= self.shared(target, amount)
         if target.cap:
@@ -617,6 +721,11 @@ class _Battle:
         target.barrier -= absorbed
         if target.hp - (amount - absorbed) <= 0 and "immortal" not in target.buffs:
             self.fire(target, "lethal", actor)  # ex. immortalité sur dégâts mortels
+            if "engulf" in target.buffs:  # « grants cascade to all allies, and is dispelled »
+                del target.buffs["engulf"]
+                for a in self.allies(target):
+                    if a is not target:
+                        a.buffs["cascade"] = PERMANENT
             if "offering" in target.buffs and not target.last_fired.get("offering"):
                 target.last_fired["offering"] = 1  # offrande : immortalité une seule fois
                 target.buffs["immortal"] = 1
@@ -634,6 +743,11 @@ class _Battle:
                 return f"{target.name} −{_fmt(amount)}, ressuscite ({_fmt(target.hp)} PV)"
             target.barrier = 0
             self.deaths.append(target)
+        for cursed in [a for a in self.allies(target) if a is not target and "curse" in a.debuffs]:
+            extra = CURSE * amount  # malédiction : le porteur subit 60 % des dégâts de l'allié
+            cursed.hp = max(1.0 if "immortal" in cursed.buffs else 0.0, cursed.hp - extra)
+            if not cursed.alive:
+                self.deaths.append(cursed)
         effects = skill.get("effects", [])
         for e in effects:
             if e["type"] == "injury" and target.alive:  # gravité ∝ dégâts (estimée à 25 %)
@@ -678,6 +792,23 @@ class _Battle:
                     target = next((t for t in hit if t.alive), None)
                     target = target or self.main_target(ally, self.foes(ally))
                     self.note(f"  ↳ {ally.name} attaque double → {self.hit(ally, s1, target)}")
+        for e in effects:
+            if e["type"] == "extra_attack":
+                self.extra_attack(actor, e, hit)
+        if hit and "dawn" in actor.buffs:  # Aube : 25 % d'étourdir la cible après l'attaque
+            stun = {
+                "type": "debuff",
+                "effect": "stun",
+                "target": "target",
+                "turns": 1,
+                "chance": 0.25,
+            }
+            if notes := self.apply(actor, stun, [t for t in hit if t.alive][:1]):
+                self.note(f"  ↳ {actor.name} aube → " + ", ".join(notes))
+        if "cascade" in actor.buffs and hit:
+            del actor.buffs["cascade"]  # « dispelled after attacking »
+        if actor.marks.get("dirge") and actor is self.current and self.foes(actor):
+            self.dirge(actor)
         killed = any(not t.alive for t in hit)
         for e in effects:
             if e["type"] != "extra_turn" or (e.get("on_kill") and not killed):
@@ -687,6 +818,60 @@ class _Battle:
                 self.stats["extra_turns"] += 1
                 self.note(f"  ↳ {actor.name} rejoue (tour supplémentaire)")
                 break
+
+    def extra_attack(self, actor: _Unit, e: dict[str, Any], hit: list[_Unit]) -> None:
+        """Attaque supplémentaire avec une autre compétence (sous certaines conditions)."""
+        if not actor.alive or "bind" in actor.debuffs or not self.foes(actor):
+            return
+        if e.get("own_turn") and actor is not self.current:
+            return
+        if e.get("if_buff") and e["if_buff"] not in actor.buffs:
+            return
+        chance = float(e.get("chance", 1)) * (2 if e.get("chance_x2_if") in actor.buffs else 1)
+        key = f"extra:{e['skill']}"
+        if e.get("once_per_turn") and actor.last_fired.get(key) == actor.turns:
+            return
+        if self.rng.random() >= chance:
+            return
+        skill = actor.fighter.skills.get(e["skill"])
+        if not skill or skill.get("rate") is None:
+            return
+        actor.last_fired[key] = actor.turns
+        if any(x["type"] == "soul_damage" for x in skill.get("effects", [])):
+            sd = next(x for x in skill["effects"] if x["type"] == "soul_damage")
+            spent, self.souls[actor.team] = self.souls[actor.team], 0
+            self.soul_bonus = min(float(sd["per_soul"]) * spent, float(sd["cap"]))
+        foes = self.foes(actor)
+        alive = [t for t in hit if t.alive]
+        targets = (
+            foes if skill.get("aoe") else [alive[0] if alive else self.main_target(actor, foes)]
+        )
+        parts = [self.hit(actor, skill, t) for t in targets]
+        self.soul_bonus = 0.0
+        for effect in skill.get("effects", []):
+            parts += self.apply(actor, effect, targets)
+        self.note(f"  ↳ {actor.name} attaque supplémentaire → " + ", ".join(parts))
+        if any(not t.alive for t in targets):
+            for effect in skill.get("on_kill", []):
+                self.apply(actor, effect, targets)
+
+    def dirge(self, actor: _Unit) -> None:
+        """Balles funèbres (Renoa) : une attaque par balle (5 au plus, estimé), puis consommées."""
+        shots, actor.marks["dirge"] = min(actor.marks["dirge"], 5), 0
+        bullet = actor.fighter.skills.get("s2_extra")
+        if not bullet or bullet.get("rate") is None:
+            return
+        parts = []
+        for _ in range(shots):
+            foes = self.foes(actor)
+            if not foes:
+                break
+            parts.append(self.hit(actor, bullet, self.rng.choice(foes)))
+            for sid, sk in actor.fighter.skills.items():  # « Dirge Bullet (Gains 1 Focus) »
+                res = (sk.get("trigger") or {}).get("resource")
+                if res and res["kind"] == "focus":
+                    actor.stacks[sid] = min(actor.stacks.get(sid, 0) + 1, res["need"])
+        self.note(f"  ↳ {actor.name} balles funèbres → " + ", ".join(parts))
 
     def shared(self, target: _Unit, amount: float) -> float:
         """Partage de dégâts : un allié (Offrande, passif) prend sa part ; renvoie cette part."""
@@ -802,6 +987,8 @@ class _Battle:
             self.current = actor
             actor.turns += 1
             notes = len(self.log)
+            if "continuous_heal" in actor.buffs and "unhealable" not in actor.debuffs:
+                actor.hp = min(actor.hp + CONTINUOUS_HEAL * actor.max_hp, actor.max_hp)
             self.dots(actor)
             if not actor.alive:
                 self.end_turn(actor)
@@ -814,7 +1001,7 @@ class _Battle:
                     self.fire(a, "ally_turn_start", actor)
             if "fear" in actor.debuffs and self.rng.random() < FEAR_DISPEL:
                 del actor.debuffs["fear"]  # « 40% chance to be dispelled »
-            if {"stun", "sleep", "fear"} & set(actor.debuffs):
+            if {"stun", "sleep", "fear", "detain"} & set(actor.debuffs):
                 self.note(f"{actor.name} ne peut pas agir", at=notes)
                 self.end_turn(actor)
                 continue
@@ -835,9 +1022,10 @@ class _Battle:
                 parts.append("âme brûlée")
                 for u in [x for x in self.units if x.alive and x is not actor]:
                     self.fire(u, "soulburn", actor)
-            self.souls[actor.team] = min(
-                self.souls[actor.team] + (1 if sid == "s1" else 2), SOUL_MAX
-            )
+            gain = (1 if sid == "s1" else 2) * (2 if "dawn" in actor.buffs else 1)
+            if any("soul_block" in f.flags for f in foes):
+                gain = 0  # « decreases the amount of Soul acquired by the enemy by 100% »
+            self.souls[actor.team] = min(self.souls[actor.team] + gain, SOUL_MAX)
             if skill.get("rate") is not None:
                 hit = self.targets(actor, skill, foes)
                 parts += [self.hit(actor, skill, t, soulburn=burn) for t in hit]

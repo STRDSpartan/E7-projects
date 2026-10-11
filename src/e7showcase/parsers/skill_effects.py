@@ -309,7 +309,7 @@ def parse_effects(
         m = re.search(r"exceed (\d+)% of max health", text.lower())
         effects.append({"type": "damage_cap", "value": int(m.group(1)) / 100 if m else 0.5})
     if "Immune to Debuffs Which Prevent Movement" in tagset:
-        effects.append({"type": "static_immune", "effects": ["stun", "sleep"]})
+        effects.append({"type": "static_immune", "effects": ["stun", "sleep", "fear"]})
     if "Damage Share" in tagset:
         m = re.search(r"(\d+)% damage sharing", text.lower())
         if m:

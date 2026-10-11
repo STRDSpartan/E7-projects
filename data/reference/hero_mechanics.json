@@ -737,6 +737,735 @@
      ]
     }
    }
+  },
+  "zio": {
+   "lot": 2,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with a spear, before increasing Attack of the caster for 1 turn. When the caster is deified, activates Disappear as an extra attack (once per turn, during the caster's turn).",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "self",
+       "turns": 1
+      },
+      {
+       "type": "extra_attack",
+       "skill": "s1_bis",
+       "own_turn": true,
+       "once_per_turn": true,
+       "if_buff": "deify"
+      }
+     ]
+    },
+    "s1_bis": {
+     "source": "Disappear: Attacks the enemy with a swordstorm, and when the enemy is defeated, increases Combat Readiness of the caster by 50%. Penetrates the target's Defense by 50%.",
+     "set": {
+      "passive": true,
+      "on_kill": [
+       {
+        "type": "gauge",
+        "amount": 50,
+        "target": "self",
+        "chance": 1.0
+       }
+      ]
+     }
+    },
+    "s3": {
+     "source": "Attacks the enemy, dispelling two buffs before decreasing Combat Readiness by 40%. Grants deify to the caster for 3 turns (crit chance +50% when attacking, damage suffered −50%). Cannot trigger a critical hit.",
+     "set": {
+      "no_crit": true
+     },
+     "effects": [
+      {
+       "type": "strip",
+       "target": "target",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "target",
+       "all": false
+      },
+      {
+       "type": "gauge",
+       "amount": -40,
+       "target": "target",
+       "chance": 1.0
+      },
+      {
+       "type": "buff",
+       "effect": "deify",
+       "target": "self",
+       "turns": 3
+      }
+     ]
+    }
+   }
+  },
+  "renoa": {
+   "lot": 2,
+   "skills": {
+    "s2": {
+     "source": "Buffs and debuffs applied to the caster become Dirge Bullets (speed and critical hit damage +20%). After using a skill on the caster's turn, when the caster has a Dirge Bullet, uses Dirge Bullet on a random enemy. Immune to debuffs which prevent movement. (Nombre d'attaques ∝ balles : une par balle, 5 au plus, estimé.)",
+     "set": {
+      "trigger": null
+     },
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "bullets"
+      },
+      {
+       "type": "static_immune",
+       "effects": [
+        "stun",
+        "sleep",
+        "fear"
+       ]
+      }
+     ]
+    },
+    "s2_extra": {
+     "source": "Dirge Bullet (Gains 1 Focus): Attacks the enemy with a pistol. Damage dealt increases proportional to the caster's Defense. (Multiplicateurs de la S1, estimés.)",
+     "set": {
+      "rate": 0.8,
+      "pow": 0.85,
+      "flat": {
+       "caster_Defense": 1.5
+      },
+      "passive": true
+     }
+    },
+    "s1_thorn": {
+     "source": "At the start of the turn, when Focus is full, changes to Black Thorn (Consumes 5 Focus): attacks the enemy with thorns, and grants the maximum number of Dirge Bullets to the caster.",
+     "set": {
+      "rate": 1.5,
+      "pow": 1,
+      "enhance": [],
+      "pen": 0,
+      "aoe": false,
+      "flat": {
+       "caster_Defense": 3
+      },
+      "trigger": {
+       "event": "resource",
+       "chance": 1.0,
+       "resource": {
+        "kind": "focus",
+        "need": 5,
+        "gain": 0,
+        "on": "turn_start"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "mark",
+       "mark": "dirge",
+       "target": "self",
+       "count": 10
+      }
+     ]
+    },
+    "s3": {
+     "source": "Increases Combat Readiness of all allies by 40% (max 50%), and grants three Dirge Bullets to the caster. (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 40,
+       "target": "allies",
+       "chance": 1.0
+      },
+      {
+       "type": "mark",
+       "mark": "dirge",
+       "target": "self",
+       "count": 3
+      }
+     ]
+    }
+   }
+  },
+  "eye_of_the_abyss_fumyr": {
+   "lot": 2,
+   "skills": {
+    "s2": {
+     "source": "Envelops all enemies with the energy of the deep sea, dispelling two buffs before decreasing Combat Readiness by 25%. Grants an extra turn.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "gauge",
+       "amount": -25,
+       "target": "enemies",
+       "chance": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
+    },
+    "s3": {
+     "source": "Pierces the foremost enemy Hero with light, inflicting detain (temporarily removed from the battlefield, unaffected by Effect Resistance), and grants deterrence to the caster for 2 turns. Grants a barrier and stealth to the caster for 2 turns. (Détention : 2 tours, durée de la dissuasion.)",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "detain",
+       "target": "enemy_front",
+       "turns": 2,
+       "chance": 1.0,
+       "ignore_resist": true,
+       "unique": true
+      },
+      {
+       "type": "barrier",
+       "target": "self",
+       "stat": "hp",
+       "ratio": 0.15,
+       "turns": 2,
+       "estimated": true
+      },
+      {
+       "type": "buff",
+       "effect": "stealth",
+       "target": "self",
+       "turns": 2
+      }
+     ]
+    }
+   }
+  },
+  "belian": {
+   "lot": 2,
+   "skills": {
+    "s1": {
+     "source": "Attacks all enemies with a ray, with a 65% chance to dispel one buff. When used on the caster's turn, has a 35% chance to activate Incursion as an extra attack.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": false
+      },
+      {
+       "type": "extra_attack",
+       "skill": "s1_bis",
+       "own_turn": true,
+       "chance": 0.35
+      }
+     ]
+    },
+    "s1_bis": {
+     "source": "Incursion: Attacks all enemies, decreasing Speed and Hit Chance for 1 turn.",
+     "set": {
+      "passive": true
+     },
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "spd_down",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "hit_down",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "Decreases the amount of Soul acquired by the enemy by 100%. At the start of the turn, has a 100% chance to grant a random buff to the caster for 1 turn (Increase Effectiveness, Increase Critical Hit Chance, Continuous Heal).",
+     "set": {
+      "trigger": {
+       "event": "turn_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "soul_block"
+      },
+      {
+       "type": "random_buff",
+       "choices": [
+        "eff_up",
+        "cc_up",
+        "continuous_heal"
+       ],
+       "turns": 1
+      }
+     ]
+    },
+    "s3": {
+     "source": "Attacks all enemies, decreasing Combat Readiness by a random amount between 10% and 30% and provokes for 1 turn. Increases Defense of the caster for 2 turns.",
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": -20,
+       "target": "enemies",
+       "chance": 1.0
+      },
+      {
+       "type": "debuff",
+       "effect": "provoke",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": false
+      },
+      {
+       "type": "buff",
+       "effect": "def_up",
+       "target": "self",
+       "turns": 2
+      }
+     ]
+    }
+   }
+  },
+  "monarch_of_the_sword_iseria": {
+   "lot": 2,
+   "skills": {
+    "s1_counter": {
+     "source": "When triggered as a counterattack, activates Sword of Duty: after inflicting fracture on the caster (Attack +20%, Defense −5%, up to 10 times), attacks the enemy, and increases Combat Readiness of the caster and the foremost ally by 20%. Inflicts up to 25% injuries. (Multiplicateurs de la S1.)",
+     "set": {
+      "rate": 0.3,
+      "pow": 1,
+      "pen": 1,
+      "aoe": false,
+      "passive": true
+     },
+     "effects": [
+      {
+       "type": "mark",
+       "mark": "fracture",
+       "target": "self"
+      },
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "front",
+       "chance": 1.0
+      },
+      {
+       "type": "injury",
+       "max": 0.25,
+       "estimated": false
+      }
+     ]
+    },
+    "s2": {
+     "source": "All counterattack chances of the caster are doubled, and when counterattacking, if the target is a Hero, triggers a counterattack from the foremost ally. After attacking, grants a barrier (proportional to Attack) to the caster for 2 turns.",
+     "set": {
+      "rate": null,
+      "trigger": {
+       "event": "after_attack",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "counter_x2"
+      },
+      {
+       "type": "static_flag",
+       "flag": "counter_chain"
+      },
+      {
+       "type": "barrier",
+       "target": "self",
+       "stat": "atk",
+       "ratio": 0.6,
+       "turns": 2,
+       "estimated": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "After inflicting fracture on the caster and dispelling all debuffs, attacks all enemies. Inflicts up to 25% injuries. (Compétence active : recharge par défaut.)",
+     "set": {
+      "passive": false
+     },
+     "effects": [
+      {
+       "type": "mark",
+       "mark": "fracture",
+       "target": "self"
+      },
+      {
+       "type": "cleanse",
+       "target": "self",
+       "all": true
+      },
+      {
+       "type": "injury",
+       "max": 0.25,
+       "estimated": false
+      }
+     ]
+    },
+    "s1": {
+     "source": "Attacks the enemy with sword fragments. Penetrates the target's Defense. (Jauge et blessures : seulement en contre-attaque, voir s1_counter.)",
+     "effects": []
+    }
+   }
+  },
+  "notos": {
+   "lot": 2,
+   "skills": {
+    "s2": {
+     "source": "Unaffected by Combat Readiness increase and decrease effects. God of Battle: attacks the enemy with transcendent power.",
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "cr_lock"
+      }
+     ]
+    },
+    "s3": {
+     "source": "Grants God of Battle (all stats doubled) to the caster for 3 turns and fully recovers Health. While God of Battle is maintained, Sanctuary of Battle: all Heroes are immune to buffs and debuffs. Begins the first battle with a full skill cooldown count.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "god",
+       "target": "self",
+       "turns": 3,
+       "unique": true
+      },
+      {
+       "type": "heal",
+       "target": "self",
+       "stat": "max",
+       "ratio": 1.0
+      }
+     ]
+    }
+   }
+  },
+  "tidal_rift_elvira": {
+   "lot": 2,
+   "skills": {
+    "s1": {
+     "source": "Has a 85% chance to inflict seal on the enemy for 2 turns before attacking. When used on the caster's turn, has a 40% chance to activate Twisted Strike as an extra attack. Cannot trigger a critical hit.",
+     "set": {
+      "no_crit": true
+     },
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "seal",
+       "target": "target",
+       "turns": 2,
+       "chance": 0.85,
+       "ignore_resist": false
+      },
+      {
+       "type": "extra_attack",
+       "skill": "s1_extra",
+       "own_turn": true,
+       "chance": 0.4
+      }
+     ]
+    },
+    "s1_extra": {
+     "source": "Twisted Strike: Attacks all enemies, absorbing some of the damage dealt as Health, and has a 35% chance to inflict fear for 1 turn. When the caster is granted engulf, effect chance is doubled.",
+     "set": {
+      "passive": true
+     },
+     "effects": [
+      {
+       "type": "lifesteal",
+       "ratio": 0.2,
+       "estimated": true
+      },
+      {
+       "type": "debuff",
+       "effect": "fear",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 0.35,
+       "ignore_resist": false,
+       "chance_x2_if": "engulf"
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the start of battle, grants engulf (Effectiveness +100%; upon receiving lethal damage, grants cascade to all allies, and is dispelled). Cannot trigger a critical hit.",
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "engulf",
+       "target": "self",
+       "turns": 999,
+       "unique": true
+      }
+     ]
+    },
+    "s3": {
+     "source": "Has a 35% chance to inflict curse on all enemies except for the target for 2 turns before attacking the enemy. When the caster is granted engulf, effect chance is doubled. Cannot trigger a critical hit.",
+     "set": {
+      "no_crit": true
+     },
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "curse",
+       "target": "other_enemies",
+       "turns": 2,
+       "chance": 0.35,
+       "ignore_resist": false,
+       "chance_x2_if": "engulf"
+      }
+     ]
+    }
+   }
+  },
+  "rinak": {
+   "lot": 2,
+   "skills": {
+    "s2": {
+     "source": "Swiftly attacks the enemy, dispelling all buffs before decreasing Combat Readiness by 30% and inflicting pilfer (Attack, Health, Defense −20%; grants spoils +20% to the attacker, up to 4). Grants increased Attack to the caster for 2 turns and an extra turn.",
+     "effects": [
+      {
+       "type": "strip",
+       "target": "target",
+       "all": true
+      },
+      {
+       "type": "gauge",
+       "amount": -30,
+       "target": "target",
+       "chance": 1.0
+      },
+      {
+       "type": "mark",
+       "mark": "pilfer",
+       "target": "target"
+      },
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "self",
+       "turns": 2
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      }
+     ]
+    },
+    "s3": {
+     "source": "Nimbly attacks the enemy. After attacking, dispels all buffs from the caster and inflicts stun for 1 turn on the caster, and deals 7000 fixed damage to all enemies.",
+     "effects": [
+      {
+       "type": "fixed_hit",
+       "amount": 7000,
+       "target": "enemies"
+      },
+      {
+       "type": "strip",
+       "target": "self",
+       "all": true
+      },
+      {
+       "type": "debuff",
+       "effect": "stun",
+       "target": "self",
+       "turns": 1,
+       "chance": 1.0,
+       "ignore_resist": true
+      }
+     ]
+    }
+   }
+  },
+  "frieren": {
+   "lot": 2,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with magic, and grants immunity to the caster for 1 turn. When it is the caster's turn, activates Vollzanbel as an extra attack (gain 1 Soul, all enemies).",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "immunity",
+       "target": "self",
+       "turns": 1
+      },
+      {
+       "type": "extra_attack",
+       "skill": "s1_bis",
+       "own_turn": true
+      }
+     ]
+    },
+    "s1_bis": {
+     "source": "Vollzanbel: Attacks all enemies with flame magic.",
+     "set": {
+      "passive": true
+     }
+    },
+    "s2": {
+     "source": "During battle, when Soul is 4 or higher, grants Defensive Magic (when attacked, consumes 4 Soul, nullifying damage from skills). After being attacked, increases Combat Readiness of all allies by 10%.",
+     "set": {
+      "trigger": {
+       "event": "attacked",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "static_flag",
+       "flag": "def_magic"
+      },
+      {
+       "type": "gauge",
+       "amount": 10,
+       "target": "allies",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "After granting increased Attack to the caster for 3 turns, attacks all enemies with lightning magic, dispelling all buffs.",
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "self",
+       "turns": 3
+      },
+      {
+       "type": "strip",
+       "target": "enemies",
+       "all": true
+      }
+     ]
+    }
+   }
+  },
+  "aubade_ludwig": {
+   "lot": 2,
+   "skills": {
+    "s1": {
+     "source": "Attacks the enemy with moonlight. When the caster is granted dawn, activates Light of Condemnation as an extra attack (once per turn, during the caster's turn).",
+     "effects": [
+      {
+       "type": "extra_attack",
+       "skill": "s1_bis",
+       "own_turn": true,
+       "once_per_turn": true,
+       "if_buff": "dawn"
+      }
+     ]
+    },
+    "s1_bis": {
+     "source": "Light of Condemnation (Acquire 5 Soul): Attacks all enemies and consumes all Soul, inflicting 1,000 additional damage. Additional damage increases proportional to the amount of consumed Soul, up to 25,000. (1 000 par Âme, estimé.)",
+     "set": {
+      "passive": true
+     },
+     "effects": [
+      {
+       "type": "soul_damage",
+       "per_soul": 1000,
+       "cap": 25000,
+       "estimated": true
+      }
+     ]
+    },
+    "s2": {
+     "source": "At the end of an ally's turn, when Soul is 10 or higher, increases Combat Readiness of the caster by 20%.",
+     "set": {
+      "trigger": {
+       "event": "ally_turn_end",
+       "chance": 1.0,
+       "condition": {
+        "kind": "souls_at_least",
+        "value": 10
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      }
+     ]
+    },
+    "s3": {
+     "source": "Has a 85% chance each to inflict block for 2 turns and silence for 1 turn on all enemies. Grants dawn (Soul acquired +100%; after attacking, 25% chance to stun) and a barrier (proportional to max Health) to the caster for 3 turns.",
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "block",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 0.85,
+       "ignore_resist": false
+      },
+      {
+       "type": "debuff",
+       "effect": "silence",
+       "target": "enemies",
+       "turns": 1,
+       "chance": 0.85,
+       "ignore_resist": false
+      },
+      {
+       "type": "buff",
+       "effect": "dawn",
+       "target": "self",
+       "turns": 3,
+       "unique": true
+      },
+      {
+       "type": "barrier",
+       "target": "self",
+       "stat": "hp",
+       "ratio": 0.15,
+       "turns": 3,
+       "estimated": true
+      }
+     ]
+    }
+   }
   }
  }
 }

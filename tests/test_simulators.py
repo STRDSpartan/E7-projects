@@ -5,6 +5,7 @@ import random
 import urllib.request
 from dataclasses import replace
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -513,3 +514,75 @@ def test_lot1_unique_mechanics() -> None:
     assert k.stacks["s1_subspace"] == 90
     # l'attaque double de Boss Arunka n'existe qu'en âme brûlée
     assert not any(e["type"] == "dual" for e in arunka.skills["s1"]["effects"])
+
+
+LOT2 = [
+    "Zio",
+    "Renoa",
+    "Eye of the Abyss Fumyr",
+    "Belian",
+    "Monarch of the Sword Iseria",
+    "Notos",
+    "Tidal Rift Elvira",
+    "Rinak",
+    "Frieren",
+    "Aubade Ludwig",
+]
+
+
+def test_lot2_arena_heroes_have_rules_and_fight() -> None:
+    rules = load("hero_mechanics")["heroes"]
+    assert sum(1 for r in rules.values() if r.get("lot") == 2) == 10
+    for first, second in ((LOT2[:5], LOT2[5:]), (LOT2[5:], LOT1[:5])):
+        res = simulate([_hero(n) for n in first[:4]], [_hero(n) for n in second[:4]], runs=30)
+        assert sum(res["win_rate"]) + res["draws"] == pytest.approx(100)
+
+
+def _duel(a: str, b: str) -> tuple[_Battle, Any, Any]:
+    battle = _Battle([_hero(a)], [_hero(b)], random.Random(1), {}, Options(), True)
+    return battle, battle.units[0], battle.units[1]
+
+
+def test_lot2_unique_mechanics() -> None:
+    # Notos : Dieu de la guerre double les stats ; Sanctuaire : plus de buffs ni débuffs
+    battle, notos, foe = _duel("Notos", "Zio")
+    atk = notos.stat("atk")
+    for effect in notos.fighter.skills["s3"]["effects"]:
+        battle.apply(notos, effect, [])
+    assert notos.stat("atk") == 2 * atk and battle.sanctuary()
+    assert battle.apply(foe, {"type": "buff", "effect": "atk_up", "target": "self"}, []) == [
+        "Zio : Sanctuaire"
+    ]
+    assert "cr_lock" in notos.flags
+    # Renoa : buffs et débuffs reçus deviennent des balles funèbres
+    battle, renoa, foe = _duel("Renoa", "Zio")
+    battle.apply(foe, {"type": "debuff", "effect": "stun", "target": "target"}, [renoa])
+    assert renoa.marks["dirge"] == 1 and "stun" not in renoa.debuffs
+    battle.current = renoa
+    battle.dirge(renoa)
+    assert renoa.marks["dirge"] == 0 and foe.hp < foe.max_hp
+    # Rinak : pillage (−20 %) et butin (+20 %)
+    battle, rinak, foe = _duel("Rinak", "Zio")
+    def_before = foe.stat("defense")
+    battle.apply(rinak, {"type": "mark", "mark": "pilfer", "target": "target"}, [foe])
+    assert foe.stat("defense") == pytest.approx(0.8 * def_before) and rinak.marks["spoils"] == 1
+    # Fumyr : la détention retire la cible du champ de bataille
+    battle, fumyr, foe = _duel("Eye of the Abyss Fumyr", "Zio")
+    battle.apply(fumyr, fumyr.fighter.skills["s3"]["effects"][0], [])
+    assert "detain" in foe.debuffs and battle.foes(fumyr) == []
+    # Zio : attaque supplémentaire seulement s'il est déifié, pendant son tour
+    battle, zio, foe = _duel("Zio", "Renoa")
+    battle.current = zio
+    battle.specials(zio, zio.fighter.skills["s1"], [foe])
+    hp = foe.hp
+    zio.buffs["deify"] = 3
+    battle.specials(zio, zio.fighter.skills["s1"], [foe])
+    assert foe.hp < hp
+    # Frieren : la magie défensive annule un coup contre 4 Âmes
+    battle, frieren, foe = _duel("Frieren", "Zio")
+    battle.souls[0] = 4
+    assert "magie défensive" in battle.hit(foe, foe.fighter.skills["s1"], frieren)
+    assert battle.souls[0] == 0
+    # Iseria : chances de contre-attaque doublées par la S2
+    battle, iseria, _ = _duel("Monarch of the Sword Iseria", "Zio")
+    assert {"counter_x2", "counter_chain"} <= iseria.flags
