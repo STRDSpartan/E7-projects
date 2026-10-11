@@ -30,6 +30,8 @@ from e7showcase.vision.set_catalog import SetMatcher
 
 log = logging.getLogger(__name__)
 
+NATIVE_ASPECT = 0.01  # écart relatif de format sous lequel une capture est déjà bien cadrée
+
 
 @dataclass
 class ImportReport:
@@ -100,7 +102,14 @@ class ScreenshotImporter:
         """Recadre une fiche mal cadrée (barre de titre sombre, marges) grâce aux repères."""
         from e7showcase.config import region_profiles
 
-        for cfg in region_profiles().values():
+        profiles = region_profiles().values()
+        aspect = image.width / image.height
+        if any(
+            cfg.get("calibrated") and abs(aspect / float(cfg["aspect"]) - 1) < NATIVE_ASPECT
+            for cfg in profiles
+        ):
+            return image  # format natif d'un profil calibré : rien à recadrer
+        for cfg in profiles:
             landmarks = cfg.get("detail", {}).get("landmarks")
             if cfg.get("calibrated") and landmarks:
                 framed = frame_detail(normalize_scale(image, cfg), self._engine(), landmarks)

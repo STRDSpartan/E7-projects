@@ -77,10 +77,16 @@ E7_TEST_CAPTURES=<dossier local> pytest tests/test_real_captures.py
 | Profil | Format | État |
 |---|---|---|
 | `19_5x9.toml` | 2,167 (smartphones récents) | **calibré** sur captures réelles |
+| `mobile_20x9.toml` | 2,222 (smartphones 20:9, captures 2000×900) | **calibré** sur 5 fiches réelles : 100 % (puissance, 9 stats, 30 pièces : set, score, principale, 120 secondaires) |
 | `pc_19x10.toml` | 1,902 (PC, fenêtre agrandie en 1920×1080) | **calibré** sur captures réelles (100 %) |
 | `16x9.toml` | 1,778 (PC plein écran 1920×1080, 2560×1440) | **estimé** depuis `pc_19x10` (`scripts/derive_profile.py`), à vérifier |
 
 `region_profile = "auto"` choisit le profil au format le plus proche de la fenêtre ou des captures.
+Une capture au format exact d'un profil calibré (à 1 % près) n'est jamais recadrée par les
+repères PC (`NATIVE_ASPECT`). Les petites icônes de stats sont agrandies ×3 avant seuillage
+(`vision/icons.py`) : sans cela, le bouclier (Défense) des colliers mobiles était lu comme
+un cœur (Santé).
+
 Pour un nouveau format PC : `python scripts/derive_profile.py config/regions/pc_19x10.toml <largeur/hauteur>`
 puis calibrer (skill `calibrate-ocr-regions`).
 

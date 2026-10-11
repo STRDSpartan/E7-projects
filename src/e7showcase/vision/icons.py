@@ -14,6 +14,7 @@ import numpy as np
 from PIL import Image
 
 SIZE = 24
+UPSCALE_BELOW = 64  # px ; mesuré : bouclier/cœur confondus sans agrandissement
 
 
 def features(image: Image.Image, drop_border: bool = False) -> np.ndarray:
@@ -24,6 +25,8 @@ def features(image: Image.Image, drop_border: bool = False) -> np.ndarray:
     déborde sur l'icône) ; elles sont gardées si rien d'autre ne reste."""
     import cv2
 
+    if image.height < UPSCALE_BELOW:  # petites icônes (mobile) : le seuillage garde la forme
+        image = image.resize((image.width * 3, image.height * 3), Image.Resampling.BICUBIC)
     g = np.asarray(image.convert("L")).copy()
     _, mask = cv2.threshold(g, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     n, labels, st, _ = cv2.connectedComponentsWithStats(mask)

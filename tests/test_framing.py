@@ -1,6 +1,7 @@
 """Recadrage d'une fiche sur la zone du jeu grâce aux repères (OCR simulé, sans image du jeu)."""
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
 from PIL import Image
@@ -87,3 +88,13 @@ def test_not_a_detail_screen() -> None:
     ocr = LandmarkOcr(0, 0)
     ocr.lines = []
     assert frame_detail(make(GAME_W, GAME_H), ocr, LM) is None
+
+
+def test_native_aspect_capture_is_never_reframed(tmp_path: Path) -> None:
+    """Capture 20:9 d'un téléphone : déjà au format d'un profil calibré, pas de recadrage."""
+    from e7showcase.app.importer import ScreenshotImporter
+
+    importer = ScreenshotImporter(tmp_path, fetch_icons=None)
+    importer._ocr = object()  # noqa: SLF001 - aucune lecture ne doit avoir lieu
+    phone = Image.new("RGB", (2000, 900))
+    assert importer._frame(phone) is phone  # noqa: SLF001

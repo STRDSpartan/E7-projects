@@ -1,0 +1,51 @@
+# Profil 20:9 (smartphones, ex. captures 2000x900 du client FR). Dérivé de 19_5x9.toml
+# puis calibré sur de vraies captures « Infos de héros » : le panneau d'équipement est
+# ancré un peu plus à gauche que la simple transposition (−0,0056).
+
+aspect = 2.2222
+calibrated = true
+reference_height = 900   # hauteur (px) des captures de calibration
+
+[detail]
+title = [0.039, 0.02, 0.195, 0.055]
+classes = [0.078, 0.118, 0.2925, 0.045]
+name = [0.0605, 0.15, 0.4096, 0.08]
+level = [0.0605, 0.262, 0.1268, 0.055]
+imprint = [0.1024, 0.325, 0.1365, 0.125]
+power = [0.0829, 0.45, 0.0878, 0.05]
+artifact = [0.8586, 0.12, 0.117, 0.08]
+gear_score = [0.727, 0.272, 0.195, 0.045]
+portrait = [0.2952, 0.1, 0.3706, 0.9]
+stats_icons = [0.0644, 0.505, 0.0166, 0.294]
+stats_labels = [0.0829, 0.505, 0.1219, 0.294]
+stats_values = [0.1902, 0.505, 0.0585, 0.294]
+stats_rows = 9
+
+[detail.gear]
+weapon = [0.7862, 0.339]
+helmet = [0.7862, 0.5157]
+armor = [0.7862, 0.6924]
+necklace = [0.9278, 0.339]
+ring = [0.9278, 0.5157]
+boots = [0.9278, 0.6924]
+
+[detail.gear_layout]
+icon_w = 0.0127
+values_dx = 0.0127
+values_w = 0.0351
+line_dy = [0.0, 0.034, 0.0618, 0.0896, 0.1174]
+line_h = [0.032, 0.027, 0.027, 0.027, 0.027]
+level = [-0.0585, 0.004, 0.0161, 0.03]
+enhance = [-0.0322, -0.002, 0.0205, 0.027]
+set_icon = [-0.0302, 0.066, 0.0185, 0.044]
+score = [-0.0546, 0.107, 0.0332, 0.03]
+
+[navigation]
+back_button = [0.0049, 0.015, 0.0439, 0.065]
+next_hero = [0.8342, 0.455, 0.1463, 0.07]
+detail_button = [0.6414, 0.835, 0.039, 0.075]
+
+[hero_list]
+title_hint = [0.4025, 0.88, 0.234, 0.1]
+name = [0.039, 0.02, 0.2925, 0.055]
+set_rows = [[0.1097, 0.869, 0.0171, 0.031, 0.1463], [0.1097, 0.9, 0.0171, 0.031, 0.1463], [0.1097, 0.931, 0.0171, 0.031, 0.1463]]

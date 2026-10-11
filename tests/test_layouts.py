@@ -39,7 +39,8 @@ def test_anchors_keep_distances_in_height_units() -> None:
 
 def test_candidates_start_with_the_closest_calibrated_profile() -> None:
     profiles = region_profiles()
-    assert candidate_layouts(profiles, 2.2)[0]["derived_from"] == "19_5x9"
+    assert candidate_layouts(profiles, 2.15)[0]["derived_from"] == "19_5x9"
+    assert candidate_layouts(profiles, 2.21)[0]["derived_from"] == "mobile_20x9"
     assert candidate_layouts(profiles, 16 / 9)[0]["derived_from"] == "pc_19x10"
 
 
