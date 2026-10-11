@@ -11,6 +11,8 @@ la même application sur son ordinateur.
      + **pose du personnage** recadrée sur la capture (image du héros dans la vitrine) ;
    - **liste des héros** → blasons des sets portés (appris une fois pour toutes) ;
    - **catalogue des sets** (filtre d'inventaire) → les 24 blasons.
+   Facultatif : les blasons de référence des 24 sets sont téléchargés automatiquement au
+   premier import (connexion Internet nécessaire une fois).
 3. La vitrine se construit : recherche, filtres (élément, classe, set), tris, fiche détaillée.
 4. *Exporter la vitrine* → `vitrine-<joueur>.e7v`.
 5. Le destinataire : double-clic sur le fichier (association installée) ou *Ouvrir une vitrine* →
@@ -19,7 +21,7 @@ la même application sur son ordinateur.
 ## Architecture (`src/e7showcase/app/`)
 | Fichier | Rôle |
 |---|---|
-| `launcher.py` | point d'entrée `e7showcase-app [fichier.e7v]` : serveur local + fenêtre native (pywebview) ou navigateur (`--browser`) |
+| `launcher.py` | point d'entrée `e7showcase-app [fichier.e7v]` : serveur local + fenêtre native (pywebview + WebView2), pas de version navigateur |
 | `server.py` | serveur HTTP local (127.0.0.1, port aléatoire), API JSON, jeton de session + contrôle de l'en-tête Host ; import en arrière-plan suivi par `/api/jobs/<id>` (barre de progression) |
 | `ui.html` | interface (HTML/JS sans dépendance) |
 | `profiles.py` | profils dans `<données>/profiles/<id>/` (`profile.json` = Roster, `images/*.webp`) |
@@ -48,7 +50,8 @@ pyinstaller packaging\e7showcase-app.spec --noconfirm
 iscc packaging\windows\installer.iss
 ```
 L'installateur (Inno Setup) crée le raccourci et associe les fichiers `.e7v`, sans droits
-administrateur. Sans pywebview, `E7Showcase.exe --browser` ouvre l'interface dans le navigateur.
+administrateur. Tout se fait dans la fenêtre de l'application : sans WebView2, un message
+explique comment l'installer.
 
 ## Tests
 `tests/test_app.py` : profils, aller-retour `.e7v`, fichiers hostiles, API (jeton, Host,

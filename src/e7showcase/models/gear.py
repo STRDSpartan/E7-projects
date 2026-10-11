@@ -49,6 +49,7 @@ class GearSet(StrEnum):
     PURSUIT = "pursuit"
     RIPOSTE = "riposte"
     REVERSAL = "reversal"
+    FERVOR = "fervor"  # nom FR non confirmé
     # Sets identifiés dans le client FR, nom anglais non confirmé (voir data/reference/sets.json)
     WEAKENING = "weakening"  # « Affaiblissement »
     REACTION = "reaction"  # « Réaction »

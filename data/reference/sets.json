@@ -1,151 +1,172 @@
 {
-  "_comment": "Sets d'équipement. 'fr' = nom exact du client FR (vérifié sur le catalogue en jeu). 'pieces' : 2 ou 4 ; 'pieces_verified' false = à confirmer. 'en_mapping' : correspondance avec le nom anglais / Fribbels (certain | probable | inconnu).",
+  "_comment": "Sets d'équipement. 'fr' = nom exact du client FR (vérifié sur le catalogue en jeu). 'pieces' : 2 ou 4 ; 'pieces_verified' false = à confirmer. 'en_mapping' : correspondance avec le nom anglais / Fribbels (certain | probable | inconnu). 'effect_en' et 'pieces' : base de données Hideout Guides (octobre 2026), qui sert aussi aux blasons téléchargés localement (sources/set_icons.py).",
   "attack": {
     "fr": "Attaque",
     "en": "Attack",
     "pieces": 4,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "Attack increases by 45%."
   },
   "defense": {
     "fr": "Défense",
     "en": "Defense",
     "pieces": 2,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "Defense increases by 20%."
   },
   "health": {
     "fr": "Santé",
     "en": "Health",
     "pieces": 2,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "Health increases by 20%."
   },
   "speed": {
     "fr": "Vitesse",
     "en": "Speed",
     "pieces": 4,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "Speed increases by 25%."
   },
   "critical": {
     "fr": "Critique",
     "en": "Critical",
     "pieces": 2,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "Critical Hit Chance increases by 12%."
   },
   "destruction": {
     "fr": "Destruction",
     "en": "Destruction",
     "pieces": 4,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "Critical Hit Damage increases by 60%."
   },
   "hit": {
     "fr": "Coup",
     "en": "Hit",
     "pieces": 2,
     "pieces_verified": true,
-    "en_mapping": "probable"
+    "en_mapping": "probable",
+    "effect_en": "Effectiveness increases by 20%."
   },
   "resist": {
     "fr": "Résistance",
     "en": "Resist",
     "pieces": 2,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "Effect Resistance increases by 20%."
   },
   "lifesteal": {
     "fr": "Vol de vie",
     "en": "Lifesteal",
     "pieces": 4,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "Absorbs 20% of damage dealt as Health."
   },
   "counter": {
     "fr": "Contre",
     "en": "Counter",
     "pieces": 4,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "30% chance to counterattack when attacked."
   },
   "unity": {
     "fr": "Unité",
     "en": "Unity",
     "pieces": 2,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "Increases Dual Attack chance by 8%."
   },
   "immunity": {
     "fr": "Immunité",
     "en": "Immunity",
     "pieces": 2,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "Grants the caster immunity for 1 turn at the beginning of the battle. Does not stack with similar effects."
   },
   "rage": {
     "fr": "Rage",
     "en": "Rage",
     "pieces": 4,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "Damage dealt increases by 30% when attacking debuffed targets."
   },
   "penetration": {
     "fr": "Infiltration",
     "en": "Penetration",
     "pieces": 2,
     "pieces_verified": true,
-    "en_mapping": "probable"
+    "en_mapping": "probable",
+    "effect_en": "When attacking with a Single Attack, penetrates the target's Defense by 15%. Does not stack with other sets of the same name."
   },
   "revenge": {
     "fr": "Vengeance",
     "en": "Revenge",
     "pieces": 4,
-    "pieces_verified": false,
-    "en_mapping": "certain"
+    "pieces_verified": true,
+    "en_mapping": "certain",
+    "effect_en": "Speed increases by 12%, and for every 1% of Health lost, Speed increases by an additional 0.5%."
   },
   "injury": {
     "fr": "Blessure",
     "en": "Injury",
     "pieces": 4,
-    "pieces_verified": false,
-    "en_mapping": "certain"
+    "pieces_verified": true,
+    "en_mapping": "certain",
+    "effect_en": "After attacking, decreases the target's max Health equal to damage dealt, by up to 6% (12% when using Single Attack)."
   },
   "protection": {
     "fr": "Protection",
     "en": "Protection",
-    "pieces": 2,
-    "pieces_verified": false,
-    "en_mapping": "certain"
+    "pieces": 4,
+    "pieces_verified": true,
+    "en_mapping": "certain",
+    "effect_en": "At the start of battle, grants a barrier equivalent to 12% of the caster's max Health to all allies for 2 turns."
   },
   "torrent": {
     "fr": "Tumulte",
     "en": "Torrent",
     "pieces": 2,
-    "pieces_verified": false,
-    "en_mapping": "probable"
+    "pieces_verified": true,
+    "en_mapping": "probable",
+    "effect_en": "Decreases Health by 10%, and when attacking, increases damage dealt by 10%."
   },
   "riposte": {
     "fr": "Riposte",
     "en": "Riposte",
     "pieces": 4,
-    "pieces_verified": false,
-    "en_mapping": "certain"
+    "pieces_verified": true,
+    "en_mapping": "certain",
+    "effect_en": "After successfully evading, has a 70% chance to counterattack."
   },
   "pursuit": {
     "fr": "Poursuite",
     "en": "Pursuit",
     "pieces": 2,
     "pieces_verified": true,
-    "en_mapping": "certain"
+    "en_mapping": "certain",
+    "effect_en": "Increases additional damage dealt by 20%. Does not stack with other sets of the same name."
   },
   "weakening": {
     "fr": "Affaiblissement",
-    "en": null,
+    "en": "Weakening",
     "pieces": 4,
     "pieces_verified": true,
-    "en_mapping": "inconnu"
+    "en_mapping": "certain",
+    "effect_en": "Increases Speed by 15%. Increases the chance to inflict debuffs by 15%."
   },
   "reaction": {
     "fr": "Réaction",
@@ -172,14 +193,24 @@
     "fr": null,
     "en": "Warfare",
     "pieces": 4,
-    "pieces_verified": false,
-    "en_mapping": "inconnu"
+    "pieces_verified": true,
+    "en_mapping": "certain",
+    "effect_en": "Increases Health by 20%. At the start of battle, resets skill cooldowns."
   },
   "reversal": {
     "fr": null,
     "en": "Reversal",
     "pieces": 4,
-    "pieces_verified": false,
-    "en_mapping": "inconnu"
+    "pieces_verified": true,
+    "en_mapping": "certain",
+    "effect_en": "Increases Speed by 15%. Upon reviving, increases Combat Readiness by 50%."
+  },
+  "fervor": {
+    "fr": null,
+    "en": "Fervor",
+    "pieces": 2,
+    "pieces_verified": true,
+    "en_mapping": "certain",
+    "effect_en": "At the start of an extra turn, increases the damage of the next attack by 20%. Does not stack with other sets of the same name."
   }
 }

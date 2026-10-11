@@ -1,17 +1,15 @@
 """Point d'entrée de l'application : `e7showcase-app [vitrine.e7v]`.
 
-Lance le serveur local puis ouvre l'interface dans une fenêtre native (pywebview) ou, à
-défaut, dans le navigateur. Un fichier .e7v passé en argument (double-clic sur le fichier)
-est ajouté aux vitrines reçues et affiché directement.
+Lance le serveur local puis ouvre l'interface dans la fenêtre native de l'application
+(pywebview + WebView2) ; il n'y a pas de version navigateur. Un fichier .e7v passé en
+argument (double-clic sur le fichier) est ajouté aux vitrines reçues et affiché
+directement.
 """
 
 from __future__ import annotations
 
-import contextlib
 import logging
 import sys
-import threading
-import webbrowser
 from pathlib import Path
 from typing import Any
 
@@ -68,7 +66,6 @@ def main(argv: list[str] | None = None) -> int:
         log_kwargs["encoding"] = "utf-8"
     logging.basicConfig(**log_kwargs)
     args = sys.argv[1:] if argv is None else argv
-    browser = "--browser" in args
     files = [Path(a) for a in args if not a.startswith("--")]
 
     state = AppState(data_dir())
@@ -83,17 +80,11 @@ def main(argv: list[str] | None = None) -> int:
     server = start_server(state)
     url = f"http://127.0.0.1:{server.server_address[1]}/" + (f"#p={start_id}" if start_id else "")
     try:
-        if browser:
-            raise ImportError
         import webview
     except ImportError:
-        print(f"E7 Showcase : {url}\n(Ctrl+C pour quitter)", flush=True)
-        webbrowser.open(url)
-        try:
-            threading.Event().wait()
-        except KeyboardInterrupt:
-            server.shutdown()
-        return 0
+        server.shutdown()
+        _fatal("Composant d'affichage manquant (pywebview). Réinstallez E7 Showcase.")
+        return 1
 
     api = WindowApi(state)
     webview.settings["ALLOW_DOWNLOADS"] = True
@@ -102,13 +93,28 @@ def main(argv: list[str] | None = None) -> int:
     window.events.loaded += lambda: log.info("Fenêtre chargée [window-loaded]")
     try:
         webview.start()
-    except Exception:  # noqa: BLE001 - composant d'affichage absent (WebView2) : navigateur
-        log.exception("Fenêtre native indisponible, ouverture dans le navigateur")
-        webbrowser.open(url)
-        with contextlib.suppress(KeyboardInterrupt):
-            threading.Event().wait()
+    except Exception:  # noqa: BLE001 - composant d'affichage absent (WebView2)
+        log.exception("Fenêtre native indisponible")
+        server.shutdown()
+        _fatal(
+            "Impossible d'ouvrir la fenêtre d'E7 Showcase : le composant Microsoft Edge WebView2 "
+            "est absent ou endommagé. Installez-le depuis "
+            "https://go.microsoft.com/fwlink/p/?LinkId=2124703 puis relancez l'application."
+        )
+        return 1
     server.shutdown()
     return 0
+
+
+def _fatal(message: str) -> None:
+    """Prévenir l'utilisateur d'une erreur bloquante (boîte de dialogue sous Windows)."""
+    log.error(message)
+    if sys.platform == "win32":
+        import ctypes
+
+        ctypes.windll.user32.MessageBoxW(None, message, "E7 Showcase", 0x10)
+    else:
+        print(message, file=sys.stderr)
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ Langue du projet : documentation et messages utilisateur en **français**, code 
 pip install -e ".[dev]"          # + [scan] [render] [bot]
 ruff format . && ruff check . && mypy && pytest     # définition de « terminé » (skill dev-checks)
 e7showcase --help
-e7showcase app --browser          # application (interface dans le navigateur)
+e7showcase app                    # application de bureau (fenêtre native)
 ```
 
 ## Carte du code (`src/e7showcase/`)

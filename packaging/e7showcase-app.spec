@@ -16,7 +16,7 @@ datas = [
     (str(SRC / "app" / "ui.html"), "e7showcase/app"),
 ]
 binaries = []
-hiddenimports = ["e7showcase.scanner.hero_scanner", "e7showcase.vision.ocr"]
+hiddenimports = ["e7showcase.scanner.hero_scanner", "e7showcase.vision.ocr", "httpx"]
 for package in ("rapidocr_onnxruntime", "onnxruntime"):
     d, b, h = collect_all(package)
     datas += d

@@ -33,6 +33,7 @@ main { display:flex; flex-direction:column; min-height:0; }
 .drop { margin:12px 16px 0; border:2px dashed var(--line); border-radius:12px; padding:14px; text-align:center; color:var(--muted); cursor:pointer; }
 .drop.over { border-color:var(--gold); color:var(--text); background:#1a1c14; }
 .report { margin:8px 16px 0; font-size:13px; }
+.report .transient { transition: opacity .6s ease; } .report .fading { opacity: 0; }
 .report .ok { color:var(--ok); } .report .warn { color:var(--gold); } .report .err { color:var(--danger); }
 .progress { margin:10px 16px 0; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px 14px; }
 .progress .head { display:flex; justify-content:space-between; gap:12px; font-size:13px; margin-bottom:8px; }
@@ -216,12 +217,18 @@ async function importFiles(files) {
     bar.set(1, `Terminé : ${r.heroes.length} héros ajouté(s)`);
     bar.finish();
     const lines = [bar.box];
-    if (r.learned_sets.length) lines.push(el("div", {}, `Sets appris : ${r.learned_sets.join(", ")}`));
+    if (r.learned_sets.length) lines.push(el("div", { class: "transient" }, `Sets appris : ${r.learned_sets.join(", ")}`));
     for (const w of r.warnings) lines.push(el("div", { class: "warn" }, "⚠ " + w));
     if (r.ignored.length) lines.push(el("div", { class: "warn" }, `Captures non reconnues : ${r.ignored.join(", ")}`));
     report.replaceChildren(...lines);
     const keep = [...report.childNodes];
     await refresh(); await show(current); $("#report").replaceChildren(...keep);
+    bar.box.classList.add("transient");
+    setTimeout(() => {
+      const gone = keep.filter((n) => n.classList && n.classList.contains("transient"));
+      gone.forEach((n) => n.classList.add("fading"));
+      setTimeout(() => gone.forEach((n) => n.remove()), 600);
+    }, 5000);
   } catch (e) { report.replaceChildren(el("span", { class: "err" }, e.message)); }
 }
 

@@ -9,7 +9,7 @@
 ; - raccourcis menu Démarrer / Bureau, association des fichiers .e7v ;
 ; - désinstallation : les profils sont conservés, sauf si l'utilisateur demande leur suppression.
 #ifndef AppVersion
-  #define AppVersion "0.3.2"
+  #define AppVersion "0.4.0"
 #endif
 #define AppName "E7 Showcase"
 #define AppExe "E7Showcase.exe"
@@ -70,7 +70,6 @@ Source: "..\..\LICENSE"; DestDir: "{app}"; DestName: "LICENCE.txt"; Flags: ignor
 
 [Icons]
 Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppExe}"; IconFilename: "{app}\e7showcase.ico"; Comment: "Vitrines Epic Seven"
-Name: "{autoprograms}\{#AppName} (navigateur)"; Filename: "{app}\{#AppExe}"; Parameters: "--browser"; IconFilename: "{app}\e7showcase.ico"; Comment: "Ouvrir l'interface dans le navigateur"
 Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; IconFilename: "{app}\e7showcase.ico"; Tasks: desktopicon
 
 [Registry]

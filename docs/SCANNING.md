@@ -25,6 +25,11 @@ Sur la liste, les stats affichent un bonus (« 4088 ▲2708 ») : on ne les lit 
    Sans catalogue, la **liste des héros** suffit pour les sets portés : chaque ligne « Set Xxx »
    montre le blason à côté de son nom (`HeroScanner.learn_list_sets`) ; un blason du catalogue
    reste prioritaire. Sur PC : bon set ≥ 0,93, meilleur mauvais set ≤ 0,52.
+   **Blasons de référence** (`sources/set_icons.py`) : au premier import de fiches, l'application
+   télécharge les icônes publiques des 24 sets (base Hideout Guides) dans cette même bibliothèque
+   locale, recadrées comme un blason lu en jeu, sans jamais remplacer un blason appris. Avec ces
+   seules icônes : 18/18 pièces de 720p à 4K, bon set ≥ 0,93, meilleur mauvais set ≤ 0,66.
+   Aucune capture préalable de la liste ou du catalogue n'est donc nécessaire.
 5. **Icônes perturbées par le décor** (ex. cristaux de glace de Coli tactique) : une seconde
    lecture ignore les formes qui touchent le bord de la boîte (`features(drop_border=True)`),
    le meilleur score des deux est retenu.

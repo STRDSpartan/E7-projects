@@ -21,6 +21,8 @@ from PIL import Image
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.config import regions
 from e7showcase.models.hero import Hero
+from e7showcase.sources.set_icons import fetch_set_icons
+from e7showcase.sources.set_icons import missing as missing_icons
 from e7showcase.vision.framing import frame_detail
 from e7showcase.vision.layouts import candidate_layouts, normalize_scale
 from e7showcase.vision.preprocess import strip_window_chrome
@@ -66,12 +68,26 @@ def _quality(hero: Hero) -> int:
 class ScreenshotImporter:
     """Garde le moteur OCR et les blasons appris entre deux imports (chargement unique)."""
 
-    def __init__(self, set_library: Path, lang: str = "fr", profile: str = "auto"):
+    def __init__(
+        self,
+        set_library: Path,
+        lang: str = "fr",
+        profile: str = "auto",
+        fetch_icons: Callable[[Path], list[str]] | None = fetch_set_icons,
+    ):
         self.set_library = set_library
+        self.fetch_icons = fetch_icons
         self.lang = lang
         self.profile = profile
         self.sets = SetMatcher.load(set_library)
         self._ocr: Any = None
+
+    def _add_reference_shields(self, added: list[str]) -> None:
+        """Blasons de référence téléchargés : complètent ceux appris, sans les remplacer."""
+        for key in added:
+            if key not in self.sets.templates:
+                with Image.open(self.set_library / f"{key}.png") as shield:
+                    self.sets.add(key, shield)
 
     def _engine(self) -> Any:
         if self._ocr is None:
@@ -148,6 +164,9 @@ class ScreenshotImporter:
             step += 1 if kind == "detail" else 2
         if report.learned_sets:
             self.sets.save(self.set_library)
+        if details and self.fetch_icons is not None and missing_icons(self.set_library):
+            notify(step, total, "Téléchargement des blasons de sets")
+            self._add_reference_shields(self.fetch_icons(self.set_library))
 
         for name, attempts in details:
             notify(step, total, f"Lecture du héros ({name})")
