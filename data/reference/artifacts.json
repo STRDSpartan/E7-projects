@@ -1,5 +1,5 @@
 {
- "_comment": "Généré depuis e7codex.com (archive fan-made ; contenu du jeu © Smilegate / Super Creative) par scripts/update_reference.py le 2026-09-28. Ne pas éditer à la main.",
+ "_comment": "Généré depuis e7codex.com (archive fan-made ; contenu du jeu © Smilegate / Super Creative) par scripts/update_reference.py le 2026-10-11. Effets des artefacts ('effect_en' : niveau de compétence 1 → 11, 'lore_en') : e7gw.xyz/artifacts. Ne pas éditer à la main.",
  "artifacts": [
   {
    "code": "art0001",
@@ -7,7 +7,9 @@
    "fr": "Tige d'Amaryllis",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0001_fu.png"
+   "art": "assets/_artifacts/art0001_fu.png",
+   "effect_en": "Heals the ally with the lowest Health by 1.2% → 2.4% after using a non-attack skill.",
+   "lore_en": "Everyone who fights for the salvation of the world will have the divine protection of the Goddess."
   },
   {
    "code": "art0002",
@@ -15,7 +17,9 @@
    "fr": "Durandal",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0002_fu.png"
+   "art": "assets/_artifacts/art0002_fu.png",
+   "effect_en": "After being attacked, increases Combat Readiness by 4% → 8% and when the caster's Health is 75% or less, increases Combat Readiness by an additional 4% → 8%.",
+   "lore_en": "The soft light emitted by the sword shields its owner from all injuries."
   },
   {
    "code": "art0004",
@@ -23,7 +27,9 @@
    "fr": "Kal'adra",
    "stars": 4,
    "role": "mage",
-   "art": "assets/_artifacts/art0004_fu.png"
+   "art": "assets/_artifacts/art0004_fu.png",
+   "effect_en": "Increases damage dealt by 1.5% → 3% if the target is debuffed when the caster attacks.",
+   "lore_en": "A cursed weapon created by the fallen priest, Sestia. It causes a mental breakdown in the target by reminding them of their most painful memories. Even ages later, when fallen priests have sided with the Covenant, use of this mask is banned."
   },
   {
    "code": "art0007",
@@ -31,7 +37,9 @@
    "fr": "Épée du soleil",
    "stars": 1,
    "role": null,
-   "art": "assets/_artifacts/art0007_fu.png"
+   "art": "assets/_artifacts/art0007_fu.png",
+   "effect_en": "Increases Attack by 2% → 4%",
+   "lore_en": "A mysterious sword containing the power of light that grants its wielder continuous vitality."
   },
   {
    "code": "art0008",
@@ -39,7 +47,9 @@
    "fr": "Pistolet du démon",
    "stars": 1,
    "role": null,
-   "art": "assets/_artifacts/art0008_fu.png"
+   "art": "assets/_artifacts/art0008_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 2% → 4%",
+   "lore_en": "Legend says that anyone shot by this gun will become cursed."
   },
   {
    "code": "art0009",
@@ -47,7 +57,9 @@
    "fr": "Parchemin de rêve",
    "stars": 1,
    "role": null,
-   "art": "assets/_artifacts/art0009_fu.png"
+   "art": "assets/_artifacts/art0009_fu.png",
+   "effect_en": "Increases Effect Resistance by 2% → 4%",
+   "lore_en": "Tell me what you want to dream. I can show you anything."
   },
   {
    "code": "art0010",
@@ -55,7 +67,9 @@
    "fr": "Étoile de vent mordant",
    "stars": 1,
    "role": null,
-   "art": "assets/_artifacts/art0010_fu.png"
+   "art": "assets/_artifacts/art0010_fu.png",
+   "effect_en": "Increases Critical Hit Damage by 2% → 4%",
+   "lore_en": "A throwing star that flies as fast as the wind straight at the enemy's weak point."
   },
   {
    "code": "art0011",
@@ -63,7 +77,9 @@
    "fr": "Orbe de Vénus",
    "stars": 1,
    "role": null,
-   "art": "assets/_artifacts/art0011_fu.png"
+   "art": "assets/_artifacts/art0011_fu.png",
+   "effect_en": "Increases Effectiveness by 2% → 4%",
+   "lore_en": "If you keep this orb with you, Venus's blessing will be with you."
   },
   {
    "code": "art0012",
@@ -71,7 +87,9 @@
    "fr": "Gantelet amélioré",
    "stars": 1,
    "role": null,
-   "art": "assets/_artifacts/art0012_fu.png"
+   "art": "assets/_artifacts/art0012_fu.png",
+   "effect_en": "Increases Defense by 2% → 4%",
+   "lore_en": "A specially reinforced gauntlet that does not break, even after being hit with several attacks."
   },
   {
    "code": "art0013",
@@ -79,7 +97,9 @@
    "fr": "Épée mortelle",
    "stars": 2,
    "role": null,
-   "art": "assets/_artifacts/art0013_fu.png"
+   "art": "assets/_artifacts/art0013_fu.png",
+   "effect_en": "Increases Attack by 3% → 6%",
+   "lore_en": "If you remove the sword from its sheath, you must kill someone with it. If you fail to do so, you will die."
   },
   {
    "code": "art0014",
@@ -87,7 +107,9 @@
    "fr": "Arc elfique",
    "stars": 2,
    "role": null,
-   "art": "assets/_artifacts/art0014_fu.png"
+   "art": "assets/_artifacts/art0014_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 3% → 6%",
+   "lore_en": "A light and sturdy bow used by an elf from Dun Blyraia."
   },
   {
    "code": "art0015",
@@ -95,7 +117,9 @@
    "fr": "Bâton de sagesse",
    "stars": 2,
    "role": null,
-   "art": "assets/_artifacts/art0015_fu.png"
+   "art": "assets/_artifacts/art0015_fu.png",
+   "effect_en": "Increases Effectiveness by 3% → 6%",
+   "lore_en": "A soul inside the staff will whisper ancient knowledge."
   },
   {
    "code": "art0016",
@@ -103,7 +127,9 @@
    "fr": "Grimoire de la fée",
    "stars": 2,
    "role": null,
-   "art": "assets/_artifacts/art0016_fu.png"
+   "art": "assets/_artifacts/art0016_fu.png",
+   "effect_en": "Increases Effect Resistance by 3% → 6%",
+   "lore_en": "Take a good look at that spell book. The glowing letters that you find after a few pages are messages from fairies."
   },
   {
    "code": "art0017",
@@ -111,7 +137,9 @@
    "fr": "Dague à perles de sang",
    "stars": 2,
    "role": null,
-   "art": "assets/_artifacts/art0017_fu.png"
+   "art": "assets/_artifacts/art0017_fu.png",
+   "effect_en": "Increases Critical Hit Damage by 3% → 6%",
+   "lore_en": "A dagger once used by an assassin that took many lives."
   },
   {
    "code": "art0018",
@@ -119,7 +147,9 @@
    "fr": "Bouclier ferme",
    "stars": 2,
    "role": null,
-   "art": "assets/_artifacts/art0018_fu.png"
+   "art": "assets/_artifacts/art0018_fu.png",
+   "effect_en": "Increases Defense by 3% → 6%",
+   "lore_en": "They say that the wielder of this shield doesn't back down from any situation, no matter how terrifying."
   },
   {
    "code": "art0026",
@@ -127,7 +157,9 @@
    "fr": "Mémorandum de Ranon",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art0026_fu.png"
+   "art": "assets/_artifacts/art0026_fu.png",
+   "effect_en": "Increase Speed by 1% → 2% after attacking. Can stack up to 10 times.",
+   "lore_en": "A memorandum that contains all the records of magic researched by Ranon, the Mage. However, a spell is cast to show different content every time it's opened, so one must disable the spell to read the real content."
   },
   {
    "code": "art0027",
@@ -135,7 +167,9 @@
    "fr": "Substance de temps",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0027_fu.png"
+   "art": "assets/_artifacts/art0027_fu.png",
+   "effect_en": "Increases damage by 6% → 12% when attacking. When an enemy is killed by an attack, increases the damage of the next attack by an additional 1.2% → 2.4% and reduces skill cooldown by 1 turn. Skill cooldown reduction effect can only be activated once per skill.",
+   "lore_en": "A source of power that Guardian Kazran wields that controls time. It can bring forth a time in the past that no one can remember."
   },
   {
    "code": "art0028",
@@ -143,7 +177,9 @@
    "fr": "Machine éthérée",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0028_fu.png"
+   "art": "assets/_artifacts/art0028_fu.png",
+   "effect_en": "Increases damage of attacks that target all enemies by 10%, and when the target is not an Elite or Boss monster, has a 5% → 10% chance to ignore damage sharing effects.",
+   "lore_en": "For the people of Orbis, Yuna's cellphone is a peculiar item that they couldn't understand."
   },
   {
    "code": "art0029",
@@ -151,7 +187,9 @@
    "fr": "Chatty",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0029_fu.png"
+   "art": "assets/_artifacts/art0029_fu.png",
+   "effect_en": "At the start of battle, grants a barrier for 2 turns. After being attacked, has a 5% → 10% chance to be granted a barrier for 2 turns when the caster's Health is 50% or less. Barrier's strength is proportional to the caster's Attack. The effect after being attacked can only be activated once every 2 turns.",
+   "lore_en": "I was once the best mercenary in the world!! Before Serila... No, master trapped my soul inside this lantern."
   },
   {
    "code": "art0030",
@@ -159,7 +197,9 @@
    "fr": "Dent d'Uberius",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0030_fu.png"
+   "art": "assets/_artifacts/art0030_fu.png",
+   "effect_en": "After attacking, has a 5% → 10% chance to deal additional damage proportional to the caster's Attack on the target.",
+   "lore_en": "Treasure of the Wintenberg royal family made from the remains of wicked dragon Uberius. It's said to be capable of ripping dragon scale armor."
   },
   {
    "code": "art0031",
@@ -167,7 +207,9 @@
    "fr": "Santa Muerte",
    "stars": 4,
    "role": "thief",
-   "art": "assets/_artifacts/art0031_fu.png"
+   "art": "assets/_artifacts/art0031_fu.png",
+   "effect_en": "Decreases Combat Readiness of the enemy by 5% → 10% after a single attack if the enemy is an Earth Elemental.",
+   "lore_en": "There was nothing that Haste's scythe could not slay. The peaceful darkness could not stand in its way, nor even could life and death, until eventually he slayed even his own humanity."
   },
   {
    "code": "art0032",
@@ -175,7 +217,9 @@
    "fr": "Célestine",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0032_fu.png"
+   "art": "assets/_artifacts/art0032_fu.png",
+   "effect_en": "After attacking with a Single Attack, heals the ally with the lowest Health by 8% → 16%.",
+   "lore_en": "A rare ore extracted from near the Sanctuary. Known as the Blessing of Diche, it has the power to infuse the wearer with the energy of life and is carried by royalty and some high-ranking priests."
   },
   {
    "code": "art0033",
@@ -183,7 +227,9 @@
    "fr": "Noble serment",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0033_fu.png"
+   "art": "assets/_artifacts/art0033_fu.png",
+   "effect_en": "As Health decreases, Defense and Effect Resistance increase by up to 5% → 10%.",
+   "lore_en": "An emblem given to members of Ezera's Orders after they pledge to dedicate their lives to the Goddess. Those given to knights resemble an escutcheon, while those given to priests resemble a rosary."
   },
   {
    "code": "art0034",
@@ -191,7 +237,9 @@
    "fr": "Ambrote",
    "stars": 4,
    "role": "ranger",
-   "art": "assets/_artifacts/art0034_fu.png"
+   "art": "assets/_artifacts/art0034_fu.png",
+   "effect_en": "Increases damage dealt by basic skill by 1% → 2%. After using a basic skill, increases Speed by 1% → 2%. Increase Speed effect can stack up to 5 times.",
+   "lore_en": "After a final prayer, she took her bow made from the branches of the World Tree and leaped onto the battlefield full of death, wishing to restore the world in the belief that all things will be born anew."
   },
   {
    "code": "art0035",
@@ -199,7 +247,9 @@
    "fr": "Carte des petits miracles",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0035_fu.png"
+   "art": "assets/_artifacts/art0035_fu.png",
+   "effect_en": "Increases Attack and Defense of all allies by 2.5% → 5%. Effect does not stack with other Artifacts of the same name.",
+   "lore_en": "A New Year's card with a picture of Arky pulling a sled over a starry sky, on his way to grant the wishes of the people of Ritania. No matter how much time has passed, this card will help you remember your precious memories of that day."
   },
   {
    "code": "art0036",
@@ -207,7 +257,9 @@
    "fr": "Panier d'Alexa",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0036_fu.png"
+   "art": "assets/_artifacts/art0036_fu.png",
+   "effect_en": "3.5% → 7% chance to grant increased Attack for 1 turn and a 2% → 4% chance to grant increased Attack (Greater) to the caster for 1 turn at the start of the turn.",
+   "lore_en": "A basket Alexa carries whenever she goes on a picnic with someone she wishes to become close to, containing everything necessary for a nice lunch in a beautiful forest. Just taking it along will elicit the joy of a pleasant picnic outing."
   },
   {
    "code": "art0037",
@@ -223,7 +275,9 @@
    "fr": "Éventail de fer",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0038_fu.png"
+   "art": "assets/_artifacts/art0038_fu.png",
+   "effect_en": "After using an attack that targets all enemies except for a basic skill, increase Combat Readiness of the caster by 1.5% → 3%. Can only be activated once per turn.",
+   "lore_en": "\"Ladies use fans for many purposes: hiding smiles, expressing feelings indirectly, and of course, eliminating enemies.\""
   },
   {
    "code": "art0039",
@@ -231,7 +285,9 @@
    "fr": "Gaieté de l'idole",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0039_fu.png"
+   "art": "assets/_artifacts/art0039_fu.png",
+   "effect_en": "When attacked, increases Combat Readiness of the ally with the highest Attack by 1% → 2%.",
+   "lore_en": "I believe that music can change the world. Because it changed me!"
   },
   {
    "code": "art0040",
@@ -239,7 +295,9 @@
    "fr": "Talisman de Violet",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0040_fu.png"
+   "art": "assets/_artifacts/art0040_fu.png",
+   "effect_en": "Increases Attack by 5% → 10% and Evasion by 5% → 10% at the start of every turn. Each effect can stack up to 3 times, and resets at the start of battle.",
+   "lore_en": "\"As long as you believe in victory, the light of hope shall never fade. Remember that, my son. Our family's legacy now rests on your shoulders.\"\n- Violet's Father"
   },
   {
    "code": "art0041",
@@ -247,7 +305,9 @@
    "fr": "Épée du jugement",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0041_fu.png"
+   "art": "assets/_artifacts/art0041_fu.png",
+   "effect_en": "1% → 2% chance to attack again with a basic skill when the target survives a Single Attack. Can only be activated once per turn.",
+   "lore_en": "\"If you truly are innocent, then the Goddess will save you from my sword.\"\nWhether it is blood or the dark red of rose petals that falls in that next moment, it is unclear."
   },
   {
    "code": "art0042",
@@ -255,7 +315,9 @@
    "fr": "Potion d'amour",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0042_fu.png"
+   "art": "assets/_artifacts/art0042_fu.png",
+   "effect_en": "Increases the effect of all healing received by allies by 5% → 10%. When more than one increased healing effect is granted, only the strongest effect is applied.",
+   "lore_en": "It is said to be a magic potion of love, but in reality it is a potion that makes people honest about their innermost feelings."
   },
   {
    "code": "art0043",
@@ -263,7 +325,9 @@
    "fr": "Justice pour tous",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0043_fu.png"
+   "art": "assets/_artifacts/art0043_fu.png",
+   "effect_en": "5% → 10% chance to grant the caster a random buff for 2 turns at the end of the turn (Increase Attack,  Defense, Speed, or Critical Hit Chance, Barrier, Immunity, Continuous Heal, or Critical Hit Resistance).",
+   "lore_en": "A gauntlet made the year the first member of the Sharon family was knighted. It represents the pursuit of justice to be shared by all who follow the Goddess and the kingdom, rather than just for the sake of oneself."
   },
   {
    "code": "art0044",
@@ -271,7 +335,9 @@
    "fr": "Pièce frontalière",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0044_fu.png"
+   "art": "assets/_artifacts/art0044_fu.png",
+   "effect_en": "After using a non-attack skill, increases Attack by 7.5% → 15% and Speed by 5% → 10%. Effects can only stack up to 3 times.",
+   "lore_en": "\"Heads, I'll pretend I didn't see anything and let you go free. But tails...\"\nCountless people have had their fortunes rely on this old gold coin."
   },
   {
    "code": "art0045",
@@ -279,7 +345,9 @@
    "fr": "Perpétuellement radieux",
    "stars": 4,
    "role": "mage",
-   "art": "assets/_artifacts/art0045_fu.png"
+   "art": "assets/_artifacts/art0045_fu.png",
+   "effect_en": "When using a skill that targets all enemies, increases damage dealt against Elite or Boss monsters by 2.5% → 5%.",
+   "lore_en": "A flash appears with creation; a flare passes by with death. This crystal, created by a consolidation of all light within life, is said to have immense power."
   },
   {
    "code": "art0046",
@@ -287,7 +355,9 @@
    "fr": "Épée d'Ezera",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0046_fu.png"
+   "art": "assets/_artifacts/art0046_fu.png",
+   "effect_en": "Decreases damage suffered by the caster from Elite or Boss monsters by 1.5% → 3%. When more than one damage reduction effect is granted, only the strongest effect is applied.",
+   "lore_en": "\"Because the color and shape is different to the holy sword wielded by the real life Ezeran legend...\"\nThe final part of the etching on the sword's hilt has been lost to time, but a mysterious force can still be felt flowing through the blade."
   },
   {
    "code": "art0047",
@@ -295,7 +365,9 @@
    "fr": "Necro et Undine",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0047_fu.png"
+   "art": "assets/_artifacts/art0047_fu.png",
+   "effect_en": "Increases the caster's Combat Readiness by 1% → 2% after using an attack that targets all enemies. This effect is not activated by a counterattack, Dual Attack, or extra attack.",
+   "lore_en": "Two sentient wings on Dizzy‘s back. When attacking, the green wing becomes Necro, a grim reaper, an the blue wing becomes Undine, an angel. Though their personalities often clash, both of them consider Dizzy's safety their highest priority."
   },
   {
    "code": "art0048",
@@ -303,7 +375,9 @@
    "fr": "Portrait des sauveurs",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0048_fu.png"
+   "art": "assets/_artifacts/art0048_fu.png",
+   "effect_en": "Increases damage dealt by 1% → 2% if the target's Health is 50% or more when the caster attacks.",
+   "lore_en": "A portrait featuring the faces of the heroes who vanished after saving Orbis, drawn from Ras's memory by a famous Ezeran artist."
   },
   {
    "code": "art0049",
@@ -311,7 +385,9 @@
    "fr": "Souffle de l'esprit",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0049_fu.png"
+   "art": "assets/_artifacts/art0049_fu.png",
+   "effect_en": "5% → 10% chance to decrease skill cooldown by 1 turn when using a non-attack skill.",
+   "lore_en": "\"Through them... I can feel it. The pain and agony in this world…\" \nIt is said that only a few Shaman of Rekos can hear the Spirits' whispers."
   },
   {
    "code": "art0050",
@@ -319,7 +395,9 @@
    "fr": "Manche déchirée",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0050_fu.png"
+   "art": "assets/_artifacts/art0050_fu.png",
+   "effect_en": "5% → 10% chance to inflict bleeding for 2 turns after a single attack.",
+   "lore_en": "A torn sleeve out of which various weapons appear as though they are prosthetic limbs. She never has explained how she manages to fit so many things up there."
   },
   {
    "code": "art0051",
@@ -327,7 +405,9 @@
    "fr": "Preuve de vaillance",
    "stars": 5,
    "role": null,
-   "art": "assets/_artifacts/art0051_fu.png"
+   "art": "assets/_artifacts/art0051_fu.png",
+   "effect_en": "Decreases damage taken by 1.5% → 3%. Effect decreases by 1.5% → 3% with each attack suffered, down to 7.5% → 15%. When more than one damage reduction effect is granted, only the strongest effect is applied. This Artifact's can only apply to one Hero within a party.",
+   "lore_en": "\"Though courage and daring may not be visible to mortal eyes, this insignia will act as proof of yours. From now on, everyone you meet shall know of your valor.\""
   },
   {
    "code": "art0052",
@@ -335,7 +415,9 @@
    "fr": "Junkyard Dog",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0052_fu.png"
+   "art": "assets/_artifacts/art0052_fu.png",
+   "effect_en": "2.5% → 5% chance to burn enemy for 2 turns after using basic skill.",
+   "lore_en": "A weapon created to embody the ability of the Outrage. It is a combination of the Fireseal and the Flashing Tooth, which is one of the Sacred Treasures, originally possessed by the Conclave on Sol's home planet."
   },
   {
    "code": "art0053",
@@ -343,7 +425,9 @@
    "fr": "Larme du désert",
    "stars": 4,
    "role": "mage",
-   "art": "assets/_artifacts/art0053_fu.png"
+   "art": "assets/_artifacts/art0053_fu.png",
+   "effect_en": "After using an attack that targets all enemies, increases Attack of the caster by 2% → 4%. Effect can only stack up to 5 times.",
+   "lore_en": "A jewel insignia that is made of Peridot found only in the nearby desert of Savara and granted exclusively to a few credited mercenaries by Basar himself. Adventurers of the desert covet it for its mystical blue glow that grows brighter as a sandstorm approaches."
   },
   {
    "code": "art0054",
@@ -351,7 +435,9 @@
    "fr": "Sépulcre",
    "stars": 4,
    "role": "warrior",
-   "art": "assets/_artifacts/art0054_fu.png"
+   "art": "assets/_artifacts/art0054_fu.png",
+   "effect_en": "Decreases damage taken by 4% → 8%. Effect increases by 4% → 8% with each attack suffered, and can stack up to 3 times. When more than one damage reduction effect is granted, only the strongest effect is applied. The effect resets at the beginning of the caster's turn.",
+   "lore_en": "\"All those who wander shall embrace death under my blade. My sword will be the gravestone of sinners.\"\n- Mary the Benevolent Punisher"
   },
   {
    "code": "art0055",
@@ -359,7 +445,9 @@
    "fr": "Éternus",
    "stars": 4,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0055_fu.png"
+   "art": "assets/_artifacts/art0055_fu.png",
+   "effect_en": "Increases Combat Readiness of the caster by 7% → 14% when an ally has a debuff at the end of an enemy's turn. Can only be activated once per turn.",
+   "lore_en": "\"An eternal promise of perpetual confinement. Through endless cycles of death and rebirth, you will be intertwined.\"\nAccording to myth, the cursed archmage Heindel has spent thousands of years traveling the world to find a way to free himself from the ring’s domination."
   },
   {
    "code": "art0056",
@@ -367,7 +455,9 @@
    "fr": "Pluie soudaine",
    "stars": 4,
    "role": "thief",
-   "art": "assets/_artifacts/art0056_fu.png"
+   "art": "assets/_artifacts/art0056_fu.png",
+   "effect_en": "5% → 10% chance to increase Attack of the ally except for the caster with the highest Attack for 2 turns when the caster uses a non-attack skill.",
+   "lore_en": "After her shurikens poured down from the sky, the alley was awash with blood."
   },
   {
    "code": "art0058",
@@ -375,7 +465,9 @@
    "fr": "Création & destruction",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0058_fu.png"
+   "art": "assets/_artifacts/art0058_fu.png",
+   "effect_en": "1% → 2% chance for skill cooldown to not occur after using a skill.",
+   "lore_en": "A scissor-like weapon that can be used as two separate swords, forged by the greatest blacksmith at Lilibet's request. In mockery of the official religion of Rekos, the blades are named after Cho and Mal, the demons of creation and destruction."
   },
   {
    "code": "art0059",
@@ -383,7 +475,9 @@
    "fr": "Graine pourpre",
    "stars": 4,
    "role": "warrior",
-   "art": "assets/_artifacts/art0059_fu.png"
+   "art": "assets/_artifacts/art0059_fu.png",
+   "effect_en": "After attacking, has a 4% → 8% chance to dispel one debuff. Can only be activated once per turn.",
+   "lore_en": "A token in the shape of the small flame emblem of Meldrec, used as proof of friendly relations and to show that an outsider has been granted passage through Meldrec by the great chief."
   },
   {
    "code": "art0060",
@@ -391,7 +485,9 @@
    "fr": "Bergers du chaos",
    "stars": 4,
    "role": "thief",
-   "art": "assets/_artifacts/art0060_fu.png"
+   "art": "assets/_artifacts/art0060_fu.png",
+   "effect_en": "Increases Defense by 10%. As Health decreases, Evasion and Defense increase by up to 2% → 4%.",
+   "lore_en": "New kinds of Unknown that came to Orbis through Chaos Gates. Their appearance and traits differ from that of the Unknown that previously appeared in Ritania. Most are acting under someone's command, and a few appear to possess some intelligence."
   },
   {
    "code": "art0061",
@@ -399,7 +495,9 @@
    "fr": "Orbe de Dignus",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0061_fu.png"
+   "art": "assets/_artifacts/art0061_fu.png",
+   "effect_en": "Grants a barrier equivalent to 6% → 12% of Attack for 2 turns when the caster uses a non-attack skill and increases the damage of the next attack by 15%.",
+   "lore_en": "\"Whenever times are hard, l just look up to the sky, and it shows me the way forward.\""
   },
   {
    "code": "art0062",
@@ -407,7 +505,9 @@
    "fr": "Nectar de Reingar",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0062_fu.png"
+   "art": "assets/_artifacts/art0062_fu.png",
+   "effect_en": "When attacking all enemies, has a 5% → 10% chance to inflict additional damage after attacking. Additional damage dealt increases proportional to the caster's Attack.",
+   "lore_en": "A drink specially made in Reingar. With its pretty color and sweet scent, this drink is great for relaxation. They say this drink also enhances concentration, memorization, and judgment, but this hasn't been verified yet."
   },
   {
    "code": "art0063",
@@ -415,7 +515,9 @@
    "fr": "Écaille arc-en-ciel",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0063_fu.png"
+   "art": "assets/_artifacts/art0063_fu.png",
+   "effect_en": "Increases Effectiveness and Effect Resistance of all allies by 5% → 10%. Effect does not stack with other artifacts of the same name.",
+   "lore_en": "According to legend, a handful of Merpeople have rainbow-colored scales, which possess very powerful healing properties, capable even of bringing back the dead."
   },
   {
    "code": "art0064",
@@ -423,7 +525,9 @@
    "fr": "Une année de gratitude",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0064_fu.png"
+   "art": "assets/_artifacts/art0064_fu.png",
+   "effect_en": "Increases the EXP acquired by Heroes in the team by 10%. When more than one Artifact that increases EXP is equipped, only the strongest effect is applied, and this effect will not be applied when used via a Supporter. The skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "Orbis has completed one long orbit around Ilryos. To convey their feelings of gratitude to Heirs for protecting Orbis all that time, Ras brings a gift, wrapped by Arky, and a letter, written by Mercedes."
   },
   {
    "code": "art0065",
@@ -431,7 +535,9 @@
    "fr": "Fleur de minuit",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0065_fu.png"
+   "art": "assets/_artifacts/art0065_fu.png",
+   "effect_en": "Increases Critical Hit Chance of all allies by 8% → 16%. Effect does not stack with other Artifacts of the same name.",
+   "lore_en": "A type of firework used at the Full Moon Festival Afterparty. lts blooms vary from huge explosions that illuminate the entire night sky to small bursts shaped like delightful plants and animals."
   },
   {
    "code": "art0066",
@@ -439,7 +545,9 @@
    "fr": "Orbuculum de Barthez",
    "stars": 4,
    "role": "mage",
-   "art": "assets/_artifacts/art0066_fu.png"
+   "art": "assets/_artifacts/art0066_fu.png",
+   "effect_en": "1% → 2% chance to decrease damage received when attacked by 50%. When more than one damage reduction effect is granted, only the strongest effect is applied.",
+   "lore_en": "There is no need to ask me about the future. Now that you are my master, everything will unfold according to your desires. The future is in your hands."
   },
   {
    "code": "art0067",
@@ -447,7 +555,9 @@
    "fr": "Citadelle de Perlutia",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0067_fu.png"
+   "art": "assets/_artifacts/art0067_fu.png",
+   "effect_en": "At the start of battle, grants the caster and the ally in the back row immunity for 1 turn and a barrier equivalent to 1.5% → 3% of the caster's max Health for 2 turns.",
+   "lore_en": "A divine weapon passed down in the Perlutia family that may only be wielded by those born to be leaders. It chooses its master of its own will and rearranges its dark, hexagonal pieces to take the form most optimal for any situation. It was locked away for decades with no one to wield it, but finally, it has found a new master to bring it back into the world."
   },
   {
    "code": "art0068",
@@ -455,7 +565,9 @@
    "fr": "Histoires effrayantes de Solayu",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0068_fu.png"
+   "art": "assets/_artifacts/art0068_fu.png",
+   "effect_en": "Increases Hit Chance and Effectiveness of all allies by 2.5% → 5%. Effect does not stack with other artifacts of the same name.",
+   "lore_en": "A book written by a ghost story aficionado. The first story features a sad little ghost girl who appears within a hazy beam of light."
   },
   {
    "code": "art0069",
@@ -463,7 +575,9 @@
    "fr": "Rose sanglante",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0069_fu.png"
+   "art": "assets/_artifacts/art0069_fu.png",
+   "effect_en": "Increases Effectiveness by 3% → 6% on a Single Attack. After attacking with a Single Attack, has a 2.5% → 5% chance to inflict vampiric touch on the target for 2 turns. Vampiric touch effect is not attacking by a counterattack, Dual Attack, or extra attack.",
+   "lore_en": "\"I will steal that power from him and bring my family back from the dead, then he too will learn how it feels to lose everything. Just watch me.\""
   },
   {
    "code": "art0070",
@@ -471,7 +585,9 @@
    "fr": "Plaque draconique",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0070_fu.png"
+   "art": "assets/_artifacts/art0070_fu.png",
+   "effect_en": "Increases Critical Hit Damage by 1.5% → 3% while decreasing damage suffered from critical hits by 1.5% → 3%. When more than one damage reduction effect is granted, only the strongest effect is applied.",
+   "lore_en": "\"Isn't it ironic? That Dragon's skin and bones are now used to make armor to protect the very Dragon Knights of Wintenberg it curse as it died.\" The queen laughed as she wiped the blood from her armor."
   },
   {
    "code": "art0071",
@@ -479,7 +595,9 @@
    "fr": "Bénédictions de camaraderie",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0071_fu.png"
+   "art": "assets/_artifacts/art0071_fu.png",
+   "effect_en": "Increases the EXP acquired by Heroes in the team by 10%. This effect will not be applied when used via a supporter. The skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "A postcard depicting a wonderful scene that could have existed at any time, on any world, in any dimension. It contains the power of gratitude and belongs to those Heirs who are about to turn the first page of an epic history."
   },
   {
    "code": "art0073",
@@ -487,7 +605,9 @@
    "fr": "Portier inébranlable",
    "stars": 4,
    "role": "knight",
-   "art": "assets/_artifacts/art0073_fu.png"
+   "art": "assets/_artifacts/art0073_fu.png",
+   "effect_en": "Increases Defense of all allies by 5%. Decreases damage suffered from Elite or Boss monsters by 1% → 2%. Effect does not stack with other Artifacts of the same name, and when more than one damage reduction effect is granted, only the strongest effect is applied.",
+   "lore_en": "\"This sword was forged not to take lives but to keep those within our castle safe. Never forget that our utmost duty is to prevent even a single drop of blood from being shed inside these walls.\""
   },
   {
    "code": "art0076",
@@ -495,7 +615,9 @@
    "fr": "Arbalète d'André",
    "stars": 4,
    "role": "ranger",
-   "art": "assets/_artifacts/art0076_fu.png"
+   "art": "assets/_artifacts/art0076_fu.png",
+   "effect_en": "Increases Hit Chance and Effectiveness by 1% → 2%.",
+   "lore_en": "\"This crossbow has been modified to my own personal specifications. As long as I’m using this, there's no target I cannot hit.\""
   },
   {
    "code": "art0078",
@@ -503,7 +625,9 @@
    "fr": "Stella Harpa",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0078_fu.png"
+   "art": "assets/_artifacts/art0078_fu.png",
+   "effect_en": "3% → 6% chance to dispel one debuff from an ally after being attacked.",
+   "lore_en": "An ancient relic of the Shandra Empire handed down between the High Priests and Priestesses of Constella. It is said that when the harp is played while singing, stars fall from the night sky and fireflies soar upward."
   },
   {
    "code": "art0079",
@@ -511,7 +635,9 @@
    "fr": "Souvenirs persistants",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0079_fu.png"
+   "art": "assets/_artifacts/art0079_fu.png",
+   "effect_en": "Increases Effect Resistance of all allies by 20%. At the start of the turn, recovers Health of all allies by 4% → 8%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "Diene always kept a dried forget-me-not in her pocket watch, shimmering with bright blue light as if it were picked only a day earlier."
   },
   {
    "code": "art0080",
@@ -519,7 +645,9 @@
    "fr": "Série de soldats résolus",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0080_fu.png"
+   "art": "assets/_artifacts/art0080_fu.png",
+   "effect_en": "Increases Defense and Effectiveness of all allies by 5% → 10%. Effect does not stack with other artifacts of the same name.",
+   "lore_en": "A series of paintings comprising the final work of the master Triviano, portraying various scenes of the Archdemon War in the utmost detail. Designated as National Treasure No. 28 of Ezera."
   },
   {
    "code": "art0081",
@@ -527,7 +655,9 @@
    "fr": "Biscuits du Nouvel an",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0081_fu.png"
+   "art": "assets/_artifacts/art0081_fu.png",
+   "effect_en": "Recovers Health of all allies by 10% at the start of the battle. Amount recovered increases proportional to the target's max Health. The skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "Arky heard that at the end of the year if you wear a red hat with white fur, you should give out presents to make people happy! Since Arky's such a generous Guardian, I will give Master a cookie! Just for today!"
   },
   {
    "code": "art0082",
@@ -535,7 +665,9 @@
    "fr": "Colère d'Alencinox",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0082_fu.png"
+   "art": "assets/_artifacts/art0082_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 15%. After activating an extra attack on the caster's turn, increases Combat Readiness by 1% → 2%.",
+   "lore_en": "The most vulnerable point on a Dragon's body is protected by their toughest scales. An accurate shot can kill a Dragon in an instant, but if you miss, their wrath will ensure you do not live long enough to regret it."
   },
   {
    "code": "art0083",
@@ -543,7 +675,9 @@
    "fr": "Glouton impitoyable",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0083_fu.png"
+   "art": "assets/_artifacts/art0083_fu.png",
+   "effect_en": "When using a Single Attack, increases damage dealt by 8% → 16%. When defeating the enemy with a Single Attack, increases Combat Readiness of all allies except for the caster by 6% → 12%.",
+   "lore_en": "This blade's name is derived from the brutal scar it leaves behind, which makes it appear as though the victim's skin was torn by the bite of a giant beast. In order to effectively control the blade, a strength that goes beyond the realm of Humans is needed."
   },
   {
    "code": "art0084",
@@ -551,7 +685,9 @@
    "fr": "Dux Noctis",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0084_fu.png"
+   "art": "assets/_artifacts/art0084_fu.png",
+   "effect_en": "Increases Attack by 6% → 12%. Increases Attack of the caster by 2% → 4% when an ally makes a critical hit. Effect can only stack up to 6 times.",
+   "lore_en": "\"According to my mother, this necklace holds a wolf's power. That's why it shines brighter on nights you can see the moon clearly. It means the wolf will soon begin its relentless chase.\""
   },
   {
    "code": "art0085",
@@ -559,7 +695,9 @@
    "fr": "Cookie de Cacao d'or",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0085_fu.png"
+   "art": "assets/_artifacts/art0085_fu.png",
+   "effect_en": "Increases Hit Chance and Effect Resistance of all allies by 2.5% → 5%. Effect does not stack with other Artifacts of the same name.",
+   "lore_en": "A dessert made for the festival by a famous chef using special golden cocoa beans that can only be found in the forests near Perland. It is famous for its sweet flavor compared to normal cocoa."
   },
   {
    "code": "art0086",
@@ -567,7 +705,9 @@
    "fr": "Lumière dirigeante",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0086_fu.png"
+   "art": "assets/_artifacts/art0086_fu.png",
+   "effect_en": "At the start of the battle, grants stealth for 1 turn. At the end of the caster's turn, has a 3.5% → 7% to grant stealth for 2 turns. Stealth granted at the end of the caster's turn can be activated once every 2 turns.",
+   "lore_en": "The bright star shining within the dark crystal resembles the North Star, and is determined to guide people through chaotic times."
   },
   {
    "code": "art0087",
@@ -575,7 +715,9 @@
    "fr": "Drapeau de victoire",
    "stars": 5,
    "role": null,
-   "art": "assets/_artifacts/art0087_fu.png"
+   "art": "assets/_artifacts/art0087_fu.png",
+   "effect_en": "When attacking, damage dealt increases by 8% → 16%. When being attacked, damage taken decreases by 8% → 16%. When more than one damage reduction effect is granted, only the strongest effect is applied. The effect of this Artifact applies only to Earth, Ice, and Fire Elemental Heroes, and can only be applied to one Hero within a team.",
+   "lore_en": "\"A flag symbolizes the authority and honor of its unit. Therefore, it is bestowed upon the most trustworthy person. I present to you this flag, with faith that you will be the beacon of hope on our path to victory.\""
   },
   {
    "code": "art0088",
@@ -583,7 +725,9 @@
    "fr": "Main noire de la Déesse",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0088_fu.png"
+   "art": "assets/_artifacts/art0088_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 15%. At the start of battle, increases Critical Hit Damage by 1.8% → 3.6%. This effect decreases by 3% for each attack made, down to 0.6% → 2.4%.",
+   "lore_en": "A glove made to maximize an enhanced mage's magic. It draws out limitless power so that one may fight against many. However, because it was made without consideration of the harmful effects it may have upon the wearer, the wearer suffers from terrible side effects."
   },
   {
    "code": "art0089",
@@ -591,7 +735,9 @@
    "fr": "Alabastron",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0089_fu.png"
+   "art": "assets/_artifacts/art0089_fu.png",
+   "effect_en": "Increases Effectiveness by 35%. After attacking with a Single Attack, has a 3.5% → 7% chance to inflict a random debuff on the target for 2 turns. Can only be activated once per turn. (Decrease Attack, Decrease Defense, Decrease Speed, or Unhealable)",
+   "lore_en": "A bottle that contains a mystical fragrant oil infused with the power of Lunaris. It is said that if you perform a purifying ceremony with this, you will be granted life as a sacred being."
   },
   {
    "code": "art0090",
@@ -599,7 +745,9 @@
    "fr": "Ms. Confille",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0090_fu.png"
+   "art": "assets/_artifacts/art0090_fu.png",
+   "effect_en": "Has a 3% → 6% chance to decrease Defense of the enemy for 1 turn after a Single Attack. This effect is not activated by a counterattack, Dual Attack, or extra attack.",
+   "lore_en": "A long-range rifle owned by Elphelt Valentine. It is a special weapon that allows the bearer to change magic into bullets, and thus it allows any ordinary person to use powerful attacks."
   },
   {
    "code": "art0091",
@@ -607,7 +755,9 @@
    "fr": "Main de Rekos",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0091_fu.png"
+   "art": "assets/_artifacts/art0091_fu.png",
+   "effect_en": "Recovers the Health of all allies by 5% → 10% after being attacked. This effect can only be activated once per turn. Amount recovered increases proportional to the target's max Health.",
+   "lore_en": "An artifact handed down by the god Rekos after the Spirit Shrine was built. It is said that this item, containing the power of a god, is bestowed upon the most qualified shaman."
   },
   {
    "code": "art0092",
@@ -615,7 +765,9 @@
    "fr": "Chant pour tous",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0092_fu.png"
+   "art": "assets/_artifacts/art0092_fu.png",
+   "effect_en": "Increases Dual Attack Chance of all allies by 3.0%. Effect does not stack with other artifacts of the same name. The skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "A song written by Tamarinne, dedicated to those who courageously fought to keep Orbis safe. Karin was in charge of the chorus and choreography, and Arky joins Tamarinne to perform the song as a duet."
   },
   {
    "code": "art0093",
@@ -623,7 +775,9 @@
    "fr": "Berceau de la vie",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0093_fu.png"
+   "art": "assets/_artifacts/art0093_fu.png",
+   "effect_en": "4% → 8% chance to inflict a random debuff for 2 turns after using a Single Attack on the caster's turn. (Decrease Attack, Decrease Hit Chance, Burn, or Bleeding).",
+   "lore_en": "\"They say Humans do not require meaning to exist; therefore, they are capable of becoming free. Does that mean a being born with a specific purpose can never truly be free?\""
   },
   {
    "code": "art0094",
@@ -631,7 +785,9 @@
    "fr": "Kit de secours",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0094_fu.png"
+   "art": "assets/_artifacts/art0094_fu.png",
+   "effect_en": "Dispels one debuff from all allies and recovers 7% → 14% of each ally's max Health after using a non-attack skill. Can only be activated once every 3 turns.",
+   "lore_en": "A bag filled with medications that Ray made himself. Most illnesses and injuries can be treated by the medications within the bag."
   },
   {
    "code": "art0095",
@@ -639,7 +795,9 @@
    "fr": "Manica de contrôle",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0095_fu.png"
+   "art": "assets/_artifacts/art0095_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 15% and Hit Chance by 1% → 2%.",
+   "lore_en": "Sez's arm was modified and weaponized as part of an experiment in the past. After he escaped the facility, it grew more and more powerful until he could no longer control it. Sez considered this power a curse and used clothes and gloves to conceal his arm. After coming to realize this, the members of the Phantom CIC made him a special glove to help him control its power."
   },
   {
    "code": "art0096",
@@ -647,7 +805,9 @@
    "fr": "Méthode de l'épée de tempête",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0096_fu.png"
+   "art": "assets/_artifacts/art0096_fu.png",
+   "effect_en": "After an enemy uses a non-attack skill, increases Combat Readiness of the caster by 1.2% → 2.4% and has a 5% → 10% chance to increase Attack of the caster for 1 turn. Can only be activated once per turn.",
+   "lore_en": "A book passed down through generations of Celine's family. It contains the secret to a form of sword art that allows one to channel the energy within their body to strike down their foes with lightning speed."
   },
   {
    "code": "art0097",
@@ -655,7 +815,9 @@
    "fr": "Bain de fleurs",
    "stars": 4,
    "role": "warrior",
-   "art": "assets/_artifacts/art0097_fu.png"
+   "art": "assets/_artifacts/art0097_fu.png",
+   "effect_en": "Increases Effectiveness by 7% → 14%. When an enemy is defeated, increases Attack of the caster for 2 turns.",
+   "lore_en": "The perfect magical tool for a girl who loves attention. Her sudden appearance in a shower of petals and a flash of light is like a dream, though for many it is more akin to a scene from a nightmare."
   },
   {
    "code": "art0098",
@@ -663,7 +825,9 @@
    "fr": "Trophée du champion",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0098_fu.png"
+   "art": "assets/_artifacts/art0098_fu.png",
+   "effect_en": "Increases Effectiveness by 1.5% → 3%. 1.3% → 2.6% chance to stun the enemy for 1 turn after using a basic skill. This effect is not activated by a counterattack, Dual Attack, or extra attack.",
+   "lore_en": "A glorious trophy given to the winner of the 7th Beach Volleyball Championship. The prize also included fifty meal coupons for use at the summer festival."
   },
   {
    "code": "art0099",
@@ -671,7 +835,9 @@
    "fr": "Super Mega Pistolet à eau",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0099_fu.png"
+   "art": "assets/_artifacts/art0099_fu.png",
+   "effect_en": "Increases all allies' Attack by 5% and Effectiveness by 5% → 10%. Effect does not stack with other artifacts of the same name.",
+   "lore_en": "Achates bought a cute new water gun to use at the resort. After seeing Achates's unexpectedly impressive shooting skills and the water gun's spray power, Yufine gave her this nickname. Yufine can tell that she secretly likes it!"
   },
   {
    "code": "art0100",
@@ -679,7 +845,9 @@
    "fr": "Fantasia de cirque",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0100_fu.png"
+   "art": "assets/_artifacts/art0100_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 15%. Increases the caster's Effectiveness by 2.5% → 5% at the start of battle. Effect decreases by 2.5% → 5% every time the caster attacks, down to 1.3% → 2.5%.",
+   "lore_en": "\"I've mastered all kinds of acrobatics, so there's no performance beyond my abilities. Curious, aren't you? I'll invite you to see it for yourself!\""
   },
   {
    "code": "art0101",
@@ -687,7 +855,9 @@
    "fr": "Cristal de neige",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0101_fu.png"
+   "art": "assets/_artifacts/art0101_fu.png",
+   "effect_en": "Increases Critical Hit Resistance by 20%. After the caster suffers a non-critical hit, increases Combat Readiness by 8% → 16%. Can only be activated once per turn.",
+   "lore_en": "The specialty of Pathfinder Village, made of compressed ice that is kept from melting with a magic spell. Due to the mysterious, beautiful light they give off, they're often used to make lamps or other decorations."
   },
   {
    "code": "art0102",
@@ -695,7 +865,9 @@
    "fr": "Naissance d'un monarque",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0102_fu.png"
+   "art": "assets/_artifacts/art0102_fu.png",
+   "effect_en": "Increases Defense of all allies by 10%. At the end of the turn, grants a barrier equivalent to 8% → 16% of the caster's max Health for 2 turns to the ally except for the caster with the lowest Health. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "\"I will not forget—l am now the owner of a spear whose fate has been determined; of a coffin that will be filled by another.\"\nOn that day, the heaviest weight in the world fell upon the shoulders of the bravest soul in Wintenberg."
   },
   {
    "code": "art0103",
@@ -703,7 +875,9 @@
    "fr": "Couronne de la gloire",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0103_fu.png"
+   "art": "assets/_artifacts/art0103_fu.png",
+   "effect_en": "When an ally suffers an attack that targets all allies, decreases damage suffered by 1% → 2%, and removes 10 Soul from the enemy. Soul removal effect can only be activated once per skill.",
+   "lore_en": "In the national swordsmanship tournament held to appoint an elite knight to protect the first in line to the throne of Lefundos, the winner, crowned with a laurel wreath, was neither the son of a noble family nor a veteran knight but an ordinary young man, not even twenty years of age."
   },
   {
    "code": "art0104",
@@ -711,7 +885,9 @@
    "fr": "Perles de samsara",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0104_fu.png"
+   "art": "assets/_artifacts/art0104_fu.png",
+   "effect_en": "When attacking with a Single Attack, increases damage dealt by 10%. When attacked by a Single Attack, decreases damage suffered by 8% → 16%. When more than one damage reduction effect is granted, only the strongest effect is applied.",
+   "lore_en": "\"With this...will I grow stronger?\"\nOld prayer beads of unknown origin passed down since long ago. It is said that depending on the nature of the wearer, it can grant partial control of natural power."
   },
   {
    "code": "art0105",
@@ -719,7 +895,9 @@
    "fr": "Couronne d'une petite reine",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0105_fu.png"
+   "art": "assets/_artifacts/art0105_fu.png",
+   "effect_en": "Increases damage by 8% → 16% when the caster attacks with a Single Attack and increases damage by an additional 8% → 16% if the enemy is granted a barrier.",
+   "lore_en": "An enormous crown that Chloe carries with her for the moment when she becomes a true queen. She aspires to become a queen whose power is as impressive and glamorous as the crown itself. As for where and how she found it... That's Chloe's secret!"
   },
   {
    "code": "art0106",
@@ -727,7 +905,9 @@
    "fr": "Lune de cauchemar pourpre",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0106_fu.png"
+   "art": "assets/_artifacts/art0106_fu.png",
+   "effect_en": "Increases Dual Attack chance by 7% → 14%. When it is not the caster's turn, increases Effectiveness by 2% → 4%.",
+   "lore_en": "It's hard to even venture a guess as to when this red marble was created. This marble creates the illusion that an immense full moon has risen in the sky, bringing forth the deep madness hidden within any who see it and trapping them in a never-ending hallucination."
   },
   {
    "code": "art0107",
@@ -735,7 +915,9 @@
    "fr": "Obstacle de la discipline",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0107_fu.png"
+   "art": "assets/_artifacts/art0107_fu.png",
+   "effect_en": "At the start of the turn, for each buff granted to an enemy, has a 6% → 12% chance to grant increased Attack (Greater) for 1 turn. At the end of the turn, has a 5% → 10% chance to grant stealth for 1 turn.",
+   "lore_en": "A device that can restrict access to certain districts under the authority of the police. Unless granted access from the authorities, no one can enter."
   },
   {
    "code": "art0108",
@@ -743,7 +925,9 @@
    "fr": "Dernière tasse de thé",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0108_fu.png"
+   "art": "assets/_artifacts/art0108_fu.png",
+   "effect_en": "When using an attack that targets all enemies, increases damage dealt by 7% → 14%, with a 1% → 2% chance to decrease skill cooldown by 1 turn.",
+   "lore_en": "\"You finally found what you wanted, my lady.\"\n\"Stop imposing on me, you fool.\"\nOblivious to the events that would soon unfold before them, Baal smiled to himself when Sezan found the spell for the forbidden magic ceremony."
   },
   {
    "code": "art0109",
@@ -751,7 +935,9 @@
    "fr": "Instigateur de l'oubli",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0109_fu.png"
+   "art": "assets/_artifacts/art0109_fu.png",
+   "effect_en": "Increase Evasion by 20%. Damage dealt increases by 6% → 12% when attacking, and as Health decreases, damage dealt increases, up to a maximum of 1.2% → 2.4%",
+   "lore_en": "\"To those fools who cannot be redeemed: kneel down, despair, and obey.\"\nThose who fell to his sword soon lost themselves and rose up as Dust Walkers."
   },
   {
    "code": "art0110",
@@ -759,7 +945,9 @@
    "fr": "Pour une nouvelle ère",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0110_fu.png"
+   "art": "assets/_artifacts/art0110_fu.png",
+   "effect_en": "Increases the EXP acquired by Heroes in the team by 15%. When more than one Artifact that increases EXP is equipped, only the strongest effect is applied, and this effect will not be applied when used via a Supporter. The skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "Ras and the Heirs have been invited to a banquet in celebration of Ezeran Foundation Day. As they leave the hardships they suffered behind them, they raise their glasses in anticipation of a new, peaceful world."
   },
   {
    "code": "art0112",
@@ -767,7 +955,9 @@
    "fr": "Vestige lunaire",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0112_fu.png"
+   "art": "assets/_artifacts/art0112_fu.png",
+   "effect_en": "Increases Defense and Effect Resistance of all allies by 2.5% → 5%. Effect does not stack with other Artifacts of the same name.",
+   "lore_en": "Magical ore that the Emporium specially refines and distributes every year for the Moonlight Reception. People pray for peace in the next year as they gaze at the moonlight stored inside the ore."
   },
   {
    "code": "art0113",
@@ -775,7 +965,9 @@
    "fr": "XIII. La Mort",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0113_fu.png"
+   "art": "assets/_artifacts/art0113_fu.png",
+   "effect_en": "After attacking with a Single Attack, has a 7.5% → 15% chance to detonate any bleeding and burn effects inflicted on the target at the end of the turn.",
+   "lore_en": "A boy with a scythe crossed the threshold of life and death a number of times, and with each crisis he faced, he was reborn with a stronger desire to live. His red scythe symbolizes endings transforming into new beginnings and old blood transforming into new strength."
   },
   {
    "code": "art0114",
@@ -783,7 +975,9 @@
    "fr": "XVI. La Tour",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0114_fu.png"
+   "art": "assets/_artifacts/art0114_fu.png",
+   "effect_en": "Deals 50 → 100 fixed damage to the target after attacking.",
+   "lore_en": "After suffering the pain of deceit and betrayal, the pillars of her heart collapsed, and as she escaped the prison of passion, she embraced the freedom of destruction. However, her greed is building a new tower that will imprison her once more."
   },
   {
    "code": "art0115",
@@ -791,7 +985,9 @@
    "fr": "XVIII. La Lune",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0115_fu.png"
+   "art": "assets/_artifacts/art0115_fu.png",
+   "effect_en": "After attacking with a Single Attack, has a 7.5% → 15% chance to steal one buff from the target.",
+   "lore_en": "A girl with a large marble creates nightmares as she dances in the moonlight. These malicious illusions that blur the lines of purity and evil are actually a desperate attempt to bury the scars hidden deep within her subconscious. The whole world may know, but you might not."
   },
   {
    "code": "art0116",
@@ -799,7 +995,9 @@
    "fr": "Decrescent à double tranchant",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0116_fu.png"
+   "art": "assets/_artifacts/art0116_fu.png",
+   "effect_en": "Increases Evasion by 20%. After successfully evading, has a 2.5% → 5% chance to counterattack.",
+   "lore_en": "\"Were the trusty sword on your shoulder to slip even slightly, it could slit your throat. The same is true of people—the closer you keep them, the more easily they're able to harm you.\""
   },
   {
    "code": "art0117",
@@ -807,7 +1005,9 @@
    "fr": "Épée crépusculaire d'été",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0117_fu.png"
+   "art": "assets/_artifacts/art0117_fu.png",
+   "effect_en": "When using a skill that targets all enemies, penetrates the target's Defense by 1% → 2%. When defeating an enemy with a skill that targets all enemies, increases Combat Readiness of all allies except for the caster by 10%.",
+   "lore_en": "A sword given to Vildred by the eastern swordsman who taught him swordsmanship. It glows faintly when moonlight strikes its surface. It is known as the Summer Sword, one of the four swords crafted long, long ago."
   },
   {
    "code": "art0119",
@@ -815,7 +1015,9 @@
    "fr": "Observateur invisible",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0119_fu.png"
+   "art": "assets/_artifacts/art0119_fu.png",
+   "effect_en": "After the caster uses a non-attack skill, increases Combat Readiness of the caster by 1% → 2% and acquires 10 Souls. Souls can only be acquired once.",
+   "lore_en": "A mobile data device created just for Flan. It supports hologram displays and allows Flan to access Politia's information network anytime, anywhere."
   },
   {
    "code": "art0120",
@@ -823,7 +1025,9 @@
    "fr": "Rencontre prédestinée",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0120_fu.png"
+   "art": "assets/_artifacts/art0120_fu.png",
+   "effect_en": "Increases the Friendship acquired after completing a stage in Adventure, Side Story, Spirit Altar, Emergency Mission, Hunt, Rift, and Otherworld Breach by the Hero who has this Artifact equipped by 100%.\nThe skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "In this infinite universe, this neverending chain of connections, we were destined to be together! No matter what stands in our way, we will be the ray of hope protecting this world! Right?"
   },
   {
    "code": "art0121",
@@ -831,7 +1035,9 @@
    "fr": "Symbole d'unité",
    "stars": 5,
    "role": null,
-   "art": "assets/_artifacts/art0121_fu.png"
+   "art": "assets/_artifacts/art0121_fu.png",
+   "effect_en": "When attacking, increases Hit Chance by 1% → 2% and damage dealt by 8% → 16%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "\"The valor of one is not enough to earn victory for all—you must make colleagues you can trust and rely on. It is only once you are connected by your determination and have become one another's swords and shields that victory will be yours.\""
   },
   {
    "code": "art0122",
@@ -839,7 +1045,9 @@
    "fr": "Héritage du dragon antique",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0122_fu.png"
+   "art": "assets/_artifacts/art0122_fu.png",
+   "effect_en": "After the caster uses a non-attack skill, decreases skill cooldowns of all allies by 1 turn, and has a 5% → 10% chance to increase Critical Hit Damage of the caster for 2 turns. Skill cooldown reduction effect can only be activated once.",
+   "lore_en": "A magical tool that can be used to move to a golden chamber filled with rare goods and weaponry that lie sleeping. Once unlocked, the tool allows one to access the passage to the treasure chamber from anywhere."
   },
   {
    "code": "art0123",
@@ -847,7 +1055,9 @@
    "fr": "Conte cauchemardesque",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0123_fu.png"
+   "art": "assets/_artifacts/art0123_fu.png",
+   "effect_en": "After an extra attack, counterattack, or Dual Attack, has a 4% → 8% chance to dispel one buff from the target, and a 100% chance to deal 1,000 → 2,000 fixed damage.",
+   "lore_en": "A girl with a bouncy blue skirt dashes from place to place, just like a rabbit. Where could she be going? Perhaps the answer lies within a fairy tale."
   },
   {
    "code": "art0124",
@@ -855,7 +1065,9 @@
    "fr": "Missile air-sol : MIASH",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0124_fu.png"
+   "art": "assets/_artifacts/art0124_fu.png",
+   "effect_en": "Increases Hit Chance by 1% → 2% and Critical Hit Damage by 1.5% → 3%.",
+   "lore_en": "Kanna's favorite missile. She holds it in her arms every night before she switches off to sleep mode, dreaming of the day she can finally use it."
   },
   {
    "code": "art0125",
@@ -863,7 +1075,9 @@
    "fr": "Calamité du soleil couchant",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0125_fu.png"
+   "art": "assets/_artifacts/art0125_fu.png",
+   "effect_en": "Increases Effectiveness by 1.5% → 3%. Has a 5% → 10% chance to grant increased Attack to the caster for 2 turns after an ally uses a non-attack skill. Can only be activated once every 2 turns.",
+   "lore_en": "It is said that all those who looked into the brilliant twilight emitted by the staff drowned in a pool of light redder than blood."
   },
   {
    "code": "art0126",
@@ -871,7 +1085,9 @@
    "fr": "Graine du savoir",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0126_fu.png"
+   "art": "assets/_artifacts/art0126_fu.png",
+   "effect_en": "Upon receiving lethal damage, has a 5% → 10% chance to grant all allies except for the caster a random buff for 2 turns (Increase Attack (Greater), Increase Defense, Increase Evasion, Immunity, or Increase Critical Hit Resistance). Can only be activated once per battle.",
+   "lore_en": "A capsule created in preparation for the final days of Politis's home planet, Paradia. It's a cache of Paradia's heritage that includes relics of their technology, knowledge, culture, and art so that their legacy can live on even if their planet disappears."
   },
   {
    "code": "art0127",
@@ -879,7 +1095,9 @@
    "fr": "Louange de l'Étoile gardienne",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0127_fu.png"
+   "art": "assets/_artifacts/art0127_fu.png",
+   "effect_en": "After the caster uses a basic skill, recovers Health of the ally except for the caster with the highest Attack by 4% → 8%.",
+   "lore_en": "The most highly valued relic in a city that worships stars. This relic is considered to be blessed by the Guardian Star, and every year, the high priestess uses it during a special event to offer a prayer of gratitude to the Guardian Star."
   },
   {
    "code": "art0128",
@@ -887,7 +1105,9 @@
    "fr": "XIV. La Tempérance",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0128_fu.png"
+   "art": "assets/_artifacts/art0128_fu.png",
+   "effect_en": "After using a basic skill, grants a barrier equivalent to 5% → 10% of the caster's max Health for 2 turns to the ally except for the caster with the lowest Health. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "With a stack of papers clutched to her chest, the girl buries the truth in a pile of valuable records that no one pays attention to. She silently endures as she limits her own potential."
   },
   {
    "code": "art0129",
@@ -895,7 +1115,9 @@
    "fr": "Cor de guerre",
    "stars": 5,
    "role": null,
-   "art": "assets/_artifacts/art0129_fu.png"
+   "art": "assets/_artifacts/art0129_fu.png",
+   "effect_en": "Increaes Attack of all allies by 5% → 10%. At the end of every 3 enemy turns, increases Combat Readiness of the caster by 1% → 2%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "\"The battlefield is full of frightened and terrified souls, but only defeat awaits those who fail to overcome their fears. Now, with the sound of this horn, transform those fears into courage.\""
   },
   {
    "code": "art0130",
@@ -903,7 +1125,9 @@
    "fr": "Lance du renouveau",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0130_fu.png"
+   "art": "assets/_artifacts/art0130_fu.png",
+   "effect_en": "After using a basic skill, has a 50% → 100% chance to inflict additional damage proportional to the caster's Attack on the target.",
+   "lore_en": "This spear is said to have been used by a knight who reclaimed the throne and established a new kingdom. Legends say that whoever takes hold of this spear can begin a new era, and as a result, many covet the spear, but its whereabouts are currently unknown. However, there have been reports recently that a knight with silver hair wields a similar-looking spear."
   },
   {
    "code": "art0131",
@@ -911,7 +1135,9 @@
    "fr": "Comète azurée",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0131_fu.png"
+   "art": "assets/_artifacts/art0131_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 15%. When somebody dies, increases Combat Readiness of the caster by 1.2% → 2.4%. Can be activated once per turn.",
+   "lore_en": "It's a very heavy iron ball on a chain, but Rem wields it as though it were light as a feather."
   },
   {
    "code": "art0132",
@@ -919,7 +1145,9 @@
    "fr": "Bâton de cornes coupées",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0132_fu.png"
+   "art": "assets/_artifacts/art0132_fu.png",
+   "effect_en": "Increases Attack by 15%. When attacked by an Elite or Boss monster, damage suffered is decreased by 1% → 2%. When more than one damage reduction effect is granted, only the strongest effect is applied. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "This is the wand Ram carries with her. She wields it often when using magic."
   },
   {
    "code": "art0133",
@@ -927,7 +1155,9 @@
    "fr": "Ailes du clair-obscur",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0133_fu.png"
+   "art": "assets/_artifacts/art0133_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 15%. When attacking, increases damage dealt by 7% → 14%, and a critical hit increases the damage of the next attack by an additional 4% → 8%.",
+   "lore_en": "A spear forged with rage and sorrow and tempered with resentment. Under a flash of white light, everything collapsed; under a looming dark shadow, nothing could escape."
   },
   {
    "code": "art0134",
@@ -935,7 +1165,9 @@
    "fr": "Fragment glacé du gardien",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0134_fu.png"
+   "art": "assets/_artifacts/art0134_fu.png",
+   "effect_en": "Increases Effect Resistance by 15%. When an ally's Health is 50% or less after being attacked, recovers Health of the target by 1% → 2%. Can only be activated once per turn.",
+   "lore_en": "Emilia forms ice crystals to protect those she holds dear."
   },
   {
    "code": "art0135",
@@ -943,7 +1175,9 @@
    "fr": "Ballon de Volley de Levulin",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0135_fu.png"
+   "art": "assets/_artifacts/art0135_fu.png",
+   "effect_en": "Increases Critical Hit Chance of all allies by 5%. After attacking with a Single Attack, deals 100 → 200 fixed damage to a random enemy except for the target. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "It may look like a regular beach volleyball, but after Cermia and Alexa used this volleyball in a match, its value has increased. Because it's highly unlikely that these two will continue to play volleyball, the value of this ball keeps increasing."
   },
   {
    "code": "art0136",
@@ -959,7 +1193,9 @@
    "fr": "Magie pour les amis",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0137_fu.png"
+   "art": "assets/_artifacts/art0137_fu.png",
+   "effect_en": "Decreases damage suffered from a critical hit by 30%. When more than one damage reduction effect is granted, only the strongest effect is applied. If an ally is attacked when it's not the caster's turn, has a 15% chance to activate Dimensional Rupture. Dimensional Rupture can only be activated once every 2 turns. The skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "A device modified from a mysterious magic accessory that was given to Ras. By adding magic equations and auxiliary equipment to the device, Mercedes can now safely wield her incredible power. "
   },
   {
    "code": "art0138",
@@ -967,7 +1203,9 @@
    "fr": "Poings du dragon perfectionnés",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0138_fu.png"
+   "art": "assets/_artifacts/art0138_fu.png",
+   "effect_en": "When the caster suffers a non-critical hit, has a 1.5% → 3% chance to counterattack.",
+   "lore_en": "Upgraded Dragon Knuckles are a gift from Rimuru that Milim really likes. They have an effect that reduces Milim's strength, allowing her to control her power."
   },
   {
    "code": "art0139",
@@ -975,7 +1213,9 @@
    "fr": "Masque anti-magie",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0139_fu.png"
+   "art": "assets/_artifacts/art0139_fu.png",
+   "effect_en": "At the start of the turn, has a 5% → 10% chance to grant a random buff to the caster for 2 turns. (Immunity, Increase Attack, Increase Defense, Increase Critical Hit Damage, Increase Speed)",
+   "lore_en": "A mask Rimuru received from Shizu. Shizu asked Rimuru to absorb her, and Rimuru inherited Shizu's appearance, mask, and memories."
   },
   {
    "code": "art0140",
@@ -983,7 +1223,9 @@
    "fr": "Vêtements irréprochables",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0140_fu.png"
+   "art": "assets/_artifacts/art0140_fu.png",
+   "effect_en": "Increases Effect Resistance by 1% → 2%. Increases Effectiveness by 15% at the end of the caster's turn. This effect can only stack up to 3 times and resets at the start of battle.",
+   "lore_en": "Shuna made these clothes based on the clothing worn in Ritania using her skill, Analytic (Comprehender). It's perfection, both functionally and aesthetically."
   },
   {
    "code": "art0141",
@@ -991,7 +1233,9 @@
    "fr": "Étoile des profondeurs marines",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0141_fu.png"
+   "art": "assets/_artifacts/art0141_fu.png",
+   "effect_en": "Increases Effectiveness by 1.5% → 3%. Has a 5% → 10% chance to plant a bomb on the target for 2 turns after using a basic skill. This effect is applied to Single Attacks and is not activated by a counterattack, Dual Attack, or extra attack.",
+   "lore_en": "A gem of profound and mysterious sheen, sometimes found in seashells. It is said that these are pieces of a star that fell off as it was shaking water off its body after freshening up at sea."
   },
   {
    "code": "art0142",
@@ -999,7 +1243,9 @@
    "fr": "Preuve d'unité",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0142_fu.png"
+   "art": "assets/_artifacts/art0142_fu.png",
+   "effect_en": "Increases the EXP acquired by Heroes in the team by 15%. When more than one Artifact that increases EXP is equipped, only the strongest effect is applied, and this effect will not be applied when used via a Supporter. The skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "The citylords gathered in Aakhen to celebrate Cidonia's peace and harmony, with the hope that no one else will have to suffer from the hardships of war ever again."
   },
   {
    "code": "art0143",
@@ -1007,7 +1253,9 @@
    "fr": "Trophée de la pleine lune enflammée",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0143_fu.png"
+   "art": "assets/_artifacts/art0143_fu.png",
+   "effect_en": "When an enemy is defeated, recovers Health of all allies by 7% → 14%. Can only be activated once per turn. Effect does not stack with other Artifacts of the same name.",
+   "lore_en": "A trophy provided by the Meldrec to celebrate the Full Moon Harvest Festival. Given to the winner of the contest who has eliminated the most monsters."
   },
   {
    "code": "art0144",
@@ -1015,7 +1263,9 @@
    "fr": "Épée d'ombre hivernale",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0144_fu.png"
+   "art": "assets/_artifacts/art0144_fu.png",
+   "effect_en": "Increases Attack by 15%. After using a non-attack skill, has a 5% → 10% chance each to gain 10 Soul and remove 15 Soul from the enemy. Soul can only be acquired once.",
+   "lore_en": "One of the Four Seasons Swords that was made in the distant past. Unlike other swords, the Winter Sword's innate power flows on its surface without restraint. It is said that those who are not chosen by the sword will find themselves frozen by Its power if they try to wield it."
   },
   {
    "code": "art0145",
@@ -1023,7 +1273,9 @@
    "fr": "Bastion de l'espoir",
    "stars": 5,
    "role": null,
-   "art": "assets/_artifacts/art0145_fu.png"
+   "art": "assets/_artifacts/art0145_fu.png",
+   "effect_en": "Increases Effect Resistance of all allies by 1% → 2%, and the caster's Effect Resistance by an additional 2.5% → 5%. The caster's Effect Resistance decreases by 3% with each attack suffered, down to 1% → 3.5%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "\"When it becomes apparent that you're on the verge of defeat, soldiers will often become frustrated and surrender. When that time comes, take hold of this shield and save your soldiers. This shield will be a symbol that reinvigorates your troops, encouraging those who are in despair to continue to move forward toward victory.\""
   },
   {
    "code": "art0146",
@@ -1031,7 +1283,9 @@
    "fr": "Confiance pure",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0146_fu.png"
+   "art": "assets/_artifacts/art0146_fu.png",
+   "effect_en": "After using a non-attack skill, gains 10 Soul and has a 5% → 10% chance to increase Critical Hit Damage of the caster for 2 turns. Soul can only be acquired once.",
+   "lore_en": "A sword and costume that the Shadow Elves had presented to Humans in the distant past as a token of their trust while interacting with them. They contain the Spirits' blessing as well as the Shadow Elves' magic. Having been passed from owner to owner, it has now fallen into Zahhak's possession after the collapse of the Human kingdom."
   },
   {
    "code": "art0147",
@@ -1039,7 +1293,9 @@
    "fr": "Assurance éblouissante",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0147_fu.png"
+   "art": "assets/_artifacts/art0147_fu.png",
+   "effect_en": "Increases the Friendship acquired after completing a stage in Adventure, Side Story, Spirit Altar, Emergency Mission, Hunt, Rift, and Otherworld Breach by the Hero who has this Artifact equipped by 100%.\nThe skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "I believe that no matter the hardships you may face, or how far apart we may be, your light will never fade. No matter what happens, you'll be able to get through it!"
   },
   {
    "code": "art0148",
@@ -1047,7 +1303,9 @@
    "fr": "Boîte à musique nostalgique",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0148_fu.png"
+   "art": "assets/_artifacts/art0148_fu.png",
+   "effect_en": "Increases Defense by 5% → 10%. At the end of the turn, grants a random buff to one random ally for 1 turn. (Barrier, Increase Defense, Immunity, or Continuous Healing) Barrier streangth increases proportional to the target's max Health.",
+   "lore_en": "A hologram music box emitting mysterious light. It reminds you of old memories since it shows whatever you desire, but it often ends up leaving you with a longing heart."
   },
   {
    "code": "art0149",
@@ -1055,7 +1313,9 @@
    "fr": "Glo-Wings 21",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0149_fu.png"
+   "art": "assets/_artifacts/art0149_fu.png",
+   "effect_en": "After using a non-attack skill, grants a barrier equivalent to 30 → 60 per Level to all allies for 2 turns. This effect can only be activated once every 3 turns. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "It is named after its shape which looks like wings floating around the bearer. However, instead of being used for flight, it is used to project energy to attack, or to create a barrier to defend."
   },
   {
    "code": "art0150",
@@ -1063,7 +1323,9 @@
    "fr": "Calice du serment",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0150_fu.png"
+   "art": "assets/_artifacts/art0150_fu.png",
+   "effect_en": "Increases Effectiveness by 1.5% → 3%. After using a non-attack skill, decreases skill cooldown by 1 turn. Can only be activated three times per battle.",
+   "lore_en": "An object handed down in Peira's exterminated tribe. It contains the power of the previous chiefs, and is said to grant those who are able to complete the ceremony their power and spirit. However, with most individuals losing their sanity before completing the ceremony, there have been very few to actually take on the challenge."
   },
   {
    "code": "art0151",
@@ -1071,7 +1333,9 @@
    "fr": "Symboles de Jack-O'",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0151_fu.png"
+   "art": "assets/_artifacts/art0151_fu.png",
+   "effect_en": "Increases Effectiveness of all allies by 10%. If the target has a debuff when the caster attacks with a Single Attack, increases damage by 1.2% → 2.4%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "A mask that controls her emotional changes and an iron ball that she uses when fighting. Both are always carried by Jack-O' and resemble jack-o'-lanterns."
   },
   {
    "code": "art0152",
@@ -1079,7 +1343,9 @@
    "fr": "Parchemin de l'ombre",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0152_fu.png"
+   "art": "assets/_artifacts/art0152_fu.png",
+   "effect_en": "If the caster attacks when it's not their turn, damage dealt increases by 8% → 16%, and after attacking, has a 50% chance to inflict a random debuff on the target for 1 turn (Decrease Defense, Decrease Speed, Silence, or Unable to be buffed).",
+   "lore_en": "A scroll to summon contracted creatures through shadow magic. The scroll became full of words as she learned more magic."
   },
   {
    "code": "art0153",
@@ -1087,7 +1353,9 @@
    "fr": "III. L'Impératrice",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0153_fu.png"
+   "art": "assets/_artifacts/art0153_fu.png",
+   "effect_en": "Increases Attack by 6% → 12%. At the start of the first battle, when anyone on the team is granted the effect of IV. The Emperor, also increases Defense by 6% → 12%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "She wears a crown made of twinkling stars and has eyes that shine with intelligence. For her, there will always be only one truth and answer, even if he does not exist by her side."
   },
   {
    "code": "art0154",
@@ -1095,7 +1363,9 @@
    "fr": "IV. L'Empereur",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0154_fu.png"
+   "art": "assets/_artifacts/art0154_fu.png",
+   "effect_en": "Increases Defense by 6% → 12%. At the start of the first battle, when anyone on the team is granted the effect of III. The Empress, also increases Attack by 6% → 12%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "He wears the sun's radiance atop his head and receives the admiration of his people. For him, the sole reason for his dedication and the only weakness in his life will always be there with him, even if she does not exist by his side."
   },
   {
    "code": "art0155",
@@ -1103,7 +1373,9 @@
    "fr": "Guêtres indestructibles",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0155_fu.png"
+   "art": "assets/_artifacts/art0155_fu.png",
+   "effect_en": "Increases Attack by 10%. If a non-critical hit is made when attacking, has a 5% → 10% chance to burn for 1 turn. Can only be activated once per turn.",
+   "lore_en": "Gaiters worn by Hwayoung ever since she became a martial artist. It is an object that is said to have been crafted by combining the techniques of several ancient races. Despite being used for a long time, it is so tough that it remains without a scratch."
   },
   {
    "code": "art0156",
@@ -1111,7 +1383,9 @@
    "fr": "Lance de conjuration",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0156_fu.png"
+   "art": "assets/_artifacts/art0156_fu.png",
+   "effect_en": "Increases Attack by 1% → 2%. After an enemy uses a non-attack skill, increases Combat Readiness of the caster by 10%. Can only be activated once per turn.",
+   "lore_en": "A spear made with the body and energy of a Great Wicked that was defeated after countless sacrifices were made during a great war in the distant past. It is known to unleash one's physical limit to their extremities, but most wielders faced tragic ends when they could not handle the potential of the spear."
   },
   {
    "code": "art0157",
@@ -1119,7 +1393,9 @@
    "fr": "Auto-mail de métal",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0157_fu.png"
+   "art": "assets/_artifacts/art0157_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 10%. After an extra attack, increases Critical Hit Damage by 4% → 8%, and Speed by 4% → 8%. Can stack up to 4 times.",
+   "lore_en": "The artificial arm and leg that Winry created for Edward. Though it sometimes gets destroyed during battles, it becomes more durable every time it gets fixed. Winry takes great pride in it."
   },
   {
    "code": "art0158",
@@ -1127,7 +1403,9 @@
    "fr": "Gants de combustion",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0158_fu.png"
+   "art": "assets/_artifacts/art0158_fu.png",
+   "effect_en": "Increases Hit Chance by 1% → 2% and Attack by 7% → 14%.",
+   "lore_en": "Gloves that have transmutation circles drawn into the fabric. They are made from a special flammable fabric. Combined with Roy's proficiency in oxygen manipulation alchemy, the gloves allow him to ignite huge flames."
   },
   {
    "code": "art0159",
@@ -1135,7 +1413,9 @@
    "fr": "Pistolet de la fine gâchette",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0159_fu.png"
+   "art": "assets/_artifacts/art0159_fu.png",
+   "effect_en": "Increases Effectiveness by 25%. A critical hit has a 3.5% → 7% chance to increase Speed of the caster for 1 turn.",
+   "lore_en": "Riza's favorite handgun. Though she owns many different types, she uses this one the most. She carries it with her everywhere, whether it be for missions or even going about her daily routine."
   },
   {
    "code": "art0160",
@@ -1143,7 +1423,9 @@
    "fr": "Sphère de cruauté",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0160_fu.png"
+   "art": "assets/_artifacts/art0160_fu.png",
+   "effect_en": "At the start of battle, grants a barrier (proportional to max Health) to the caster for 2 turns. When attacking with a Single Attack, increases damage dealt by 8% → 16%.",
+   "lore_en": "A metallic sphere that is connected to Yulha's consciousness. It can freely change form and density at her discretion. While it is most often used as a form of defense, it can also be used as a form of offense. Due to its resiliency, the sphere can quickly regenerate after being destroyed."
   },
   {
    "code": "art0161",
@@ -1151,7 +1433,9 @@
    "fr": "Lunettes de soleil élégantes",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0161_fu.png"
+   "art": "assets/_artifacts/art0161_fu.png",
+   "effect_en": "Increases Critical Hit Damage by 1.5% → 3%. When attacked, grants 1% → 2% damage reduction.",
+   "lore_en": "A pair of sunglasses Charlotte bought in an attempt to look mature. No one has to know that she has put them on and taken them off in front of a mirror dozens of times."
   },
   {
    "code": "art0162",
@@ -1159,7 +1443,9 @@
    "fr": "XIX. Le Soleil",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0162_fu.png"
+   "art": "assets/_artifacts/art0162_fu.png",
+   "effect_en": "At the end of the turn, recovers 400 → 800 Health, shared between the casters and the ally except for the caster with the lowest Health.",
+   "lore_en": "What left a stronger impression than that summer's scorching sun was the trivial memory of sharing ice cream together."
   },
   {
    "code": "art0163",
@@ -1167,7 +1453,9 @@
    "fr": "VII. Le Chariot",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0163_fu.png"
+   "art": "assets/_artifacts/art0163_fu.png",
+   "effect_en": "Increases Defense by 2.5% → 5%. After attacking on the caster's turn, when the caster is bleeding, dispels one debuff from the caster.",
+   "lore_en": "No fierce wind or wave can stop her. Breaking through all hardships and obstacles, that’s what youth is all about!"
   },
   {
    "code": "art0164",
@@ -1175,7 +1463,9 @@
    "fr": "Branche de l'Arbre divin",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0164_fu.png"
+   "art": "assets/_artifacts/art0164_fu.png",
+   "effect_en": "Increases Effectiveness by 1.5% → 3%. After attacking, increases Combat Readiness of the caster and ally except for the caster with the highest Attack by 10%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "A sacred object pilgrims use when performing a ceremony. It's made from a portion of a giant sacred tree that existed in the past. It is said that this object amplifies the bearer's foresight ability and allows them to take a peek at the future's various possibilities."
   },
   {
    "code": "art0165",
@@ -1183,7 +1473,9 @@
    "fr": "Début d'une nouvelle ère",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0165_fu.png"
+   "art": "assets/_artifacts/art0165_fu.png",
+   "effect_en": "Celebrates the new era with a cannon salute. Increases damage dealt by 20% if the target's Health is 50% or more when the caster attacks. This Artifact's effect remains the same regardless of its level.",
+   "lore_en": "Leaving behind the chaotic past and with peace in their time, those who have survived have joined forces together. With their own individual goals in mind, they strive to create an ideal world."
   },
   {
    "code": "art0166",
@@ -1191,7 +1483,9 @@
    "fr": "Éventail temporel",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0166_fu.png"
+   "art": "assets/_artifacts/art0166_fu.png",
+   "effect_en": "Increases Effectiveness by 20%. After using a non-attack skill, has a 5% → 10% chance to grant stealth to the ally with the highest Attack except for the caster for 2 turns. Can only be activated once every 3 turns.",
+   "lore_en": "A fan that creates a rift between spaces. It allows the bearer to open and close Dimensional Gates wherever they like. Within the gate is an imaginary space conjured with Lua's power, and therefore no one can escape without her permission."
   },
   {
    "code": "art0167",
@@ -1199,7 +1493,9 @@
    "fr": "Épée d'éclat automnal",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0167_fu.png"
+   "art": "assets/_artifacts/art0167_fu.png",
+   "effect_en": "Increases Attack of all allies by 5% → 10% , and increases Hit Chance of the caster by 1% → 2%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "The Autumn Sword has been passed down through the Suin of the Prairie for a long time. It is said that the sword can only be lifted by those that the sword has acknowledged. The sword imbues its bearer and those around them with unwavering courage and hope."
   },
   {
    "code": "art0168",
@@ -1207,7 +1503,9 @@
    "fr": "Sceau d'entrave",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0168_fu.png"
+   "art": "assets/_artifacts/art0168_fu.png",
+   "effect_en": "When a non-critical hit is made after using a basic skill, has a 5% → 10% chance to burn the target for 2 turns. Only applies to Single Attacks.",
+   "lore_en": "A mysterious scroll used by a monk that fought against the demons of Natalon. Demons that caused tremendous chaos have been sealed within as drawings."
   },
   {
    "code": "art0169",
@@ -1215,7 +1513,9 @@
    "fr": "Épée de l'infini",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0169_fu.png"
+   "art": "assets/_artifacts/art0169_fu.png",
+   "effect_en": "Increases Evasion by 20%. When attacking, if the caster is at an elemental advantage, increases damage dealt by 25%. The skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "The sword that contains the harmonized power of the Spirit Lords that reside within each of the Four Seasons Swords. The only person that can wield this blade to its truest potential is Actin, Silvana's successor and Savior of Natalon."
   },
   {
    "code": "art0170",
@@ -1223,7 +1523,9 @@
    "fr": "Rocket Punch",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0170_fu.png"
+   "art": "assets/_artifacts/art0170_fu.png",
+   "effect_en": "After attacking with a Single Attack, has a 5% → 10% chance to inflict additional damage proportional to the caster's Defense on the target.",
+   "lore_en": "ae-KARINA's main weapon. Just like its name, Rocket Punch is a powerful gauntlet that can destroy enemies in a single strike."
   },
   {
    "code": "art0171",
@@ -1231,7 +1533,9 @@
    "fr": "Cadre de lumière",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0171_fu.png"
+   "art": "assets/_artifacts/art0171_fu.png",
+   "effect_en": "When attacking with a Single Attack, increases damage dealt by 8% → 16%. When the enemy is defeated by a Single Attack, gains 10 Souls at the start of the next turn. The effect upon defeating an enemy can only be activated once.",
+   "lore_en": "ae-GISELLE's special frame that glows translucently. It can completely immobilize anyone who is touched by its frame."
   },
   {
    "code": "art0172",
@@ -1239,7 +1543,9 @@
    "fr": "L'Armement",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0172_fu.png"
+   "art": "assets/_artifacts/art0172_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 15%. After using a non-attack skill, grants a barrier equal to 30 → 60 per Level for 2 turns.",
+   "lore_en": "ae-WINTER‘s main weapon. The Armament, like its name, can transform into any type of weapon, allowing its owner to fight at her best even in the worst scenarios."
   },
   {
    "code": "art0173",
@@ -1247,7 +1553,9 @@
    "fr": "EXIF Detective (E.d.)",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0173_fu.png"
+   "art": "assets/_artifacts/art0173_fu.png",
+   "effect_en": "After using a non-attack skill, increases Combat Readiness of the caster by 1% → 2%, and removes 10 → 20 Soul from the enemy. Soul removal can only be activated once every 4 turns.",
+   "lore_en": "One of ae-NINGNING's multiple hacking tools that allows her to track all sorts of metadata. It is also known as Ed, which shares the same name as the hacker group she's affiliated with."
   },
   {
    "code": "art0174",
@@ -1255,7 +1563,9 @@
    "fr": "P.O.S",
    "stars": 5,
    "role": null,
-   "art": "assets/_artifacts/art0174_fu.png"
+   "art": "assets/_artifacts/art0174_fu.png",
+   "effect_en": "At the end of the turn, Increases Attack by 1% → 2%, Critical Hit Chance by 1% → 2%, and Critical Hit Damage by 1% → 2%. Can stack up to 10 times.",
+   "lore_en": "A passage connected to the REAL WORLD, FLAT, and KWANGYA. Only nævis—the Gate Manager—can open it."
   },
   {
    "code": "art0175",
@@ -1263,7 +1573,9 @@
    "fr": "Sphère de feu dévastateur",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0175_fu.png"
+   "art": "assets/_artifacts/art0175_fu.png",
+   "effect_en": "After using a non-attack skill, increases Combat Readiness of the caster by 1% → 2%, and after the next attack burns the target for 2 turns.",
+   "lore_en": "A blue flame that is connected with Beehoo's consciousness. It can freely change into a variety of shapes at his discretion and can easily pick out a target from within a crowd. However, it can't be used for a prolonged period for it burns his life force."
   },
   {
    "code": "art0176",
@@ -1271,7 +1583,9 @@
    "fr": "Éventail du clair-obscur",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0176_fu.png"
+   "art": "assets/_artifacts/art0176_fu.png",
+   "effect_en": "After using a non-attack skill twice, increases Combat Readiness of the ally with the highest Attack by 1% → 2% and has a 5% → 10% chance to increase Critical Hit Damage for 2 turns.",
+   "lore_en": "One of the objects that Spirit Lord Noias gifted to the shadow Elves in the past. When the Shadow Elves settled down in Natalon, Silvana also blessed it with their energy."
   },
   {
    "code": "art0177",
@@ -1279,7 +1593,9 @@
    "fr": "VI. Les Amoureux",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0177_fu.png"
+   "art": "assets/_artifacts/art0177_fu.png",
+   "effect_en": "At the start of battle, grants a barrier equivalent to 20 → 40 per Level of the caster to the caster and the foremost ally for 2 turns.",
+   "lore_en": "The moment when these two strangers came together and held hands for the first time, they both thought the same thing. Would they be able to hold on no matter the hardships ahead?"
   },
   {
    "code": "art0178",
@@ -1287,7 +1603,9 @@
    "fr": "Offre à ne pas décliner",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0178_fu.png"
+   "art": "assets/_artifacts/art0178_fu.png",
+   "effect_en": "When attacking with a Single Attack, penetrates the target's Defense by 1% → 2%. After attacking with a Single Attack, when the target receives damage equivalent to 50% or more of max Health, has a 5% → 10% chance to increase Combat Readiness of all allies by 15%. Combat Readiness increase effect can only be activated once per turn.",
+   "lore_en": "The first pistol Eligos purchased when he left Taranor's world of crime and founded the Dagger Sicar. He will only pull out this piece when there is an issue that must be resolved."
   },
   {
    "code": "art0179",
@@ -1295,7 +1613,9 @@
    "fr": "Pandou adorable",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0179_fu.png"
+   "art": "assets/_artifacts/art0179_fu.png",
+   "effect_en": "Increases the EXP acquired by Heroes in the team by 15%. When more than one Artifact that increases EXP is equipped, only the strongest effect is applied, and this effect will not be applied when used via a Supporter. The skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "There’s nobody whose heart wouldn’t be stolen by an adorable baby panda. Except, that is, for a certain blue mascot who might feel their position is under attack…"
   },
   {
    "code": "art0180",
@@ -1303,7 +1623,9 @@
    "fr": "Tachi de Benimaru",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0180_fu.png"
+   "art": "assets/_artifacts/art0180_fu.png",
+   "effect_en": "At the start of the first battle, has a 5% → 10% chance to grant immunity for 1 turn. At the start of the turn, when the caster does not have a debuff, has a 5% → 10% chance to increase Attack for 1 turn.",
+   "lore_en": "A tachi wielded by the Commander-in-Chief, Benimaru. Created by the blacksmith Kurobe, it is a near-perfect weapon that can withstand Benimaru's flames."
   },
   {
    "code": "art0181",
@@ -1311,7 +1633,9 @@
    "fr": "Rose dorée",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0181_fu.png"
+   "art": "assets/_artifacts/art0181_fu.png",
+   "effect_en": "When attacking, if the caster's Health is 50% or more, increases damage dealt by 8% → 16%, and when Health is less than 50%, recovers 1.5% → 3% of damage dealt.",
+   "lore_en": "A rose made of gold in remembrance of the past glory and splendor of the Bloodrose family. It symbolizes unwithering beauty and passion."
   },
   {
    "code": "art0182",
@@ -1319,7 +1643,9 @@
    "fr": "Réconfort incomparable",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0182_fu.png"
+   "art": "assets/_artifacts/art0182_fu.png",
+   "effect_en": "Increases Effect Resistance by 2% → 4%. After an enemy uses a non-attack skill, increases Combat Readiness of the caster by 8% → 16%. Can only be activated once per turn.",
+   "lore_en": "\"When I'm with you, you make me forget all the hardships.\" Sometimes the small bit of warmth at one's fingertips can be more comforting than any words."
   },
   {
    "code": "art0183",
@@ -1327,7 +1653,9 @@
    "fr": "Prière de solitude",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0183_fu.png"
+   "art": "assets/_artifacts/art0183_fu.png",
+   "effect_en": "Increases Health by 5% → 10%. When attacking, increases damage dealt by 5% → 10% and when it is an extra attack, increases damage dealt by an additional 5% → 10%",
+   "lore_en": "She looks up at the night sky, shrouded in the pitch-black robe of the darkness, and sees a lone star, shining brightly. She wishes upon the star with a desperate heart, asking it to stay by her side."
   },
   {
    "code": "art0184",
@@ -1335,7 +1663,9 @@
    "fr": "Bougie d'élégie",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0184_fu.png"
+   "art": "assets/_artifacts/art0184_fu.png",
+   "effect_en": "After attacking, has a 3% → 6% chance to decrease Defense of the target for 1 turn. This effect is not activated by a counterattack, Dual Attack, or extra attack.",
+   "lore_en": "After sealing away the demons, she returned to the shrine and lit a candle, hoping to bring eternal peace to the world."
   },
   {
    "code": "art0185",
@@ -1343,7 +1673,9 @@
    "fr": "Volonté brisée du Grand prêtre",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0185_fu.png"
+   "art": "assets/_artifacts/art0185_fu.png",
+   "effect_en": "Increases Hit Chance by 1% → 2%. When attacking, penetrates the target's Defense by 8% → 16%.",
+   "lore_en": "A token that once belonged to a high priest. It symbolizes a faithful heart towards Noias. Though the token is broken, his faith will be dutifully handed down to remaining successors."
   },
   {
    "code": "art0186",
@@ -1351,7 +1683,9 @@
    "fr": "Hôte du banquet",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0186_fu.png"
+   "art": "assets/_artifacts/art0186_fu.png",
+   "effect_en": "Increases Effect Resistance by 2% → 4%. When attacking, increases damage dealt by 5% → 10%, and when the target's Health is 50% or more, increases damage dealt by an additional 4% → 8%.",
+   "lore_en": "Following the wave of agony that descended upon the depraved underground, a new hostess emerges to claim her rightful place."
   },
   {
    "code": "art0187",
@@ -1359,7 +1693,9 @@
    "fr": "Notre saison",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0187_fu.png"
+   "art": "assets/_artifacts/art0187_fu.png",
+   "effect_en": "When attacking, increases damage dealt by 20% against Elite or Boss monsters. The skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "Following a season of icy darkness, a season of resplendent light—the light of hope—finally arrives. Warm smiles abound as testament to this joyous moment, achieved only because everyone was there to support each other. \"Though our journey may bring changes to our lives just like how the seasons pass, the miracle we created together shall never fade.\""
   },
   {
    "code": "art0188",
@@ -1367,7 +1703,9 @@
    "fr": "Lignée de tyrans",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0188_fu.png"
+   "art": "assets/_artifacts/art0188_fu.png",
+   "effect_en": "When attacking, increases damage dealt by 8% → 16%, and for each debuff inflicted on the enemy, increases by 4%, up to 2.4% → 3.2%.",
+   "lore_en": "A notorious family treasure of the Drake family, infamous for ending battles in bloodshed and terror. It had been missing for a long time until the most recent successor emerged and started a war."
   },
   {
    "code": "art0189",
@@ -1375,7 +1713,9 @@
    "fr": "Pierre angulaire obscure",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0189_fu.png"
+   "art": "assets/_artifacts/art0189_fu.png",
+   "effect_en": "Increase Effectiveness by 1% → 2% and Effect Resistance by 2% → 4%. The caster's Effect Resistance decreasess by 2% → 4% with each attack suffered, down to 1% → 2%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "Ainz's personal weapon and the symbol of Ainz Ooal Gown, crafted by his Guild members. Its power is of the same level as that of a World Item, and it's entwined by seven serpents, each adorned with a Divine-class artifact gemstone in the mouth."
   },
   {
    "code": "art0190",
@@ -1383,7 +1723,9 @@
    "fr": "Fleur séduisante",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0190_fu.png"
+   "art": "assets/_artifacts/art0190_fu.png",
+   "effect_en": "Increases Effectiveness by 1.5% → 3%. After an extra attack, decreases Combat Readiness of the target by 1.2% → 2.4%. Can only be activated once every 2 turns.",
+   "lore_en": "\"After you've been chewed and digested... We're going to merge into one and be reborn anew.\" Enticing her prey, her voice sounds sweeter than honey."
   },
   {
    "code": "art0191",
@@ -1391,7 +1733,9 @@
    "fr": "Ciseaux de jardinage",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0191_fu.png"
+   "art": "assets/_artifacts/art0191_fu.png",
+   "effect_en": "After using an attack that targets all enemies except for a basic skill, has a 60% chance to inflict a random debuff on the target for 1 turn, and has a 5% → 10% chance to grant stealth to the caster for 1 turn. Can only be activated once per turn. (Decrease Attack, Decrease Speed, Unhealable, or Silence)",
+   "lore_en": "\"I'm too afraid to use it anymore, it looks like it'll break at any moment. Well, what can you expect from a tacky toy a kid could barely afford with her allowance money,\" said Byblis, as she carefully put away her shears into a drawer."
   },
   {
    "code": "art0192",
@@ -1399,7 +1743,9 @@
    "fr": "Ailes envoûtantes",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0192_fu.png"
+   "art": "assets/_artifacts/art0192_fu.png",
+   "effect_en": "Increases Effect Resistance by 15% → 30%. After using an attack except for a basic skill, when a non-critical hit is made, removes 10 → 20 Soul from the enemy. Soul removal can only be activated once every 4 turns.",
+   "lore_en": "\"In my presence, there's nothing you can do.\" In the pitch-black night, nothing remained except the echo of her wings flapping."
   },
   {
    "code": "art0193",
@@ -1407,7 +1753,9 @@
    "fr": "3F",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0193_fu.png"
+   "art": "assets/_artifacts/art0193_fu.png",
+   "effect_en": "After attacking, has a 5% → 10% chance to deal additional damage proportional to the caster's max Health on the target.",
+   "lore_en": "Albedo's main weapon, a giant bardiche. Wielding 3F, she punishes those who have been disrespectful to Ainz without hesitation."
   },
   {
    "code": "art0194",
@@ -1415,7 +1763,9 @@
    "fr": "Lance Pipette",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0194_fu.png"
+   "art": "assets/_artifacts/art0194_fu.png",
+   "effect_en": "When attacking with a Single Attack, increases damage dealt by 1% → 2% and absorbs 15% of the damage dealt as Health.",
+   "lore_en": "A Divine-class lance, which serves as Shalltear's main weapon. Resembling a giant spuit covered in metal adornments, it has the powerful ability to recover the wielder's health proportional to the damage dealt."
   },
   {
    "code": "art0195",
@@ -1423,7 +1773,9 @@
    "fr": "Sceptre d'Ainz Ooal Gown",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0195_fu.png"
+   "art": "assets/_artifacts/art0195_fu.png",
+   "effect_en": "Increase Effectiveness by 1% → 2% and Effect Resistance by 2% → 4%. The caster's Effect Resistance decreasess by 2% → 4% with each attack suffered, down to 1% → 2%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "Ainz's personal weapon and the symbol of Ainz Ooal Gown, crafted by his Guild members. Its power is of the same level as that of a World Item, and it's entwined by seven serpents, each adorned with a Divine-class artifact gemstone in the mouth."
   },
   {
    "code": "art0196",
@@ -1431,7 +1783,9 @@
    "fr": "Souvenir du festival du Nouvel An",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0196_fu.png"
+   "art": "assets/_artifacts/art0196_fu.png",
+   "effect_en": "Increases the Friendship acquired after completing a stage in Adventure, Side Story, Spirit Altar, Emergency Mission, Hunt, Rift, and Otherworld Breach by the Hero who has this Artifact equipped by 100%.\nThe skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "Dolls that can be seen everywhere, and snacks that are easily found. The reason such common items feel precious is probably because they hold special memories."
   },
   {
    "code": "art0198",
@@ -1439,7 +1793,9 @@
    "fr": "Doux miracle",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0198_fu.png"
+   "art": "assets/_artifacts/art0198_fu.png",
+   "effect_en": "Increases Health by 5% → 10%. At the start of the turn has a 5% → 10% chance to decrease debuff durations of the caster by 1 turn. Can only be activated once every 3 turns.",
+   "lore_en": "Being able to sing on stage feels like a miracle to me. Would you like to be part of our sweet miracle?"
   },
   {
    "code": "art0199",
@@ -1447,7 +1803,9 @@
    "fr": "XVII. L'Étoile",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0199_fu.png"
+   "art": "assets/_artifacts/art0199_fu.png",
+   "effect_en": "At the start of battle, recovers Health of all allies by 10%, and has a 5% → 10% chance to decrease skill cooldowns of the caster by 1 turn. Skill cooldown reduction effect can only be activated three times. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "She will continue to dream until her little wish reaches the stars, for the day she gets to perform on a grander stage with her mentor..."
   },
   {
    "code": "art0200",
@@ -1455,7 +1813,9 @@
    "fr": "Gardien du sang obscur",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0200_fu.png"
+   "art": "assets/_artifacts/art0200_fu.png",
+   "effect_en": "Increases Attack by 15%. After using a non-attack skill, grants a barrier equivalent to 3.5% → 7% of Attack for 2 turns. Barrier can only be granted once every 3 turns.",
+   "lore_en": "An ancestral sword of the Lenox family, crafted for those who keep their oaths. As a gift of gratitude and admiration, Conwell gifted it to Jenua Roland, who lost one of his legs while guarding Conwell."
   },
   {
    "code": "art0201",
@@ -1463,7 +1823,9 @@
    "fr": "Œil de l'observateur",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0201_fu.png"
+   "art": "assets/_artifacts/art0201_fu.png",
+   "effect_en": "After using a non-attack skill, acquires 10 → 20 Soul. Can only be activated once.",
+   "lore_en": "A family heirloom and weapon passed down through generations in Birgitta's family, known for their long history as famous information brokers. It symbolizes a crucial lesson that they should always remain observers, making level-headed decisions by viewing situations from a distance."
   },
   {
    "code": "art0202",
@@ -1471,7 +1833,9 @@
    "fr": "Bâton de Bon-Plaisir Cerclé d'Or",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0202_fu.png"
+   "art": "assets/_artifacts/art0202_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 1.2% → 2.4% and Critical Hit Resistance by 20%.",
+   "lore_en": "A tool used to measure the depth of rivers and seas. No one would dream of using it as a weapon because of its sheer weight, except Wukong, the only one who can wield it at will."
   },
   {
    "code": "art0203",
@@ -1479,7 +1843,9 @@
    "fr": "Livraison de pizza à minuit",
    "stars": 4,
    "role": "art4_39",
-   "art": "assets/_artifacts/art0203_fu.png"
+   "art": "assets/_artifacts/art0203_fu.png",
+   "effect_en": "Increases Critical Hit Chance and Effectiveness of all allies by 10%. Effect does not stack with other Artifacts of the same name.\nThe skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "You little thief! You can't just eat the customer's pizza! Agh... People are going to think it was me!"
   },
   {
    "code": "art0204",
@@ -1487,7 +1853,9 @@
    "fr": "Créateur de bulles magiques",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0204_fu.png"
+   "art": "assets/_artifacts/art0204_fu.png",
+   "effect_en": "Increases Effectiveness by 1.5% → 3%. After attacking on the caster's turn, has a 3.5% → 7% chance to inflict a random debuff on the target for 1 turn. (Decrease Speed, Stun, Unhealable, or Venom)",
+   "lore_en": "Grandpa, you told me that brighter days are just around the corner. Looking at the smiles on the faces of those around me, I believe those days have finally arrived."
   },
   {
    "code": "art0205",
@@ -1495,7 +1863,9 @@
    "fr": "Chouchou souris tachetée",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0205_fu.png"
+   "art": "assets/_artifacts/art0205_fu.png",
+   "effect_en": "At the start of the first battle, acquires 10 Soul. After an ally uses a Soulburn, has a 5% → 10% chance to acquire 10 Soul. Can only be activated once.",
+   "lore_en": "A hair tie Choux gave to Frida as a gift to keep her long hair from getting wet. Although at first, Frida complained that only a kid would use something like this, she secretly loves it."
   },
   {
    "code": "art0206",
@@ -1503,7 +1873,9 @@
    "fr": "Gâteau aux fraises spécial",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0206_fu.png"
+   "art": "assets/_artifacts/art0206_fu.png",
+   "effect_en": "When attacking, increases damage dealt by 20% against Elite or Boss monsters. The skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "Hey... I feel like every day we spend together is a gift. All my hardships seem to fade away when I'm with you. Th-This is a strawberry cake I made! I'm not sure if it'll taste good...but I made it just for you. I promise there's nothing weird inside...! Would you...please accept it?"
   },
   {
    "code": "art0207",
@@ -1511,7 +1883,9 @@
    "fr": "Vacances de rêve",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0207_fu.png"
+   "art": "assets/_artifacts/art0207_fu.png",
+   "effect_en": "Increases Critical Hit Damage by 1.5% → 3%. If the caster attacks when it's not their turn, has a 5% → 10% chance to increase Attack of the caster for 1 turn before attacking. Can only be activated once per turn.",
+   "lore_en": "A hair accessory Landy gave to Flan as a gift. Feeling deeply touched, Flan wore it throughout the entire vacation."
   },
   {
    "code": "art0208",
@@ -1519,7 +1893,9 @@
    "fr": "Symbole d'amitié",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0208_fu.png"
+   "art": "assets/_artifacts/art0208_fu.png",
+   "effect_en": "Increases Health of the caster and the foremost ally except for the caster by 5% → 10%. At the end of the turn, has a 5% → 10% chance to increase Combat Readiness of the foremost ally by 15%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "An emerald-jeweled accessory made by Alencia as a birthday gift for Young Senya. When Young Senya uses in times of danger, she can summon Alencia."
   },
   {
    "code": "art0209",
@@ -1527,7 +1903,9 @@
    "fr": "Détermination comblée",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0209_fu.png"
+   "art": "assets/_artifacts/art0209_fu.png",
+   "effect_en": "Increases Attack of all allies by 5% → 10%. After using an attack that targets all enemies, has a 5% → 10% chance to increase Combat Readiness of all allies by 15%. Can only be activated once every 3 turns, and the Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "Among the items left by his mother were books that contain all her knowledge and strong will, as well as vivid traces of her several exciting adventures. These became the bedrock for his newly found resolve."
   },
   {
    "code": "art0210",
@@ -1535,7 +1913,9 @@
    "fr": "Hommage à Tarman",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0210_fu.png"
+   "art": "assets/_artifacts/art0210_fu.png",
+   "effect_en": "After an ally is attacked, when the damage suffered is equivalent to 25% or more of max Health, grants a barrier to the target for 2 turns. Barrier strength is equivalent to 1% → 2% of the caster's max Health. Can only be activated once per turn.",
+   "lore_en": "A luxurious, customized pen that once belonged to the former king, Tarman. It was mounted on a specially designed display stand, but Schniel has been using it as his dedicated signing pen since taking the throne. \"Tools are meant to be used for their purpose, not worshipped. Even a nation’s king must abide by this rule.\""
   },
   {
    "code": "art0211",
@@ -1543,7 +1923,9 @@
    "fr": "XV. Le Démon",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0211_fu.png"
+   "art": "assets/_artifacts/art0211_fu.png",
+   "effect_en": "At the start of the turn, recovers Health by 250 → 500. Increases the effect of all healing received by allies by 1% → 2%. When more than one increased healing effect is granted, only the strongest effect is applied.",
+   "lore_en": "Word of advice: think twice before reaching for a convenience store item the girl has been staring at, or you might unleash her inner devil."
   },
   {
    "code": "art0212",
@@ -1551,7 +1933,9 @@
    "fr": "Preuve d'amour",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0212_fu.png"
+   "art": "assets/_artifacts/art0212_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 8% → 16%. After a Single Attack, a critical hit inflicts injuries equal to damage dealt, up to 6% → 12% of the target's max Health.",
+   "lore_en": "These snake fangs crave Fenne, but she believes it's just Papa's way of showing love."
   },
   {
    "code": "art0213",
@@ -1559,7 +1943,9 @@
    "fr": "Fenêtre des blâmes",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0213_fu.png"
+   "art": "assets/_artifacts/art0213_fu.png",
+   "effect_en": "Increases Attack by 10% → 20%. At the start of battle, grants a barrier equivalent to 50% → 100% of Attack for 2 turns.",
+   "lore_en": "Buried under mounting misunderstandings, Tori withdraws from the world. Alone in her darkened room, she silently hopes her true feelings will somehow reach others."
   },
   {
    "code": "art0214",
@@ -1567,7 +1953,9 @@
    "fr": "Épine de la Rose bleue",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0214_fu.png"
+   "art": "assets/_artifacts/art0214_fu.png",
+   "effect_en": "At the start of the first battle, acquires 10 Soul. When attacking, increases damage dealt by 5% → 10%, and when using Soulburn, increases damage dealt by an additional 1% → 2%.",
+   "lore_en": "A mystic blade once kept in the Hilag family’s secret vault, deemed too dangerous for anyone to wield. While it consumes immense mana from its wielder, it grants devastating strength in return. After using this sword, Krau always takes advantage of its side effects as an excuse to request paid leave."
   },
   {
    "code": "art0215",
@@ -1575,7 +1963,9 @@
    "fr": "Envol d'urgence",
    "stars": 5,
    "role": null,
-   "art": "assets/_artifacts/art0215_fu.png"
+   "art": "assets/_artifacts/art0215_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 10%. After attacking, increases Attack and Critical Hit Damage by 2% → 4%. Can stack up to 6 times. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "“No, no! This is mine, keep your hands off!”\nOut of breath, Witch Skinneri frantically poured magic into her broom, narrowly dodging the grasp of the Phantom Wind and escaping by a hair."
   },
   {
    "code": "art0216",
@@ -1583,7 +1973,9 @@
    "fr": "M.O.A.S",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0216_fu.png"
+   "art": "assets/_artifacts/art0216_fu.png",
+   "effect_en": "After attacking with a Single Attack, has a 5% → 10% chance to inflict additional damage proportional to the caster's Defense on the target.",
+   "lore_en": "Though originally designed to nullify magical attack damage, this device gained an auto-targeting feature at the whim of a developer.\\n\"The best defense is a strong offense... Ah, Earth's proverbs really do inspire romantic ideals! Don't you agree?\""
   },
   {
    "code": "art0217",
@@ -1591,7 +1983,9 @@
    "fr": "Geste furtif",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0217_fu.png"
+   "art": "assets/_artifacts/art0217_fu.png",
+   "effect_en": "Increases Attack by 1% → 2%. At the end of the turn, when the caster has a debuff, increases Combat Readiness by 1.5% → 3% and grants stealth for 2 turns.",
+   "lore_en": "Swift as the wind, Rinak picks her clients' pockets to gather criminal funds. Little does she know that her actions are being observed..."
   },
   {
    "code": "art0218",
@@ -1599,7 +1993,9 @@
    "fr": "Protection de l'assassin",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0218_fu.png"
+   "art": "assets/_artifacts/art0218_fu.png",
+   "effect_en": "After using an attack that targets all enemies, gain 10 Soul, and has a 5% → 10% chance to inflict burn for 1 turn. Soul can only be acquired once.",
+   "lore_en": "“Doesn’t matter who you are or where you’ve scurried off to, I will find you. You see — your life? It’s got quite the lucrative price tag.”"
   },
   {
    "code": "art0219",
@@ -1607,7 +2003,9 @@
    "fr": "XII. Le Pendu",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0219_fu.png"
+   "art": "assets/_artifacts/art0219_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 5% → 10%. At the start of the turn, has a 3% → 6% chance to grant increased Critical Hit Damage for 1 turn.",
+   "lore_en": "Hwayoung steels herself to break free from the shackles that once held her back. As if fate preordained it, she’s now back on the path of the Sura. The hot summer sun and the rolling waves of the ocean will guide her."
   },
   {
    "code": "art0220",
@@ -1615,7 +2013,9 @@
    "fr": "Ravioles du Festival de Reingar",
    "stars": 4,
    "role": null,
-   "art": "assets/_artifacts/art0220_fu.png"
+   "art": "assets/_artifacts/art0220_fu.png",
+   "effect_en": "Increases the Friendship acquired after completing a stage in Adventure, Side Story, Spirit Altar, Emergency Mission, Hunt, Rift, and Otherworld Breach by the Hero who has this Artifact equipped by 100%.\nThe skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "A traditional Earth dish recreated by the Science Recreation Club at Yuna's request. It's surprisingly addictive. \"I did my best with the ingredients available here... but do people on Earth really eat something like this?\""
   },
   {
    "code": "art0221",
@@ -1623,7 +2023,9 @@
    "fr": "Photogénique de l’été",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0221_fu.png"
+   "art": "assets/_artifacts/art0221_fu.png",
+   "effect_en": "Increases Attack by 1% → 2%. When attacking, if the target is not an Elite or Boss monster, has a 5% → 10% chance to ignore damage sharing effects.",
+   "lore_en": "Today’s photographer is the curious cat! A picture-perfect moment sealed with the final touch of the cat’s toe bean print, as summer memories are captured in the frame, one by one."
   },
   {
    "code": "art0222",
@@ -1631,7 +2033,9 @@
    "fr": "Frappe du souhait",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0222_fu.png"
+   "art": "assets/_artifacts/art0222_fu.png",
+   "effect_en": "At the start of the first battle, has a 5% → 10% chance to grant immunity for 1 turn. At the start of the turn, when the caster does not have a debuff, has a 5% → 10% chance to increase Attack for 1 turn.",
+   "lore_en": "Driven by her enduring desire to sever all evil from the world, Star Fencer Alya channels her remaining energy into one final strike."
   },
   {
    "code": "art0223",
@@ -1639,7 +2043,9 @@
    "fr": "Sifflet de la reine",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0223_fu.png"
+   "art": "assets/_artifacts/art0223_fu.png",
+   "effect_en": "Increases Attack of all allies by 5% → 10%. At the end of the ally with the highest Attack’s turn, increases Combat Readiness of the caster by 1% → 2% Can only be activated once every 2 turns, and this Artifact’s skill effect can only apply to one Hero within a team.",
+   "lore_en": "The glistening seafoam rolling with the waves, and the sun-scorched sands... It’s always around this time of year that the girl is reminded of a certain traumatic experience."
   },
   {
    "code": "art0224",
@@ -1647,7 +2053,9 @@
    "fr": "Jumbo berry spécial",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0224_fu.png"
+   "art": "assets/_artifacts/art0224_fu.png",
+   "effect_en": "When attacking with a Single Attack, increases damage dealt by 1% → 2%.",
+   "lore_en": "The jumbo berry special that he could hardly finish as a kid and had to split with his master."
   },
   {
    "code": "art0225",
@@ -1655,7 +2063,9 @@
    "fr": "Anneau Lotus miroir",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0225_fu.png"
+   "art": "assets/_artifacts/art0225_fu.png",
+   "effect_en": "At the start of the first battle, gains 10 → 20 Soul. At the start of the turn, has a 5% → 10% chance to gain 2 Soul.",
+   "lore_en": "A ring gifted by Himmel. In flower-language, the mirrored lotus represents eternal love."
   },
   {
    "code": "art0226",
@@ -1663,7 +2073,9 @@
    "fr": "Épingle à cheveux Papillon",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0226_fu.png"
+   "art": "assets/_artifacts/art0226_fu.png",
+   "effect_en": "Increases Attack by 1% → 2%. After attacking, grants a barrier equivalent to 2.5% → 5% of Attack for 2 turns. Can only be activated once per turn.",
+   "lore_en": "A birthday gift from Frieren. It is one of Fern's most precious belongings that she has decorating her hair at all times."
   },
   {
    "code": "art0227",
@@ -1671,7 +2083,9 @@
    "fr": "Baguette magique de soin",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0227_fu.png"
+   "art": "assets/_artifacts/art0227_fu.png",
+   "effect_en": "Increases Effect Resistance by 15%. When an ally's Health is 50% or less after being attacked, recovers Health of the target by 1% → 2%. Can only be activated once per turn.",
+   "lore_en": "A real-life version of the all-healing magic wand from the children's anime Healing Angel Lidica, casually referenced by Yuna. No one knows how it really works, but it is without a doubt able to cure ailments. \"I'm certain that I can cure any illness with this magic wand! But, if I want to use it... I should make sure someone is sick first, right?\""
   },
   {
    "code": "art0228",
@@ -1679,7 +2093,8 @@
    "fr": "Murmure dangereux",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0228_fu.png"
+   "art": "assets/_artifacts/art0228_fu.png",
+   "effect_en": "Increases Evasion by 20%.\nAfter counterattacking, when the target is still alive, has a 2% → 4% chance to activate the basic skill once more."
   },
   {
    "code": "art0229",
@@ -1687,7 +2102,8 @@
    "fr": "Relation précieuse",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0229_fu.png"
+   "art": "assets/_artifacts/art0229_fu.png",
+   "effect_en": "Increases Health by 10%. At the start of the turn, gain 10 Soul. Can only be activated twice. The skill efect of this Artifact does not increase when enhanced."
   },
   {
    "code": "art0230",
@@ -1695,7 +2111,9 @@
    "fr": "Feuille éveillée",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0230_fu.png"
+   "art": "assets/_artifacts/art0230_fu.png",
+   "effect_en": "After using a non-attack skill, increases Combat Readiness of the caster and the ally in the back row except for the caster by 1.2% → 2.4%. Can only be activated once every 2 turns.",
+   "lore_en": "Witnessing the silent budding of life, Saria carved deep into her heart once more why she must protect Dun Blyraia."
   },
   {
    "code": "art0231",
@@ -1703,7 +2121,9 @@
    "fr": "Livre de la longévité",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0231_fu.png"
+   "art": "assets/_artifacts/art0231_fu.png",
+   "effect_en": "When attacking, if a non-critical hit is made, increases damage dealt by 1% → 2%, and deals additional damage proportional to the caster's Attack to the target.",
+   "lore_en": "A forbidden tome that can only be read by the inheritor of Sigurd Scythe, the royal heirloom. It contains the lifespans of all Humans born and raised in Tartarus."
   },
   {
    "code": "art0232",
@@ -1711,7 +2131,9 @@
    "fr": "Maîtresse du cauchemar",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0232_fu.png"
+   "art": "assets/_artifacts/art0232_fu.png",
+   "effect_en": "Increases Attack by 1% → 2%. After using a basic skill on the caster's turn, has a 2% → 4% chance to grant an extra turn. Can only be activated once per turn.",
+   "lore_en": "To Sharun, who binds herself in guilt, the Wicked, taking the form of Zio, sows nightmares. Step by step, a hungry shadow slowly approaches its prey."
   },
   {
    "code": "art0233",
@@ -1719,7 +2141,9 @@
    "fr": "Drapeau de la gloire",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0233_fu.png"
+   "art": "assets/_artifacts/art0233_fu.png",
+   "effect_en": "Increases Evasion by 20%. After an ally uses a basic skill, has a 5% → 10% chance to increases Combat Readiness of the caster by 10%. This Artifact's effect can only apply to one Hero within a team.",
+   "lore_en": "\"First to the finish line—Sigret! Truly, this is the age of Sigret!\"\nWith breathtaking speed and brilliant riding skill, Sigret rose to fame overnight. After defeating her formidable rivals in her very firt race, the flag she waved at the finish line became a legend among racing fans."
   },
   {
    "code": "art0234",
@@ -1727,7 +2151,9 @@
    "fr": "Parfum de vérité",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0234_fu.png"
+   "art": "assets/_artifacts/art0234_fu.png",
+   "effect_en": "At the end of every 3 enemy turns, increase Combat Readiness of the caster by 1% → 2% and has a 5% → 10% chance to dispel one debuff. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "\"No matter how hard you try, you cannot hide it. The truth always lingers in the scent.\""
   },
   {
    "code": "art0235",
@@ -1735,7 +2161,9 @@
    "fr": "Stylo gracieusement offert",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0235_fu.png"
+   "art": "assets/_artifacts/art0235_fu.png",
+   "effect_en": "Increases Effectiveness by 1% → 2%. After attacking with a Single Attack except for the basic skill, inflicts decreased Hit Chance on the target for 2 turns, and increases Combat Readiness of the ally in the back row by 1.5% → 3%. Can only be activated once every 3 turns.",
+   "lore_en": "A fountain pen bestowed by Schniel, the lord who recognized Ruiza's worth. When it comes time to sign her name, this is the only pen she uses. "
   },
   {
    "code": "art0236",
@@ -1743,7 +2171,9 @@
    "fr": "Rituel des flammes scellées",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0236_fu.png"
+   "art": "assets/_artifacts/art0236_fu.png",
+   "effect_en": "Increases Effect Resistance by 1.5% → 3%.\nAt the start of battle, grants a barrier equivalent to 6% → 12% of Attack for 2 turns.",
+   "lore_en": "After each battle, the moment Aki rewraps the bandages to subdue the raging flames feels like a painful ritual—one that brings back the memories of someone long lost."
   },
   {
    "code": "art0237",
@@ -1751,7 +2181,9 @@
    "fr": "Avec un petit compagnon",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0237_fu.png"
+   "art": "assets/_artifacts/art0237_fu.png",
+   "effect_en": "Increases max Health by 5% → 10%. Decreases damage received from damage sharing by 2.5% → 5%.",
+   "lore_en": "A small bird encountered by chance on the journey home. The sky is clear, and footsteps are light. With a friend to accompany her, she is no longer lonely."
   },
   {
    "code": "art0238",
@@ -1759,7 +2191,9 @@
    "fr": "Encensoir de l'excommuniée",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art0238_fu.png"
+   "art": "assets/_artifacts/art0238_fu.png",
+   "effect_en": "Increases Effect Resistance by 1.5% → 3%. At the end of an enemy's turn, when the caster does not have a debuff, increases Combat Readiness of the caster by 1% → 2%. Can only be activated once per turn.",
+   "lore_en": "\"Goddess, have mercy on us\"\nThe day she turned her back on fate, and the night she prayed the most earnestly."
   },
   {
    "code": "art0239",
@@ -1767,7 +2201,9 @@
    "fr": "Hache de la volonté céleste libérée",
    "stars": 5,
    "role": null,
-   "art": "assets/_artifacts/art0239_fu.png"
+   "art": "assets/_artifacts/art0239_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 6% → 12%, and Hit Chance by 1% → 2%.",
+   "lore_en": "An ancient relic with mysteriously unleashed power. It is to be bestowed upon the final champion of the Orbis Fladiatorium. It gleams with the brilliance of past glory."
   },
   {
    "code": "art0240",
@@ -1775,7 +2211,9 @@
    "fr": "Trône de gloire",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art0240_fu.png"
+   "art": "assets/_artifacts/art0240_fu.png",
+   "effect_en": "After attacking, has a 5% → 10% chance to deal additional damage proportional to the caster's max Health on the target.",
+   "lore_en": "A throne containing the might of the Star Devourer. Though its former master relinquished that power and departed, the throne still silently awaits the arrival of the next monarch."
   },
   {
    "code": "art0241",
@@ -1783,7 +2221,9 @@
    "fr": "Désir distordu",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art0241_fu.png"
+   "art": "assets/_artifacts/art0241_fu.png",
+   "effect_en": "When the caster takes the first turn, has a 5% → 10% chance to grant increased Effectiveness to the caster for 3 turns. When an ally except for the caster takes the first turn, has a 5% → 10% chance to increase Combat Readiness of the caster by 20%. Can only apply to one Hero within a team.",
+   "lore_en": "The special lens created by Fumyr's magic reveals even the slightest irregularites on the surface of a pebble. A sly curiousity subtly lingers on her face as she seeks new knowledge."
   },
   {
    "code": "art0242",
@@ -1791,7 +2231,9 @@
    "fr": "Shadow Winds 7",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0242_fu.png"
+   "art": "assets/_artifacts/art0242_fu.png",
+   "effect_en": "Increases Attack by 1% → 2%.\nAt the start of the first battle, has a 5% → 10% chance to gain 10 Soul and grant swift attack to the caster. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "A gunblade specially crafted for Tactical Archetype Coli who excels in urban combat. Combining a firearm with blades, it can be used effectively at both close and long range."
   },
   {
    "code": "art0243",
@@ -1799,7 +2241,9 @@
    "fr": "Orbe de l'aube",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0243_fu.png"
+   "art": "assets/_artifacts/art0243_fu.png",
+   "effect_en": "At the start of the first battle, acquires 10 Soul. At the end of the turn, has a 5% → 10% chance to acquire 5 Soul. Can only be activated three times.",
+   "lore_en": "Some nights become the hope that leads to daybreak. For Ludwig, who is heading towards the dawn after a long darkness, there is no longer any reason to hesitate."
   },
   {
    "code": "art0244",
@@ -1807,7 +2251,9 @@
    "fr": "Baptême de papillon",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art0244_fu.png"
+   "art": "assets/_artifacts/art0244_fu.png",
+   "effect_en": "Increase Evasion by 1% → 2%. At the start of an extra turn, increases Attack and Speed by 5% each, Can stack up to 3 times.",
+   "lore_en": "Through a blood-stained baptism, two butterflies drifting over scattered dreams are connected as one. \"The two of us are one that can never be seperated, Luciella.\""
   },
   {
    "code": "art0245",
@@ -1815,7 +2261,9 @@
    "fr": "Fascination vertigineuse",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0245_fu.png"
+   "art": "assets/_artifacts/art0245_fu.png",
+   "effect_en": "After using a non-attack skill, has a 5% → 10% chance each to grant swift attack and, for 2 turns, grant increased Speed to the ally with the highest Attack. Can only be activated once every 3 turns.",
+   "lore_en": "Deep in the sea, the tentacles of the Void Coral wrap around Aube's body. A sweet and sticky wave slowly consumes her body and mind."
   },
   {
    "code": "art0246",
@@ -1823,7 +2271,18 @@
    "fr": "Ancre puissante spéciale sur mesure",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art0246_fu.png"
+   "art": "assets/_artifacts/art0246_fu.png",
+   "effect_en": "At the start of the first battle, has a 50% → 100% chance to gain 10 Soul. After an ally is attacked by a Single Attack, increases the caster's Combat Readiness by 8% → 16%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "To others, it's an incredible weapon capable of generating immense force under extreme weight. To Haru, it's just another high school girl's accessory. It was orignally designed to generate gravity at a designated point, but after falling into Haru's hands, it became a blunt weapon."
+  },
+  {
+   "code": "art0247",
+   "en": "Flame Dragon's Jewel",
+   "fr": "Flame Dragon's Jewel",
+   "stars": 5,
+   "role": "thief",
+   "art": "assets/_artifacts/art0247_fu.png",
+   "effect_en": "Increases Attack by 10% → 20%. After being attacked, has a 50% → 100% chance to decrease debuff durations of the caster by 1 turn."
   },
   {
    "code": "art0248",
@@ -1831,7 +2290,9 @@
    "fr": "Chagrin de la rose",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0248_fu.png"
+   "art": "assets/_artifacts/art0248_fu.png",
+   "effect_en": "At the start of battle and at the start of every third ally turn, grants a random buff to the caster for 1 turn. (Increase Attack, Immunity, Increase Critical Hit Resistance, Barrier proportional to max Health) \nThe skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "A pistol Renoa always carries when she's not using her Gift. Driven by a desperate determination to never fall behind, she honed her skills until she could take on monsters with a single gun. From that resolve, the Black Rose bloomed."
   },
   {
    "code": "art0249",
@@ -1839,7 +2300,8 @@
    "fr": "Lumière et obscurité",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art0249_fu.png"
+   "art": "assets/_artifacts/art0249_fu.png",
+   "effect_en": "After using an attack that targets all enemies, deals 1,000 → 2,000 additional damage, and has a 5% → 10% chance to decrease the Combat Readiness of the target by 15%."
   },
   {
    "code": "art0250",
@@ -1847,7 +2309,9 @@
    "fr": "Terre de la lumière",
    "stars": 5,
    "role": null,
-   "art": "assets/_artifacts/art0250_fu.png"
+   "art": "assets/_artifacts/art0250_fu.png",
+   "effect_en": "Increases the Friendship acquired after completing a stage in Adventure, Side Story, Spirit Altar, Emergency Mission, Hunt, Rift, and Otherworld Breach by the Hero who has this Artifact equipped by 100%. When more than one Friendship increase effect is granted, only the strongest effect is applied. The skill effect of this Artifact does not increase when enhanced.",
+   "lore_en": "\"At the end of thousands upon thousands of worldlines, I finally found you. With this brilliant light as our promise... Come, let us step into tomorrow together.\""
   },
   {
    "code": "art3_1",
@@ -1855,7 +2319,9 @@
    "fr": "Graal de sang",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_1_fu.png"
+   "art": "assets/_artifacts/art3_1_fu.png",
+   "effect_en": "Recovers Health equal to 1% → 2% of the caster's Attack at the start of the turn. Effect is increases by 50% when the caster's Health is 30% or less.",
+   "lore_en": "What wishes may be granted by this Death Goblet that holds the blood of so many victims?"
   },
   {
    "code": "art3_10",
@@ -1863,7 +2329,9 @@
    "fr": "Épée du matin",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_10_fu.png"
+   "art": "assets/_artifacts/art3_10_fu.png",
+   "effect_en": "Increase Attack and Speed by 1% → 2% when Health is 50% or less.",
+   "lore_en": "\"Only those with the power to control their inner energy can wield this sword.\"\n- Master Swordsman Rhynos"
   },
   {
    "code": "art3_11",
@@ -1871,7 +2339,9 @@
    "fr": "Redoutable Yaksha",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_11_fu.png"
+   "art": "assets/_artifacts/art3_11_fu.png",
+   "effect_en": "Increases Attack by 1% → 2% when Health is 50% or more.",
+   "lore_en": "If you really want to be strong, risk your Iife and challenge me."
   },
   {
    "code": "art3_12",
@@ -1879,7 +2349,9 @@
    "fr": "Marque du diable",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_12_fu.png"
+   "art": "assets/_artifacts/art3_12_fu.png",
+   "effect_en": "Increases Effect Resistance of all allies by 2% → 4% at the start of the turn. Effect can only stack up to 5 times.",
+   "lore_en": "\"As long as this brand is with you, the Devil wilI continue to protect you.\"\n- Cult Enforcer Ebarak"
   },
   {
    "code": "art3_13",
@@ -1887,7 +2359,9 @@
    "fr": "Lampe de gobelin",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_13_fu.png"
+   "art": "assets/_artifacts/art3_13_fu.png",
+   "effect_en": "When an enemy is defeated, has a 5% → 10% chance to acquire 1 Soul.",
+   "lore_en": "If you allow yourself to be seduced by the faint light floating upon the lake, the demon in the water will reach out for you."
   },
   {
    "code": "art3_14",
@@ -1895,7 +2369,9 @@
    "fr": "Rose turquoise",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_14_fu.png"
+   "art": "assets/_artifacts/art3_14_fu.png",
+   "effect_en": "50% chance to grant a barrier to the caster equivalent to 5% → 10% of max Health for 2 turns at the moment the caster is attacked. Can only be granted once every 2 turns.",
+   "lore_en": "This rose of eternal beauty grants great magical power to the possessor."
   },
   {
    "code": "art3_15",
@@ -1903,7 +2379,9 @@
    "fr": "Hache de la volonté céleste",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_15_fu.png"
+   "art": "assets/_artifacts/art3_15_fu.png",
+   "effect_en": "Increases Critical Hit Chance by 6% → 12%.",
+   "lore_en": "The swing of his axe was unstoppable; his enemies becoming an ever-growing pile of corpses.\nWritten by Reingar Media Club [Special Edition: Testimony of Ancient Weapons 6, 44p]"
   },
   {
    "code": "art3_16",
@@ -1911,7 +2389,9 @@
    "fr": "Tonfa d'exorciste",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_16_fu.png"
+   "art": "assets/_artifacts/art3_16_fu.png",
+   "effect_en": "Increases damage dealt by 8% → 16% if the target's Health is 50% or more when the caster attacks.",
+   "lore_en": "A powerful tonfa capable of smashing bones and splitting flesh. They say that when the wielders of this weapon die, their souls are bound to it."
   },
   {
    "code": "art3_17",
@@ -1919,7 +2399,9 @@
    "fr": "Joker de rêverie",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_17_fu.png"
+   "art": "assets/_artifacts/art3_17_fu.png",
+   "effect_en": "Increases damage dealt by 1.5% → 3% of the enemy's max Health when attacking.",
+   "lore_en": "Did you enjoy the world I showed you? Was it satisfying? Now, pay the price with your life."
   },
   {
    "code": "art3_18",
@@ -1927,7 +2409,9 @@
    "fr": "Mandoline papillon",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_18_fu.png"
+   "art": "assets/_artifacts/art3_18_fu.png",
+   "effect_en": "4% → 8% chance to be granted an extra turn at the end of the next turn when attacked.",
+   "lore_en": "A mandolin used by Ludo, a pure-voiced minstrel. If you play it, you can see an illusion of butterflies made of light dancing."
   },
   {
    "code": "art3_19",
@@ -1935,7 +2419,9 @@
    "fr": "Pipe de l'émissaire",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_19_fu.png"
+   "art": "assets/_artifacts/art3_19_fu.png",
+   "effect_en": "When attacked, decreases damage suffered by 5% → 10%.  When more than one damage reduction effect is granted, only the strongest effect is applied.",
+   "lore_en": "Look carefully at the smoke that rises from the pipe—you'll see within whether you're destined for paradise or hell."
   },
   {
    "code": "art3_2",
@@ -1943,7 +2429,9 @@
    "fr": "Œuf d'illusion",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_2_fu.png"
+   "art": "assets/_artifacts/art3_2_fu.png",
+   "effect_en": "Increases Defense by 1% → 2% when Health is 50% or more.",
+   "lore_en": "A dark egg containing demonic energy. Nobody knows what it may contain inside."
   },
   {
    "code": "art3_20",
@@ -1951,7 +2439,9 @@
    "fr": "Ancre intemporelle",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_20_fu.png"
+   "art": "assets/_artifacts/art3_20_fu.png",
+   "effect_en": "After attacking, has a 2% → 4% chance to dispel one debuff.",
+   "lore_en": "\"They say that the ship held down with that anchor is able to endure all strong winds.\"\n- Written by Louis [The Adventures of Louis Van Vrista, Pg. 51]"
   },
   {
    "code": "art3_21",
@@ -1959,7 +2449,9 @@
    "fr": "Totem de la forêt",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_21_fu.png"
+   "art": "assets/_artifacts/art3_21_fu.png",
+   "effect_en": "1% → 2% chance to grant continuous healing for 2 turns at the moment the caster is attacked. Can only be activated once every 2 turns.",
+   "lore_en": "A totem deep within the forest. Make a wish before it, and if you hear the clear ringing of a bell, your wish will come true."
   },
   {
    "code": "art3_22",
@@ -1967,7 +2459,9 @@
    "fr": "Clé de serment",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_22_fu.png"
+   "art": "assets/_artifacts/art3_22_fu.png",
+   "effect_en": "Increases Hit Chance by 1% → 2%.",
+   "lore_en": "\"A key made in honor of the heroes who defeated the ancient monster, Nankuda, engraved with their oath to protect the world.\"\n- Philosopher Izet"
   },
   {
    "code": "art3_23",
@@ -1983,7 +2477,9 @@
    "fr": "Chandelier prophétique",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_3_fu.png"
+   "art": "assets/_artifacts/art3_3_fu.png",
+   "effect_en": "2% → 4% chance to reduce cooldown by 1 turn at the moment the caster is attacked. Can only be activated once per turn.",
+   "lore_en": "It is said that you can see into the future by lighting a candle, putting it on this candlestick, and looking into the flame."
   },
   {
    "code": "art3_4",
@@ -1991,7 +2487,9 @@
    "fr": "Fourreau ancien",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_4_fu.png"
+   "art": "assets/_artifacts/art3_4_fu.png",
+   "effect_en": "Increases damage dealt by basic skill by 8% → 16%.",
+   "lore_en": "This magical sheath is said to keep any blade from losing its sharpness."
   },
   {
    "code": "art3_6",
@@ -1999,7 +2497,9 @@
    "fr": "Portail d'Atma",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_6_fu.png"
+   "art": "assets/_artifacts/art3_6_fu.png",
+   "effect_en": "1% → 2% chance to decrease skill cooldown of all allies by 1 turn at the start of battle.",
+   "lore_en": "By going through that door, you can turn back time. It may be for a brief moment, but it's enough to gain momentum in a fight."
   },
   {
    "code": "art3_7",
@@ -2007,7 +2507,9 @@
    "fr": "Lance d'Alsacia",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_7_fu.png"
+   "art": "assets/_artifacts/art3_7_fu.png",
+   "effect_en": "After attacking with a Single Attack, decreases Combat Readiness of the target by 2.5% → 5%.",
+   "lore_en": "It is said that this spear contains the souls of the spirits who protect the forest, and grants strong protection to those who wield it."
   },
   {
    "code": "art3_8",
@@ -2015,7 +2517,9 @@
    "fr": "Cube du labyrinthe",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_8_fu.png"
+   "art": "assets/_artifacts/art3_8_fu.png",
+   "effect_en": "1% → 2% chance to increase the caster's Combat Readiness by 15% at the end of the enemy's turn.",
+   "lore_en": "A strange relic that was found in the mysterious maze of Farche Frontier. With mysterious light emitting from it, it has the power to distort space with impact."
   },
   {
    "code": "art3_9",
@@ -2023,7 +2527,9 @@
    "fr": "Boussole maudite",
    "stars": 3,
    "role": null,
-   "art": "assets/_artifacts/art3_9_fu.png"
+   "art": "assets/_artifacts/art3_9_fu.png",
+   "effect_en": "Increases Effectiveness by 2.5% → 5% for 1 turn at the start of battle.",
+   "lore_en": "\"Careful, it's a monster. Who knows what could happen if we go in the direction the compass is pointing.\"\n- Adventurer Laurelai"
   },
   {
    "code": "art4_1",
@@ -2031,7 +2537,9 @@
    "fr": "Cavalier du vent",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art4_1_fu.png"
+   "art": "assets/_artifacts/art4_1_fu.png",
+   "effect_en": "Increases Attack by 1% → 2%. When the caster defeats an enemy with an attack, casts stealth for 1 turn and increases Attack of the caster by 2% → 4% for 1 turn at the start of their next turn.",
+   "lore_en": "Famously known as the Phantom Wind, Rinak would sneak into the mansions of the rich with ghost-like stealth and vanish with their most expensive possessions."
   },
   {
    "code": "art4_12",
@@ -2039,7 +2547,9 @@
    "fr": "Couteau d'Elyha",
    "stars": 4,
    "role": "thief",
-   "art": "assets/_artifacts/art4_12_fu.png"
+   "art": "assets/_artifacts/art4_12_fu.png",
+   "effect_en": "Penetrates Defense by 1% → 2% when attacking an enemy not at max Health.",
+   "lore_en": "Whenever Elyha, the leader of the Black Fog Company, wielded a knife, it got darker with blood and more brutal every time."
   },
   {
    "code": "art4_13",
@@ -2047,7 +2557,9 @@
    "fr": "Fiole de potion extraordinaire",
    "stars": 4,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art4_13_fu.png"
+   "art": "assets/_artifacts/art4_13_fu.png",
+   "effect_en": "5% → 10% chance to dispel one debuff from an ally at the beginning of the turn.",
+   "lore_en": "\"A potion of love, or a potion of eternal youth. Only one of each exists in this world. Which do you choose?\"\n- A Senior Fellow of the Alchemy Society, Pei"
   },
   {
    "code": "art4_14",
@@ -2055,7 +2567,9 @@
    "fr": "Rosa Hargana",
    "stars": 4,
    "role": "ranger",
-   "art": "assets/_artifacts/art4_14_fu.png"
+   "art": "assets/_artifacts/art4_14_fu.png",
+   "effect_en": "Increases Dual Attack Chance by 7% → 14%. When it is not the caster's turn, increases Attack by 30%.",
+   "lore_en": "Gun mage Amber Rose was an expert in lightweight magic and sharpshooting. Her magic bullets never missed, even when aimed at her own lover."
   },
   {
    "code": "art4_16",
@@ -2063,7 +2577,9 @@
    "fr": "Panier infini",
    "stars": 4,
    "role": "ranger",
-   "art": "assets/_artifacts/art4_16_fu.png"
+   "art": "assets/_artifacts/art4_16_fu.png",
+   "effect_en": "For the duration of the caster's turn, increases Dual Attack Chance of all allies except for the caster by 7% → 14% and increases Attack of all allies except for the caster by 20%.",
+   "lore_en": "Now, put your most expensive possession in this basket - it doubles! Put In two? Quadruples! This isn't a scam, trust me!"
   },
   {
    "code": "art4_17",
@@ -2071,7 +2587,9 @@
    "fr": "Pierre de sang",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art4_17_fu.png"
+   "art": "assets/_artifacts/art4_17_fu.png",
+   "effect_en": "After attacking, heals the ally with the lowest Health by 1.3% → 2.6% of the damage dealt.",
+   "lore_en": "As I took a bite of the fruit, a red liquid spilled out. Instead of the copper smell of blood, the sweet scent of fruit emanated from it."
   },
   {
    "code": "art4_2",
@@ -2079,7 +2597,9 @@
    "fr": "Gantelet de Strak",
    "stars": 4,
    "role": "warrior",
-   "art": "assets/_artifacts/art4_2_fu.png"
+   "art": "assets/_artifacts/art4_2_fu.png",
+   "effect_en": "Effect Resistance increases by 3% → 6% when the caster's Health is 50% or more. When Health is less than 50%, the effect is halved.",
+   "lore_en": "\"When the eclipse began, those small gloves started to spew fire and engulf my whole body. The spirit inside the gloves had woken up, an we were able to defeat the Archdemon.\"\n- Heir Aki"
   },
   {
    "code": "art4_3",
@@ -2087,7 +2607,9 @@
    "fr": "Violon d'Iela",
    "stars": 4,
    "role": "mage",
-   "art": "assets/_artifacts/art4_3_fu.png"
+   "art": "assets/_artifacts/art4_3_fu.png",
+   "effect_en": "Has a 4% → 8% chance to dispel one buff from the enemy after attacking.",
+   "lore_en": "\"No matter how much power or darkness one wields, they're just a part of the audience.\"\nIela started to play the violin and her melody touched the hearts of all that heard It. Even the genius mage who was only interested in fighting was moved."
   },
   {
    "code": "art4_4",
@@ -2095,7 +2617,9 @@
    "fr": "Coupe-enfer",
    "stars": 4,
    "role": "warrior",
-   "art": "assets/_artifacts/art4_4_fu.png"
+   "art": "assets/_artifacts/art4_4_fu.png",
+   "effect_en": "At the start of someone's turn, increases Attack and Critical Hit Chance of the caster by 2% → 4%. Effect stacks, and is removed after the caster attacks.",
+   "lore_en": "\"Look at this saw... isn't it awesome?\"\n- Notorious Lunatic, Ralakia"
   },
   {
    "code": "art4_5",
@@ -2103,7 +2627,9 @@
    "fr": "Lance d'Hilag",
    "stars": 4,
    "role": "knight",
-   "art": "assets/_artifacts/art4_5_fu.png"
+   "art": "assets/_artifacts/art4_5_fu.png",
+   "effect_en": "Increases the caster's Combat Readiness by 5% → 10% after an ally except for the caster is attacked by a single attack.",
+   "lore_en": "As she lifted her lance, a cry burst out from behind her. She believed she would soon be able to overthrow the Archdemon.\n\"If I cannot do it, Goddess, give me the power to fight on forever.\""
   },
   {
    "code": "art4_6",
@@ -2111,7 +2637,9 @@
    "fr": "Sashe Ithanes",
    "stars": 4,
    "role": "ranger",
-   "art": "assets/_artifacts/art4_6_fu.png"
+   "art": "assets/_artifacts/art4_6_fu.png",
+   "effect_en": "Increases Combat Readiness of all allies by 8% → 16% when the enemy is defeated. Effect does not stack with other Artifacts of the same name.",
+   "lore_en": "This is the Sashe Ithanes. It is a flame that will shake the world on its axis, that will destroy people, cities, kingdoms, even dreams. Take it, and in my name bring an end to everything."
   },
   {
    "code": "art4_7",
@@ -2119,7 +2647,9 @@
    "fr": "Diable de poussière",
    "stars": 4,
    "role": "thief",
-   "art": "assets/_artifacts/art4_7_fu.png"
+   "art": "assets/_artifacts/art4_7_fu.png",
+   "effect_en": "1.5% → 3% chance to attack again with a basic skill when the target survives a basic skill attack. Can only be activated once per turn.",
+   "lore_en": "\"Once this long fight is over, will everything go back to the way it was?\"\nNoha, who is later praised as the Hero of the Dejurak Desert, mused with a deep sigh."
   },
   {
    "code": "art4_8",
@@ -2127,7 +2657,9 @@
    "fr": "Origine de l'eau",
    "stars": 4,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art4_8_fu.png"
+   "art": "assets/_artifacts/art4_8_fu.png",
+   "effect_en": "Recovers 8% Health and increases Combat Readiness by 1% → 2% upon receiving damage equivalent to 20% or more of max Health at the moment the caster is attacked.",
+   "lore_en": "\"Wherever this talisman is, I will be too. To bring safety from storms, freedom from illness, Iife where once there was only ruin.\"\n- Shaman Cizette"
   },
   {
    "code": "art4_9",
@@ -2135,7 +2667,9 @@
    "fr": "Sacrifice sacré",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art4_9_fu.png"
+   "art": "assets/_artifacts/art4_9_fu.png",
+   "effect_en": "5% → 10% chance to be revived with 25% Health and granted a barrier for 1 turn after dying. Barrier strength is proportional to the caster's max Health. Can only be activated once.",
+   "lore_en": "The Statue of Grace is given to whichever knight wins the Goddess's favor and will save them from death once before shattering to pieces.\nWritten by Barret [Treasures of the Sacred Kingdom, 15p]"
   },
   {
    "code": "art5_1",
@@ -2143,7 +2677,9 @@
    "fr": "Épée rituelle d'Elbris",
    "stars": 5,
    "role": "knight",
-   "art": "assets/_artifacts/art5_1_fu.png"
+   "art": "assets/_artifacts/art5_1_fu.png",
+   "effect_en": "Has a 1% → 2% chance to counterattack when an ally except for the caster is attacked.",
+   "lore_en": "A ceremonial sword handed down by the Elves for thousands of years, the blade is infused with several springs of magic. The person who owns this sword becomes the king of Elves."
   },
   {
    "code": "art5_11",
@@ -2151,7 +2687,9 @@
    "fr": "Rhianna et Luciella",
    "stars": 5,
    "role": "thief",
-   "art": "assets/_artifacts/art5_11_fu.png"
+   "art": "assets/_artifacts/art5_11_fu.png",
+   "effect_en": "Increases Attack by 10%.1% → 2% chance to be granted an extra turn at the end of the turn. Can only be activated once per turn.",
+   "lore_en": "\"You're today's target.\"\n\"I'll let you know now that there's nowhere to run.\"\n- Moon Assassins, Rhianna and Luciella"
   },
   {
    "code": "art5_12",
@@ -2159,7 +2697,9 @@
    "fr": "Rêvelame lunaire",
    "stars": 4,
    "role": "thief",
-   "art": "assets/_artifacts/art5_12_fu.png"
+   "art": "assets/_artifacts/art5_12_fu.png",
+   "effect_en": "Increases Evasion by 1% → 2%. At the moment the caster is attacked, if the caster successfully evades, the caster is granted increased Attack for 1 turn.",
+   "lore_en": "\"Whether you take the path before you or not, it's al your choice to make.\"\nThe White Shining Blade's voice whispered in my mind."
   },
   {
    "code": "art5_15",
@@ -2167,7 +2707,9 @@
    "fr": "Sira-Ren",
    "stars": 4,
    "role": "mage",
-   "art": "assets/_artifacts/art5_15_fu.png"
+   "art": "assets/_artifacts/art5_15_fu.png",
+   "effect_en": "2.5% → 5% chance to inflict a random debuff for 1 turn after attacking (Decrease Attack, Decreases Hit Chance, Silence, Sleep, or Poison).",
+   "lore_en": "This rare magical flower blooms from the corpse of a Human who possessed incredible magic power. It quickly withers away unless it is constantly being infused with powerful Mana. Few have been lucky enough to witness such a sight."
   },
   {
    "code": "art5_16",
@@ -2175,7 +2717,9 @@
    "fr": "Farce atroce",
    "stars": 5,
    "role": null,
-   "art": "assets/_artifacts/art5_16_fu.png"
+   "art": "assets/_artifacts/art5_16_fu.png",
+   "effect_en": "Increases Attack in the Hall of Trials by 2% → 4%. This Artifact's skill effect can only apply to one Hero within a team.",
+   "lore_en": "Once upon a time, a girl's parents asked a mage to transform their tomboyish daughter into an elegant lady. He fulfilled their request, and the parents were thrilled to see how obedient she had become, not realizing she had been replaced by a doll."
   },
   {
    "code": "art5_18",
@@ -2183,7 +2727,9 @@
    "fr": "Tome de Magaraha",
    "stars": 4,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art5_18_fu.png"
+   "art": "assets/_artifacts/art5_18_fu.png",
+   "effect_en": "Increases the caster's Combat Readiness by 1.5% → 3% after using a non-attack skill.",
+   "lore_en": "An ancient book written by a great mage. It contains all of Magaraha's magical research. Due to its complicate content and massive volume, even those ambitious enough to try to read it all had to give up after turning only a few pages."
   },
   {
    "code": "art5_19",
@@ -2191,7 +2737,9 @@
    "fr": "Livre ancien de Tagehel",
    "stars": 4,
    "role": "mage",
-   "art": "assets/_artifacts/art5_19_fu.png"
+   "art": "assets/_artifacts/art5_19_fu.png",
+   "effect_en": "Acquires 10 → 20 Souls at the start of the first battle.",
+   "lore_en": "A book written in the characters of the fallen Kingdom of Tagehel. Researchers are working hard to discover the meaning and principles behind the characters and unlock the mysterious power they hold."
   },
   {
    "code": "art5_2",
@@ -2199,7 +2747,9 @@
    "fr": "Chanson des étoiles",
    "stars": 5,
    "role": "ranger",
-   "art": "assets/_artifacts/art5_2_fu.png"
+   "art": "assets/_artifacts/art5_2_fu.png",
+   "effect_en": "5% → 10% chance for an enemy to become targetted for 2 turns after a Single Attack.",
+   "lore_en": "As the strings start to vibrate, the starlight illuminates her."
   },
   {
    "code": "art5_20",
@@ -2207,7 +2757,9 @@
    "fr": "Poing d'El",
    "stars": 4,
    "role": "warrior",
-   "art": "assets/_artifacts/art5_20_fu.png"
+   "art": "assets/_artifacts/art5_20_fu.png",
+   "effect_en": "Increases Attack by 10%. As Health decreases, Attack and Speed increase by up to 2.5% → 5%.",
+   "lore_en": "\"While holding this gauntlet, you can destroy anything you touch, as if it had never even existed!\"\n- Guard Maid, El"
   },
   {
    "code": "art5_21",
@@ -2215,7 +2767,9 @@
    "fr": "Faux de Sigurd",
    "stars": 5,
    "role": "warrior",
-   "art": "assets/_artifacts/art5_21_fu.png"
+   "art": "assets/_artifacts/art5_21_fu.png",
+   "effect_en": "Increases Attack by 1% → 2%. When attacking, if the caster's Health is 50% or less, absorbs 2.5% → 5% of the damage dealt as Health.",
+   "lore_en": "As the moonlight revealed a figure holding a scythe, the astonished onlookers exclaimed \"the God of Death has descended!\""
   },
   {
    "code": "art5_3",
@@ -2223,7 +2777,9 @@
    "fr": "Bouclier inflexible",
    "stars": 4,
    "role": "knight",
-   "art": "assets/_artifacts/art5_3_fu.png"
+   "art": "assets/_artifacts/art5_3_fu.png",
+   "effect_en": "Decreases Critical Hit Damage received by all allies by 8% → 16%. When more than one damage reduction effect is granted, only the strongest effect is applied.",
+   "lore_en": "\"That damn shield can't be penetrated by anything. I guarantee you, cause even my sword couldn't.\"\n- Star Fencer Ayla"
   },
   {
    "code": "art5_4",
@@ -2231,7 +2787,9 @@
    "fr": "Bâton de Shimadra",
    "stars": 5,
    "role": "soul-weaver",
-   "art": "assets/_artifacts/art5_4_fu.png"
+   "art": "assets/_artifacts/art5_4_fu.png",
+   "effect_en": "Increases Effect Resistance of all allies by 20% and the effect of healing received by all allies by 2% → 4%. Effect does not stack with other artifacts of the same name. When more than one increased healing effect is granted, only the strongest effect is applied.",
+   "lore_en": "\"Let's end this together.\"\n- The Great Fallen Priest, Shimadra"
   },
   {
    "code": "art5_5",
@@ -2239,7 +2797,9 @@
    "fr": "Couronne de l'abîme",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art5_5_fu.png"
+   "art": "assets/_artifacts/art5_5_fu.png",
+   "effect_en": "1.5% → 3% chance to stun the enemy for 1 turn after attacking.",
+   "lore_en": "\"May those ruled by the crown walk the road of corruption forever.\" - Witch Reinwood, hung high up on the stake"
   },
   {
    "code": "art5_6",
@@ -2247,7 +2807,9 @@
    "fr": "Aurius",
    "stars": 4,
    "role": "knight",
-   "art": "assets/_artifacts/art5_6_fu.png"
+   "art": "assets/_artifacts/art5_6_fu.png",
+   "effect_en": "Increases Defense of all allies by 10%. Receives 1% → 2% of damage suffered by all allies in their place. This effect does not stack with other Artifacts of the same name. When more than one damage distribution effect is granted, only the strongest effect is applied.",
+   "lore_en": "Legendary hero Knight Commander Rowell's tower shield."
   },
   {
    "code": "art5_9",
@@ -2255,7 +2817,9 @@
    "fr": "Sceptre d'Etica",
    "stars": 5,
    "role": "mage",
-   "art": "assets/_artifacts/art5_9_fu.png"
+   "art": "assets/_artifacts/art5_9_fu.png",
+   "effect_en": "25% → 50% chance to decreases skill cooldown by 1 turn at the beginning of the turn.",
+   "lore_en": "When the empire is in its greatest peril, the exiled princess, Etica, will return with the five spirits to take back the royal hall and call own a rain of repentance to save the devastated world."
   }
  ]
 }

@@ -71,14 +71,14 @@ select { background: var(--panel); border: 1px solid var(--line-2); border-radiu
 .empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 48px 0; }
 
 /* Fiche détaillée */
-dialog { border: none; padding: 0; background: transparent; color: var(--text); max-width: min(1180px, 100vw - 24px); width: 100%;
+dialog { border: none; padding: 0; background: transparent; color: var(--text); max-width: min(1760px, 100vw - 24px); width: 100%;
   max-height: calc(100vh - 24px); margin: auto; }
 dialog::backdrop { background: rgba(4, 6, 12, .72); backdrop-filter: blur(3px); }
 .sheet { background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--line); border-top: 3px solid var(--el);
-  border-radius: 14px; box-shadow: var(--shadow); display: grid; grid-template-columns: minmax(240px, 340px) 1fr; overflow: hidden;
+  border-radius: 14px; box-shadow: var(--shadow); display: grid; grid-template-columns: minmax(260px, 32%) 1fr; overflow: hidden;
   max-height: calc(100vh - 24px); }
 .media { position: relative; background: radial-gradient(120% 70% at 50% 100%, rgba(255,255,255,.07), transparent 70%), #0e121b;
-  display: flex; align-items: flex-end; justify-content: center; min-height: 420px; overflow: hidden; }
+  display: flex; align-items: flex-end; justify-content: center; min-height: min(78vh, 900px); overflow: hidden; }
 .media img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
 .media img.portrait { width: 100%; height: 100%; object-fit: cover; object-position: 50% 10%; position: absolute; inset: 0; }
 .media iframe.anim { color-scheme: dark; background: transparent; position: absolute; inset: 0; width: 100%; height: 100%; border: 0; opacity: 0; transition: opacity .5s ease; }
@@ -95,11 +95,15 @@ dialog::backdrop { background: rgba(4, 6, 12, .72); backdrop-filter: blur(3px); 
   color: var(--muted); font-size: 11px; text-align: center; }
 .arti .lv { position: absolute; top: -4px; right: -6px; background: #c0392b; color: #fff; font-weight: 700; font-size: 11px;
   border-radius: 999px; padding: 1px 6px; border: 2px solid var(--panel); }
-.arti .tip { position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); width: 260px; z-index: 5;
+.arti .tip { position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); width: 340px; z-index: 5;
   background: #0d121c; border: 1px solid var(--gold); border-radius: 10px; padding: 10px 12px; font-size: 12.5px;
   box-shadow: var(--shadow); visibility: hidden; opacity: 0; transition: opacity .15s ease; pointer-events: none; }
 .arti:hover .tip, .arti:focus .tip, .arti:focus-within .tip { visibility: visible; opacity: 1; }
 .arti .tip b { color: var(--gold); font-size: 13.5px; }
+.arti .tip .art { display: block; width: 100%; height: 240px; object-fit: contain; margin: 4px 0 8px;
+  background: radial-gradient(closest-side, rgba(255,255,255,.06), transparent); }
+.arti .tip .eff em { font-style: normal; color: var(--good); font-weight: 700; }
+.arti .tip .lore { margin-top: 6px; color: var(--muted); font-style: italic; font-size: 11.5px; line-height: 1.35; }
 .arti .tip .muted { color: var(--muted); }
 .arti .tip .eff { margin-top: 6px; color: #d7deea; line-height: 1.35; }
 .rank { display: inline-block; min-width: 24px; text-align: center; font-weight: 800; border-radius: 6px; padding: 0 5px; margin-right: 4px;
@@ -126,7 +130,7 @@ table.stats td:last-child { text-align: right; font-weight: 600; font-variant-nu
 .piece.empty { opacity: .35; }
 .piece .top { display: flex; gap: 8px; align-items: flex-start; }
 .piece .top > div { flex: 1; min-width: 0; }
-.piece .icon { width: 44px; height: 50px; border-radius: 8px; object-fit: cover; flex: none; border: 1px solid var(--line-2); }
+.piece .icon { width: 50px; height: 50px; border-radius: 8px; object-fit: contain; background: #0b0f17; flex: none; border: 1px solid var(--line-2); }
 .piece .ph { display: flex; justify-content: space-between; gap: 6px; color: var(--muted); margin-bottom: 4px; font-size: 12.5px; }
 .piece .ph span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 .piece .ph .lvl { white-space: nowrap; flex: none; }
@@ -391,6 +395,24 @@ footer { color: var(--muted); font-size: 12px; text-align: center; padding: 18px
 
   // Fiche détaillée d'un héros
   const dlg = $("detail");
+  // Effet d'artefact au niveau de compétence actuel : « 5% → 10% » (niveau 1 → 11),
+  // niveau = 1 + amélioration / 3 (+21 → 8, +30 → 11, comme « Lv.Max/8 » en jeu).
+  function artEffect(text, level) {
+    if (!text) return el("div", { class: "eff", text: "Effet : données pas encore disponibles." });
+    const lv = level == null ? 11 : Math.min(11, Math.floor(level / 3) + 1);
+    const node = el("div", { class: "eff" });
+    const re = /(\d+(?:\.\d+)?)(%?)\s*→\s*(\d+(?:\.\d+)?)(%?)/g;
+    let last = 0, m;
+    while ((m = re.exec(text))) {
+      node.append(text.slice(last, m.index));
+      const a = parseFloat(m[1]), b = parseFloat(m[3]), unit = m[4] || m[2];
+      const v = Math.round((a + (b - a) * (lv - 1) / 10) * 10) / 10;
+      node.append(el("em", { title: `Niveau ${lv}/11 (de ${a}${unit} à ${b}${unit})`, text: v + unit }));
+      last = re.lastIndex;
+    }
+    node.append(text.slice(last));
+    return node;
+  }
   const GEAR_ICONS = ["weapon", "helmet", "armor", "necklace", "ring", "boots"];
   function piece(g, i, h) {
     const icon = h ? img(h, GEAR_ICONS[i]) : null;
@@ -448,8 +470,10 @@ footer { color: var(--muted); font-size: 12px; text-align: center; padding: 18px
         el("b", { text: h.artifact }),
         el("div", { class: "muted", text: [ai.stars ? "★".repeat(ai.stars) : "", h.artifact_level != null ? "Amélioration +" + h.artifact_level : "",
                                           ai.role ? "Classe : " + ai.role : ""].filter(Boolean).join(" · ") }),
+        ai.art_url ? el("img", { class: "art", src: ai.art_url, alt: "", onerror: (e) => e.target.remove() }) : null,
         ai.stats ? el("div", { class: "eff" }, Object.entries(ai.stats).map(([k, v]) => el("div", { text: k + " : " + v }))) : null,
-        el("div", { class: "eff", text: ai.effect || "Statistiques et effet : données pas encore disponibles." }))) : null;
+        artEffect(ai.effect, h.artifact_level),
+        ai.lore ? el("div", { class: "lore", text: ai.lore }) : null)) : null;
     const sheet = el("article", { class: "sheet", style: `--el:${h.color}` },
       media,
       el("div", { class: "body" },

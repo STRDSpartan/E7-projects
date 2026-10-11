@@ -125,6 +125,8 @@ def hero_payload(
             "role": ROLE_FR.get(art.get("role") or "", art.get("role")),
             "stats": art.get("stats"),
             "effect": art.get("effect_fr") or art.get("effect_en"),
+            "lore": art.get("lore_en"),
+            "art_url": f"https://e7codex.com/{art['art']}" if art.get("art") else None,
         }
         if art
         else None,

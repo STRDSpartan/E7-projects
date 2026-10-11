@@ -91,7 +91,9 @@ def main(argv: list[str] | None = None) -> int:
 
     api = WindowApi(state)
     webview.settings["ALLOW_DOWNLOADS"] = True
-    window = webview.create_window("E7 Showcase", url, js_api=api, width=1360, height=860)
+    window = webview.create_window(
+        "E7 Showcase", url, js_api=api, width=1360, height=860, min_size=(960, 640), maximized=True
+    )
     api._window = window  # noqa: SLF001 - jamais exposé à JavaScript
     window.events.loaded += lambda: log.info("Fenêtre chargée [window-loaded]")
     window.events.closed += lambda: _quit(server)

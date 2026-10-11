@@ -49,6 +49,10 @@ class ImportReport:
         }
 
 
+# Le cadre de l'objet occupe ~78 % de la zone entre le niveau et les stats (mesuré PC et mobile)
+FRAME_W = 0.78
+
+
 def crop_item_icons(image: Image.Image, profile: dict[str, Any]) -> dict[str, Image.Image]:
     """Icônes des pièces portées et blason de l'artefact, découpés dans la capture du joueur."""
     from e7showcase.vision.regions import crop
@@ -57,7 +61,7 @@ def crop_item_icons(image: Image.Image, profile: dict[str, Any]) -> dict[str, Im
     lay = d["gear_layout"]
     left, top = lay["level"][0], lay["enhance"][1]
     icons = {
-        slot: crop(image, [ax + left, ay + top, -left - 0.002, lay["score"][1] - top])
+        slot: crop(image, [ax + left, ay + top, (-left - 0.002) * FRAME_W, lay["score"][1] - top])
         for slot, (ax, ay) in d["gear"].items()
     }
     if box := d.get("artifact_icon"):

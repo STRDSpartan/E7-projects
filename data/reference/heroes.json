@@ -1,5 +1,5 @@
 {
- "_comment": "Généré depuis e7codex.com (archive fan-made ; contenu du jeu © Smilegate / Super Creative) par scripts/update_reference.py le 2026-09-28. Ne pas éditer à la main.",
+ "_comment": "Généré depuis e7codex.com (archive fan-made ; contenu du jeu © Smilegate / Super Creative) par scripts/update_reference.py le 2026-10-11. Effets des artefacts ('effect_en' : niveau de compétence 1 → 11, 'lore_en') : e7gw.xyz/artifacts. Ne pas éditer à la main.",
  "heroes": [
   {
    "code": "c0002",
@@ -2268,7 +2268,7 @@
    "en": "Mei Lin",
    "fr": "Mei Lin",
    "element": "fire",
-   "role": "warrior",
+   "role": "thief",
    "stars": 5,
    "pose": "assets/c1191_1/pose.png",
    "face": "assets/c1191_1/face_c1191_s.png",
