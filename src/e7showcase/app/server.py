@@ -521,7 +521,11 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     return self._json(gvg.summary())
                 if rest == "/report" and method == "POST":  # capture de fin de combat (binaire)
                     try:
-                        found = read_report(self._raw(MAX_UPLOAD), state.ocr(), state.faces)
+                        engine = state.ocr()
+                    except ImportError as exc:
+                        raise ApiError(503, "moteur de lecture des captures absent") from exc
+                    try:
+                        found = read_report(self._raw(MAX_UPLOAD), engine, state.faces)
                     except ValueError as exc:
                         raise ApiError(400, str(exc)) from exc
                     return self._json(found)

@@ -791,6 +791,12 @@ def test_gvg_scouted_defense_and_simulation_with_read_stats(app: Any) -> None:
 
 def test_gvg_report_rejects_other_images(app: Any) -> None:
     state, base = app
+
+    class NoText:  # moteur OCR factice : aucun texte reconnu
+        def read_boxes(self, image: Any) -> list[Any]:
+            return []
+
+    state._ocr = NoText()
     buf = io.BytesIO()
     Image.new("RGB", (400, 200), (20, 30, 40)).save(buf, "PNG")
     req = urllib.request.Request(base + "/api/gvg/report", method="POST", data=buf.getvalue())
