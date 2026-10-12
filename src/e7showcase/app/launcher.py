@@ -58,6 +58,25 @@ class WindowApi:
         target.write_bytes(export_profile(self._state.store, profile_id))
         return str(target)
 
+    def save_defense_plan(self, fmt: str) -> str | None:
+        """Plan de défense GvG enregistré en .md (texte Discord) ou .csv (tableur)."""
+        import webview
+
+        from e7showcase.app.gvg import defense_plan
+
+        suffix = ".csv" if fmt == "csv" else ".md"
+        plan = defense_plan(self._state.gvg.summary())
+        chosen = self._window.create_file_dialog(
+            webview.SAVE_DIALOG,
+            save_filename="plan-defense-gvg" + suffix,
+            file_types=("Tableur (*.csv)",) if suffix == ".csv" else ("Texte Markdown (*.md)",),
+        )
+        if not chosen:
+            return None
+        target = Path(chosen if isinstance(chosen, str) else chosen[0]).with_suffix(suffix)
+        target.write_text(plan["csv" if suffix == ".csv" else "text"], encoding="utf-8")
+        return str(target)
+
 
 def main(argv: list[str] | None = None) -> int:
     log_kwargs: dict[str, Any] = {

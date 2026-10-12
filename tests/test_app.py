@@ -339,3 +339,20 @@ def test_gvg_api(app: Any) -> None:
     g = call(base, "PATCH", "/api/gvg/settings", {"attacks_per_member": 3, "towers": ["Fort A"]}, t)
     assert g["settings"] == {"attacks_per_member": 3, "towers": ["Fort A"]}
     assert call(base, "DELETE", f"/api/gvg/wars/{war}", token=t)["wars"] == []
+    plan = call(base, "GET", "/api/gvg/plan", token=t)
+    assert "__Château__" in plan["text"] and "É1 : Belian, Lilias" in plan["text"]
+    assert plan["csv"].startswith("\ufeffTour;Membre") and "Château;Spartan;2;Aria" in plan["csv"]
+
+
+def test_defense_plan_splits_discord_messages_and_neutralises_formulas() -> None:
+    from e7showcase.app.gvg import DISCORD_LIMIT, defense_plan
+
+    trio = [["Belian", "Lilias", "Aria"]]
+    members = [
+        {"player": f"Joueur{i}", "defense": {"tower": "Fort", "teams": trio}} for i in range(80)
+    ] + [{"player": "=HYPERLINK()", "defense": {"tower": "Fort", "teams": [["Aria"]]}},
+         {"player": "Absent", "defense": {"tower": "", "teams": []}}]  # fmt: skip
+    plan = defense_plan({"guild": "G", "settings": {"towers": ["Fort"]}, "members": members})
+    assert len(plan["messages"]) > 1 and all(len(m) <= DISCORD_LIMIT for m in plan["messages"])
+    assert "\n".join(plan["messages"]) == plan["text"] and "Sans défense : Absent" in plan["text"]
+    assert "'=HYPERLINK()" in plan["csv"]  # pas de formule exécutée à l'ouverture du tableur

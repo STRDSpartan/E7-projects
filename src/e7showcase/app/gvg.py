@@ -257,3 +257,56 @@ class GvgStore:
                 }
             )
         return sorted(out, key=lambda r: -(r["wins"] + r["losses"]))
+
+
+DISCORD_LIMIT = 1900  # Discord : 2 000 caractères par message (marge pour le découpage)
+
+
+def defense_plan(summary: dict[str, Any], today: date | None = None) -> dict[str, Any]:
+    """Plan de défense de la guilde : texte Discord (messages ≤ 2 000 car.) et tableau CSV."""
+    day = (today or date.today()).strftime("%d/%m/%Y")
+    towers: list[str] = list(summary["settings"]["towers"])
+    groups: dict[str, list[dict[str, Any]]] = {}
+    idle = []
+    for m in summary["members"]:
+        teams = [t for t in m["defense"]["teams"] if t]
+        if not teams:
+            idle.append(m["player"])
+            continue
+        tower = m["defense"]["tower"] or "Tour non attribuée"
+        groups.setdefault(tower, []).append({"player": m["player"], "teams": m["defense"]["teams"]})
+        if tower not in towers:
+            towers.append(tower)
+    title = f"**Plan de défense GvG{' — ' + summary['guild'] if summary['guild'] else ''}** ({day})"
+    lines = [title]
+    rows = [["Tour", "Membre", "Équipe", "Héros 1", "Héros 2", "Héros 3"]]
+    for tower in towers:
+        if tower not in groups:
+            continue
+        lines += ["", f"__{tower}__"]
+        for d in groups[tower]:
+            parts = [f"É{i + 1} : {', '.join(t)}" for i, t in enumerate(d["teams"]) if t]
+            lines.append(f"• **{d['player']}** — " + " · ".join(parts))
+            for i, t in enumerate(d["teams"]):
+                if t:
+                    rows.append([tower, d["player"], str(i + 1), *(t + ["", "", ""])[:3]])
+    if idle:
+        lines += ["", "Sans défense : " + ", ".join(idle)]
+    if len(lines) == 1:
+        lines.append("Aucune défense n'est encore placée.")
+    messages: list[str] = []
+    for line in lines:  # découpe en messages Discord, sans couper une ligne
+        if messages and len(messages[-1]) + len(line) + 1 <= DISCORD_LIMIT:
+            messages[-1] += "\n" + line
+        else:
+            messages.append(line[:DISCORD_LIMIT])
+    csv = "\n".join(";".join(_csv_cell(c) for c in row) for row in rows)
+    return {"text": "\n".join(lines), "messages": messages, "csv": "﻿" + csv + "\n"}
+
+
+def _csv_cell(value: str) -> str:
+    """Cellule CSV (séparateur « ; » pour Excel en français) ; formules neutralisées."""
+    text = value.replace('"', '""')
+    if text[:1] in ("=", "+", "-", "@"):
+        text = "'" + text
+    return f'"{text}"' if any(c in text for c in ';"\n') or text != value else text

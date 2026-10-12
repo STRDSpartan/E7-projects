@@ -23,7 +23,7 @@ from urllib.parse import unquote, urlparse
 from e7showcase import __version__
 from e7showcase.app.armory import armory
 from e7showcase.app.guild import GuildStore
-from e7showcase.app.gvg import GvgError, GvgStore
+from e7showcase.app.gvg import GvgError, GvgStore, defense_plan
 from e7showcase.app.importer import ScreenshotImporter
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.app.viewer import profile_page
@@ -290,6 +290,8 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             try:
                 if rest == "" and method == "GET":
                     return self._json(gvg.summary())
+                if rest == "/plan" and method == "GET":
+                    return self._json(defense_plan(gvg.summary()))
                 if rest == "/settings" and method == "PATCH":
                     gvg.update_settings(self._body())
                 elif (d := re.fullmatch(r"/defense/([a-z0-9-]+)", rest)) and method == "PUT":

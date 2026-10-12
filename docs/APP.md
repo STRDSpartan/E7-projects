@@ -43,6 +43,10 @@ la même application sur son ordinateur.
     victoire et attaques restantes par membre (nombre d'attaques par guerre réglable) ;
   - *Contres* : pour chaque défense ennemie rencontrée, les équipes qui l'ont battue ou non,
     cumulées sur toutes les guerres, avec recherche par héros.
+  - *Export du plan de défense* (`GET /api/gvg/plan`) : par tour, les équipes de chaque membre
+    et les membres sans défense ; texte prêt pour Discord, découpé en messages de moins de
+    2 000 caractères (bouton « Copier »), ou fichier `.md` / `.csv` (séparateur « ; », formules
+    neutralisées) ;
   - *Tests dans le simulateur de combat* (500 combats) : une attaque saisie contre la défense
     ennemie notée, une équipe d'un membre contre une défense de l'onglet Contres, ou une défense
     de la guilde contre une attaque ennemie supposée. Les héros adverses, connus par leur seul
