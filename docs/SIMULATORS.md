@@ -233,7 +233,7 @@ partiel, contre-attaque quand un allié est attaqué, dégâts doublés hors de 
   pour elle et le rang arrière après une attaque subie sans débuff, S3 attaque + des alliés et
   soin de 15 % (estimé). Mei Lin : Zèle gagné quand un allié Feu utilise une compétence
   (2 cumuls, S2 +25 % par cumul, estimé, retiré après la S2) et attaque suivant la S3 rejouée.
-  Non simulé : le partage de résistance de Christy.
+  Christy donne au départ 50 % de sa résistance à l'allié du rang arrière (sauf si elle y est).
 - **Suite** : le classement public d'epic7rtastats s'arrête au rang 105 (filtre « Remove Low
   Pick Data ») ; les héros restants pourront suivre par listes fournies.
 

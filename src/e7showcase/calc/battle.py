@@ -206,6 +206,7 @@ EFFECT_TYPES = frozenset(
         "random_buff", "extra_attack", "soul_damage", "buff_shorten", "barrier_invert",
         "crit_guard", "static_aura", "random_debuff", "buff_steal", "stack", "souls", "assist",
         "class_debuff", "debuff_extend", "debuff_shorten", "transfer", "aftermath", "clone",
+        "share_resist",
     }
 )  # fmt: skip
 PERMANENT = 10**6  # durée d'un statut permanent
@@ -556,6 +557,8 @@ class _Battle:
             return other is not None and other.last_damage >= float(cond["value"]) * other.max_hp
         if kind == "other_element":  # ex. « when a Fire elemental ally uses a skill »
             return other is not None and other.fighter.element == cond["element"]
+        if kind == "not_back":  # « when the caster is in the back row, not activated »
+            return self.allies(u)[-1:] != [u]
         if kind == "first_ally":
             return other is not None and other.team == u.team
         if kind == "first_enemy":
@@ -922,6 +925,10 @@ class _Battle:
                     self.mark(actor, "buff:clone")
                     notes.append(f"{actor.name} clone {model.name}")
                 break
+            elif kind == "share_resist" and t is not actor:  # Silvertide Christy
+                value = float(effect["ratio"]) * actor.stat("effect_res")  # taux figé au départ
+                t.bonus.append({"stat": "effect_res", "value": value})
+                notes.append(f"résistance {t.name} +{value:.0f} %")
             elif kind == "random_debuff":
                 pick = self.rng.choice(effect.get("choices", ["stun", "sleep", "redirect"]))
                 sub = {**effect, "type": "debuff", "effect": pick, "target": "target"}

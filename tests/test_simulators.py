@@ -934,5 +934,12 @@ def test_estimated_heroes_fight() -> None:
     for effect in mei.fighter.skills["s3"]["effects"]:
         battle.apply(mei, effect, [])
     assert "repeat" in mei.buffs
+    # Silvertide Christy : 50 % de sa résistance pour l'allié du rang arrière
+    team = _Battle([_hero("Silvertide Christy"), _hero("Zio")], [_hero("Renoa")],
+                   random.Random(1), {}, Options(), True)  # fmt: skip
+    christy, zio, _ = team.units
+    before = zio.stat("effect_res")
+    team.fire(christy, "battle_start")
+    assert zio.stat("effect_res") == pytest.approx(before + 0.5 * christy.stat("effect_res"))
     res = simulate([_hero("Mei Lin"), _hero("Silvertide Christy")], [_hero("Zio")], runs=10)
     assert sum(res["win_rate"]) + res["draws"] == pytest.approx(100)

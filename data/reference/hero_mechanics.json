@@ -7895,6 +7895,25 @@
       }
      ],
      "source": "Increases Attack of all allies for 2 turns. Increases Effectiveness of the caster for 2 turns and recovers Health proportional to the caster's Max Health. (soin 15 % et recharge 4 estimés)"
+    },
+    "s2_resist": {
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0,
+       "condition": {
+        "kind": "not_back"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "share_resist",
+       "target": "back_row",
+       "ratio": 0.5
+      }
+     ],
+     "source": "At the start of the first battle, increases Effect Resistance of the ally in the back row by 50% of the caster's Effect Resistance. The rate of this effect does not change after it is activated, and this effect is dispelled only when the ally in the back row is defeated. When the caster is in the back row, the effect is not activated."
     }
    }
   }
