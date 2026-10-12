@@ -337,7 +337,7 @@ def test_gvg_api(app: Any) -> None:
     g = call(base, "DELETE", f"/api/gvg/wars/{war}/attacks/{w['attacks'][0]['id']}", token=t)
     assert len(g["wars"][0]["attacks"]) == 1
     g = call(base, "PATCH", "/api/gvg/settings", {"attacks_per_member": 3, "towers": ["Fort A"]}, t)
-    assert g["settings"] == {"attacks_per_member": 3, "towers": ["Fort A"]}
+    assert g["settings"] == {"attacks_per_member": 3, "towers": ["Fort A"], "plan_counters": False}
     assert call(base, "DELETE", f"/api/gvg/wars/{war}", token=t)["wars"] == []
     plan = call(base, "GET", "/api/gvg/plan", token=t)
     assert "__Château__" in plan["text"] and "É1 : Belian, Lilias" in plan["text"]
@@ -554,3 +554,35 @@ def test_counters_sent_and_updated_on_new_attack(app: Any) -> None:
     assert "⚖️ Aria, Belian — 1 V / 1 D" in state.publication("counters")[0]
     status = call(base, "GET", "/api/gvg/webhook", token=t)
     assert status["auto_counters"] and status["counters"]["published"]
+
+
+def test_defense_plan_can_include_counters(app: Any) -> None:
+    import httpx
+
+    state, base = app
+    t = state.token
+    pid = call(base, "POST", "/api/profiles", {"player": "Spartan"}, t)["id"]
+    for name in ("Belian", "Aria"):
+        state.store.add_hero(pid, Hero(name=name), None)
+    call(base, "PATCH", "/api/guild", {"members": [pid]}, t)
+    call(base, "PUT", f"/api/gvg/defense/{pid}", {"tower": "Fort", "teams": [["Belian"]]}, t)
+    wid = call(base, "POST", "/api/gvg/wars", {"opponent": "Ombres"}, t)["wars"][0]["id"]
+    attack = {"member": pid, "team": ["Aria"], "enemy_team": ["Lua"], "result": "win"}
+    call(base, "POST", f"/api/gvg/wars/{wid}/attacks", attack, t)
+    assert "Contres connus" not in call(base, "GET", "/api/gvg/plan", token=t)["text"]
+    call(base, "PATCH", "/api/gvg/settings", {"plan_counters": True}, t)
+    text = call(base, "GET", "/api/gvg/plan", token=t)["text"]
+    assert "__Fort__" in text and "**Contres connus**" in text and "✅ Aria — 1 V / 0 D" in text
+    calls: list[str] = []
+
+    def discord(request: httpx.Request) -> httpx.Response:
+        calls.append(request.method)
+        return httpx.Response(200, json={"id": "616161"})
+
+    state.webhook_transport = httpx.MockTransport(discord)
+    call(base, "PUT", "/api/gvg/webhook", {"url": HOOK, "auto": True}, t)
+    call(base, "POST", "/api/gvg/plan/send", {}, t)
+    state.publisher.delay = 0.05
+    call(base, "POST", f"/api/gvg/wars/{wid}/attacks", {**attack, "result": "loss"}, t)
+    time.sleep(0.4)
+    assert calls == ["POST", "PATCH"]  # nouvelle attaque : le plan publié (avec contres) suit

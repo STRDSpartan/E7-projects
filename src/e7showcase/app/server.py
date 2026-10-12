@@ -354,6 +354,8 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     gvg.delete_war(w[1])
                     state.discord.forget("war:" + w[1])  # les messages déjà publiés restent
                     state.publisher.changed("counters")
+                    if gvg.summary()["settings"]["plan_counters"]:
+                        state.publisher.changed("plan")  # le plan contient les contres
                 elif rest == "/counters/send" and method == "POST":
                     return self._json(self._send_plan("counters"))
                 elif (w := re.fullmatch(r"/wars/([0-9a-f]{1,16})/send", rest)) and method == "POST":
@@ -366,12 +368,16 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     gvg.add_attack(w[1], self._body())
                     state.publisher.changed("war:" + w[1])  # suivi publié : mis à jour
                     state.publisher.changed("counters")
+                    if gvg.summary()["settings"]["plan_counters"]:
+                        state.publisher.changed("plan")  # le plan contient les contres
                 elif (
                     a := re.fullmatch(r"/wars/([0-9a-f]{1,16})/attacks/([0-9a-f]{1,16})", rest)
                 ) and method == "DELETE":
                     gvg.delete_attack(a[1], a[2])
                     state.publisher.changed("war:" + a[1])
                     state.publisher.changed("counters")
+                    if gvg.summary()["settings"]["plan_counters"]:
+                        state.publisher.changed("plan")  # le plan contient les contres
                 else:
                     raise ApiError(404, "introuvable")
             except (GvgError, ValueError, TypeError) as exc:

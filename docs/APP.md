@@ -47,6 +47,9 @@ la même application sur son ordinateur.
     et les membres sans défense ; texte prêt pour Discord, découpé en messages de moins de
     2 000 caractères (bouton « Copier »), ou fichier `.md` / `.csv` (séparateur « ; », formules
     neutralisées) ;
+  - *Contres dans le plan* (case « Inclure les contres connus », réglage `plan_counters`) : le
+    texte Discord, le fichier `.md` et le plan publié se terminent par les contres connus ; le
+    plan publié en mise à jour automatique suit alors aussi chaque nouvelle attaque ;
   - *Publication sur Discord* : bouton « Envoyer sur Discord » (après confirmation) qui publie le
     plan dans le salon de la guilde par **webhook** (`publish/webhook.post_messages`, aucune
     mention déclenchée, limite de débit respectée). L'adresse du webhook, qui donne le droit

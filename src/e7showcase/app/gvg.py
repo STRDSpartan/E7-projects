@@ -66,6 +66,7 @@ class GvgStore:
                 "attacks_per_member": int(settings.get("attacks_per_member", 2) or 2),
                 "towers": [_text(t) for t in settings.get("towers", DEFAULT_TOWERS) if _text(t)]
                 or list(DEFAULT_TOWERS),
+                "plan_counters": bool(settings.get("plan_counters", False)),
             },
             "defenses": defenses,
             "wars": wars,
@@ -117,6 +118,8 @@ class GvgStore:
             data["settings"]["attacks_per_member"] = min(
                 max(int(body["attacks_per_member"]), 1), 10
             )
+        if "plan_counters" in body:  # contres connus ajoutés au plan de défense
+            data["settings"]["plan_counters"] = bool(body["plan_counters"])
         if isinstance(body.get("towers"), list):
             towers = [_text(t) for t in body["towers"] if _text(t)][:20]
             data["settings"]["towers"] = towers or list(DEFAULT_TOWERS)
@@ -294,6 +297,8 @@ def defense_plan(summary: dict[str, Any], today: date | None = None) -> dict[str
         lines += ["", "Sans défense : " + ", ".join(idle)]
     if len(lines) == 1:
         lines.append("Aucune défense n'est encore placée.")
+    if summary["settings"].get("plan_counters") and summary.get("counters"):
+        lines += ["", "**Contres connus**", *counter_lines(summary["counters"])]
     messages: list[str] = []
     for line in lines:  # découpe en messages Discord, sans couper une ligne
         if messages and len(messages[-1]) + len(line) + 1 <= DISCORD_LIMIT:
@@ -363,9 +368,15 @@ def counters_report(summary: dict[str, Any]) -> list[str]:
     lines = [f"**Contres connus en GvG{' — ' + guild if guild else ''}**"]
     if not summary["counters"]:
         lines.append("Aucun contre enregistré pour l'instant.")
-    for c in summary["counters"]:
+    return _chunks(lines + counter_lines(summary["counters"]))
+
+
+def counter_lines(counters: list[dict[str, Any]]) -> list[str]:
+    """Une section par défense ennemie : équipes testées (✅ gagnée, ⚖️ mitigée, ❌ perdue)."""
+    lines: list[str] = []
+    for c in counters:
         lines += ["", f"__{' · '.join(c['enemy_team'])}__ ({c['wins']} V / {c['losses']} D)"]
         for t in c["teams"]:
             mark = "✅" if t["wins"] and not t["losses"] else "❌" if not t["wins"] else "⚖️"
             lines.append(f"{mark} {', '.join(t['team'])} — {t['wins']} V / {t['losses']} D")
-    return _chunks(lines)
+    return lines

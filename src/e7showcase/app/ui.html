@@ -648,11 +648,17 @@ function gvgDefense(page, g, send) {
       towerList,
       el("div", { style: "overflow:auto" }, el("table", { class: "members gvg" },
         el("thead", {}, el("tr", {}, ...["Membre", "Tour", "Équipe 1", "Équipe 2"].map((t) => el("th", {}, t)))), el("tbody", {}, ...rows.map((r) => r.row))))),
-    planCard(), defenseTest, gvgSettings(g, send));
+    planCard(g), defenseTest, gvgSettings(g, send));
 }
 // Export du plan de défense : messages Discord à copier, fichiers .md / .csv
-function planCard() {
+function planCard(g) {
   const out = el("div", {});
+  const withCounters = el("input", { type: "checkbox" });
+  withCounters.checked = !!g.settings.plan_counters;
+  withCounters.addEventListener("change", async () => {
+    await json("PATCH", "/gvg/settings", { plan_counters: withCounters.checked });
+    if (out.childNodes.length) show();  // aperçu rafraîchi
+  });
   const copy = async (text, btn) => {
     try { await navigator.clipboard.writeText(text); }
     catch { const t = el("textarea"); t.value = text; document.body.append(t); t.select(); document.execCommand("copy"); t.remove(); }
@@ -717,6 +723,7 @@ function planCard() {
   drawHook().catch((e) => say(e.message, false));
   return el("div", { class: "card" }, el("h3", {}, "Exporter le plan de défense"),
     el("p", { class: "note" }, "À partager avec la guilde : texte prêt pour Discord (découpé en messages de 2 000 caractères au plus), ou fichier .md / tableur .csv."),
+    el("label", { class: "autosend" }, withCounters, " Inclure les contres connus dans le plan (défenses ennemies rencontrées et équipes qui les battent) — texte Discord, fichier .md et plan publié"),
     el("div", { class: "filters" },
       el("button", { onclick: show }, "Préparer le texte Discord"),
       el("button", { class: "ghost", onclick: () => save("md") }, "Enregistrer (.md)"),
