@@ -189,3 +189,9 @@ forteresse, les joueurs à leur place. Un joueur : pseudo corrigeable, case « d
 avec le test de vos équipes, et un raccourci pour lire un écran de fin de combat contre lui.
 Une nouvelle capture de carte de la même guerre garde joueurs et captures des forteresses ;
 `DELETE /api/gvg/map` efface tout.
+
+## Coller une capture (Ctrl+V)
+Partout où une capture s'importe (profil, armurerie, GvG : carte, forteresse, relevés), une
+image du presse-papiers (Win+Maj+S, Impr. écran) se colle avec **Ctrl+V** : elle part dans la
+zone d'import survolée, sinon la première visible à l'écran. Le texte se colle normalement
+dans les champs. Les captures collées sont nommées `capture-collee-<date>.png`.

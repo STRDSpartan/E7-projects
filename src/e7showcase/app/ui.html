@@ -442,6 +442,11 @@ select { cursor:pointer; }
 .wm-count { position:absolute; right:-6px; top:-6px; min-width:20px; height:20px; border-radius:10px; display:grid; place-items:center; font-size:11px; font-weight:800; color:#1d1606; background:var(--gold); }
 .wm-check { position:absolute; inset:0; display:grid; place-items:center; font-size:28px; color:var(--ok); text-shadow:0 0 8px #000; filter:none; }
 .wm-player { position:sticky; top:10px; }
+
+/* --- v0.49 : coller une capture --- */
+.paste-hint { color:var(--gold); opacity:.8; }
+.drop.pasted { animation:pasted .9s var(--ease-out); }
+@keyframes pasted { 0% { box-shadow:0 0 0 0 rgba(232,194,106,.7); border-color:var(--gold); } 100% { box-shadow:0 0 0 18px rgba(232,194,106,0); } }
 html.no-fx *, html.no-fx *::before, html.no-fx *::after { animation:none !important; transition:none !important; }
 html.no-fx #fx { display:none; }
 @media (prefers-reduced-motion: reduce) {
@@ -612,6 +617,28 @@ async function show(id) {
   else kids.push(el("div", { class: "empty" }, p.received ? "Cette vitrine ne contient aucun héros." : "Aucun héros pour l'instant : ajoutez vos captures ci-dessus."));
   $("#content").replaceChildren(...kids);
 }
+
+// Coller une capture (Ctrl+V) : l'image du presse-papiers (Win+Maj+S, Impr. écran) part dans la
+// zone d'import visible — celle survolée, sinon la première à l'écran
+function pasteTarget(zone, handle) {
+  zone.dataset.paste = "1";
+  zone._paste = handle;
+  if (!zone.querySelector(".paste-hint")) zone.append(el("span", { class: "paste-hint" }, " · ou collez-la avec Ctrl+V"));
+}
+document.addEventListener("paste", (e) => {
+  const items = [...(e.clipboardData?.items || [])].filter((i) => i.kind === "file" && i.type.startsWith("image/"));
+  if (!items.length) return;  // texte : collage normal dans les champs
+  const zones = [...document.querySelectorAll("[data-paste]")].filter((z) => z.isConnected && z.offsetParent !== null);
+  const zone = zones.find((z) => z.matches(":hover")) || zones.find((z) => { const r = z.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; }) || zones[0];
+  if (!zone) { toast("Aucune zone d'import ici : ouvrez un profil, l'armurerie ou l'onglet GvG pour coller une capture.", "warn"); return; }
+  e.preventDefault();
+  const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+  const files = items.map((i, k) => { const f = i.getAsFile(); return new File([f], `capture-collee-${stamp}${k ? "-" + k : ""}.${(f.type.split("/")[1] || "png")}`, { type: f.type }); });
+  zone.scrollIntoView({ behavior: "smooth", block: "center" });
+  zone.classList.remove("pasted"); void zone.offsetWidth; zone.classList.add("pasted");
+  toast(files.length > 1 ? `${files.length} captures collées` : "Capture collée", "ok");
+  zone._paste(files);
+});
 function dropZone(text) {
   const input = el("input", { type: "file", accept: "image/png,image/jpeg,image/webp", multiple: "", hidden: "" });
   const drop = el("div", { class: "drop", onclick: () => input.click() }, text);
@@ -619,6 +646,7 @@ function dropZone(text) {
   drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
   drop.addEventListener("dragleave", () => drop.classList.remove("over"));
   drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); importFiles([...e.dataTransfer.files]); });
+  pasteTarget(drop, (files) => importFiles(files));
   return [drop, input];
 }
 function reloadFrame() { const f = $("#frame"); if (f) f.src = f.src; }
@@ -1408,6 +1436,7 @@ function captureZone(label, url, done) {
   drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
   drop.addEventListener("dragleave", () => drop.classList.remove("over"));
   drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); const f = e.dataTransfer.files[0]; if (f) go(f); });
+  pasteTarget(drop, (files) => go(files[0]));
   return el("div", {}, drop, file, msg);
 }
 const ratioText = (r) => r ? `${r[0]}/${r[1]}` : "—";
@@ -1547,6 +1576,7 @@ function gvgScout(page, g, send) {
   drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
   drop.addEventListener("dragleave", () => drop.classList.remove("over"));
   drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); const f = e.dataTransfer.files[0]; if (f) read(f); });
+  pasteTarget(drop, (files) => read(files[0]));
   // visages : téléchargés une fois pour reconnaître les héros sur leurs portraits
   const drawFaces = async () => {
     const st = await json("GET", "/gvg/faces");
