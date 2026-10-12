@@ -33,7 +33,7 @@ def _gear(gear: Gear) -> dict[str, Any]:
 
 
 def armory(store: ProfileStore, profile_id: str, set_library: Path) -> dict[str, Any]:
-    roster = store.load(profile_id)
+    roster = store.peek(profile_id)
     equipped = [
         {
             "hero": hero.name,

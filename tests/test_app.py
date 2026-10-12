@@ -677,3 +677,57 @@ def test_portraits_api(app: Any) -> None:
     assert data["Kise"]["img"].startswith("data:image/webp;base64,")
     assert data["Kise"]["element"] == "ice" and data["Kise"]["stars"] == 5
     assert data["Inconnu"]["img"] is None and "" not in data
+
+
+def test_app_pages_send_security_headers(app: Any) -> None:
+    state, base = app
+    pid = state.store.create("Spartan")
+    for path in ("/", f"/profile/{pid}"):
+        with urllib.request.urlopen(base + path) as res:
+            csp = res.headers["Content-Security-Policy"]
+            assert res.headers["Referrer-Policy"] == "no-referrer"
+        assert "default-src 'none'" in csp and "frame-ancestors 'self'" in csp
+        assert "http" not in csp  # aucune ressource externe sur ces pages
+
+
+def test_screenshots_uploaded_as_raw_binary(app: Any) -> None:
+    state, base = app
+    t = state.token
+    pid = call(base, "POST", "/api/profiles", {"player": "Spartan"}, t)["id"]
+    req = urllib.request.Request(
+        base + f"/api/profiles/{pid}/uploads", method="POST", data=b"\x89PNG brut"
+    )
+    req.add_header("X-E7-Token", t)
+    req.add_header("X-File-Name", "h%C3%A9ros.png")
+    with urllib.request.urlopen(req) as res:
+        upload = json.loads(res.read())["id"]
+    started = call(base, "POST", f"/api/profiles/{pid}/screenshots", {"uploads": [upload]}, t)
+    for _ in range(100):
+        if call(base, "GET", f"/api/jobs/{started['job']}", token=t)["finished"]:
+            break
+        time.sleep(0.05)
+    assert state.importer.calls[-1] == [("héros.png", b"\x89PNG brut")]
+    with pytest.raises(urllib.error.HTTPError) as err:  # déjà consommée
+        call(base, "POST", f"/api/profiles/{pid}/screenshots", {"uploads": [upload]}, t)
+    assert err.value.code == 400
+
+
+def test_concurrent_edits_are_not_lost(app: Any) -> None:
+    from concurrent.futures import ThreadPoolExecutor
+
+    state, base = app
+    t = state.token
+    pids = []
+    for i in range(12):
+        pid = state.store.create(f"Membre{i}")
+        state.store.add_hero(pid, Hero(name="Kise"), None)
+        pids.append(pid)
+    call(base, "PATCH", "/api/guild", {"members": pids}, t)
+
+    def put(pid: str) -> None:
+        call(base, "PUT", f"/api/gvg/defense/{pid}", {"tower": pid, "teams": [["Kise"]]}, t)
+
+    with ThreadPoolExecutor(12) as pool:  # l'interface enregistre à chaque changement
+        list(pool.map(put, pids))
+    members = call(base, "GET", "/api/gvg", token=t)["members"]
+    assert {m["id"]: m["defense"]["tower"] for m in members} == {p: p for p in pids}

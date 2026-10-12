@@ -156,7 +156,7 @@ button.ghost:hover { background:#232b3d; } button.danger:hover { background:rgba
 .item { transition:background var(--t-fast), transform var(--t-fast) var(--ease-out); position:relative; }
 .item:hover { transform:translateX(3px); }
 .item.active { background:linear-gradient(90deg, rgba(232,194,106,.16), rgba(34,48,76,.6)); box-shadow:inset 3px 0 0 var(--gold); }
-.card, .tile, .gear, .progress { background:linear-gradient(180deg, rgba(27,33,48,.85), rgba(20,25,37,.85)); backdrop-filter:blur(6px);
+.card, .tile, .gear, .progress { background:linear-gradient(180deg, rgba(27,33,48,.92), rgba(20,25,37,.92));
   transition:transform var(--t-med) var(--ease-out), box-shadow var(--t-med), border-color var(--t-med); position:relative; }
 .card:hover, .gear:hover, .tile:hover { border-color:#3a4561; box-shadow:0 10px 30px rgba(0,0,0,.35), 0 0 0 1px rgba(232,194,106,.08); }
 .gear:hover, .tile:hover { transform:translateY(-3px); }
@@ -537,14 +537,21 @@ async function importFiles(files) {
   const bar = progressBox();
   report.replaceChildren(bar.box);
   try {
-    // 1) lecture des fichiers (0 → 10 %)
-    const encoded = [];
-    for (const [i, f] of files.entries()) {
-      bar.set((i / files.length) * 0.1, `Préparation ${i + 1}/${files.length} : ${f.name}`);
-      encoded.push({ name: f.name, data: await toB64(f) });
-    }
-    bar.set(0.1, "Envoi des captures…");
-    const { job } = await json("POST", `/profiles/${current}/screenshots`, { files: encoded });
+    // 1) envoi des captures en binaire, 3 à la fois (0 → 10 %)
+    const uploads = new Array(files.length);
+    let sent = 0, next = 0;
+    const worker = async () => {
+      while (next < files.length) {
+        const i = next++, f = files[i];
+        const res = await fetch(`/api/profiles/${current}/uploads`, { method: "POST", body: f,
+          headers: { "X-E7-Token": TOKEN, "Content-Type": "application/octet-stream", "X-File-Name": encodeURIComponent(f.name) } });
+        if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || `erreur ${res.status}`);
+        uploads[i] = (await res.json()).id;
+        bar.set((++sent / files.length) * 0.1, `Envoi ${sent}/${files.length} : ${f.name}`);
+      }
+    };
+    await Promise.all([worker(), worker(), worker()]);
+    const { job } = await json("POST", `/profiles/${current}/screenshots`, { uploads });
     // 2) analyse côté application (10 → 100 %)
     let state;
     for (;;) {
@@ -1369,13 +1376,14 @@ const fx = (() => {
     scope.querySelectorAll(".tile b").forEach(countUp);
     scope.querySelectorAll(".wins").forEach((w) => { if (!w.dataset.fx) { w.dataset.fx = "1"; burstAt(w); } });
   };
+  let pending = 0;
   new MutationObserver((records) => {
     if (records.some((r) => r.target === content && r.addedNodes.length)) {
       content.classList.remove("enter", "enter-l", "enter-r");
       if (active()) { void content.offsetWidth; content.classList.add(entering); }
       entering = "enter";
     }
-    decorate(content);
+    if (!pending) pending = requestAnimationFrame(() => { pending = 0; decorate(content); });  // une fois par image
   }).observe(content, { childList: true, subtree: true });
   new MutationObserver(() => $("#list").querySelectorAll(".item").forEach((n, i) => n.style.setProperty("--i", String(i))))
     .observe($("#list"), { childList: true });
@@ -1440,6 +1448,7 @@ const fx = (() => {
   function frame(t) {
     raf = 0;
     if (!active() || document.hidden) { ctx.clearRect(0, 0, w, h); return; }
+    if (!sparks.length && last && t - last < 33) { wake(); return; }  // fond seul : ~30 i/s
     const dt = Math.min(3, (t - (last || t)) / 16.7); last = t;
     ctx.clearRect(0, 0, w, h);
     ctx.globalCompositeOperation = "lighter";
@@ -1460,7 +1469,10 @@ const fx = (() => {
     ctx.globalCompositeOperation = "source-over";
     wake();
   }
-  function wake() { if (!raf && active() && !document.hidden) raf = requestAnimationFrame(frame); }
+  let focused = document.hasFocus();
+  function wake() { if (!raf && active() && !document.hidden && (focused || sparks.length)) raf = requestAnimationFrame(frame); }
+  addEventListener("focus", () => { focused = true; last = 0; wake(); });
+  addEventListener("blur", () => { focused = false; });
   addEventListener("resize", resize);
   document.addEventListener("visibilitychange", () => { last = 0; wake(); });
   reduced.addEventListener?.("change", wake);

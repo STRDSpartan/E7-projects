@@ -14,6 +14,7 @@ import logging
 import re
 import secrets
 import threading
+import time
 from dataclasses import asdict, dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -51,9 +52,20 @@ from e7showcase.assets import AssetStore
 log = logging.getLogger(__name__)
 UI = Path(__file__).resolve().parent / "ui.html"
 MAX_BODY = 400 * 1024 * 1024
+MAX_UPLOAD = 40 * 1024 * 1024  # une capture
+UPLOAD_TTL = 600.0
+UNLOCKED = ("/api/sim/", "/api/portraits")  # calculs sans écriture, parfois longs
 
 
 ANIM_PAGE = Path(__file__).with_name("anim.html")
+# Interface et vitrine : tout est local et intégré (aucun script, style ou image externe) ;
+# la page ne peut être affichée dans un cadre que par l'application elle-même
+APP_CSP = (
+    "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; "
+    "img-src 'self' data: blob:; connect-src 'self'; frame-src 'self'; "
+    "frame-ancestors 'self'; base-uri 'none'; form-action 'none'"
+)
+APP_HEADERS = {"Content-Security-Policy": APP_CSP, "Referrer-Policy": "no-referrer"}
 ANIM_RE = re.compile(r"/anim/(c\d{4}(?:_[a-z0-9]{1,8}){0,2})")
 # Page du modèle animé : seuls le lecteur et les fichiers publics d'E7 Codex sont autorisés
 ANIM_CSP = (
@@ -77,6 +89,33 @@ class AppState:
         self.token = secrets.token_urlsafe(24)
         self.lock = threading.Lock()  # un import OCR à la fois
         self.jobs: dict[str, ImportJob] = {}
+        self._ui: bytes | None = None
+        self.uploads: dict[str, tuple[float, str, bytes]] = {}
+        self.lock_uploads = threading.Lock()
+        self.write_lock = threading.RLock()
+
+    def add_upload(self, name: str, data: bytes) -> str:
+        """Capture reçue en attente d'analyse ; les envois oubliés (> 10 min) sont purgés."""
+        now = time.monotonic()
+        with self.lock_uploads:
+            self.uploads = {k: v for k, v in self.uploads.items() if now - v[0] < UPLOAD_TTL}
+            if sum(len(v[2]) for v in self.uploads.values()) + len(data) > MAX_BODY:
+                raise ApiError(413, "trop de captures en attente : relancez l'import")
+            upload_id = secrets.token_hex(8)
+            self.uploads[upload_id] = (now, name, data)
+        return upload_id
+
+    def take_uploads(self, ids: list[str]) -> list[tuple[str, bytes]]:
+        with self.lock_uploads:
+            if any(i not in self.uploads for i in ids):
+                raise ApiError(400, "capture introuvable : relancez l'import")
+            return [self.uploads.pop(i)[1:] for i in ids]
+
+    def ui_page(self) -> bytes:
+        """Interface (lue une fois puis gardée en mémoire, jeton de session inséré)."""
+        if self._ui is None:
+            self._ui = UI.read_text(encoding="utf-8").replace("__TOKEN__", self.token).encode()
+        return self._ui
 
     def guild_ids(self) -> list[str]:
         """Profils où chercher un portrait découpé : membres de la guilde, puis les autres."""
@@ -182,6 +221,12 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 raise ApiError(400, "requête invalide")
             return data
 
+        def _raw(self, limit: int) -> bytes:
+            length = int(self.headers.get("Content-Length") or 0)
+            if not 0 < length <= limit:
+                raise ApiError(413 if length else 400, "fichier vide ou trop volumineux")
+            return self.rfile.read(length)
+
         def _dispatch(self, method: str) -> None:
             if not self._host_ok():
                 self._send(403, b"forbidden", "text/plain")
@@ -189,13 +234,12 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             path = urlparse(self.path).path
             try:
                 if method == "GET" and path == "/":
-                    html = UI.read_text(encoding="utf-8").replace("__TOKEN__", state.token)
-                    self._send(200, html.encode(), "text/html; charset=utf-8")
+                    self._send(200, state.ui_page(), "text/html; charset=utf-8", APP_HEADERS)
                 elif method == "GET" and (m := re.fullmatch(r"/profile/([a-z0-9-]+)", path)):
                     if not state.store.exists(m[1]):
                         raise ApiError(404, "profil introuvable")
                     page = profile_page(state.store, m[1], state.assets)
-                    self._send(200, page.encode(), "text/html; charset=utf-8")
+                    self._send(200, page.encode(), "text/html; charset=utf-8", APP_HEADERS)
                 elif method == "GET" and (m := ANIM_RE.fullmatch(path)):
                     html = ANIM_PAGE.read_text(encoding="utf-8").replace("__CODE__", m[1])
                     self._send(
@@ -207,7 +251,11 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 elif path.startswith("/api/"):
                     if not secrets.compare_digest(self.headers.get("X-E7-Token", ""), state.token):
                         raise ApiError(403, "jeton de session invalide")
-                    self._api(method, path[4:])
+                    if method == "GET" or path.startswith(UNLOCKED):
+                        self._api(method, path[4:])
+                    else:  # modifications une par une (fichiers lus, modifiés puis réécrits)
+                        with state.write_lock:
+                            self._api(method, path[4:])
                 else:
                     raise ApiError(404, "introuvable")
             except ApiError as exc:
@@ -295,7 +343,7 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 raise ApiError(404, "profil introuvable")
             pid, rest = m[1], m[2] or ""
             if rest == "" and method == "GET":
-                roster = store.load(pid)
+                roster = store.peek(pid)
                 return self._json(
                     {
                         "id": pid,
@@ -308,12 +356,12 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 store.delete(pid)
                 return self._send(204, b"", "text/plain")
             if rest == "/csv" and method == "GET":
-                return self._json({"csv": profile_csv(store.load(pid))})
+                return self._json({"csv": profile_csv(store.peek(pid))})
             if rest == "/armory" and method == "GET":
                 return self._json(armory(store, pid, state.importer.set_library))
             if rest == "/export" and method == "GET":
                 data = export_profile(store, pid)
-                name = suggested_filename(store.load(pid).player)
+                name = suggested_filename(store.peek(pid).player)
                 return self._send(
                     200,
                     data,
@@ -325,11 +373,18 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             if rest == "" and method == "PATCH":
                 store.rename(pid, str(self._body().get("player", "")))
                 return self._json({"id": pid})
+            if rest == "/uploads" and method == "POST":  # une capture, en binaire (sans base64)
+                name = unquote(self.headers.get("X-File-Name") or "capture")[:120]
+                return self._json({"id": state.add_upload(name, self._raw(MAX_UPLOAD))}, 201)
             if rest == "/screenshots" and method == "POST":
-                files = self._body().get("files")
-                if not isinstance(files, list) or not files:
+                body = self._body()
+                files, uploads = body.get("files"), body.get("uploads")
+                if isinstance(uploads, list) and uploads:
+                    decoded = state.take_uploads([str(u) for u in uploads])
+                elif isinstance(files, list) and files:  # ancien envoi en base64
+                    decoded = [(str(f.get("name", "capture")), _b64(f.get("data"))) for f in files]
+                else:
                     raise ApiError(400, "aucune capture reçue")
-                decoded = [(str(f.get("name", "capture")), _b64(f.get("data"))) for f in files]
                 job = state.start_import(pid, decoded)
                 return self._json({"job": job.id, "total": job.total}, 202)
             if (i := re.fullmatch(r"/items/([0-9a-f]{1,32})", rest)) and method == "DELETE":

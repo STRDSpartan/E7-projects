@@ -363,6 +363,7 @@ class _Battle:
         self.rng, self.cds, self.opts, self.keep_log = rng, cooldowns, options, keep_log
         self.log: list[str] = []
         self.frames: list[dict[str, Any]] = []
+        self._triggers: dict[int, dict[str, list[tuple[str, dict[str, Any]]]]] = {}
         self.stats = {
             "healed": 0.0,
             "shielded": 0.0,
@@ -598,10 +599,8 @@ class _Battle:
         out: list[tuple[str, dict[str, Any]]] = []
         if "seal" in u.debuffs and event != "revive":  # sceau : passifs inactifs
             return out
-        for sid, skill in u.fighter.skills.items():
-            trig = skill.get("trigger")
-            if not trig:
-                continue
+        for sid, skill in self.trigger_index(u).get(event, ()):
+            trig = skill["trigger"]
             res = trig.get("resource")
             if trig["event"] == "resource" and res and res["on"] == event:
                 if not self.condition_met(u, trig.get("condition"), other, non_attack):
@@ -625,6 +624,24 @@ class _Battle:
             u.last_fired[sid] = u.turns
             out.append((sid, skill))
         return out
+
+    def trigger_index(self, u: _Unit) -> dict[str, list[tuple[str, dict[str, Any]]]]:
+        """Compétences à déclencheur de `u`, rangées par évènement (ordre des compétences gardé)."""
+        index = self._triggers.get(id(u.fighter))
+        if index is None:
+            index = {}
+            for sid, skill in u.fighter.skills.items():
+                trig = skill.get("trigger")
+                if not trig:
+                    continue
+                res = trig.get("resource")
+                events = {trig["event"]}
+                if trig["event"] == "resource" and res:
+                    events.add(res["on"])
+                for ev in events:
+                    index.setdefault(ev, []).append((sid, skill))
+            self._triggers[id(u.fighter)] = index
+        return index
 
     def resource_mult(self, u: _Unit, res: dict[str, Any]) -> float:
         """Gains d'Esprit combatif / Concentration : hausse (Frieren), réductions (Lidica...)."""
@@ -1597,11 +1614,13 @@ class _Battle:
             alive = [u for u in self.units if u.alive]
             if len({u.team for u in alive}) < 2:
                 break
-            actor = min(alive, key=lambda u: (100 - u.gauge) / self.speed(u))
-            wait = max((100 - actor.gauge) / self.speed(actor), 0)
-            for u in alive:
+            speeds = [self.speed(u) for u in alive]  # une fois par action
+            first = min(range(len(alive)), key=lambda i: (100 - alive[i].gauge) / speeds[i])
+            actor = alive[first]
+            wait = max((100 - actor.gauge) / speeds[first], 0)
+            for u, spd in zip(alive, speeds, strict=True):
                 if "immobilize" not in u.debuffs:  # pas de jauge gagnée par la vitesse
-                    u.gauge = min(u.gauge + self.speed(u) * wait, 100)
+                    u.gauge = min(u.gauge + spd * wait, 100)
             actor.gauge = 0
             self.actions += 1
             if self.actions == 1:  # Aram : « if an enemy / an ally takes the first turn »

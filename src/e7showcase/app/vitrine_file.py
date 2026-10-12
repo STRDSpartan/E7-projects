@@ -47,7 +47,7 @@ class VitrineFileError(ValueError):
 
 
 def export_profile(store: ProfileStore, profile_id: str) -> bytes:
-    roster = store.load(profile_id)
+    roster = store.peek(profile_id)
     manifest = {
         "format": FORMAT,
         "version": VERSION,

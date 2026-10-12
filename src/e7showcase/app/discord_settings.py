@@ -12,7 +12,6 @@ du joueur (jamais dans un fichier .e7v ni renvoyée en clair à l'interface).
 
 from __future__ import annotations
 
-import contextlib
 import json
 import logging
 import threading
@@ -21,6 +20,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from e7showcase.app.jsonfile import write_json
 from e7showcase.publish.webhook import mask_webhook, post_messages, sync_messages, valid_webhook
 
 log = logging.getLogger(__name__)
@@ -31,6 +31,7 @@ AUTO_DELAY = 20.0  # s : les modifications rapprochées sont regroupées en une 
 class DiscordSettings:
     def __init__(self, path: Path):
         self.path = path
+        self._lock = threading.RLock()  # serveur et publications différées écrivent ici
 
     def _read(self) -> dict[str, Any]:
         try:
@@ -40,15 +41,13 @@ class DiscordSettings:
         return data if isinstance(data, dict) else {}
 
     def _write(self, data: dict[str, Any]) -> None:
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(json.dumps(data), encoding="utf-8")
-        with contextlib.suppress(OSError):  # lisible par le seul utilisateur (hors Windows)
-            self.path.chmod(0o600)
+        write_json(self.path, data, private=True)
 
     def update(self, **changes: Any) -> None:
-        data = self._read()
-        data.update(changes)
-        self._write(data)
+        with self._lock:
+            data = self._read()
+            data.update(changes)
+            self._write(data)
 
     def webhook(self) -> str:
         url = self._read().get("gvg_webhook", "")
@@ -83,19 +82,21 @@ class DiscordSettings:
         return [str(i) for i in ids if isinstance(i, str | int)] if isinstance(ids, list) else []
 
     def record(self, key: str, *, ids: list[str] | None = None, error: str | None = None) -> None:
-        pubs = self.publications()
-        pub = dict(pubs.get(key, {}))
-        if ids is not None:
-            pub.update(ids=ids, last_sent=_now(), last_error=None)
-        else:
-            pub["last_error"] = error
-        pubs[key] = pub
-        self.update(publications=pubs)
+        with self._lock:
+            pubs = self.publications()
+            pub = dict(pubs.get(key, {}))
+            if ids is not None:
+                pub.update(ids=ids, last_sent=_now(), last_error=None)
+            else:
+                pub["last_error"] = error
+            pubs[key] = pub
+            self.update(publications=pubs)
 
     def forget(self, key: str) -> None:
-        pubs = self.publications()
-        pubs.pop(key, None)
-        self.update(publications=pubs)
+        with self._lock:
+            pubs = self.publications()
+            pubs.pop(key, None)
+            self.update(publications=pubs)
 
     def status(self) -> dict[str, object]:
         data, url = self._read(), self.webhook()

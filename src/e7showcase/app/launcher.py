@@ -44,7 +44,7 @@ class WindowApi:
     def save_vitrine(self, profile_id: str) -> str | None:
         import webview
 
-        player = self._state.store.load(profile_id).player
+        player = self._state.store.peek(profile_id).player
         chosen = self._window.create_file_dialog(
             webview.SAVE_DIALOG,
             save_filename=suggested_filename(player),
@@ -94,7 +94,7 @@ class WindowApi:
         from e7showcase.app.profile_csv import profile_csv
         from e7showcase.app.vitrine_file import suggested_filename
 
-        roster = self._state.store.load(profile_id)
+        roster = self._state.store.peek(profile_id)
         name = suggested_filename(roster.player).rsplit(".", 1)[0] + ".csv"
         return self._save_csv(name, profile_csv(roster))
 

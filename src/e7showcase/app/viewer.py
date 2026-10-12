@@ -12,7 +12,7 @@ from e7showcase.render.webapp import build_payload_from_members, member_from_ros
 def profile_payload(
     store: ProfileStore, profile_id: str, assets: AssetStore | None = None
 ) -> dict[str, object]:
-    roster = store.load(profile_id)
+    roster = store.peek(profile_id)
     member = member_from_roster(roster, assets, anims=False)
     for hero, data in zip(roster.heroes, member.heroes, strict=True):
         images = data.setdefault("images", {})

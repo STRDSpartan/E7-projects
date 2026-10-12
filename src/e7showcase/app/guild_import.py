@@ -237,7 +237,7 @@ def import_guild_csv(
             gvg.set_defense(pid, d)
             report.defenses += 1
         except GvgError as exc:
-            report.errors.append(f"défense de {profiles.load(pid).player} : {exc}")
+            report.errors.append(f"défense de {profiles.peek(pid).player} : {exc}")
 
     existing = {(w["opponent"], w["date"]) for w in gvg.summary()["wars"]}
     wars: dict[tuple[str, str], str] = {}

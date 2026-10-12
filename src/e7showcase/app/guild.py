@@ -12,6 +12,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from e7showcase.app.jsonfile import write_json
 from e7showcase.app.profiles import ProfileStore
 
 TOP_HEROES = 5
@@ -31,8 +32,7 @@ class GuildStore:
         return {"name": name[:40], "members": members}
 
     def _write(self, data: dict[str, Any]) -> None:
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+        write_json(self.path, data, ensure_ascii=False, indent=1)
 
     def update(self, name: str | None = None, members: list[str] | None = None) -> None:
         data = self._read()
@@ -55,7 +55,7 @@ class GuildStore:
         for pid in data["members"]:
             if not self.profiles.exists(pid):
                 continue  # profil supprimé depuis
-            roster = self.profiles.load(pid)
+            roster = self.profiles.peek(pid)
             heroes = sorted(roster.heroes, key=lambda h: h.power or 0, reverse=True)
             members.append(
                 {
@@ -110,7 +110,7 @@ def guild_csv(summary: dict[str, Any], profiles: ProfileStore, gvg: dict[str, An
     heroes: list[list[str]] = [["Membre", *HERO_HEAD]]
     gear: list[list[str]] = [["Membre", *GEAR_HEAD]]
     for m in summary["members"]:
-        roster = profiles.load(m["id"])
+        roster = profiles.peek(m["id"])
         heroes += [[m["player"], *r] for r in hero_rows(roster)]
         gear += [[m["player"], *r] for r in gear_rows(roster, sets)]
     rows += [[], *heroes, [], *gear]

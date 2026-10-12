@@ -14,6 +14,7 @@ import json
 import re
 import secrets
 import shutil
+import threading
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -49,6 +50,19 @@ class ProfileStore:
     def __init__(self, root: Path):
         self.root = root
         root.mkdir(parents=True, exist_ok=True)
+        # rosters validés en mémoire, reconnus à la date et la taille du fichier (une
+        # modification hors de l'application est donc relue) ; `generation` change à chaque
+        # écriture pour invalider les caches qui en dépendent (portraits…)
+        self._rosters: dict[str, tuple[tuple[int, int], Roster]] = {}
+        self._metas: dict[str, dict[str, object]] = {}
+        self._lock = threading.RLock()  # lecture-modification-écriture atomiques
+        self.generation = 0
+
+    def _touch(self, profile_id: str | None = None) -> None:
+        with self._lock:
+            self.generation += 1
+            if profile_id is not None:
+                self._metas.pop(profile_id, None)
 
     def path(self, profile_id: str) -> Path:
         if not ID_RE.fullmatch(profile_id):
@@ -62,14 +76,18 @@ class ProfileStore:
             return False
 
     def _meta(self, profile_id: str) -> dict[str, object]:
+        if (cached := self._metas.get(profile_id)) is not None:
+            return cached
         meta = self.path(profile_id) / "meta.json"
-        return dict(json.loads(meta.read_text(encoding="utf-8"))) if meta.is_file() else {}
+        data = dict(json.loads(meta.read_text(encoding="utf-8"))) if meta.is_file() else {}
+        self._metas[profile_id] = data
+        return data
 
     def list(self) -> list[ProfileInfo]:
         out = []
         for folder in sorted(self.root.iterdir()):
             if folder.is_dir() and self.exists(folder.name):
-                roster = self.load(folder.name)
+                roster = self.peek(folder.name)
                 out.append(
                     ProfileInfo(
                         id=folder.name,
@@ -88,28 +106,46 @@ class ProfileStore:
         (folder / "images").mkdir(parents=True)
         self.save(profile_id, Roster(player=player))
         (folder / "meta.json").write_text(json.dumps({"received": received}), encoding="utf-8")
+        self._touch(profile_id)
         return profile_id
 
+    def peek(self, profile_id: str) -> Roster:
+        """Roster en LECTURE SEULE (partagé, ne pas modifier) : relu seulement s'il a changé."""
+        target = self.path(profile_id) / "profile.json"
+        st = target.stat()
+        key = (st.st_mtime_ns, st.st_size)
+        cached = self._rosters.get(profile_id)
+        if cached is not None and cached[0] == key:
+            return cached[1]
+        roster = Roster.model_validate_json(target.read_text(encoding="utf-8"))
+        self._rosters[profile_id] = (key, roster)
+        return roster
+
     def load(self, profile_id: str) -> Roster:
-        text = (self.path(profile_id) / "profile.json").read_text(encoding="utf-8")
-        return Roster.model_validate_json(text)
+        """Copie modifiable du roster (à enregistrer avec `save`)."""
+        return self.peek(profile_id).model_copy(deep=True)
 
     def save(self, profile_id: str, roster: Roster) -> None:
         target = self.path(profile_id) / "profile.json"
         tmp = target.with_suffix(".tmp")
         tmp.write_text(roster.model_dump_json(indent=2, by_alias=True), encoding="utf-8")
         tmp.replace(target)
+        self._rosters.pop(profile_id, None)
+        self._touch()
 
     def is_received(self, profile_id: str) -> bool:
         return bool(self._meta(profile_id).get("received"))
 
     def rename(self, profile_id: str, player: str) -> None:
-        roster = self.load(profile_id)
-        roster.player = player.strip()[:40] or roster.player
-        self.save(profile_id, roster)
+        with self._lock:
+            roster = self.load(profile_id)
+            roster.player = player.strip()[:40] or roster.player
+            self.save(profile_id, roster)
 
     def delete(self, profile_id: str) -> None:
         shutil.rmtree(self.path(profile_id))
+        self._rosters.pop(profile_id, None)
+        self._touch(profile_id)
 
     # --- héros et poses
     def add_hero(
@@ -119,31 +155,35 @@ class ProfileStore:
         portrait: Image.Image | None,
         icons: dict[str, Image.Image] | None = None,
     ) -> None:
-        roster = self.load(profile_id)
-        roster.upsert(hero)
-        self.save(profile_id, roster)
-        if portrait is not None:
-            self.save_portrait(profile_id, hero.name, portrait)
-        for kind, icon in (icons or {}).items():
-            self.save_icon(profile_id, hero.name, kind, icon)
+        with self._lock:
+            roster = self.load(profile_id)
+            roster.upsert(hero)
+            self.save(profile_id, roster)
+            if portrait is not None:
+                self.save_portrait(profile_id, hero.name, portrait)
+            for kind, icon in (icons or {}).items():
+                self.save_icon(profile_id, hero.name, kind, icon)
 
     def remove_hero(self, profile_id: str, hero_name: str) -> None:
-        roster = self.load(profile_id)
-        roster.heroes = [h for h in roster.heroes if h.name.casefold() != hero_name.casefold()]
-        self.save(profile_id, roster)
-        self.portrait_path(profile_id, hero_name).unlink(missing_ok=True)
-        for kind in ICON_KINDS:
-            self.icon_path(profile_id, hero_name, kind).unlink(missing_ok=True)
+        with self._lock:
+            roster = self.load(profile_id)
+            roster.heroes = [h for h in roster.heroes if h.name.casefold() != hero_name.casefold()]
+            self.save(profile_id, roster)
+            self.portrait_path(profile_id, hero_name).unlink(missing_ok=True)
+            for kind in ICON_KINDS:
+                self.icon_path(profile_id, hero_name, kind).unlink(missing_ok=True)
 
-    # --- armurerie : pièces non équipées
+        # --- armurerie : pièces non équipées
+
     def add_item(self, profile_id: str, gear: Gear, icon: Image.Image | None = None) -> str:
-        roster = self.load(profile_id)
-        item = InventoryItem(id=secrets.token_hex(6), gear=gear)
-        roster.inventory.append(item)
-        self.save(profile_id, roster)
-        if icon is not None:
-            self.save_item_icon(profile_id, item.id, icon)
-        return item.id
+        with self._lock:
+            roster = self.load(profile_id)
+            item = InventoryItem(id=secrets.token_hex(6), gear=gear)
+            roster.inventory.append(item)
+            self.save(profile_id, roster)
+            if icon is not None:
+                self.save_item_icon(profile_id, item.id, icon)
+            return item.id
 
     def item_icon_path(self, profile_id: str, item_id: str) -> Path:
         if not ITEM_ID_RE.fullmatch(item_id):
@@ -156,6 +196,7 @@ class ProfileStore:
         target = self.item_icon_path(profile_id, item_id)
         target.parent.mkdir(parents=True, exist_ok=True)
         img.save(target, "WEBP", quality=85)
+        self._touch()
 
     def item_icon_bytes(self, profile_id: str, item_id: str) -> bytes | None:
         try:
@@ -165,14 +206,15 @@ class ProfileStore:
         return path.read_bytes() if path.is_file() else None
 
     def remove_item(self, profile_id: str, item_id: str) -> bool:
-        roster = self.load(profile_id)
-        kept = [i for i in roster.inventory if i.id != item_id]
-        found = len(kept) != len(roster.inventory)
-        roster.inventory = kept
-        self.save(profile_id, roster)
-        if found:
-            self.item_icon_path(profile_id, item_id).unlink(missing_ok=True)
-        return found
+        with self._lock:
+            roster = self.load(profile_id)
+            kept = [i for i in roster.inventory if i.id != item_id]
+            found = len(kept) != len(roster.inventory)
+            roster.inventory = kept
+            self.save(profile_id, roster)
+            if found:
+                self.item_icon_path(profile_id, item_id).unlink(missing_ok=True)
+            return found
 
     def portrait_path(self, profile_id: str, hero_name: str) -> Path:
         return self.path(profile_id) / "images" / f"{image_key(hero_name)}.webp"
@@ -183,6 +225,7 @@ class ProfileStore:
         target = self.portrait_path(profile_id, hero_name)
         target.parent.mkdir(parents=True, exist_ok=True)
         img.save(target, "WEBP", quality=82)
+        self._touch()
 
     def portrait_bytes(self, profile_id: str, hero_name: str) -> bytes | None:
         path = self.portrait_path(profile_id, hero_name)
@@ -199,6 +242,7 @@ class ProfileStore:
         target = self.icon_path(profile_id, hero_name, kind)
         target.parent.mkdir(parents=True, exist_ok=True)
         img.save(target, "WEBP", quality=85)
+        self._touch()
 
     def icon_bytes(self, profile_id: str, hero_name: str, kind: str) -> bytes | None:
         path = self.icon_path(profile_id, hero_name, kind)

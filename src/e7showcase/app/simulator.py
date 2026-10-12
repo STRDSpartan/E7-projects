@@ -87,7 +87,7 @@ def catalog(store: ProfileStore) -> list[dict[str, Any]]:
     """Héros de tous les profils (mes profils et vitrines reçues), utilisables en simulation."""
     out = []
     for info in store.list():
-        for hero in store.load(info.id).heroes:
+        for hero in store.peek(info.id).heroes:
             out.append(
                 {
                     "ref": f"{info.id}/{hero.name}",
@@ -109,7 +109,7 @@ def _hero(store: ProfileStore, ref: Any) -> Hero:
         raise SimError("héros invalide")
     pid, name = ref.split("/", 1)
     try:
-        roster = store.load(pid)
+        roster = store.peek(pid)
     except (KeyError, OSError) as exc:
         raise SimError("profil introuvable") from exc
     for hero in roster.heroes:

@@ -146,3 +146,6 @@ PyInstaller : 6 captures réelles → 3 héros, 4 sets appris → export → ouv
 ## Esthétique et animations
 Thème, transitions entre onglets, apparitions, particules et micro-interactions : voir
 `docs/UI_MOTION.md` (désactivables par le bouton « ✨ Effets visuels » et `prefers-reduced-motion`).
+
+## Audit
+Sécurité et performances : voir `docs/AUDIT.md`.

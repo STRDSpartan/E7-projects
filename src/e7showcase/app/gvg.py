@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any
 
 from e7showcase.app.guild import GuildStore
+from e7showcase.app.jsonfile import write_json
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.reference import load
 
@@ -73,14 +74,13 @@ class GvgStore:
         }
 
     def _write(self, data: dict[str, Any]) -> None:
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+        write_json(self.path, data, ensure_ascii=False, indent=1)
 
     # --- validation
     def _roster_names(self, member: str) -> dict[str, str]:
         if not self.profiles.exists(member):
             raise GvgError("membre introuvable")
-        return {h.name.casefold(): h.name for h in self.profiles.load(member).heroes}
+        return {h.name.casefold(): h.name for h in self.profiles.peek(member).heroes}
 
     def _team(self, member: str, team: Any) -> list[str]:
         names = self._roster_names(member)
@@ -194,7 +194,7 @@ class GvgStore:
         names = {m["id"]: m["player"] for m in guild["members"]}
         members = []
         for m in guild["members"]:
-            roster = self.profiles.load(m["id"])
+            roster = self.profiles.peek(m["id"])
             defense = data["defenses"].get(m["id"], {"teams": [], "tower": ""})
             members.append(
                 {
