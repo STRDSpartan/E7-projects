@@ -287,6 +287,11 @@ def test_armory_and_guild_api(app: Any) -> None:
     assert state.store.item_icon_bytes(copy, copied)
     state.store.delete(copy)
     assert data["inventory"][0]["set"] == "destruction" and data["inventory"][0]["id"] == item_id
+    csv = call(base, "GET", f"/api/profiles/{pid}/csv", token=t)["csv"]
+    assert csv.startswith("\ufeffJoueur;Guilde;") and "\nSpartan;;;1;1;1;" in csv
+    assert "\nKise;;;;;;1000;;" in csv and "Porté par;Emplacement;Set" in csv
+    assert "\nKise;Bottes;Vitesse;;;15;Vitesse 45;" in csv
+    assert "\nNon équipée;Anneau;Destruction;;;12;Attaque 47 %;" in csv
     assert data["sets"]["speed"]["name"] == "Vitesse"
     call(base, "DELETE", f"/api/profiles/{pid}/items/{item_id}", token=t)
     assert state.store.item_icon_bytes(pid, item_id) is None

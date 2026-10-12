@@ -236,6 +236,7 @@ async function show(id) {
   const bar = el("div", { class: "bar" }, el("h1", {}, name),
     p.received ? el("span", { class: "badge" }, "Vitrine reçue") : "",
     el("button", { onclick: () => exportVitrine(id, p.player) }, "Exporter la vitrine"),
+    el("button", { class: "ghost", title: "Profil, héros et armurerie dans un seul tableur", onclick: () => saveCsv("save_profile_csv", `/profiles/${id}/csv`, "vitrine.csv", "Tableur enregistré", id) }, "Exporter en tableur (.csv)"),
     el("button", { class: "danger", onclick: () => removeProfile(id, p.player) }, "Supprimer"));
   const kids = [bar];
   const report = el("div", { class: "report", id: "report" });
@@ -741,9 +742,9 @@ function gvgSettings(g, send) {
     field("Attaques par membre et par guerre", per), field("Tours proposées (séparées par des virgules)", towers)));
 }
 // Export tableur (.csv) : fenêtre « Enregistrer sous » dans l'application, téléchargement sinon
-async function saveCsv(api, route, filename, done) {
+async function saveCsv(api, route, filename, done, ...args) {
   if (window.pywebview?.api?.[api]) {
-    const path = await window.pywebview.api[api]();
+    const path = await window.pywebview.api[api](...args);
     if (path) alert(done + " :\n" + path);
     return;
   }

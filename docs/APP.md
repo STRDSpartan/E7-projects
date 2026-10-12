@@ -14,7 +14,9 @@ la même application sur son ordinateur.
    Facultatif : les blasons de référence des 24 sets sont téléchargés automatiquement au
    premier import (connexion Internet nécessaire une fois).
 3. La vitrine se construit : recherche, filtres (élément, classe, set), tris, fiche détaillée.
-4. *Exporter la vitrine* → `vitrine-<joueur>.e7v`.
+4. *Exporter la vitrine* → `vitrine-<joueur>.e7v`. *Exporter en tableur (.csv)* →
+   `vitrine-<joueur>.csv`, tout le profil dans un seul fichier : résumé du profil, héros (stats)
+   et armurerie (pièces portées et non équipées) — `GET /api/profiles/<id>/csv`.
 5. Le destinataire : double-clic sur le fichier (association installée) ou *Ouvrir une vitrine* →
    rangée dans « Vitrines reçues », consultation seule.
 

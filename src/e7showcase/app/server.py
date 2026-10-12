@@ -35,6 +35,7 @@ from e7showcase.app.gvg import (
     wars_csv,
 )
 from e7showcase.app.importer import ScreenshotImporter
+from e7showcase.app.profile_csv import profile_csv
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.app.viewer import profile_page
 from e7showcase.app.vitrine_file import (
@@ -277,6 +278,8 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             if rest == "" and method == "DELETE":
                 store.delete(pid)
                 return self._send(204, b"", "text/plain")
+            if rest == "/csv" and method == "GET":
+                return self._json({"csv": profile_csv(store.load(pid))})
             if rest == "/armory" and method == "GET":
                 return self._json(armory(store, pid, state.importer.set_library))
             if rest == "/export" and method == "GET":

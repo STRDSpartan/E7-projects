@@ -89,6 +89,15 @@ class WindowApi:
 
         return self._save_csv("defenses-gvg.csv", defenses_csv(self._state.gvg.summary()))
 
+    def save_profile_csv(self, profile_id: str) -> str | None:
+        """Profil complet (héros de la vitrine et armurerie) en un seul .csv (tableur)."""
+        from e7showcase.app.profile_csv import profile_csv
+        from e7showcase.app.vitrine_file import suggested_filename
+
+        roster = self._state.store.load(profile_id)
+        name = suggested_filename(roster.player).rsplit(".", 1)[0] + ".csv"
+        return self._save_csv(name, profile_csv(roster))
+
     def save_guild_csv(self) -> str | None:
         """Membres de la guilde, enregistrés en .csv (tableur)."""
         from e7showcase.app.guild import members_csv
