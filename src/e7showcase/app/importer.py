@@ -3,7 +3,8 @@
 Chaque capture est reconnue automatiquement (barre de titre / barre des tâches retirées) :
 - liste des héros → apprend les blasons des sets portés ;
 - catalogue des sets → apprend les 24 blasons ;
-- « Infos de héros » → héros complet + pose recadrée (le modèle du personnage).
+- « Infos de héros » → héros complet + pose recadrée (le modèle du personnage) ;
+- infobulle d'un objet de l'inventaire → pièce non équipée ajoutée à l'armurerie.
 Les listes sont traitées avant les fiches pour que les sets soient connus à la lecture.
 """
 
@@ -20,7 +21,9 @@ from PIL import Image
 
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.config import regions
+from e7showcase.models.gear import Gear
 from e7showcase.models.hero import Hero
+from e7showcase.reference import load
 from e7showcase.sources.set_icons import fetch_set_icons
 from e7showcase.sources.set_icons import missing as missing_icons
 from e7showcase.vision.framing import frame_detail
@@ -36,6 +39,7 @@ NATIVE_ASPECT = 0.01  # écart relatif de format sous lequel une capture est dé
 @dataclass
 class ImportReport:
     heroes: list[str] = field(default_factory=list)
+    items: list[str] = field(default_factory=list)  # pièces non équipées ajoutées à l'armurerie
     learned_sets: list[str] = field(default_factory=list)
     ignored: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
@@ -43,6 +47,7 @@ class ImportReport:
     def as_dict(self) -> dict[str, Any]:
         return {
             "heroes": self.heroes,
+            "items": self.items,
             "learned_sets": self.learned_sets,
             "ignored": self.ignored,
             "warnings": self.warnings,
@@ -67,6 +72,22 @@ def crop_item_icons(image: Image.Image, profile: dict[str, Any]) -> dict[str, Im
     if box := d.get("artifact_icon"):
         icons["artifact"] = crop(image, box)
     return icons
+
+
+SLOT_FR = {
+    "weapon": "Arme",
+    "helmet": "Casque",
+    "armor": "Armure",
+    "necklace": "Collier",
+    "ring": "Bague",
+    "boots": "Bottes",
+}
+
+
+def _item_label(gear: Gear) -> str:
+    """« Bottes Vitesse +15 » : résumé d'une pièce pour le compte rendu d'import."""
+    set_name = load("sets").get(gear.set.value, {}).get("fr", gear.set.value) if gear.set else ""
+    return " ".join(p for p in (SLOT_FR[gear.slot.value], set_name, f"+{gear.enhance}") if p)
 
 
 def crop_portrait(image: Image.Image, profile: dict[str, Any]) -> Image.Image | None:
@@ -148,6 +169,13 @@ class ScreenshotImporter:
             layouts = candidate_layouts(region_profiles(), image.width / image.height)
         return [HeroScanner(self._engine(), z, self.lang, self.sets) for z in layouts]
 
+    def _read_item(self, image: Image.Image) -> Gear | None:
+        """Infobulle d'un objet de l'inventaire : texte lu sur toute la capture."""
+        from e7showcase.parsers.item_parser import parse_item_lines
+
+        lines = [line.text for line in self._engine().read_lines(image)]
+        return parse_item_lines(lines, self.lang)
+
     def run(
         self,
         store: ProfileStore,
@@ -188,6 +216,10 @@ class ScreenshotImporter:
             if kind == "ignored" and (learned := learn_catalog(scanners[0], images[0], None)):
                 report.learned_sets += learned
                 kind = "catalog"
+            if kind == "ignored" and (item := self._read_item(raw)) is not None:
+                store.add_item(profile_id, item)
+                report.items.append(_item_label(item))
+                kind = "item"
             if kind == "ignored":
                 report.ignored.append(name)
             step += 1 if kind == "detail" else 2

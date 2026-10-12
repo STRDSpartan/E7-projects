@@ -120,6 +120,7 @@ def test_hostile_entries_are_ignored(tmp_path: Path) -> None:
 class FakeImporter:
     def __init__(self) -> None:
         self.calls: list[list[tuple[str, bytes]]] = []
+        self.set_library = Path("blasons-absents")
 
     def run(
         self, store: ProfileStore, pid: str, files: list[tuple[str, bytes]], progress: Any = None
@@ -261,3 +262,34 @@ def test_anim_page_is_locked_down(app: Any) -> None:
         with pytest.raises(urllib.error.HTTPError) as err:
             urllib.request.urlopen(base + bad)
         assert err.value.code == 404
+
+
+def test_armory_and_guild_api(app: Any) -> None:
+    from e7showcase.models.gear import Gear, GearSet, GearSlot, StatLine
+    from e7showcase.models.stats import StatType
+
+    state, base = app
+    t = state.token
+    pid = call(base, "POST", "/api/profiles", {"player": "Spartan"}, t)["id"]
+    worn = Gear(slot=GearSlot.BOOTS, set=GearSet.SPEED, enhance=15,
+                main=StatLine(stat=StatType.SPD, value=45))  # fmt: skip
+    state.store.add_hero(pid, Hero(name="Kise", power=1000, gear={GearSlot.BOOTS: worn}), None)
+    spare = Gear(slot=GearSlot.RING, set=GearSet.DESTRUCTION, enhance=12,
+                 main=StatLine(stat=StatType.ATK_PCT, value=47))  # fmt: skip
+    item_id = state.store.add_item(pid, spare)
+    data = call(base, "GET", f"/api/profiles/{pid}/armory", token=t)
+    assert [g["hero"] for g in data["equipped"]] == ["Kise"]
+    assert data["inventory"][0]["set"] == "destruction" and data["inventory"][0]["id"] == item_id
+    assert data["sets"]["speed"]["name"] == "Vitesse"
+    call(base, "DELETE", f"/api/profiles/{pid}/items/{item_id}", token=t)
+    assert call(base, "GET", f"/api/profiles/{pid}/armory", token=t)["inventory"] == []
+    # guilde : nom, membres (profil du joueur et vitrine reçue d'un coéquipier)
+    guild = call(base, "PATCH", "/api/guild", {"name": "Spartiates", "members": [pid]}, t)
+    assert guild["name"] == "Spartiates" and guild["members"][0]["power"] == 1000
+    exported = call(base, "GET", f"/api/profiles/{pid}/export", token=t)
+    shared = base64.b64encode(exported).decode()
+    rid = call(base, "POST", "/api/open", {"data": shared, "guild": True}, t)["id"]
+    guild = call(base, "GET", "/api/guild", token=t)
+    assert {m["id"] for m in guild["members"]} == {pid, rid}
+    state.store.delete(rid)  # un profil supprimé disparaît de la guilde
+    assert [m["id"] for m in call(base, "GET", "/api/guild", token=t)["members"]] == [pid]

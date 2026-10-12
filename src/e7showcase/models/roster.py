@@ -6,9 +6,18 @@ from datetime import UTC, datetime
 
 from pydantic import BaseModel, Field
 
+from e7showcase.models.gear import Gear
 from e7showcase.models.hero import Hero
 
 SCHEMA_VERSION = 1
+
+
+class InventoryItem(BaseModel):
+    """Pièce non équipée (armurerie), lue sur une capture d'infobulle d'objet."""
+
+    id: str
+    gear: Gear
+    added_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class Roster(BaseModel):
@@ -18,6 +27,9 @@ class Roster(BaseModel):
     server: str | None = Field(default=None, description="global | europe | asia | korea | japan")
     updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     heroes: list[Hero] = Field(default_factory=list)
+    inventory: list[InventoryItem] = Field(
+        default_factory=list, description="Pièces non équipées (armurerie)"
+    )
 
     def find(self, name: str) -> Hero | None:
         from rapidfuzz import fuzz, process

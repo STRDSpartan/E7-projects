@@ -77,6 +77,38 @@ table.res td.crit { color:var(--gold); font-weight:700; } table.res td.exp { col
 .empty ol { text-align:left; }
 dialog { background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:12px; padding:18px; }
 dialog input { width:100%; background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:8px; margin:10px 0; font:inherit; }
+.topnav { display:flex; gap:4px; padding:10px 16px 0; border-bottom:1px solid var(--line); background:var(--panel); flex-wrap:wrap; }
+.topnav button { background:transparent; color:var(--muted); font-weight:600; border-radius:8px 8px 0 0; padding:9px 16px; border-bottom:2px solid transparent; }
+.topnav button:hover { color:var(--text); background:var(--panel-2); }
+.topnav button[aria-selected="true"] { color:var(--gold); border-bottom-color:var(--gold); background:var(--bg); }
+#content { flex:1; display:flex; flex-direction:column; min-height:0; overflow:auto; }
+.page { padding:16px; display:grid; gap:14px; align-content:start; }
+.filters { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; }
+.filters select, .filters input, .bar h1 input[aria-label="Nom de la guilde"] { min-width:0; background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:7px; font:inherit; }
+.chips { display:flex; flex-wrap:wrap; gap:6px; }
+.chip { display:inline-flex; align-items:center; gap:6px; font-size:12px; background:var(--panel-2); border:1px solid var(--line); border-radius:999px; padding:2px 10px 2px 4px; }
+.chip img { width:20px; height:20px; }
+.gear-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:10px; }
+.gear { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px; display:grid; gap:6px; }
+.gear.free { border-color:#3c5a3c; }
+.gear .top { display:flex; gap:10px; align-items:center; }
+.gear .icon { width:56px; height:56px; border-radius:10px; background:var(--panel-2); display:grid; place-items:center; flex:none; overflow:hidden; position:relative; }
+.gear .icon img.main { width:100%; height:100%; object-fit:cover; }
+.gear .icon img.shield { position:absolute; right:-2px; bottom:-2px; width:24px; height:24px; }
+.gear .title { font-weight:700; } .gear .title b { color:var(--gold); }
+.gear .owner { font-size:12px; color:var(--muted); } .gear.free .owner { color:var(--ok); }
+.gear ul { margin:0; padding:0; list-style:none; font-size:13px; display:grid; gap:2px; font-variant-numeric:tabular-nums; }
+.gear li { display:flex; justify-content:space-between; gap:8px; } .gear li.main { color:var(--gold); font-weight:600; }
+.gear .del { justify-self:end; padding:3px 10px; font-size:12px; }
+.rank-epic { color:#e26060; } .rank-heroic { color:#c58cff; } .rank-rare { color:#4ab3ff; } .rank-good { color:#7fe0a0; }
+table.members { width:100%; border-collapse:collapse; }
+table.members th, table.members td { padding:8px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+table.members td.num { text-align:right; font-variant-numeric:tabular-nums; }
+table.members td .acts { display:flex; gap:6px; flex-wrap:wrap; }
+table.members td .acts button { padding:4px 10px; font-size:12px; }
+.stat-tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; }
+.tile { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 14px; }
+.tile b { display:block; font-size:22px; color:var(--gold); font-variant-numeric:tabular-nums; } .tile span { font-size:12px; color:var(--muted); }
 @media (max-width: 760px) { body { grid-template-columns: 1fr; grid-template-rows: auto minmax(0,1fr); } aside { max-height: 40vh; } }
 </style>
 </head>
@@ -85,13 +117,21 @@ dialog input { width:100%; background:var(--panel-2); color:var(--text); border:
   <div class="brand">E7 SHOWCASE<small>Vitrines Epic Seven</small></div>
   <div class="list" id="list"></div>
   <div class="side-actions">
-    <button class="ghost" id="sims">⚔ Simulateurs</button>
     <button id="new">+ Nouveau profil</button>
     <button class="ghost" id="open">Ouvrir une vitrine (.e7v)</button>
     <input type="file" id="open-file" accept=".e7v" hidden>
   </div>
 </aside>
-<main id="main"></main>
+<main id="main">
+  <nav class="topnav" role="tablist" aria-label="Fonctionnalités">
+    <button role="tab" data-tab="vitrine">Vitrine</button>
+    <button role="tab" data-tab="sim">Simulateur de combat</button>
+    <button role="tab" data-tab="guild">Guilde</button>
+    <button role="tab" data-tab="armory">Armurerie</button>
+    <button role="tab" data-tab="gvg">GvG</button>
+  </nav>
+  <div id="content"></div>
+</main>
 
 <dialog id="dlg">
   <form id="dlg-form">
@@ -107,7 +147,7 @@ dialog input { width:100%; background:var(--panel-2); color:var(--text); border:
 <script>
 const TOKEN = "__TOKEN__";
 const $ = (s) => document.querySelector(s);
-let profiles = [], current = null;
+let profiles = [], current = null, tab = "vitrine";
 
 async function api(method, path, body) {
   const res = await fetch("/api" + path, {
@@ -137,15 +177,35 @@ async function refresh(select) {
   for (const [title, group] of [["Mes profils", mine], ["Vitrines reçues", recv]]) {
     if (!group.length) continue;
     list.append(el("h3", {}, title));
-    for (const p of group) list.append(el("button", { class: "item" + (p.id === (select || current) ? " active" : ""), "data-id": p.id, onclick: () => show(p.id) },
+    for (const p of group) list.append(el("button", { class: "item" + (p.id === (select || current) ? " active" : ""), "data-id": p.id, onclick: () => selectProfile(p.id) },
       p.player, el("small", {}, `${p.heroes} héros · ${p.updated_at}`)));
   }
-  if (select) show(select); else if (!current) welcome();
+  if (select) { current = select; render(); } else if (!current && tab === "vitrine") welcome();
 }
 
+function selectProfile(id) {
+  current = id;
+  if (tab !== "armory") tab = "vitrine";
+  render();
+}
+function setTab(name) { tab = name; render(); }
+function render() {
+  document.querySelectorAll(".topnav button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
+  document.querySelectorAll(".item").forEach((b) => b.classList.toggle("active", b.dataset.id === current));
+  if (tab === "sim") return simulators();
+  if (tab === "guild") return guildPage();
+  if (tab === "gvg") return gvgPage();
+  if (tab === "armory") return current ? armoryPage(current) : pickFirst("l'armurerie");
+  return current ? show(current) : welcome();
+}
+function pickFirst(what) {
+  $("#content").replaceChildren(el("div", { class: "empty" }, el("h2", {}, "Choisissez un profil"),
+    el("p", {}, `Sélectionnez un profil dans la liste de gauche pour ouvrir ${what}.`)));
+}
+document.querySelectorAll(".topnav button").forEach((b) => b.addEventListener("click", () => setTab(b.dataset.tab)));
+
 function welcome() {
-  current = null;
-  $("#main").replaceChildren(el("div", { class: "empty" },
+  $("#content").replaceChildren(el("div", { class: "empty" },
     el("h2", {}, "Bienvenue"),
     el("p", {}, "Créez votre profil, puis ajoutez les captures d'écran de vos héros."),
     el("ol", {},
@@ -157,8 +217,6 @@ function welcome() {
 }
 
 async function show(id) {
-  current = id;
-  document.querySelectorAll(".item").forEach((b) => b.classList.toggle("active", b.dataset.id === id));
   const p = await json("GET", "/profiles/" + id);
   const name = el("input", { value: p.player, maxlength: "40", "aria-label": "Nom du joueur" });
   if (p.received) name.setAttribute("readonly", "");
@@ -169,20 +227,20 @@ async function show(id) {
     el("button", { class: "danger", onclick: () => removeProfile(id, p.player) }, "Supprimer"));
   const kids = [bar];
   const report = el("div", { class: "report", id: "report" });
-  if (!p.received) {
-    const input = el("input", { type: "file", accept: "image/png,image/jpeg,image/webp", multiple: "", hidden: "" });
-    const drop = el("div", { class: "drop", onclick: () => input.click() },
-      "Glissez ici vos captures (Infos de héros, liste des héros) — ou cliquez pour les choisir");
-    input.addEventListener("change", () => importFiles([...input.files]));
-    drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
-    drop.addEventListener("dragleave", () => drop.classList.remove("over"));
-    drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); importFiles([...e.dataTransfer.files]); });
-    kids.push(drop, input);
-  }
+  if (!p.received) kids.push(...dropZone("Glissez ici vos captures (Infos de héros, liste des héros, objets non équipés) — ou cliquez pour les choisir"));
   kids.push(report);
   if (p.heroes.length) kids.push(el("iframe", { id: "frame", src: "/profile/" + id, title: "Vitrine" }));
   else kids.push(el("div", { class: "empty" }, p.received ? "Cette vitrine ne contient aucun héros." : "Aucun héros pour l'instant : ajoutez vos captures ci-dessus."));
-  $("#main").replaceChildren(...kids);
+  $("#content").replaceChildren(...kids);
+}
+function dropZone(text) {
+  const input = el("input", { type: "file", accept: "image/png,image/jpeg,image/webp", multiple: "", hidden: "" });
+  const drop = el("div", { class: "drop", onclick: () => input.click() }, text);
+  input.addEventListener("change", () => importFiles([...input.files]));
+  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); importFiles([...e.dataTransfer.files]); });
+  return [drop, input];
 }
 function reloadFrame() { const f = $("#frame"); if (f) f.src = f.src; }
 
@@ -233,15 +291,16 @@ async function importFiles(files) {
     if (state.error) throw new Error(state.error);
     const r = state.report;
     r.heroes.forEach((h) => bar.hero(h));
-    bar.set(1, `Terminé : ${r.heroes.length} héros ajouté(s)`);
+    bar.set(1, `Terminé : ${r.heroes.length} héros ajouté(s)` + (r.items.length ? `, ${r.items.length} pièce(s) ajoutée(s) à l'armurerie` : ""));
     bar.finish();
     const lines = [bar.box];
+    if (r.items.length) lines.push(el("div", { class: "ok" }, `Armurerie : ${r.items.join(" · ")}`));
     if (r.learned_sets.length) lines.push(el("div", { class: "transient" }, `Sets appris : ${r.learned_sets.join(", ")}`));
     for (const w of r.warnings) lines.push(el("div", { class: "warn" }, "⚠ " + w));
     if (r.ignored.length) lines.push(el("div", { class: "warn" }, `Captures non reconnues : ${r.ignored.join(", ")}`));
     report.replaceChildren(...lines);
     const keep = [...report.childNodes];
-    await refresh(); await show(current); $("#report").replaceChildren(...keep);
+    await refresh(); await render(); $("#report")?.replaceChildren(...keep);
     bar.box.classList.add("transient");
     setTimeout(() => {
       const gone = keep.filter((n) => n.classList && n.classList.contains("transient"));
@@ -266,7 +325,7 @@ async function exportVitrine(id, player) {
 
 async function removeProfile(id, player) {
   if (!confirm(`Supprimer le profil « ${player} » de cet ordinateur ?`)) return;
-  await api("DELETE", "/profiles/" + id); current = null; refresh();
+  await api("DELETE", "/profiles/" + id); current = null; await refresh(); render();
 }
 
 // --- Simulateurs (dégâts, combat) : calculs côté application (calc/damage.py, calc/battle.py)
@@ -295,19 +354,17 @@ function optionsCard() {
     el("div", { class: "checks", style: "margin-top:10px" }, check("Set Pénétration", "penetration_set"), check("Set Rage (cible affaiblie)", "rage_set"),
       check("Set Tumulte", "torrent_set")));
 }
-async function simulators(tab = "damage") {
-  current = null;
-  document.querySelectorAll(".item").forEach((b) => b.classList.remove("active"));
+async function simulators(sub = "battle") {
   const heroes = await json("GET", "/sim/heroes");
   const usable = heroes.filter((h) => h.simulable);
   const tabs = el("div", { class: "tabs" },
-    el("button", { "aria-pressed": String(tab === "damage"), onclick: () => simulators("damage") }, "Simulateur de dégâts"),
-    el("button", { "aria-pressed": String(tab === "battle"), onclick: () => simulators("battle") }, "Simulateur de combat"));
+    el("button", { "aria-pressed": String(sub === "battle"), onclick: () => simulators("battle") }, "Combat"),
+    el("button", { "aria-pressed": String(sub === "damage"), onclick: () => simulators("damage") }, "Dégâts"));
   const bar = el("div", { class: "bar" }, el("h1", {}, "Simulateurs"), tabs);
   const body = el("div", { class: "sim" });
   if (!usable.length) body.append(el("div", { class: "empty" }, "Ajoutez d'abord des héros à un profil : leurs stats servent aux simulations."));
-  else if (tab === "damage") damagePage(body, heroes); else battlePage(body, heroes);
-  $("#main").replaceChildren(bar, body);
+  else if (sub === "damage") damagePage(body, heroes); else battlePage(body, heroes);
+  $("#content").replaceChildren(bar, body);
 }
 function damagePage(body, heroes) {
   const attacker = pick(heroes, "Attaquant");
@@ -367,7 +424,128 @@ function battlePage(body, heroes) {
       el("div", { class: "grid2" }, field("Nombre de combats simulés", runs), field("Recharge S2 par défaut (tours)", cd2), field("Recharge S3 par défaut (tours)", cd3)),
       el("div", { style: "margin-top:12px" }, el("button", { onclick: run }, "Lancer la simulation"))), opts, out);
 }
-$("#sims").onclick = () => simulators();
+
+// --- Armurerie : pièces portées (captures « Infos de héros ») et non équipées (infobulles d'objet)
+const SLOTS = { weapon: "Arme", helmet: "Casque", armor: "Armure", necklace: "Collier", ring: "Bague", boots: "Bottes" };
+const SLOT_GLYPH = { weapon: "⚔", helmet: "⛑", armor: "🛡", necklace: "📿", ring: "💍", boots: "👢" };
+const RANKS = { epic: "Épique", heroic: "Héroïque", rare: "Rare", good: "Bon", normal: "Normal" };
+const STATS = { atk: "Attaque", atk_pct: "Attaque", hp: "PV", hp_pct: "PV", def: "Défense", def_pct: "Défense", spd: "Vitesse",
+  crit_chance: "Chances de critique", crit_dmg: "Dégâts critiques", effectiveness: "Efficacité", effect_res: "Résistance", dual_attack: "Attaque double" };
+const statText = (s) => /_pct$|crit|effect|dual/.test(s.stat) ? `${s.value} %` : fmtN(s.value);
+async function armoryPage(id) {
+  const p = await json("GET", "/profiles/" + id);
+  const data = await json("GET", `/profiles/${id}/armory`);
+  const items = [...data.equipped, ...data.inventory];
+  const sel = (label, entries) => el("select", { "aria-label": label }, ...entries.map(([v, t]) => el("option", { value: v }, t)));
+  const slot = sel("Emplacement", [["", "Tous les emplacements"], ...Object.entries(SLOTS)]);
+  const usedSets = [...new Set(items.map((g) => g.set).filter(Boolean))].sort((a, b) => data.sets[a].name.localeCompare(data.sets[b].name));
+  const set = sel("Set", [["", "Tous les sets"], ...usedSets.map((k) => [k, data.sets[k].name])]);
+  const state = sel("État", [["", "Toutes les pièces"], ["free", "Non équipées (de côté)"], ["worn", "Portées par un héros"]]);
+  const main = sel("Stat principale", [["", "Toutes les stats principales"], ...Object.entries(STATS).map(([k, v]) => [k, v + (k.endsWith("_pct") ? " %" : "")])]);
+  const sort = sel("Tri", [["enhance", "Amélioration"], ["set", "Set"], ["slot", "Emplacement"], ["hero", "Héros"]]);
+  const search = el("input", { type: "search", placeholder: "Héros, stat…", "aria-label": "Recherche" });
+  const grid = el("div", { class: "gear-grid" });
+  const counter = el("p", { class: "note" });
+  const shield = (k) => k && data.sets[k]?.icon ? el("img", { src: data.sets[k].icon, alt: "" }) : "";
+  const card = (g) => {
+    const icon = el("div", { class: "icon" }, g.icon ? el("img", { class: "main", src: g.icon, alt: SLOTS[g.slot] }) : SLOT_GLYPH[g.slot] || "?");
+    if (g.set && data.sets[g.set]?.icon) icon.append(el("img", { class: "shield", src: data.sets[g.set].icon, alt: "" }));
+    const title = el("div", { class: "title" }, `${SLOTS[g.slot]} `, el("b", {}, `+${g.enhance}`));
+    const sub = el("div", { class: "owner" }, g.hero ? `Portée par ${g.hero}` : "Non équipée");
+    const desc = el("div", {}, title, el("div", { class: g.rank ? "rank-" + g.rank : "" , style: "font-size:12px" },
+      [g.set ? data.sets[g.set].name : "Set inconnu", g.rank ? RANKS[g.rank] : "", g.level ? `niv. ${g.level}` : ""].filter(Boolean).join(" · ")), sub);
+    const node = el("div", { class: "gear" + (g.hero ? "" : " free") }, el("div", { class: "top" }, icon, desc),
+      el("ul", {}, el("li", { class: "main" }, el("span", {}, STATS[g.main.stat]), el("span", {}, statText(g.main))),
+        ...g.substats.map((s) => el("li", {}, el("span", {}, STATS[s.stat]), el("span", {}, statText(s))))));
+    if (!g.hero && !p.received) node.append(el("button", { class: "danger del", onclick: async () => {
+      if (!confirm("Retirer cette pièce de l'armurerie ?")) return;
+      await api("DELETE", `/profiles/${id}/items/${g.id}`); armoryPage(id);
+    } }, "Retirer"));
+    return node;
+  };
+  const draw = () => {
+    const q = search.value.trim().toLowerCase();
+    const shown = items.filter((g) => (!slot.value || g.slot === slot.value) && (!set.value || g.set === set.value)
+      && (!main.value || g.main.stat === main.value)
+      && (!state.value || (state.value === "free") === !g.hero)
+      && (!q || [g.hero, ...[g.main, ...g.substats].map((s) => STATS[s.stat])].some((t) => t && t.toLowerCase().includes(q))));
+    const key = { enhance: (g) => -g.enhance, set: (g) => g.set ? data.sets[g.set].name : "~", slot: (g) => Object.keys(SLOTS).indexOf(g.slot), hero: (g) => g.hero || "" }[sort.value];
+    shown.sort((a, b) => { const x = key(a), y = key(b); return x < y ? -1 : x > y ? 1 : 0; });
+    counter.textContent = `${shown.length} pièce(s) affichée(s) sur ${items.length}.`;
+    grid.replaceChildren(...shown.map(card));
+  };
+  [slot, set, state, main, sort].forEach((n) => n.addEventListener("change", draw));
+  search.addEventListener("input", draw);
+  const bySet = {};
+  for (const g of data.inventory) if (g.set) bySet[g.set] = (bySet[g.set] || 0) + 1;
+  const kids = [el("div", { class: "bar" }, el("h1", {}, `Armurerie — ${p.player}`), p.received ? el("span", { class: "badge" }, "Vitrine reçue") : "")];
+  if (!p.received) kids.push(...dropZone("Glissez ici les captures d'objets non équipés (infobulle de l'objet dans l'inventaire) — ou des fiches « Infos de héros »"));
+  kids.push(el("div", { class: "report", id: "report" }));
+  const page = el("div", { class: "page" },
+    el("div", { class: "stat-tiles" },
+      el("div", { class: "tile" }, el("b", {}, fmtN(items.length)), el("span", {}, "pièces au total")),
+      el("div", { class: "tile" }, el("b", {}, fmtN(data.equipped.length)), el("span", {}, "portées par vos héros")),
+      el("div", { class: "tile" }, el("b", {}, fmtN(data.inventory.length)), el("span", {}, "de côté (non équipées)"))),
+    Object.keys(bySet).length ? el("div", { class: "card" }, el("h3", {}, "Pièces de côté par set"),
+      el("div", { class: "chips" }, ...Object.entries(bySet).sort((a, b) => b[1] - a[1]).map(([k, n]) => el("span", { class: "chip" }, shield(k), `${data.sets[k].name} × ${n}`)))) : "",
+    el("div", { class: "card" }, el("div", { class: "filters" }, search, slot, set, main, state, sort)),
+    counter, grid);
+  if (!items.length) page.append(el("div", { class: "empty" }, "Aucune pièce : ajoutez les fiches « Infos de héros » de vos héros, ou des captures de l'infobulle de vos objets non équipés."));
+  kids.push(page);
+  $("#content").replaceChildren(...kids);
+  draw();
+}
+
+// --- Guilde : son profil et les vitrines reçues des autres membres
+async function guildPage() {
+  const g = await json("GET", "/guild");
+  const name = el("input", { value: g.name, maxlength: "40", placeholder: "Nom de la guilde", "aria-label": "Nom de la guilde" });
+  name.addEventListener("change", async () => { await json("PATCH", "/guild", { name: name.value }); });
+  const ids = g.members.map((m) => m.id);
+  const save = async (members) => { await json("PATCH", "/guild", { members }); guildPage(); };
+  const add = el("select", { "aria-label": "Profil à ajouter" }, el("option", { value: "" }, "Ajouter un profil existant…"),
+    ...g.candidates.map((c) => el("option", { value: c.id }, c.player + (c.received ? " (vitrine reçue)" : " (mon profil)"))));
+  add.addEventListener("change", () => add.value && save([...ids, add.value]));
+  const file = el("input", { type: "file", accept: ".e7v", hidden: "" });
+  file.addEventListener("change", async () => {
+    const f = file.files[0]; file.value = "";
+    if (!f) return;
+    try { await json("POST", "/open", { name: f.name, data: await toB64(f), guild: true }); await refresh(); guildPage(); }
+    catch (err) { alert(err.message); }
+  });
+  const open = (id, where) => { current = id; tab = where; render(); };
+  const power = g.members.reduce((t, m) => t + m.power, 0);
+  const table = el("table", { class: "members" },
+    el("thead", {}, el("tr", {}, ...["Membre", "Héros", "Puissance", "Pièces", "Héros les plus puissants", "Mise à jour", ""].map((t) => el("th", {}, t)))),
+    el("tbody", {}, ...g.members.map((m) => el("tr", {},
+      el("td", {}, el("strong", {}, m.player), el("div", { class: "note" }, m.received ? "Vitrine reçue" : "Mon profil")),
+      el("td", { class: "num" }, fmtN(m.heroes)), el("td", { class: "num" }, fmtN(m.power)), el("td", { class: "num" }, fmtN(m.items)),
+      el("td", {}, m.top.map((h) => h.name + (h.power ? ` (${fmtN(h.power)})` : "")).join(", ") || "—"),
+      el("td", {}, m.updated_at),
+      el("td", {}, el("div", { class: "acts" },
+        el("button", { class: "ghost", onclick: () => open(m.id, "vitrine") }, "Vitrine"),
+        el("button", { class: "ghost", onclick: () => open(m.id, "armory") }, "Armurerie"),
+        el("button", { class: "danger", onclick: () => save(ids.filter((x) => x !== m.id)) }, "Retirer")))))));
+  $("#content").replaceChildren(
+    el("div", { class: "bar" }, el("h1", {}, name)),
+    el("div", { class: "page" },
+      el("div", { class: "stat-tiles" },
+        el("div", { class: "tile" }, el("b", {}, fmtN(g.members.length)), el("span", {}, "membres")),
+        el("div", { class: "tile" }, el("b", {}, fmtN(g.members.reduce((t, m) => t + m.heroes, 0))), el("span", {}, "héros au total")),
+        el("div", { class: "tile" }, el("b", {}, fmtN(power)), el("span", {}, "puissance cumulée"))),
+      el("div", { class: "card" }, el("h3", {}, "Ajouter des membres"),
+        el("p", { class: "note" }, "Chaque membre vous envoie sa vitrine (.e7v, bouton « Exporter la vitrine ») : ouvrez-la ici pour l'ajouter à la guilde."),
+        el("div", { class: "filters" }, add, el("button", { onclick: () => file.click() }, "Ajouter une vitrine (.e7v)")), file),
+      g.members.length ? el("div", { class: "card" }, el("h3", {}, "Membres"), table)
+        : el("div", { class: "empty" }, "Aucun membre pour l'instant : ajoutez votre profil et les vitrines de vos coéquipiers.")));
+}
+
+// --- GvG : à venir
+function gvgPage() {
+  $("#content").replaceChildren(el("div", { class: "empty" }, el("h2", {}, "Guerre de guilde"),
+    el("p", {}, "Cet onglet accueillera la préparation des guerres de guilde (défenses, attaques, suivi des combats)."),
+    el("p", { class: "note" }, "Fonctionnalité à venir.")));
+}
 
 $("#new").onclick = () => { $("#dlg-name").value = ""; $("#dlg").showModal(); };
 $("#dlg-cancel").onclick = () => $("#dlg").close();
@@ -376,18 +554,18 @@ $("#dlg-form").addEventListener("submit", async (e) => {
   const player = $("#dlg-name").value.trim();
   if (!player) return;
   $("#dlg").close();
-  try { const r = await json("POST", "/profiles", { player }); await refresh(r.id); }
+  try { const r = await json("POST", "/profiles", { player }); tab = "vitrine"; await refresh(r.id); }
   catch (err) { alert(err.message); }
 });
 $("#open").onclick = () => $("#open-file").click();
 $("#open-file").addEventListener("change", async (e) => {
   const f = e.target.files[0]; e.target.value = "";
   if (!f) return;
-  try { const r = await json("POST", "/open", { name: f.name, data: await toB64(f) }); refresh(r.id); }
+  try { const r = await json("POST", "/open", { name: f.name, data: await toB64(f) }); tab = "vitrine"; refresh(r.id); }
   catch (err) { alert(err.message); }
 });
 const start = new URLSearchParams(location.hash.slice(1)).get("p");
-refresh(start || undefined);
+refresh(start || undefined).then(() => { if (!start) render(); });
 </script>
 </body>
 </html>

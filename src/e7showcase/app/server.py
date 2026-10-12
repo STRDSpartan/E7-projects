@@ -21,6 +21,8 @@ from typing import Any
 from urllib.parse import unquote, urlparse
 
 from e7showcase import __version__
+from e7showcase.app.armory import armory
+from e7showcase.app.guild import GuildStore
 from e7showcase.app.importer import ScreenshotImporter
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.app.viewer import profile_page
@@ -51,6 +53,7 @@ class AppState:
     def __init__(self, data_root: Path, importer: ScreenshotImporter | None = None):
         self.store = ProfileStore(data_root / "profiles")
         self.assets = AssetStore(data_root / "assets")
+        self.guild = GuildStore(data_root / "guild.json", self.store)
         self.importer = importer or ScreenshotImporter(data_root / "templates" / "sets")
         self.token = secrets.token_urlsafe(24)
         self.lock = threading.Lock()  # un import OCR à la fois
@@ -204,6 +207,17 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 except simulator.SimError as exc:
                     raise ApiError(400, str(exc)) from exc
                 raise ApiError(404, "introuvable")
+            if path == "/guild":
+                if method == "GET":
+                    return self._json(state.guild.summary())
+                if method == "PATCH":
+                    body = self._body()
+                    members = body.get("members")
+                    state.guild.update(
+                        name=str(body["name"]) if "name" in body else None,
+                        members=[str(m) for m in members] if isinstance(members, list) else None,
+                    )
+                    return self._json(state.guild.summary())
             if (j := re.fullmatch(r"/jobs/([0-9a-f]+)", path)) and method == "GET":
                 job = state.jobs.get(j[1])
                 if job is None:
@@ -215,6 +229,8 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     pid = import_vitrine(store, _b64(body.get("data")))
                 except VitrineFileError as exc:
                     raise ApiError(400, str(exc)) from exc
+                if body.get("guild"):  # vitrine d'un coéquipier ajoutée depuis la page Guilde
+                    state.guild.add(pid)
                 return self._json({"id": pid}, 201)
             m = re.fullmatch(r"/profiles/([a-z0-9-]+)(/.*)?", path)
             if not m or not store.exists(m[1]):
@@ -233,6 +249,8 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             if rest == "" and method == "DELETE":
                 store.delete(pid)
                 return self._send(204, b"", "text/plain")
+            if rest == "/armory" and method == "GET":
+                return self._json(armory(store, pid, state.importer.set_library))
             if rest == "/export" and method == "GET":
                 data = export_profile(store, pid)
                 name = suggested_filename(store.load(pid).player)
@@ -254,6 +272,10 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 decoded = [(str(f.get("name", "capture")), _b64(f.get("data"))) for f in files]
                 job = state.start_import(pid, decoded)
                 return self._json({"job": job.id, "total": job.total}, 202)
+            if (i := re.fullmatch(r"/items/([0-9a-f]{1,32})", rest)) and method == "DELETE":
+                if not store.remove_item(pid, i[1]):
+                    raise ApiError(404, "pièce introuvable")
+                return self._send(204, b"", "text/plain")
             if (h := re.fullmatch(r"/heroes/(.+)", rest)) and method == "DELETE":
                 store.remove_hero(pid, unquote(h[1]))
                 return self._send(204, b"", "text/plain")

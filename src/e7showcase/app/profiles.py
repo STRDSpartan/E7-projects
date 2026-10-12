@@ -20,8 +20,9 @@ from pathlib import Path
 from PIL import Image
 
 from e7showcase.assets import slugify
+from e7showcase.models.gear import Gear
 from e7showcase.models.hero import Hero
-from e7showcase.models.roster import Roster
+from e7showcase.models.roster import InventoryItem, Roster
 
 ID_RE = re.compile(r"^[a-z0-9-]{1,60}$")
 PORTRAIT_MAX = (640, 900)
@@ -132,6 +133,22 @@ class ProfileStore:
         self.portrait_path(profile_id, hero_name).unlink(missing_ok=True)
         for kind in ICON_KINDS:
             self.icon_path(profile_id, hero_name, kind).unlink(missing_ok=True)
+
+    # --- armurerie : pièces non équipées
+    def add_item(self, profile_id: str, gear: Gear) -> str:
+        roster = self.load(profile_id)
+        item = InventoryItem(id=secrets.token_hex(6), gear=gear)
+        roster.inventory.append(item)
+        self.save(profile_id, roster)
+        return item.id
+
+    def remove_item(self, profile_id: str, item_id: str) -> bool:
+        roster = self.load(profile_id)
+        kept = [i for i in roster.inventory if i.id != item_id]
+        found = len(kept) != len(roster.inventory)
+        roster.inventory = kept
+        self.save(profile_id, roster)
+        return found
 
     def portrait_path(self, profile_id: str, hero_name: str) -> Path:
         return self.path(profile_id) / "images" / f"{image_key(hero_name)}.webp"

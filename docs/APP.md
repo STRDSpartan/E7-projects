@@ -18,12 +18,30 @@ la même application sur son ordinateur.
 5. Le destinataire : double-clic sur le fichier (association installée) ou *Ouvrir une vitrine* →
    rangée dans « Vitrines reçues », consultation seule.
 
+## Onglets
+- **Vitrine** : le profil choisi à gauche (import des captures, export `.e7v`).
+- **Simulateur de combat** : combat entre deux équipes et calcul des dégâts.
+- **Guilde** : nom de la guilde et membres (son profil + les vitrines `.e7v` reçues des
+  coéquipiers) avec héros, puissance cumulée, pièces et héros les plus puissants ; accès direct à
+  la vitrine et à l'armurerie de chacun. Stockage local : `<données>/guild.json`.
+- **Armurerie** : toutes les pièces du profil choisi. Les pièces **portées** viennent des fiches
+  « Infos de héros » (icône découpée sur la capture, set, rang, niveau, amélioration, stats) ; les
+  pièces **non équipées** viennent de captures de l'infobulle d'un objet de l'inventaire, glissées
+  comme les autres captures (`parsers/item_parser.py` lit l'emplacement, le rang, le set,
+  l'amélioration, la stat principale et les stats secondaires ; la description du set est
+  ignorée). Filtres par emplacement, set, stat principale, état (de côté / portée), recherche et
+  tris ; résumé des pièces de côté par set. Les pièces de côté sont rangées dans
+  `Roster.inventory` (champ facultatif : les anciens profils et fichiers `.e7v` restent lisibles).
+- **GvG** : à venir.
+
 ## Architecture (`src/e7showcase/app/`)
 | Fichier | Rôle |
 |---|---|
 | `launcher.py` | point d'entrée `e7showcase-app [fichier.e7v]` : serveur local + fenêtre native (pywebview + WebView2), pas de version navigateur |
 | `server.py` | serveur HTTP local (127.0.0.1, port aléatoire), API JSON, jeton de session + contrôle de l'en-tête Host ; import en arrière-plan suivi par `/api/jobs/<id>` (barre de progression) |
 | `ui.html` | interface (HTML/JS sans dépendance) |
+| `armory.py` | armurerie : pièces portées et non équipées d'un profil, blasons des sets (API `/api/profiles/<id>/armory`, `DELETE …/items/<id>`) |
+| `guild.py` | guilde locale (API `/api/guild` : `GET`, `PATCH` nom et membres ; `/api/open` avec `guild: true` ajoute la vitrine ouverte) |
 | `simulator.py` | simulateurs de dégâts et de combat (API `/api/sim/*`, voir `docs/SIMULATORS.md`) |
 | `anim.html` | modèle animé du héros dans la fiche : rendu en direct depuis les fichiers publics d'E7 Codex (lecteur Spine du site), dans un cadre isolé (`sandbox`, CSP limitée à e7codex.com) sans accès à l'application ; la pose de la capture reste affichée hors ligne |
 | `profiles.py` | profils dans `<données>/profiles/<id>/` (`profile.json` = Roster, `images/*.webp`) |
