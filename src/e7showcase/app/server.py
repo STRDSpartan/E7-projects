@@ -26,7 +26,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 from e7showcase import __version__
 from e7showcase.app.armory import armory
-from e7showcase.app.battle_report import read_report
+from e7showcase.app.battle_report import read_capture, read_report
 from e7showcase.app.discord_settings import DiscordSettings, Publisher
 from e7showcase.app.guild import GuildStore, guild_csv, members_csv
 from e7showcase.app.guild_import import GuildImportError, import_guild_csv
@@ -52,6 +52,7 @@ from e7showcase.app.vitrine_file import (
     suggested_filename,
 )
 from e7showcase.assets import AssetStore
+from e7showcase.parsers.war_map import parse_fortress, parse_war_map
 from e7showcase.vision.hero_faces import FaceMatcher
 
 log = logging.getLogger(__name__)
@@ -76,6 +77,9 @@ APP_CSP = (
     "frame-ancestors 'self'; base-uri 'none'; form-action 'none'"
 )
 APP_HEADERS = {"Content-Security-Policy": APP_CSP, "Referrer-Policy": "no-referrer"}
+MAP_HELP = "capture non reconnue : utilisez l'écran principal de la guerre (guildes et forteresses)"
+FORTRESS_HELP = "aucun joueur reconnu : utilisez la vue d'une forteresse (pseudos des défenseurs)"
+WARMAP_RE = re.compile(r"/gvgmap/([0-9a-f]{16}\.webp)")
 MEDIA_RE = re.compile(r"/media/([a-z0-9-]{1,60})/([a-z0-9-]{1,80}(?:\.[a-z]{1,10})?\.webp)")
 ANIM_RE = re.compile(r"/anim/(c\d{4}(?:_[a-z0-9]{1,8}){0,2})")
 # Page du modèle animé : seuls le lecteur et les fichiers publics d'E7 Codex sont autorisés
@@ -104,6 +108,7 @@ class AppState:
         self._ocr: Any = None
         self.lock_ocr = threading.Lock()
         self.faces = FaceMatcher(data_root / "assets" / "faces")
+        self.war_images = data_root / "gvg_map"
         self.face_sync: dict[str, Any] = {"running": False, "done": 0, "total": 0, "error": None}
         self._pages: dict[str, tuple[tuple[int, int, int], bytes]] = {}
         self.uploads: dict[str, tuple[float, str, bytes]] = {}
@@ -193,6 +198,20 @@ class AppState:
                 self.face_sync["running"] = False
 
         threading.Thread(target=work, daemon=True).start()
+
+    def save_war_image(self, image: Any) -> str:
+        """Capture de guerre gardée localement (réencodée, 2 000 px au plus) pour la carte."""
+        self.war_images.mkdir(parents=True, exist_ok=True)
+        name = secrets.token_hex(8) + ".webp"
+        img = image.copy()
+        img.thumbnail((2000, 2000))
+        img.save(self.war_images / name, "WEBP", quality=80)
+        return name
+
+    def drop_war_images(self, names: list[str]) -> None:
+        for name in names:
+            if WARMAP_RE.fullmatch("/gvgmap/" + name):
+                (self.war_images / name).unlink(missing_ok=True)
 
     def guild_ids(self) -> list[str]:
         """Profils où chercher un portrait découpé : membres de la guilde, puis les autres."""
@@ -330,6 +349,12 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     if not state.store.exists(m[1]):
                         raise ApiError(404, "profil introuvable")
                     self._send(200, state.vitrine(m[1]), "text/html; charset=utf-8", APP_HEADERS)
+                elif method == "GET" and (m := WARMAP_RE.fullmatch(path)):
+                    target = state.war_images / m[1]  # capture de carte ou de forteresse
+                    if not target.is_file():
+                        raise ApiError(404, "introuvable")
+                    cache = {"Cache-Control": "private, max-age=31536000, immutable"}
+                    self._send(200, target.read_bytes(), "image/webp", cache)
                 elif method == "GET" and (m := MEDIA_RE.fullmatch(path)):
                     # image d'un profil (adresse versionnée par ?v= : gardée en cache longtemps)
                     if not state.store.exists(m[1]):
@@ -529,6 +554,43 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     except ValueError as exc:
                         raise ApiError(400, str(exc)) from exc
                     return self._json(found)
+                if rest in ("/map", "/map/fortress") and method == "POST":  # captures (binaire)
+                    raw = self._raw(MAX_UPLOAD)
+                    try:
+                        engine = state.ocr()
+                    except ImportError as exc:
+                        raise ApiError(503, "moteur de lecture des captures absent") from exc
+                    try:
+                        image, lines = read_capture(raw, engine)
+                    except ValueError as exc:
+                        raise ApiError(400, str(exc)) from exc
+                    if rest == "/map":
+                        war_map = parse_war_map(lines, image.size)
+                        if war_map is None or not war_map.fortresses:
+                            raise ApiError(400, MAP_HELP)
+                        name = state.save_war_image(image)
+                        state.drop_war_images(gvg.set_map(asdict(war_map), name))
+                    else:
+                        players = parse_fortress(lines, image.size)
+                        if not players:
+                            raise ApiError(400, FORTRESS_HELP)
+                        fid = parse_qs(urlparse(self.path).query).get("id", [None])[0]
+                        name = state.save_war_image(image)
+                        try:
+                            _, old = gvg.set_fortress(fid, [asdict(p) for p in players], name)
+                        except GvgError:
+                            state.drop_war_images([name])
+                            raise
+                        state.drop_war_images([old] if old else [])
+                    return self._json(gvg.summary())
+                if (
+                    pl := re.fullmatch(r"/map/fortress/(f\d)/players/(\d{1,2})", rest)
+                ) and method == "PATCH":
+                    gvg.update_player(pl[1], int(pl[2]), self._body())
+                    return self._json(gvg.summary())
+                if rest == "/map" and method == "DELETE":
+                    state.drop_war_images(gvg.clear_map())
+                    return self._json(gvg.summary())
                 if rest == "/faces" and method == "GET":
                     return self._json(state.face_sync_status())
                 if rest == "/faces/sync" and method == "POST":

@@ -39,12 +39,23 @@ def _thumb(image: Image.Image, x: float, y: float, r: float) -> str:
     return "data:image/webp;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
 
 
-def read_report(data: bytes, engine: Any, matcher: FaceMatcher) -> dict[str, Any]:
-    with Image.open(io.BytesIO(data)) as src:
-        image = src.convert("RGB")
+def read_capture(data: bytes, engine: Any) -> tuple[Image.Image, list[Any]]:
+    """Image (réduite si très grande) et boîtes de texte de l'OCR d'une capture."""
+    try:
+        with Image.open(io.BytesIO(data)) as src:
+            image = src.convert("RGB")
+    except OSError as exc:
+        raise ValueError(
+            "fichier illisible : envoyez une capture d'écran (PNG, JPG, WebP)"
+        ) from exc
     if max(image.size) > MAX_SIDE:
         image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
-    report = parse_report(engine.read_boxes(image))
+    return image, engine.read_boxes(image)
+
+
+def read_report(data: bytes, engine: Any, matcher: FaceMatcher) -> dict[str, Any]:
+    image, lines = read_capture(data, engine)
+    report = parse_report(lines)
     if report is None:
         raise ValueError(
             "capture non reconnue : utilisez l'écran de fin de combat de GvG montrant les "

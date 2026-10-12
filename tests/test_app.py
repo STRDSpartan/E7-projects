@@ -804,3 +804,53 @@ def test_gvg_report_rejects_other_images(app: Any) -> None:
     with pytest.raises(urllib.error.HTTPError) as err:
         urllib.request.urlopen(req)
     assert err.value.code == 400 and "fin de combat" in json.loads(err.value.read())["error"]
+
+
+def test_gvg_war_map_and_fortress_flow(app: Any) -> None:
+    from tests.test_war_map import lines
+
+    state, base = app
+    t = state.token
+
+    class Fixture:  # moteur OCR factice : renvoie le texte relevé sur une vraie capture
+        name = "gvg_war_map_ocr.json"
+
+        def read_boxes(self, image: Any) -> list[Any]:
+            return lines(self.name)
+
+    engine = Fixture()
+    state._ocr = engine
+    buf = io.BytesIO()
+    Image.new("RGB", (2000, 1125), (20, 30, 50)).save(buf, "PNG")
+    shot = buf.getvalue()
+
+    def upload(path: str) -> Any:
+        req = urllib.request.Request(base + "/api" + path, method="POST", data=shot)
+        req.add_header("X-E7-Token", t)
+        with urllib.request.urlopen(req) as res:
+            return json.loads(res.read())
+
+    g = upload("/gvg/map")
+    m = g["map"]
+    assert m["enemy"]["name"] == "Omega" and [f["total"] for f in m["fortresses"]] == [10, 7, 6]
+    assert g["wars"][0]["opponent"] == "Omega"  # la guerre du jour rejoint le suivi
+    with urllib.request.urlopen(base + "/gvgmap/" + m["image"]) as res:
+        assert res.headers["Content-Type"] == "image/webp"
+    engine.name = "gvg_fortress_ocr.json"
+    g = upload("/gvg/map/fortress")  # 10 joueurs : la forteresse « 10/10 », sans la désigner
+    dard = g["map"]["fortresses"][0]
+    assert len(dard["players"]) == 10 and dard["image"]
+    call(base, "PATCH", "/api/gvg/map/fortress/f0/players/0", {"beaten": True, "name": "Zed"}, t)
+    engine.name = "gvg_war_map_ocr.json"
+    g = upload("/gvg/map")  # même guerre : joueurs et capture de forteresse conservés
+    first = g["map"]["fortresses"][0]["players"][0]
+    assert first["name"] == "Zed" and first["beaten"] and len(g["wars"]) == 1
+    images = list(state.war_images.glob("*.webp"))
+    assert len(images) == 2  # l'ancienne carte a été remplacée
+    call(base, "DELETE", "/api/gvg/map", token=t)
+    assert call(base, "GET", "/api/gvg", token=t)["map"] is None
+    assert not list(state.war_images.glob("*.webp"))
+    for bad in ("/gvgmap/../gvg.json", "/gvgmap/abc.webp"):
+        with pytest.raises(urllib.error.HTTPError) as err:
+            call(base, "GET", bad)
+        assert err.value.code == 404

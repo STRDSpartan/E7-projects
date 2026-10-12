@@ -30,6 +30,8 @@ TEAMS = 2
 MAX_TEXT = 40
 RESULTS = ("win", "loss")
 MAX_SCOUTED = 200
+MAX_FORTRESSES = 6
+MAX_PLAYERS = 40
 SCOUT_STATS = (
     "atk", "def", "hp", "spd", "crit_chance", "crit_dmg", "effectiveness", "effect_res",
     "dual_attack",
@@ -77,6 +79,7 @@ class GvgStore:
             "defenses": defenses,
             "wars": wars,
             "scouted": [s for s in data.get("scouted", []) if isinstance(s, dict) and s.get("id")],
+            "map": data["map"] if isinstance(data.get("map"), dict) else None,
         }
 
     def _write(self, data: dict[str, Any]) -> None:
@@ -220,6 +223,92 @@ class GvgStore:
         self._write(data)
         return str(entry["id"])
 
+    # --- carte de la guerre (captures du jeu : carte, forteresses)
+    def set_map(self, war_map: dict[str, Any], image: str | None) -> list[str]:
+        """Nouvelle carte de guerre ; renvoie les images remplacées (à supprimer)."""
+        data = self._read()
+        old = data["map"] or {}
+        replaced = [
+            i for i in [old.get("image"), *(f.get("image") for f in old.get("fortresses", []))] if i
+        ]
+        same_war = (old.get("enemy") or {}).get("name") == war_map["enemy"].get("name")
+        fortresses = []
+        for i, f in enumerate(war_map["fortresses"][:MAX_FORTRESSES]):
+            prev: dict[str, Any] = next(
+                (p for p in old.get("fortresses", []) if same_war and p.get("name") == f["name"]),
+                {},
+            )  # même guerre : on garde joueurs et capture de la forteresse
+            fortresses.append(
+                {**f, "id": f"f{i}", "players": prev.get("players", []), "image": prev.get("image")}
+            )
+        kept = {f["image"] for f in fortresses if f.get("image")}
+        data["map"] = {
+            "date": date.today().isoformat(),
+            "ours": war_map["ours"],
+            "enemy": war_map["enemy"],
+            "ends_in": _text(war_map.get("ends_in")),
+            "fortresses": fortresses,
+            "image": image,
+        }
+        opponent = _text(war_map["enemy"].get("name"))
+        if opponent and not any(  # la guerre du jour apparaît aussi dans le suivi
+            w["opponent"] == opponent and w["date"] == date.today().isoformat()
+            for w in data["wars"]
+        ):
+            today = date.today().isoformat()
+            data["wars"].insert(
+                0, {"id": secrets.token_hex(5), "opponent": opponent, "date": today, "attacks": []}
+            )
+        self._write(data)
+        return [i for i in replaced if i not in kept and i != image]
+
+    def set_fortress(
+        self, fortress_id: str | None, players: list[dict[str, Any]], image: str | None
+    ) -> tuple[str, str | None]:
+        """Joueurs d'une forteresse (désignée, sinon celle qui en compte autant) ;
+        renvoie son id et l'ancienne capture remplacée."""
+        data = self._read()
+        if not data["map"]:
+            raise GvgError("importez d'abord la capture de la carte de la guerre")
+        forts = data["map"]["fortresses"]
+        fort = next((f for f in forts if f["id"] == fortress_id), None)
+        if fort is None:
+            same = [f for f in forts if f.get("total") == len(players)]
+            fort = same[0] if len(same) == 1 else None
+        if fort is None:
+            raise GvgError("choisissez la forteresse de cette capture (nombre de joueurs ambigu)")
+        old = fort.get("image")
+        fort["players"] = [
+            {"name": _text(p["name"]), "x": float(p["x"]), "y": float(p["y"]), "beaten": False}
+            for p in players[:MAX_PLAYERS]
+        ]
+        fort["image"] = image
+        self._write(data)
+        return str(fort["id"]), old if old != image else None
+
+    def update_player(self, fortress_id: str, index: int, body: dict[str, Any]) -> None:
+        data = self._read()
+        fort = next(
+            (f for f in (data["map"] or {}).get("fortresses", []) if f["id"] == fortress_id), None
+        )
+        if fort is None or not 0 <= index < len(fort["players"]):
+            raise GvgError("joueur introuvable")
+        player = fort["players"][index]
+        if "name" in body and _text(body["name"]):
+            player["name"] = _text(body["name"])
+        if "beaten" in body:
+            player["beaten"] = bool(body["beaten"])
+        self._write(data)
+
+    def clear_map(self) -> list[str]:
+        data = self._read()
+        old = data["map"] or {}
+        data["map"] = None
+        self._write(data)
+        return [
+            i for i in [old.get("image"), *(f.get("image") for f in old.get("fortresses", []))] if i
+        ]
+
     def delete_scouted(self, scout_id: str) -> None:
         data = self._read()
         kept = [s for s in data["scouted"] if s.get("id") != scout_id]
@@ -272,6 +361,7 @@ class GvgStore:
             "wars": wars,
             "counters": self.counters(data["wars"]),
             "scouted": data["scouted"],
+            "map": data["map"],
             "hero_names": sorted(
                 {h.get("fr") or h["en"] for h in load("heroes")["heroes"] if h.get("stars")}
             ),

@@ -403,6 +403,45 @@ select { cursor:pointer; }
 .scout-stats label { display:grid; gap:2px; font-size:11px; color:var(--muted); }
 .scout-stats input { background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:6px; padding:4px 6px; font:inherit; font-size:13px; min-width:0; }
 .hidden-stats { opacity:.85; }
+
+/* --- v0.48 : carte de la guerre --- */
+.warmap { position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--line); box-shadow:0 20px 50px rgba(0,0,0,.45); background:#0b1220; }
+.wm-bg { display:block; width:100%; filter:saturate(.85) brightness(.55); } .wm-bg.empty { aspect-ratio:16/9; background:radial-gradient(circle at 60% 40%, #24344f, #0b1220); filter:none; }
+.wm-overlay { position:absolute; inset:0; background:linear-gradient(90deg, rgba(8,12,20,.75), transparent 35%), radial-gradient(circle at 50% 120%, rgba(74,179,255,.15), transparent 60%); }
+.warmap.fortress .wm-overlay { background:radial-gradient(circle at 50% 50%, transparent 30%, rgba(8,12,20,.55)); }
+.wm-hud { position:absolute; left:2%; top:14%; display:grid; gap:18px; width:min(28%, 260px); }
+.wm-guild { padding:10px 12px; border-radius:12px; background:rgba(10,14,22,.78); backdrop-filter:blur(4px); box-shadow:inset 4px 0 0 var(--ok); display:grid; gap:2px; font-size:13px; animation:reveal .6s var(--ease-out) both; }
+.wm-guild.enemy { box-shadow:inset 4px 0 0 var(--danger); animation-delay:.12s; }
+.wm-gname { display:flex; gap:8px; align-items:center; font-size:17px; flex-wrap:wrap; }
+.wm-server { font-size:11px; padding:1px 8px; border-radius:6px; background:rgba(127,224,160,.2); color:var(--ok); } .enemy .wm-server { background:rgba(226,96,96,.2); color:#ff9b9b; }
+.wm-members { font-weight:800; font-size:16px; color:var(--ok); } .enemy .wm-members { color:#ff8a8a; }
+.wm-timer { position:absolute; left:2%; top:4%; font-size:14px; color:var(--muted); background:rgba(10,14,22,.7); padding:4px 12px; border-radius:999px; }
+.wm-timer b { color:var(--text); font-size:18px; margin-left:4px; }
+.wm-fort { position:absolute; transform:translate(-50%, -50%); background:none !important; box-shadow:none !important; padding:0; display:grid; justify-items:center; gap:4px; color:var(--text); }
+.wm-ring { width:clamp(64px, 9vw, 112px); aspect-ratio:1; border-radius:50%; display:grid; place-items:center;
+  background:conic-gradient(var(--danger) calc(var(--pct) * 1%), rgba(255,255,255,.18) 0); box-shadow:0 0 0 3px rgba(0,0,0,.5), 0 0 24px rgba(226,96,96,.35);
+  transition:transform var(--t-med) var(--ease-spring), box-shadow var(--t-med); animation:dlg .6s var(--ease-spring) both; }
+.wm-core { width:84%; aspect-ratio:1; border-radius:50%; display:grid; place-items:center; align-content:center; background:radial-gradient(circle, #2a2f3a, #12161f); }
+.wm-swords { font-size:clamp(16px, 2vw, 26px); opacity:.6; } .wm-core b { font-size:clamp(14px, 1.6vw, 22px); }
+.wm-fname { font-weight:800; font-size:clamp(12px, 1.3vw, 18px); text-shadow:0 2px 6px #000, 0 0 2px #000; white-space:nowrap; }
+.wm-fsub { font-size:11px; color:var(--muted); text-shadow:0 1px 3px #000; }
+.wm-fort:hover .wm-ring { transform:scale(1.08); box-shadow:0 0 0 3px var(--gold), 0 0 34px var(--glow); }
+.wm-fhead { display:flex; gap:14px; align-items:center; flex-wrap:wrap; } .wm-fhead > div:nth-child(2) { flex:1; }
+.wm-ravage { display:flex; width:220px; height:22px; border-radius:6px; overflow:hidden; font-size:12px; font-weight:800; }
+.wm-ravage span { display:grid; place-items:center; min-width:30px; } .wm-ravage .ours { background:#2f8f55; } .wm-ravage .enemy { background:#a33a3a; }
+.wm-split { display:grid; grid-template-columns:minmax(0, 2.2fr) minmax(260px, 1fr); gap:14px; align-items:start; }
+@media (max-width: 1100px) { .wm-split { grid-template-columns:1fr; } }
+.wm-node { position:absolute; transform:translate(-50%, -100%); background:none !important; box-shadow:none !important; padding:0; display:grid; justify-items:center; gap:2px; color:var(--text); }
+.wm-avatar { position:relative; width:clamp(32px, 3.2vw, 50px); aspect-ratio:1; border-radius:50%; display:grid; place-items:center; overflow:visible;
+  background:radial-gradient(circle, #3a2a2a, #150c0c); box-shadow:0 0 0 3px #b33f3f, 0 6px 16px rgba(0,0,0,.6); transition:transform var(--t-med) var(--ease-spring), box-shadow var(--t-med); }
+.wm-avatar .hp { width:100%; height:100%; border-radius:50%; box-shadow:none; }
+.wm-initial { font-weight:900; font-size:clamp(13px, 1.4vw, 20px); }
+.wm-pname { font-weight:800; font-size:clamp(11px, 1.1vw, 16px); text-shadow:0 2px 5px #000, 0 0 2px #000; white-space:nowrap; }
+.wm-node:hover .wm-avatar { transform:scale(1.1); } .wm-node.selected .wm-avatar { box-shadow:0 0 0 3px var(--gold), 0 0 26px var(--glow); }
+.wm-node.beaten .wm-avatar { filter:grayscale(1) brightness(.6); box-shadow:0 0 0 3px #555; }
+.wm-count { position:absolute; right:-6px; top:-6px; min-width:20px; height:20px; border-radius:10px; display:grid; place-items:center; font-size:11px; font-weight:800; color:#1d1606; background:var(--gold); }
+.wm-check { position:absolute; inset:0; display:grid; place-items:center; font-size:28px; color:var(--ok); text-shadow:0 0 8px #000; filter:none; }
+.wm-player { position:sticky; top:10px; }
 html.no-fx *, html.no-fx *::before, html.no-fx *::after { animation:none !important; transition:none !important; }
 html.no-fx #fx { display:none; }
 @media (prefers-reduced-motion: reduce) {
@@ -1060,12 +1099,12 @@ function simBox(label, build) {
 }
 
 // --- GvG : défenses des membres, suivi des guerres, contres connus (stockage local gvg.json)
-let gvgSub = "defense", gvgWar = null;
+let gvgSub = "map", gvgWar = null, gvgFort = null, gvgPlayer = null, gvgScoutPlayer = "";
 async function gvgPage(sub = gvgSub) {
   gvgSub = sub;
   let g;
   try { g = await json("GET", "/gvg"); } catch (e) { $("#content").replaceChildren(el("p", { class: "note" }, e.message)); return; }
-  const tabs = el("div", { class: "tabs" }, ...[["defense", "Défenses"], ["wars", "Guerres"], ["counters", "Contres"], ["scout", "Relevés"]].map(([k, t]) =>
+  const tabs = el("div", { class: "tabs" }, ...[["map", "Carte"], ["defense", "Défenses"], ["wars", "Guerres"], ["counters", "Contres"], ["scout", "Relevés"]].map(([k, t]) =>
     el("button", { "aria-pressed": String(sub === k), onclick: () => gvgPage(k) }, t)));
   const bar = el("div", { class: "bar" }, el("h1", {}, "Guerre de guilde" + (g.guild ? ` — ${g.guild}` : "")), tabs);
   const page = el("div", { class: "page" });
@@ -1078,7 +1117,8 @@ async function gvgPage(sub = gvgSub) {
     page.append(el("div", { class: "empty" }, el("h2", {}, "Aucun membre"),
       el("p", {}, "Ajoutez d'abord les membres dans l'onglet Guilde (votre profil et les vitrines de vos coéquipiers) : leurs héros servent aux défenses et aux attaques."),
       el("button", { onclick: () => setTab("guild") }, "Ouvrir l'onglet Guilde")));
-  } else if (sub === "defense") gvgDefense(page, g, send);
+  } else if (sub === "map") gvgMap(page, g, send);
+  else if (sub === "defense") gvgDefense(page, g, send);
   else if (sub === "wars") gvgWars(page, g, send);
   else if (sub === "scout") gvgScout(page, g, send);
   else gvgCounters(page, g);
@@ -1346,6 +1386,112 @@ function gvgWars(page, g, send) {
       }))));
 }
 
+
+// Carte de la guerre : reproduction de l'écran du jeu (capture en fond, éléments interactifs)
+async function uploadCapture(url, f) {
+  const res = await fetch("/api" + url, { method: "POST", body: f, headers: { "X-E7-Token": TOKEN, "Content-Type": "application/octet-stream" } });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || `erreur ${res.status}`);
+  return data;
+}
+function captureZone(label, url, done) {
+  const file = el("input", { type: "file", accept: "image/*", hidden: "" });
+  const msg = el("p", { class: "note", role: "status" });
+  const drop = el("div", { class: "drop", tabindex: "0", role: "button" }, label);
+  const go = async (f) => {
+    msg.style.color = ""; msg.textContent = "Lecture de la capture… (quelques secondes la première fois)";
+    try { await uploadCapture(url, f); msg.textContent = ""; done(); }
+    catch (e) { msg.textContent = e.message; msg.style.color = "var(--danger)"; }
+  };
+  file.addEventListener("change", () => { const f = file.files[0]; file.value = ""; if (f) go(f); });
+  drop.addEventListener("click", () => file.click());
+  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); const f = e.dataTransfer.files[0]; if (f) go(f); });
+  return el("div", {}, drop, file, msg);
+}
+const ratioText = (r) => r ? `${r[0]}/${r[1]}` : "—";
+function guildCard(gd, side) {
+  return el("div", { class: "wm-guild " + side },
+    el("div", { class: "wm-gname" }, el("strong", {}, gd.name || "—"), gd.server ? el("span", { class: "wm-server" }, gd.server) : ""),
+    el("div", {}, `Ravage : ${gd.ravage ?? "—"}`),
+    el("div", { title: "Tickets d'attaque" }, "⚔ ", ratioText(gd.tickets)),
+    el("div", { class: "wm-members", title: "Membres" }, ratioText(gd.members)));
+}
+function scoutedOf(g, name) {
+  const key = (name || "").trim().toLowerCase();
+  return g.scouted.filter((sc) => key && sc.player.trim().toLowerCase() === key);
+}
+function gvgMap(page, g, send) {
+  const m = g.map;
+  if (!m) {
+    page.append(el("div", { class: "card" }, el("h3", {}, "Carte de la guerre"),
+      el("p", { class: "note" }, "À chaque GvG, importez la capture de l'écran principal de la guerre (les deux guildes et les forteresses), puis celle de chaque forteresse (ses défenseurs). L'application reproduit la carte : cliquez sur une forteresse puis sur un joueur pour tester vos équipes contre ses défenses relevées."),
+      captureZone("Glissez ici la capture de l'écran principal de la guerre — ou cliquez pour la choisir", "/gvg/map", () => gvgPage("map"))));
+    return;
+  }
+  const fort = m.fortresses.find((f) => f.id === gvgFort);
+  if (fort) return gvgFortress(page, g, send, m, fort);
+  gvgFort = null;
+  const overlay = el("div", { class: "wm-overlay" },
+    el("div", { class: "wm-hud" }, guildCard(m.ours, "ours"), guildCard(m.enemy, "enemy")),
+    m.ends_in ? el("div", { class: "wm-timer" }, "La guerre se termine ", el("b", {}, m.ends_in)) : "",
+    ...m.fortresses.map((f) => {
+      const pct = f.total ? Math.round(100 * (f.left ?? 0) / f.total) : 0;
+      const beaten = f.players.filter((p) => p.beaten).length;
+      return el("button", { class: "wm-fort", style: `left:${f.x * 100}%;top:${f.y * 100}%;--pct:${pct}`, onclick: () => { gvgFort = f.id; gvgPlayer = null; gvgPage("map"); }, title: `Ouvrir ${f.name}` },
+        el("span", { class: "wm-ring" }, el("span", { class: "wm-core" }, el("span", { class: "wm-swords", "aria-hidden": "true" }, "⚔"), el("b", {}, ratioText([f.left ?? "?", f.total ?? "?"])))),
+        el("span", { class: "wm-fname" }, f.name),
+        el("span", { class: "wm-fsub" }, f.players.length ? `${f.players.length} joueurs${beaten ? ` · ${beaten} battu(s)` : ""}` : "capture à importer"));
+    }));
+  page.append(el("div", { class: "warmap" }, m.image ? el("img", { class: "wm-bg", src: "/gvgmap/" + m.image, alt: "" }) : el("div", { class: "wm-bg empty" }), overlay),
+    el("div", { class: "card" }, el("h3", {}, "Mettre à jour"),
+      el("p", { class: "note" }, `Carte du ${m.date} contre ${m.enemy.name || "la guilde adverse"}. Une nouvelle capture de la carte met à jour les compteurs ; pour une nouvelle guerre, les forteresses repartent à zéro.`),
+      captureZone("Nouvelle capture de l'écran principal de la guerre", "/gvg/map", () => gvgPage("map")),
+      el("button", { class: "danger", style: "margin-top:8px", onclick: () => confirm("Effacer la carte de la guerre et ses captures ?") && send("DELETE", "/map", null, () => gvgPage("map")) }, "Effacer la carte")));
+}
+function gvgFortress(page, g, send, m, f) {
+  const total = (m.ours.ravage || 0) + (m.enemy.ravage || 0) || 1;
+  const head = el("div", { class: "card wm-fhead" },
+    el("button", { class: "ghost", onclick: () => { gvgFort = null; gvgPlayer = null; gvgPage("map"); } }, "← Carte"),
+    el("div", {}, el("h3", { style: "margin:0" }, f.name), el("div", { class: "note" }, `Défenses restantes : ${ratioText([f.left ?? "?", f.total ?? "?"])} · ${f.players.filter((p) => p.beaten).length} joueur(s) marqué(s) battu(s)`)),
+    el("div", { class: "wm-ravage", title: "Ravage" },
+      el("span", { class: "ours", style: `flex:${m.ours.ravage || 0}` }, m.ours.ravage ?? ""), el("span", { class: "enemy", style: `flex:${m.enemy.ravage || 0}` }, m.enemy.ravage ?? "")));
+  page.append(head);
+  const side = el("div", { class: "card wm-player" });
+  const drawPlayer = () => {
+    const i = gvgPlayer, p = f.players[i];
+    if (p == null) { side.replaceChildren(el("p", { class: "note" }, "Cliquez sur un joueur pour voir ses défenses relevées et tester vos équipes contre lui.")); return; }
+    const name = el("input", { value: p.name, maxlength: "40", "aria-label": "Pseudo" });
+    name.addEventListener("change", () => send("PATCH", `/map/fortress/${f.id}/players/${i}`, { name: name.value }, () => gvgPage("map")));
+    const beaten = el("input", { type: "checkbox", ...(p.beaten ? { checked: "" } : {}) });
+    beaten.addEventListener("change", () => send("PATCH", `/map/fortress/${f.id}/players/${i}`, { beaten: beaten.checked }, () => gvgPage("map")));
+    const mine = scoutedOf(g, p.name);
+    side.replaceChildren(el("h3", {}, "Joueur"), el("div", { class: "filters" }, name, el("label", { class: "autosend" }, beaten, " Défense battue")),
+      mine.length ? el("div", { class: "scout-grid" }, ...mine.map((sc) => el("div", { class: "scout-saved card" },
+        el("div", { class: "counter-head" }, teamRow(sc.heroes.map((h) => h.name), "md", 0), el("div", {}, el("strong", {}, sc.heroes.map((h) => h.name).join(" · ")), el("div", { class: "note" }, sc.date))),
+        teamTest(g, () => sc.heroes.map((h) => ({ name: h.name, stats: Object.keys(h.stats).length ? h.stats : null }))))))
+        : el("p", { class: "note" }, "Aucune défense relevée pour ce joueur."),
+      el("button", { style: "margin-top:8px", onclick: () => { gvgScoutPlayer = p.name; gvgPage("scout"); } }, `Lire un écran de fin de combat contre ${p.name}`));
+  };
+  if (f.players.length) {
+    const nodes = el("div", { class: "wm-overlay" }, ...f.players.map((p, i) => {
+      const sc = scoutedOf(g, p.name);
+      const face = sc.length ? portrait(sc[0].heroes[0].name, { size: "md", stars: false }) : el("span", { class: "wm-initial" }, p.name.slice(0, 1).toUpperCase());
+      return el("button", { class: "wm-node" + (p.beaten ? " beaten" : "") + (i === gvgPlayer ? " selected" : ""), style: `left:${p.x * 100}%;top:${p.y * 100}%`,
+        onclick: () => { gvgPlayer = i; nodesEl.querySelectorAll(".wm-node").forEach((n, k) => n.classList.toggle("selected", k === i)); drawPlayer(); } },
+        el("span", { class: "wm-avatar" }, face, sc.length ? el("span", { class: "wm-count" }, String(sc.length)) : "", p.beaten ? el("span", { class: "wm-check" }, "✓") : ""),
+        el("span", { class: "wm-pname" }, p.name));
+    }));
+    const nodesEl = el("div", { class: "warmap fortress" }, f.image ? el("img", { class: "wm-bg", src: "/gvgmap/" + f.image, alt: "" }) : el("div", { class: "wm-bg empty" }), nodes);
+    page.append(el("div", { class: "wm-split" }, nodesEl, side));
+    drawPlayer();
+  }
+  page.append(el("div", { class: "card" }, el("h3", {}, f.players.length ? "Mettre à jour les défenseurs" : "Importer les défenseurs"),
+    el("p", { class: "note" }, "Capture de la vue de cette forteresse (pseudos des joueurs en défense)."),
+    captureZone("Glissez ici la capture de la forteresse — ou cliquez pour la choisir", `/gvg/map/fortress?id=${f.id}`, () => gvgPage("map"))));
+}
+
 // Relevés : capture de fin de combat → héros adverses reconnus (portraits) et leurs stats,
 // testés contre les équipes des membres avec ces stats réelles
 let gvgReport = null;
@@ -1424,7 +1570,7 @@ function gvgScout(page, g, send) {
   if (gvgReport) {
     gvgReport.sets.forEach((pair, si) => {
       let enemyIdx = Math.max(0, pair.findIndex((t) => t.known));  // l'équipe dont les stats sont visibles
-      const player = el("input", { placeholder: "Joueur adverse (facultatif)", maxlength: "40" });
+      const player = el("input", { placeholder: "Joueur adverse (facultatif)", maxlength: "40", value: gvgScoutPlayer });
       const teamsBox = el("div", { class: "scout-teams" });
       const draw = () => teamsBox.replaceChildren(...pair.map((t, ti) => el("div", { class: "scout-team" + (ti === enemyIdx ? " enemy" : "") },
         el("label", { class: "scout-pick" }, el("input", { type: "radio", name: `enemy-${si}`, ...(ti === enemyIdx ? { checked: "" } : {}), onchange: () => { enemyIdx = ti; draw(); } }),

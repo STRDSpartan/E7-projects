@@ -170,3 +170,22 @@ Onglet GvG → **Relevés** : déposer la capture de l'écran de résultat d'un 
   `/api/sim/battle` ; héros aux stats cachées simulés avec les stats types de leur classe) ;
 - « Enregistrer cette défense » la garde dans `gvg.json` (`scouted`, 200 au plus) pour la
   retester plus tard (`POST` / `DELETE /api/gvg/scouted`).
+
+## GvG — Carte de la guerre
+Onglet GvG → **Carte** (premier sous-onglet). À chaque guerre :
+1. capture de l'**écran principal** de la guerre (`POST /api/gvg/map`, image en binaire) :
+   `parsers/war_map.parse_war_map` lit les deux guildes (nom, serveur, Ravage, tickets
+   d'attaque, membres ; la nôtre en haut, l'adverse en bas), le temps restant et les
+   forteresses (nom, défenses restantes « x/y », position) ; la guerre du jour est ajoutée au
+   suivi des guerres ;
+2. capture de **chaque forteresse** (`POST /api/gvg/map/fortress[?id=fN]`) :
+   `parse_fortress` lit les pseudos des défenseurs et leur position ; sans `id`, la forteresse
+   est choisie d'après le nombre de joueurs (ex. 10 joueurs → « 10/10 »).
+L'interface reproduit l'écran du jeu : la capture (réduite, gardée seulement dans
+`<données>/gvg_map/`, servie par `/gvgmap/<fichier>`) sert de fond, avec par-dessus les
+panneaux des guildes, les forteresses cliquables (anneau de progression) puis, dans une
+forteresse, les joueurs à leur place. Un joueur : pseudo corrigeable, case « défense battue »
+(`PATCH /api/gvg/map/fortress/fN/players/<i>`), ses défenses relevées (Relevés, même pseudo)
+avec le test de vos équipes, et un raccourci pour lire un écran de fin de combat contre lui.
+Une nouvelle capture de carte de la même guerre garde joueurs et captures des forteresses ;
+`DELETE /api/gvg/map` efface tout.
