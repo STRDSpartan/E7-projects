@@ -521,3 +521,36 @@ def test_war_report_sent_and_updated_on_each_attack(app: Any) -> None:
     call(base, "DELETE", f"/api/gvg/wars/{wid}", token=t)
     assert wid not in call(base, "GET", "/api/gvg/webhook", token=t)["wars"]
     assert state.publication("war:" + wid) is None
+
+
+def test_counters_sent_and_updated_on_new_attack(app: Any) -> None:
+    import httpx
+
+    state, base = app
+    t = state.token
+    pid = call(base, "POST", "/api/profiles", {"player": "Spartan"}, t)["id"]
+    for name in ("Belian", "Aria"):
+        state.store.add_hero(pid, Hero(name=name), None)
+    call(base, "PATCH", "/api/guild", {"members": [pid]}, t)
+    wid = call(base, "POST", "/api/gvg/wars", {"opponent": "Ombres"}, t)["wars"][0]["id"]
+    attack = {"member": pid, "team": ["Aria", "Belian"], "enemy_team": ["Lua", "Cerise"],
+              "result": "win"}  # fmt: skip
+    call(base, "POST", f"/api/gvg/wars/{wid}/attacks", attack, t)
+    text = state.publication("counters")[0]
+    assert "__Cerise · Lua__ (1 V / 0 D)" in text and "✅ Aria, Belian — 1 V / 0 D" in text
+    calls: list[str] = []
+
+    def discord(request: httpx.Request) -> httpx.Response:
+        calls.append(request.method)
+        return httpx.Response(200, json={"id": "313131"})
+
+    state.webhook_transport = httpx.MockTransport(discord)
+    call(base, "PUT", "/api/gvg/webhook", {"url": HOOK, "auto_counters": True}, t)
+    assert call(base, "POST", "/api/gvg/counters/send", {}, t) == {"sent": 1}
+    state.publisher.delay = 0.05
+    call(base, "POST", f"/api/gvg/wars/{wid}/attacks", {**attack, "result": "loss"}, t)
+    time.sleep(0.4)
+    assert calls == ["POST", "PATCH"]
+    assert "⚖️ Aria, Belian — 1 V / 1 D" in state.publication("counters")[0]
+    status = call(base, "GET", "/api/gvg/webhook", token=t)
+    assert status["auto_counters"] and status["counters"]["published"]

@@ -24,7 +24,13 @@ from e7showcase import __version__
 from e7showcase.app.armory import armory
 from e7showcase.app.discord_settings import DiscordSettings, Publisher
 from e7showcase.app.guild import GuildStore
-from e7showcase.app.gvg import GvgError, GvgStore, defense_plan, war_report
+from e7showcase.app.gvg import (
+    GvgError,
+    GvgStore,
+    counters_report,
+    defense_plan,
+    war_report,
+)
 from e7showcase.app.importer import ScreenshotImporter
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.app.viewer import profile_page
@@ -69,6 +75,8 @@ class AppState:
         """Messages Discord d'une publication : plan de défense ou suivi d'une guerre."""
         if key == "plan":
             return list(defense_plan(self.gvg.summary())["messages"])
+        if key == "counters":
+            return counters_report(self.gvg.summary())
         return war_report(self.gvg.summary(), key.removeprefix("war:"))
 
     def start_import(self, profile_id: str, files: list[tuple[str, bytes]]) -> ImportJob:
@@ -322,7 +330,11 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     body = self._body()
                     if "url" in body:
                         state.discord.set_webhook(str(body.get("url", ""))[:300])
-                    for flag, kind in (("auto", "plan"), ("auto_wars", "wars")):
+                    for flag, kind in (
+                        ("auto", "plan"),
+                        ("auto_wars", "wars"),
+                        ("auto_counters", "counters"),
+                    ):
                         if flag in body:
                             state.discord.update(**{flag: bool(body[flag])})
                             if not body[flag]:
@@ -341,6 +353,9 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 elif (w := re.fullmatch(r"/wars/([0-9a-f]{1,16})", rest)) and method == "DELETE":
                     gvg.delete_war(w[1])
                     state.discord.forget("war:" + w[1])  # les messages déjà publiés restent
+                    state.publisher.changed("counters")
+                elif rest == "/counters/send" and method == "POST":
+                    return self._json(self._send_plan("counters"))
                 elif (w := re.fullmatch(r"/wars/([0-9a-f]{1,16})/send", rest)) and method == "POST":
                     if w[1] not in {x["id"] for x in gvg.summary()["wars"]}:
                         raise GvgError("guerre introuvable")
@@ -350,11 +365,13 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 ):
                     gvg.add_attack(w[1], self._body())
                     state.publisher.changed("war:" + w[1])  # suivi publié : mis à jour
+                    state.publisher.changed("counters")
                 elif (
                     a := re.fullmatch(r"/wars/([0-9a-f]{1,16})/attacks/([0-9a-f]{1,16})", rest)
                 ) and method == "DELETE":
                     gvg.delete_attack(a[1], a[2])
                     state.publisher.changed("war:" + a[1])
+                    state.publisher.changed("counters")
                 else:
                     raise ApiError(404, "introuvable")
             except (GvgError, ValueError, TypeError) as exc:

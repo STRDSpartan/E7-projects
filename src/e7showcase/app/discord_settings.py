@@ -24,6 +24,7 @@ from typing import Any
 from e7showcase.publish.webhook import mask_webhook, post_messages, sync_messages, valid_webhook
 
 log = logging.getLogger(__name__)
+AUTO_FLAGS = {"plan": "auto", "wars": "auto_wars", "counters": "auto_counters"}
 AUTO_DELAY = 20.0  # s : les modifications rapprochées sont regroupées en une publication
 
 
@@ -64,8 +65,8 @@ class DiscordSettings:
         self.update(gvg_webhook=url, message_ids=[], publications={})
 
     def auto(self, kind: str = "plan") -> bool:
-        """Mise à jour automatique activée : `plan` (défenses) ou `wars` (suivi des guerres)."""
-        flag = "auto" if kind == "plan" else "auto_wars"
+        """Mise à jour automatique activée : `plan`, `wars` (suivi des guerres) ou `counters`."""
+        flag = AUTO_FLAGS.get(kind, "auto")
         return bool(self._read().get(flag)) and bool(self.webhook())
 
     def publications(self) -> dict[str, dict[str, Any]]:
@@ -104,6 +105,13 @@ class DiscordSettings:
             "hint": mask_webhook(url),
             "auto": bool(data.get("auto")),
             "auto_wars": bool(data.get("auto_wars")),
+            "auto_counters": bool(data.get("auto_counters")),
+            "counters": {
+                k: v
+                for k, v in self.publications().get("counters", {}).items()
+                if k in ("last_sent", "last_error")
+            }
+            | {"published": bool(self.message_ids("counters"))},
             "published": bool(self.message_ids()),
             "last_sent": plan.get("last_sent") or data.get("last_sent"),
             "last_error": plan.get("last_error"),
@@ -158,11 +166,11 @@ class Publisher:
 
     def changed(self, key: str = "plan") -> None:
         """Une publication a changé : mise à jour automatique différée (changements regroupés)."""
-        kind = "plan" if key == "plan" else "wars"
+        kind = _kind(key)
         if not self.settings.auto(kind):
             return
-        if kind == "wars" and not self.settings.message_ids(key):
-            return  # guerre jamais publiée : on attend un premier envoi à la demande
+        if kind != "plan" and not self.settings.message_ids(key):
+            return  # jamais publié : on attend un premier envoi à la demande
         if old := self._timers.pop(key, None):
             old.cancel()
         timer = threading.Timer(self.delay, self.flush, args=(key,))
@@ -199,8 +207,13 @@ class Publisher:
 
     def cancel(self, kind: str | None = None) -> None:
         for key in list(self._timers):
-            if kind is None or (key == "plan") == (kind == "plan"):
+            if kind is None or _kind(key) == kind:
                 self._timers.pop(key).cancel()
+
+
+def _kind(key: str) -> str:
+    """Famille d'une publication : `plan`, `counters` ou `wars` (`war:<id>`)."""
+    return key if key in ("plan", "counters") else "wars"
 
 
 def _now() -> str:

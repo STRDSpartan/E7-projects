@@ -355,3 +355,17 @@ def war_report(summary: dict[str, Any], war_id: str) -> list[str] | None:
     ]
     lines += ["", "Attaques restantes : " + (", ".join(left) if left else "aucune, bravo !")]
     return _chunks(lines)
+
+
+def counters_report(summary: dict[str, Any]) -> list[str]:
+    """Contres connus pour Discord : par défense ennemie, les équipes testées et leur bilan."""
+    guild = summary["guild"]
+    lines = [f"**Contres connus en GvG{' — ' + guild if guild else ''}**"]
+    if not summary["counters"]:
+        lines.append("Aucun contre enregistré pour l'instant.")
+    for c in summary["counters"]:
+        lines += ["", f"__{' · '.join(c['enemy_team'])}__ ({c['wins']} V / {c['losses']} D)"]
+        for t in c["teams"]:
+            mark = "✅" if t["wins"] and not t["losses"] else "❌" if not t["wins"] else "⚖️"
+            lines.append(f"{mark} {', '.join(t['team'])} — {t['wins']} V / {t['losses']} D")
+    return _chunks(lines)

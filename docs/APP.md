@@ -65,6 +65,10 @@ la même application sur son ordinateur.
     enregistrée ou supprimée, 20 s après la dernière ; une guerre supprimée dans l'application
     laisse ses messages dans Discord. Publications et messages suivis : `discord.json`
     (`publications` : `plan`, `war:<id>`) ;
+  - *Contres connus sur Discord* (page Contres, même webhook) : pour chaque défense ennemie, les
+    équipes testées et leur bilan (✅ toujours gagnée, ⚖️ mitigée, ❌ perdue), toutes guerres
+    confondues (`gvg.counters_report`, `POST /api/gvg/counters/send`) ; option de mise à jour
+    automatique à chaque attaque enregistrée ou supprimée (publication `counters`) ;
   - *Tests dans le simulateur de combat* (500 combats) : une attaque saisie contre la défense
     ennemie notée, une équipe d'un membre contre une défense de l'onglet Contres, ou une défense
     de la guilde contre une attaque ennemie supposée. Les héros adverses, connus par leur seul
