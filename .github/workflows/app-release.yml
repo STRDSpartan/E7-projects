@@ -54,6 +54,7 @@ jobs:
           Get-Content $log -ErrorAction SilentlyContinue
           $left = Get-Process -Name E7Showcase -ErrorAction SilentlyContinue
           if (-not $closed -or $left) {
+            Get-CimInstance Win32_Process -Filter "Name='E7Showcase.exe'" | ForEach-Object { Write-Host "::error::reste : pid $($_.ProcessId) parent $($_.ParentProcessId) : $($_.CommandLine)" }
             $left | Stop-Process -Force -ErrorAction SilentlyContinue
             if (-not $closed) { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue }
             Write-Host "::error::le processus reste actif après la fermeture de la fenêtre"
