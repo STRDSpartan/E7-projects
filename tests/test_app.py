@@ -578,6 +578,9 @@ def test_defense_plan_can_include_counters(app: Any) -> None:
     assert "Lua;Aria;1;0;gagnée" in csv
     assert "Guerre;Date;Membre;Équipe;Défense ennemie;Joueur ennemi;Tour;Résultat;Note" in csv
     assert ";Spartan;Aria;Lua;;;victoire;" in csv and "Attaques restantes" in csv
+    alone = call(base, "GET", "/api/gvg/wars/csv", token=t)["csv"]
+    assert alone.startswith("\ufeffGuerre;Date;Membre") and "Fort" not in alone
+    assert "Ombres;" in alone and "Défense ennemie;Équipe d'attaque" not in alone
     calls: list[str] = []
 
     def discord(request: httpx.Request) -> httpx.Response:

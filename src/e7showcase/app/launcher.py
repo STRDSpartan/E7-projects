@@ -77,6 +77,23 @@ class WindowApi:
         target.write_text(plan["csv" if suffix == ".csv" else "text"], encoding="utf-8")
         return str(target)
 
+    def save_wars_csv(self) -> str | None:
+        """Suivi des guerres GvG seul, enregistré en .csv (tableur)."""
+        import webview
+
+        from e7showcase.app.gvg import wars_csv
+
+        chosen = self._window.create_file_dialog(
+            webview.SAVE_DIALOG,
+            save_filename="suivi-guerres-gvg.csv",
+            file_types=("Tableur (*.csv)",),
+        )
+        if not chosen:
+            return None
+        target = Path(chosen if isinstance(chosen, str) else chosen[0]).with_suffix(".csv")
+        target.write_text(wars_csv(self._state.gvg.summary()), encoding="utf-8")
+        return str(target)
+
 
 def main(argv: list[str] | None = None) -> int:
     log_kwargs: dict[str, Any] = {

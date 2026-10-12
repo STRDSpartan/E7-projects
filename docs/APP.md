@@ -47,7 +47,8 @@ la même application sur son ordinateur.
     et les membres sans défense ; texte prêt pour Discord, découpé en messages de moins de
     2 000 caractères (bouton « Copier »), ou fichier `.md` / `.csv` (séparateur « ; », formules
     neutralisées) ; le `.csv` ajoute le suivi des guerres (une ligne par attaque, puis les
-    attaques restantes de chaque membre) ;
+    attaques restantes de chaque membre) ; le suivi seul s'exporte aussi depuis l'onglet
+    Guerres (bouton « Exporter le suivi (.csv) », `GET /api/gvg/wars/csv`) ;
   - *Contres dans le plan* (case « Inclure les contres connus », réglage `plan_counters`) : le
     texte Discord, le fichier `.md` et le plan publié se terminent par les contres connus, et le
     `.csv` reçoit un second tableau sous les défenses (défense ennemie, équipe d'attaque,

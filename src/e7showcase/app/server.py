@@ -30,6 +30,7 @@ from e7showcase.app.gvg import (
     counters_report,
     defense_plan,
     war_report,
+    wars_csv,
 )
 from e7showcase.app.importer import ScreenshotImporter
 from e7showcase.app.profiles import ProfileStore
@@ -324,6 +325,8 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     return self._json(gvg.summary())
                 if rest == "/plan" and method == "GET":
                     return self._json(defense_plan(gvg.summary()))
+                if rest == "/wars/csv" and method == "GET":
+                    return self._json({"csv": wars_csv(gvg.summary())})
                 if rest == "/webhook" and method == "GET":
                     return self._json(state.discord.status())
                 if rest == "/webhook" and method == "PUT":

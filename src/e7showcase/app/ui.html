@@ -742,7 +742,19 @@ function gvgWars(page, g, send) {
   const opponent = el("input", { placeholder: "Guilde adverse", maxlength: "40" });
   const day = el("input", { type: "date", value: new Date().toISOString().slice(0, 10) });
   const create = el("button", { onclick: () => opponent.value.trim() && send("POST", "/wars", { opponent: opponent.value, date: day.value }, () => { gvgWar = null; gvgPage("wars"); }) }, "Nouvelle guerre");
-  page.append(el("div", { class: "card" }, el("h3", {}, "Nouvelle guerre"), el("div", { class: "filters" }, opponent, day, create)));
+  const exportWars = async () => {
+    if (window.pywebview?.api?.save_wars_csv) {
+      const path = await window.pywebview.api.save_wars_csv();
+      if (path) alert("Suivi enregistré :\n" + path);
+      return;
+    }
+    const { csv } = await json("GET", "/gvg/wars/csv");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    el("a", { href: url, download: "suivi-guerres-gvg.csv" }).click();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  };
+  page.append(el("div", { class: "card" }, el("h3", {}, "Nouvelle guerre"), el("div", { class: "filters" }, opponent, day, create,
+    ...(g.wars.length ? [el("button", { class: "ghost", onclick: exportWars }, "Exporter le suivi (.csv)")] : []))));
   if (!g.wars.length) { page.append(el("div", { class: "empty" }, "Aucune guerre enregistrée pour l'instant.")); return; }
   const war = g.wars.find((w) => w.id === gvgWar) || g.wars[0];
   gvgWar = war.id;

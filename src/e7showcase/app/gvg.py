@@ -329,6 +329,12 @@ def defense_plan(summary: dict[str, Any], today: date | None = None) -> dict[str
     return {"text": "\n".join(lines), "messages": messages, "csv": "﻿" + csv + "\n"}
 
 
+def wars_csv(summary: dict[str, Any]) -> str:
+    """Suivi des guerres seul, en tableur (attaques puis attaques restantes)."""
+    rows = _war_rows(summary)[1:] or [["Aucune guerre enregistrée"]]
+    return "\ufeff" + "\n".join(";".join(_csv_cell(c) for c in row) for row in rows) + "\n"
+
+
 def _war_rows(summary: dict[str, Any]) -> list[list[str]]:
     """Suivi des guerres pour le CSV : attaques, puis attaques restantes par membre."""
     if not summary.get("wars"):
