@@ -665,3 +665,15 @@ def test_guild_csv_round_trip(app: Any, tmp_path: Path) -> None:
         import_guild_csv("a;b\n1;2\n", other.store, other.guild, other.gvg)
     r = call(base, "POST", "/api/guild/import", {"csv": exported}, t)
     assert sorted(r["kept"]) == ["Lua=1", "Spartan"]  # profils locaux jamais écrasés
+
+
+def test_portraits_api(app: Any) -> None:
+    state, base = app
+    t = state.token
+    pid = call(base, "POST", "/api/profiles", {"player": "Spartan"}, t)["id"]
+    state.store.add_hero(pid, Hero(name="Kise", element="ice", stars=5), None)
+    state.store.save_portrait(pid, "Kise", Image.new("RGB", (60, 60), (10, 20, 200)))
+    data = call(base, "POST", "/api/portraits", {"names": ["Kise", "Inconnu", ""]}, t)
+    assert data["Kise"]["img"].startswith("data:image/webp;base64,")
+    assert data["Kise"]["element"] == "ice" and data["Kise"]["stars"] == 5
+    assert data["Inconnu"]["img"] is None and "" not in data

@@ -97,7 +97,7 @@ dialog input { width:100%; background:var(--panel-2); color:var(--text); border:
 .gear .icon img.main { width:100%; height:100%; object-fit:cover; }
 .gear .icon img.shield { position:absolute; right:-2px; bottom:-2px; width:24px; height:24px; }
 .gear .title { font-weight:700; } .gear .title b { color:var(--gold); }
-.gear .owner { font-size:12px; color:var(--muted); } .gear.free .owner { color:var(--ok); }
+.gear .owner { font-size:12px; color:var(--muted); display:flex; align-items:center; gap:4px; } .gear.free .owner { color:var(--ok); }
 .gear ul { margin:0; padding:0; list-style:none; font-size:13px; display:grid; gap:2px; font-variant-numeric:tabular-nums; }
 .gear li { display:flex; justify-content:space-between; gap:8px; } .gear li.main { color:var(--gold); font-weight:600; }
 .gear .del { justify-self:end; padding:3px 10px; font-size:12px; }
@@ -238,6 +238,61 @@ ol.steps li::before { content:counter(st); flex:none; width:24px; height:24px; b
 @keyframes sk { to { background-position:-200% 0; } }
 .card > button + button, .card > button + .ghost { margin-left:8px; }
 .card > button { margin-top:10px; }
+
+/* --- v0.40 : portraits de héros et tableaux GvG --- */
+.hp { --c1:#3a4561; --c2:#202838; position:relative; display:inline-grid; place-items:center; flex:none; border-radius:12px; overflow:hidden;
+  background:radial-gradient(circle at 50% 30%, var(--c2), #0d111a); box-shadow:0 0 0 2px var(--c1), 0 4px 12px rgba(0,0,0,.4);
+  transition:transform var(--t-med) var(--ease-spring), box-shadow var(--t-med); }
+.hp-xs { width:22px; height:22px; border-radius:7px; } .hp-sm { width:34px; height:34px; border-radius:9px; }
+.hp-md { width:48px; height:48px; } .hp-lg { width:64px; height:64px; border-radius:14px; }
+.hp img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transform:scale(1.08); transition:opacity .4s, transform .6s var(--ease-out); }
+.hp.loaded img { opacity:1; transform:scale(1); } .hp.loaded .hp-ini { opacity:0; }
+.hp-ini { font-weight:800; font-size:.8em; color:#cfd6e4; letter-spacing:.02em; transition:opacity .3s; }
+.hp-sm .hp-ini { font-size:11px; } .hp-xs .hp-ini { font-size:9px; }
+.hp-stars { position:absolute; left:0; right:0; bottom:0; text-align:center; font-size:8px; line-height:11px; color:#ffd77a; letter-spacing:-1px;
+  background:linear-gradient(transparent, rgba(0,0,0,.75)); text-shadow:0 0 4px rgba(255,200,80,.8); }
+.hp-lg .hp-stars { font-size:10px; line-height:14px; }
+.hp::after { content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,.28) 50%, transparent 60%); background-size:250% 100%; background-position:150% 0; }
+.hp:hover { transform:translateY(-2px) scale(1.06); z-index:2; } .hp:hover::after { animation:sheen .8s ease; }
+@keyframes sheen { to { background-position:-50% 0; } }
+.hp[data-el="fire"] { --c1:#e2603f; --c2:#4a1d14; } .hp[data-el="ice"] { --c1:#4ab3ff; --c2:#12304a; }
+.hp[data-el="earth"] { --c1:#6fcf5a; --c2:#1d3a17; } .hp[data-el="light"] { --c1:#ffd166; --c2:#4a3b12; }
+.hp[data-el="dark"] { --c1:#b071ff; --c2:#2c1646; }
+.hp[data-el]:hover { box-shadow:0 0 0 2px var(--c1), 0 0 18px var(--c1); }
+.hp-empty { background:transparent; box-shadow:none; border:1.5px dashed #3a4561; }
+.hp-empty:hover { transform:none; }
+.hteam { display:inline-flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.hchip { display:inline-flex; align-items:center; gap:8px; }
+.member-cell { display:flex; align-items:center; gap:10px; }
+.avatar { width:32px; height:32px; border-radius:50%; display:grid; place-items:center; flex:none; font-weight:800; color:#1d1606;
+  background:linear-gradient(135deg, #fff0c2, var(--gold) 50%, #9c7326); box-shadow:0 0 0 2px rgba(232,194,106,.25); }
+.tower-cell { display:flex; align-items:center; gap:6px; } .tower-cell input { flex:1; }
+.tower-ico { filter:drop-shadow(0 0 6px rgba(232,194,106,.4)); }
+.team-preview { margin-bottom:8px; min-height:48px; }
+.team.compact select { font-size:12px; padding:4px; }
+table.gvg tbody tr td, table.members tbody tr td { vertical-align:middle; }
+table.gvg tbody tr { background:linear-gradient(90deg, rgba(232,194,106,.03), transparent 40%); }
+tr.atk td:first-child { box-shadow:inset 3px 0 0 var(--ok); } tr.atk.loss td:first-child { box-shadow:inset 3px 0 0 var(--danger); }
+.vs { display:flex; align-items:center; gap:8px; }
+.vs-badge { font-size:10px; font-weight:900; font-style:italic; color:#1d1606; background:linear-gradient(135deg, #ffb0a0, var(--danger)); border-radius:6px; padding:2px 5px; }
+.pill { display:inline-block; font-size:12px; font-weight:700; border-radius:999px; padding:3px 12px; }
+.pill.win { color:#0b0e15; background:linear-gradient(180deg, #a6f0c0, var(--ok)); box-shadow:0 0 12px rgba(127,224,160,.3); }
+.pill.loss { color:#fff; background:linear-gradient(180deg, #ef8a8a, var(--danger)); box-shadow:0 0 12px rgba(226,96,96,.3); }
+.remain-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:10px; }
+.remain { display:grid; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--line); background:rgba(13,17,26,.5); }
+.remain.done { opacity:.6; }
+.pips { display:flex; gap:5px; } .pips span { flex:1; height:8px; border-radius:4px; background:linear-gradient(90deg, #f3d48a, var(--gold)); box-shadow:0 0 8px var(--glow); }
+.pips span.used { background:#262e40; box-shadow:none; }
+.counter-head { display:flex; gap:14px; align-items:center; margin-bottom:10px; } .counter-head h3 { margin:0 0 4px; }
+.ratio { display:flex; height:6px; border-radius:3px; overflow:hidden; margin-bottom:12px; background:#262e40; }
+.ratio .w { background:var(--ok); } .ratio .l { background:var(--danger); }
+.ratio span { animation:grow .9s var(--ease-out) both; transform-origin:left; }
+.counter-list { display:grid; gap:6px; }
+.note.names { margin-top:4px; }
+.counter-row { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:6px 10px; border-radius:10px; background:rgba(13,17,26,.5); border:1px solid var(--line); }
+.counter-row.good { border-color:rgba(127,224,160,.35); } .counter-row.bad { border-color:rgba(226,96,96,.3); opacity:.85; } .counter-row.mixed { border-color:rgba(232,194,106,.3); }
+.counter-row .score { font-variant-numeric:tabular-nums; font-size:13px; } .score .w { color:var(--ok); } .score .l { color:var(--danger); }
 html.no-fx *, html.no-fx *::before, html.no-fx *::after { animation:none !important; transition:none !important; }
 html.no-fx #fx { display:none; }
 @media (prefers-reduced-motion: reduce) {
@@ -622,7 +677,7 @@ async function armoryPage(id) {
     const icon = el("div", { class: "icon" }, g.icon ? el("img", { class: "main", src: g.icon, alt: SLOTS[g.slot] }) : SLOT_GLYPH[g.slot] || "?");
     if (g.set && data.sets[g.set]?.icon) icon.append(el("img", { class: "shield", src: data.sets[g.set].icon, alt: "" }));
     const title = el("div", { class: "title" }, `${SLOTS[g.slot]} `, el("b", {}, `+${g.enhance}`));
-    const sub = el("div", { class: "owner" }, g.hero ? `Portée par ${g.hero}` : "Non équipée");
+    const sub = el("div", { class: "owner" }, ...(g.hero ? [portrait(g.hero, { size: "xs" }), ` Portée par ${g.hero}`] : ["Non équipée"]));
     const desc = el("div", {}, title, el("div", { class: g.rank ? "rank-" + g.rank : "" , style: "font-size:12px" },
       [g.set ? data.sets[g.set].name : "Set inconnu", g.rank ? RANKS[g.rank] : "", g.level ? `niv. ${g.level}` : ""].filter(Boolean).join(" · ")), sub);
     const node = el("div", { class: "gear" + (g.hero ? "" : " free") + (g.rank ? " rk-" + g.rank : "") }, el("div", { class: "top" }, icon, desc),
@@ -711,7 +766,7 @@ async function guildPage() {
     el("tbody", {}, ...g.members.map((m) => el("tr", {},
       el("td", {}, el("strong", {}, m.player), el("div", { class: "note" }, m.received ? "Vitrine reçue" : "Mon profil")),
       el("td", { class: "num" }, fmtN(m.heroes)), el("td", { class: "num" }, fmtN(m.power)), el("td", { class: "num" }, fmtN(m.items)),
-      el("td", {}, m.top.map((h) => h.name + (h.power ? ` (${fmtN(h.power)})` : "")).join(", ") || "—"),
+      el("td", {}, m.top.length ? el("div", { class: "hteam" }, ...m.top.map((h) => { const n = portrait(h.name, { size: "sm" }); if (h.power) n.title += ` · ${fmtN(h.power)}`; return n; })) : "—"),
       el("td", {}, m.updated_at),
       el("td", {}, el("div", { class: "acts" },
         el("button", { class: "ghost", onclick: () => open(m.id, "vitrine") }, "Vitrine"),
@@ -786,6 +841,49 @@ async function gvgPage(sub = gvgSub) {
   page.prepend(status);
   $("#content").replaceChildren(bar, page);
 }
+
+// Portraits de héros : visage dans un cadre aux couleurs de l'élément, étoiles et classe.
+// Les infos arrivent par lots (POST /api/portraits) puis remplissent tous les cadres du même héros.
+const portraitInfo = new Map(), portraitWanted = new Set();
+let portraitTimer = 0;
+const ROLE_FR = { warrior: "Guerrier", knight: "Chevalier", thief: "Voleur", ranger: "Archer", mage: "Mage", "soul-weaver": "Prêtre" };
+const ELEMENT_FR = { fire: "Feu", ice: "Glace", earth: "Terre", light: "Lumière", dark: "Ténèbres" };
+function portrait(name, opts = {}) {
+  const size = opts.size || "md";
+  const node = el("span", { class: `hp hp-${size}`, "data-hero": name, title: name });
+  node.append(el("span", { class: "hp-ini" }, (name || "?").split(/[\s-]+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase()));
+  if (opts.stars !== false && size !== "xs") node.append(el("span", { class: "hp-stars" }));
+  if (portraitInfo.has(name)) fillPortrait(node, portraitInfo.get(name));
+  else { portraitWanted.add(name); clearTimeout(portraitTimer); portraitTimer = setTimeout(loadPortraits, 25); }
+  return node;
+}
+async function loadPortraits() {
+  const names = [...portraitWanted].filter((n) => n && !portraitInfo.has(n)); portraitWanted.clear();
+  if (!names.length) return;
+  let data = {};
+  try { data = await json("POST", "/portraits", { names }); } catch { return; }
+  for (const [n, info] of Object.entries(data)) {
+    portraitInfo.set(n, info);
+    document.querySelectorAll(`.hp[data-hero="${CSS.escape(n)}"]`).forEach((node) => fillPortrait(node, info));
+  }
+}
+function fillPortrait(node, info) {
+  if (info.element) node.dataset.el = info.element;
+  const label = [node.dataset.hero, ELEMENT_FR[info.element], ROLE_FR[info.role], info.stars ? `${info.stars}★` : ""].filter(Boolean).join(" · ");
+  node.title = label;
+  if (info.img && !node.querySelector("img")) {
+    const img = el("img", { src: info.img, alt: "", loading: "lazy" });
+    img.addEventListener("load", () => node.classList.add("loaded"));
+    node.prepend(img);
+  }
+  const stars = node.querySelector(".hp-stars");
+  if (stars && info.stars) stars.textContent = "★".repeat(Math.min(6, info.stars));
+}
+// héros + nom (pastille) ; équipe = rangée de portraits avec emplacements vides en pointillés
+const heroChip = (name, size = "sm") => el("span", { class: "hchip" }, portrait(name, { size, stars: false }), el("span", {}, name));
+const teamRow = (names, size = "md", slots = 3) => el("span", { class: "hteam" },
+  ...names.filter(Boolean).map((n) => portrait(n, { size })),
+  ...Array.from({ length: Math.max(0, slots - names.filter(Boolean).length) }, () => el("span", { class: `hp hp-${size} hp-empty` })));
 const heroSelect = (heroes, value, label) => {
   const s = el("select", { "aria-label": label }, el("option", { value: "" }, "—"), ...heroes.map((h) => el("option", { value: h }, h)));
   s.value = value || ""; return s;
@@ -803,8 +901,11 @@ function gvgDefense(page, g, send) {
     const tower = el("input", { list: "gvg-towers", value: m.defense.tower || "", placeholder: "Tour", maxlength: "40", "aria-label": `Tour de ${m.player}` });
     const save = () => send("PUT", "/defense/" + m.id, { tower: tower.value, teams: teams.map((t) => t.map((s) => s.value).filter(Boolean)) }, counts);
     [tower, ...teams.flat()].forEach((n) => n.addEventListener("change", save));
-    const row = el("tr", {}, el("td", {}, el("strong", {}, m.player), el("div", { class: "note" }, `${m.heroes.length} héros`)),
-      el("td", {}, tower), ...teams.map((t) => el("td", {}, el("div", { class: "team" }, ...t))));
+    const previews = teams.map((t) => { const box = el("div", { class: "team-preview" }); const draw = () => box.replaceChildren(teamRow(t.map((x) => x.value), "md")); t.forEach((x) => x.addEventListener("change", draw)); draw(); return box; });
+    const row = el("tr", {}, el("td", {}, el("div", { class: "member-cell" }, el("span", { class: "avatar" }, m.player.slice(0, 1).toUpperCase()),
+        el("div", {}, el("strong", {}, m.player), el("div", { class: "note" }, `${m.heroes.length} héros`)))),
+      el("td", {}, el("div", { class: "tower-cell" }, el("span", { class: "tower-ico", "aria-hidden": "true" }, "🏰"), tower)),
+      ...teams.map((t, i) => el("td", {}, previews[i], el("div", { class: "team compact" }, ...t))));
     return { row, teams };
   });
   counts();
@@ -978,10 +1079,12 @@ function gvgWars(page, g, send) {
       field("Résultat", result), field("Note", note)),
     el("div", { style: "margin-top:12px" }, add), test));
   // attaques et suivi des membres
-  const rows = war.attacks.slice().reverse().map((a) => el("tr", {},
-    el("td", {}, a.player), el("td", {}, a.team.join(", ")),
-    el("td", {}, (a.enemy_team.join(", ") || "—") + (a.enemy_player || a.tower ? ` (${[a.enemy_player, a.tower].filter(Boolean).join(" · ")})` : "")),
-    el("td", { style: `color:var(${a.result === "win" ? "--ok" : "--danger"});font-weight:700` }, a.result === "win" ? "Victoire" : "Défaite"),
+  const rows = war.attacks.slice().reverse().map((a) => el("tr", { class: "atk " + a.result },
+    el("td", {}, el("div", { class: "member-cell" }, el("span", { class: "avatar" }, a.player.slice(0, 1).toUpperCase()), el("strong", {}, a.player))),
+    el("td", {}, teamRow(a.team, "sm", 0), el("div", { class: "note names" }, a.team.join(", "))),
+    el("td", {}, el("div", { class: "vs" }, el("span", { class: "vs-badge" }, "VS"), a.enemy_team.length ? teamRow(a.enemy_team, "sm", 0) : el("span", { class: "note" }, "non notée")),
+      el("div", { class: "note names" }, [a.enemy_team.join(", "), a.enemy_player, a.tower].filter(Boolean).join(" · "))),
+    el("td", {}, el("span", { class: "pill " + a.result }, a.result === "win" ? "Victoire" : "Défaite")),
     el("td", { class: "note" }, a.note || ""),
     el("td", {}, el("button", { class: "danger", style: "padding:3px 10px;font-size:12px", onclick: () => send("DELETE", `/wars/${war.id}/attacks/${a.id}`, null, () => gvgPage("wars")) }, "×"))));
   page.append(el("div", { class: "card" }, el("h3", {}, `Attaques contre ${war.opponent}`),
@@ -990,8 +1093,13 @@ function gvgWars(page, g, send) {
       : el("p", { class: "note" }, "Aucune attaque enregistrée.")),
     warDiscord(war),
     el("div", { class: "card" }, el("h3", {}, "Attaques restantes par membre"),
-      el("div", { class: "chips" }, ...g.members.map((m) => el("span", { class: "chip", style: `padding-left:10px;${war.remaining[m.id] ? "" : "opacity:.55"}` },
-        `${m.player} : ${war.remaining[m.id]}/${g.settings.attacks_per_member}`)))));
+      el("div", { class: "remain-grid" }, ...g.members.map((m) => {
+        const left = war.remaining[m.id] ?? 0, max = g.settings.attacks_per_member;
+        return el("div", { class: "remain" + (left ? "" : " done") },
+          el("div", { class: "member-cell" }, el("span", { class: "avatar" }, m.player.slice(0, 1).toUpperCase()), el("strong", {}, m.player)),
+          el("div", { class: "pips" }, ...Array.from({ length: max }, (_, i) => el("span", { class: i < max - left ? "used" : "" }))),
+          el("span", { class: "note" }, left ? `${left} restante(s)` : "terminé ✓"));
+      }))));
 }
 function counterTest(g, c) {
   const member = el("select", { "aria-label": "Membre" }, ...g.members.map((m) => el("option", { value: m.id }, m.player)));
@@ -1053,11 +1161,11 @@ function gvgCounters(page, g) {
   const draw = () => {
     const f = q.value.trim().toLowerCase();
     list.replaceChildren(...g.counters.filter((c) => !f || c.enemy_team.some((h) => h.toLowerCase().includes(f))).map((c) => el("div", { class: "card" },
-      el("h3", {}, c.enemy_team.join(" · ")),
-      el("p", { class: "note" }, `${c.wins} victoire(s), ${c.losses} défaite(s) contre cette défense`),
-      el("table", { class: "res" }, el("thead", {}, el("tr", {}, el("th", {}, "Équipe"), el("th", {}, "V"), el("th", {}, "D"))),
-        el("tbody", {}, ...c.teams.map((t) => el("tr", {}, el("td", {}, t.team.join(", ")),
-          el("td", { class: "exp" }, t.wins), el("td", { style: "color:var(--danger)" }, t.losses))))),
+      el("div", { class: "counter-head" }, teamRow(c.enemy_team, "lg", 0),
+        el("div", {}, el("h3", {}, c.enemy_team.join(" · ")), el("p", { class: "note" }, `${c.wins} victoire(s), ${c.losses} défaite(s) contre cette défense`))),
+      el("div", { class: "ratio", title: `${c.wins} V / ${c.losses} D` }, el("span", { class: "w", style: `flex:${c.wins || 0.0001}` }), el("span", { class: "l", style: `flex:${c.losses || 0.0001}` })),
+      el("div", { class: "counter-list" }, ...c.teams.map((t) => el("div", { class: "counter-row " + (t.wins && !t.losses ? "good" : !t.wins ? "bad" : "mixed") },
+        el("div", { class: "hchip" }, teamRow(t.team, "sm", 0), el("span", {}, t.team.join(", "))), el("span", { class: "score" }, el("b", { class: "w" }, `${t.wins} V`), " / ", el("b", { class: "l" }, `${t.losses} D`))))),
       counterTest(g, c))));
   };
   q.addEventListener("input", draw);

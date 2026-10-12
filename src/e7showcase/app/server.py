@@ -36,6 +36,7 @@ from e7showcase.app.gvg import (
     wars_csv,
 )
 from e7showcase.app.importer import ScreenshotImporter
+from e7showcase.app.portraits import Portraits
 from e7showcase.app.profile_csv import profile_csv
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.app.viewer import profile_page
@@ -68,6 +69,7 @@ class AppState:
         self.assets = AssetStore(data_root / "assets")
         self.guild = GuildStore(data_root / "guild.json", self.store)
         self.gvg = GvgStore(data_root / "gvg.json", self.store, self.guild)
+        self.portraits = Portraits(self.assets, self.store)
         self.discord = DiscordSettings(data_root / "discord.json")
         self.webhook_transport: Any = None  # tests : transport httpx simulé
         self.publisher = Publisher(self.discord, self.publication, lambda: self.webhook_transport)
@@ -75,6 +77,11 @@ class AppState:
         self.token = secrets.token_urlsafe(24)
         self.lock = threading.Lock()  # un import OCR à la fois
         self.jobs: dict[str, ImportJob] = {}
+
+    def guild_ids(self) -> list[str]:
+        """Profils où chercher un portrait découpé : membres de la guilde, puis les autres."""
+        members = [m["id"] for m in self.guild.summary()["members"]]
+        return members + [p.id for p in self.store.list() if p.id not in members]
 
     def publication(self, key: str) -> list[str] | None:
         """Messages Discord d'une publication : plan de défense ou suivi d'une guerre."""
@@ -234,6 +241,13 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 raise ApiError(404, "introuvable")
             if path == "/gvg" or path.startswith("/gvg/"):
                 return self._gvg(method, path[4:])
+            if path == "/portraits" and method == "POST":
+                body = self._body()
+                names, pids = body.get("names"), body.get("profiles")
+                if not isinstance(names, list):
+                    raise ApiError(400, "liste de héros attendue")
+                pids = [p for p in pids if isinstance(p, str)] if isinstance(pids, list) else []
+                return self._json(state.portraits.lookup(names, pids or state.guild_ids()))
             if path == "/guild/import" and method == "POST":
                 text = self._body().get("csv")
                 if not isinstance(text, str):

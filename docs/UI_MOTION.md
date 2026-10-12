@@ -18,6 +18,9 @@ Tout est dans `src/e7showcase/app/ui.html` (CSS en fin de `<style>`, module JS `
 | Notifications | toasts en bas à droite (succès ✓ vert, avertissement or, erreur ! rouge), fermeture au clic ou automatique ; remplacent les `alert()` (les `confirm()` restent) |
 | Armurerie | cartes teintées par rang (épique rouge, héroïque violet, rare bleu) ; badge « De côté » sur les pièces non équipées |
 | Chargement | silhouette scintillante si une page met plus de 180 ms à arriver |
+| Portraits de héros | `portrait(nom)` : visage (assets locaux, sinon portrait découpé d'une capture, sinon initiales) dans un cadre à la couleur de l'élément (feu, glace, terre, lumière, ténèbres), étoiles en bas, élément/classe en info-bulle, reflet au survol. Infos chargées par lots : `POST /api/portraits` (`app/portraits.py`) |
+| GvG | défenses : avatar du membre, tour avec icône, aperçu des équipes en portraits (emplacements vides en pointillés) au-dessus des sélecteurs ; attaques : portraits des deux équipes, badge « VS », résultat en pastille, liseré vert/rouge ; attaques restantes en jauges ; contres : portraits de la défense, barre victoires/défaites, lignes colorées selon le bilan |
+| Guilde, armurerie | héros phares en portraits ; mini-portrait du porteur sur chaque pièce |
 | Dialogues | ouverture à ressort, fond flouté |
 
 ## Accessibilité et performance
