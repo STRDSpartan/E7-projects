@@ -19,6 +19,7 @@ import base64
 import io
 import re
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
@@ -121,6 +122,16 @@ def data_uri(path: Path | None, kind: Kind) -> str | None:
     """Image réduite et encodée en data URI : la vitrine reste autonome (hors ligne)."""
     if path is None:
         return None
+    try:
+        stamp = path.stat().st_mtime_ns
+    except OSError:
+        return None
+    return _data_uri(path, kind, stamp)
+
+
+@lru_cache(maxsize=512)
+def _data_uri(path: Path, kind: Kind, stamp: int) -> str:
+    """Réduction mémorisée (fichier inchangé = même résultat, sans redécoder l'image)."""
     with Image.open(path) as src:
         img = src.convert("RGBA")
     img.thumbnail(MAX_EMBED[kind], Image.Resampling.LANCZOS)

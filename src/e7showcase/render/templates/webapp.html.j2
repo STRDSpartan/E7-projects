@@ -327,8 +327,8 @@ footer { color: var(--muted); font-size: 12px; text-align: center; padding: 18px
   function avatar(h) {
     const a = el("span", { class: "avatar", "aria-hidden": "true", style: `--el:${h.color}` });
     const face = img(h, "face"), portrait = img(h, "portrait");
-    if (face) a.append(el("img", { src: face, alt: "" }));
-    else if (portrait) a.style.backgroundImage = `url("${portrait}")`;
+    if (face) a.append(el("img", { src: face, alt: "", loading: "lazy", decoding: "async" }));
+    else if (portrait) a.style.backgroundImage = `url("${img(h, "thumb") || portrait}")`;  // vignette si fournie
     else a.textContent = (h.name || "?").slice(0, 1);
     return a;
   }
@@ -418,7 +418,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; padding: 18px
     const icon = h ? img(h, GEAR_ICONS[i]) : null;
     return el("div", { class: "piece" + (g.empty ? " empty" : "") },
       el("div", { class: "top" },
-        icon ? el("img", { class: "icon", src: icon, alt: "" }) : null,
+        icon ? el("img", { class: "icon", src: icon, alt: "", loading: "lazy", decoding: "async" }) : null,
         el("div", {},
           el("div", { class: "ph" }, el("span", { text: g.slot }),
             icon ? null : el("span", { class: "lvl" }, g.level ? g.level + " " : "", g.enhance ? el("span", { class: "enh", text: "+" + g.enhance }) : "")),

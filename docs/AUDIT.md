@@ -26,6 +26,13 @@ Mesures : guilde de 30 membres × 40 héros entièrement équipés, 5 guerres de
   au lancement, arrêtés à la fermeture). 4 contre 4, 500 combats, 4 cœurs : 2,9 s → 0,8 s.
   Le résultat ne dépend pas du nombre de cœurs (identique avec ou sans parallélisme) ; sans
   processus disponibles, calcul sur place. Sous 120 combats, tout reste dans le même processus.
+- **Vitrine** (v0.44.0) : les images découpées dans les captures ne sont plus intégrées en
+  base64 mais servies par adresse (`/media/<profil>/<fichier>?v=<date>`, gardées en cache par
+  le navigateur) ; la grille charge des vignettes de 160 px (`&w=160`) au lieu des poses
+  entières ; images chargées à la demande (`loading="lazy"`) ; page gardée en mémoire tant que
+  le profil, ses images et les images téléchargées ne changent pas ; réductions des images
+  téléchargées mémorisées. 40 héros avec pose et 7 icônes : 20 Mo / 1,2 s → 0,12 Mo / 50 ms
+  (1 à 2 ms ensuite).
 - **Import de captures** : envoi binaire, une requête par capture et 3 en parallèle
   (`POST /api/profiles/<id>/uploads`), au lieu d'un seul JSON en base64 (+33 % de taille, deux
   copies en mémoire). L'ancien format reste accepté.
@@ -56,5 +63,4 @@ webhook validé par expression régulière, jamais renvoyé en clair, mentions d
 aucun `eval`, `pickle`, `shell=True` ni désactivation TLS.
 
 ## Restant
-- La vitrine (`/profile/<id>`) réintègre ses images à chaque ouverture (~50 ms).
 - `ui.html` est gardé en mémoire : relancer l'application après l'avoir modifié.

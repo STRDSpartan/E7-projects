@@ -31,7 +31,7 @@ def test_payload_contains_sortable_values_and_labels() -> None:
     assert payload["members"][0]["player"] == "Testeur" and payload["members"][0]["count"] == 2
     ras = payload["heroes"][0]
     assert ras["spd_value"] == 250 and ras["element_key"] == "fire"
-    assert set(ras["images"]) == {"face", "portrait", "artifact", "anim", *GEAR_ICONS}
+    assert set(ras["images"]) == {"face", "portrait", "thumb", "artifact", "anim", *GEAR_ICONS}
     assert payload["heroes"][1]["power_value"] == 205138
 
 

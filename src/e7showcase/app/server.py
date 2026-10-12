@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import base64
 import binascii
+import contextlib
+import io
 import json
 import logging
 import re
@@ -16,10 +18,11 @@ import secrets
 import threading
 import time
 from dataclasses import asdict, dataclass
+from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 from e7showcase import __version__
 from e7showcase.app.armory import armory
@@ -66,6 +69,7 @@ APP_CSP = (
     "frame-ancestors 'self'; base-uri 'none'; form-action 'none'"
 )
 APP_HEADERS = {"Content-Security-Policy": APP_CSP, "Referrer-Policy": "no-referrer"}
+MEDIA_RE = re.compile(r"/media/([a-z0-9-]{1,60})/([a-z0-9-]{1,80}(?:\.[a-z]{1,10})?\.webp)")
 ANIM_RE = re.compile(r"/anim/(c\d{4}(?:_[a-z0-9]{1,8}){0,2})")
 # Page du modèle animé : seuls le lecteur et les fichiers publics d'E7 Codex sont autorisés
 ANIM_CSP = (
@@ -90,6 +94,7 @@ class AppState:
         self.lock = threading.Lock()  # un import OCR à la fois
         self.jobs: dict[str, ImportJob] = {}
         self._ui: bytes | None = None
+        self._pages: dict[str, tuple[tuple[int, int, int], bytes]] = {}
         self.uploads: dict[str, tuple[float, str, bytes]] = {}
         self.lock_uploads = threading.Lock()
         self.write_lock = threading.RLock()
@@ -110,6 +115,22 @@ class AppState:
             if any(i not in self.uploads for i in ids):
                 raise ApiError(400, "capture introuvable : relancez l'import")
             return [self.uploads.pop(i)[1:] for i in ids]
+
+    def vitrine(self, profile_id: str) -> bytes:
+        """Page vitrine, gardée en mémoire tant que rien ne change (profils, images, assets)."""
+        assets = 0
+        for kind in ("heroes", "faces", "artifacts", "anims"):  # images téléchargées
+            with contextlib.suppress(OSError):
+                assets = max(assets, (self.assets.root / kind).stat().st_mtime_ns)
+        key = (self.store.generation, self.store.path(profile_id).joinpath("profile.json")
+               .stat().st_mtime_ns, assets)  # fmt: skip
+        cached = self._pages.get(profile_id)
+        if cached is not None and cached[0] == key:
+            return cached[1]
+        page = profile_page(self.store, profile_id, self.assets).encode()
+        self._pages = {k: v for k, v in list(self._pages.items())[-7:]}  # 8 pages au plus
+        self._pages[profile_id] = (key, page)
+        return page
 
     def ui_page(self) -> bytes:
         """Interface (lue une fois puis gardée en mémoire, jeton de session inséré)."""
@@ -172,6 +193,19 @@ class ApiError(Exception):
         self.status = status
 
 
+@lru_cache(maxsize=256)
+def _thumbnail(path: Path, stamp: int, width: int) -> bytes:
+    """Vignette WebP d'une image du profil (mémorisée tant que le fichier ne change pas)."""
+    from PIL import Image
+
+    with Image.open(path) as src:
+        img = src.convert("RGB")
+    img.thumbnail((width, width * 2), Image.Resampling.LANCZOS)
+    buf = io.BytesIO()
+    img.save(buf, "WEBP", quality=80)
+    return buf.getvalue()
+
+
 def _b64(value: Any) -> bytes:
     if not isinstance(value, str):
         raise ApiError(400, "fichier manquant")
@@ -195,9 +229,10 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             self.send_response(status)
             self.send_header("Content-Type", ctype)
             self.send_header("Content-Length", str(len(body)))
-            self.send_header("Cache-Control", "no-store")
+            extra = extra or {}
+            self.send_header("Cache-Control", extra.pop("Cache-Control", "no-store"))
             self.send_header("X-Content-Type-Options", "nosniff")
-            for k, v in (extra or {}).items():
+            for k, v in extra.items():
                 self.send_header(k, v)
             self.end_headers()
             self.wfile.write(body)
@@ -238,8 +273,22 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 elif method == "GET" and (m := re.fullmatch(r"/profile/([a-z0-9-]+)", path)):
                     if not state.store.exists(m[1]):
                         raise ApiError(404, "profil introuvable")
-                    page = profile_page(state.store, m[1], state.assets)
-                    self._send(200, page.encode(), "text/html; charset=utf-8", APP_HEADERS)
+                    self._send(200, state.vitrine(m[1]), "text/html; charset=utf-8", APP_HEADERS)
+                elif method == "GET" and (m := MEDIA_RE.fullmatch(path)):
+                    # image d'un profil (adresse versionnée par ?v= : gardée en cache longtemps)
+                    if not state.store.exists(m[1]):
+                        raise ApiError(404, "introuvable")
+                    target = state.store.path(m[1]) / "images" / m[2]
+                    if not target.is_file():
+                        raise ApiError(404, "introuvable")
+                    cache = {"Cache-Control": "private, max-age=31536000, immutable"}
+                    width = parse_qs(urlparse(self.path).query).get("w", [""])[0]
+                    body = (
+                        _thumbnail(target, target.stat().st_mtime_ns, int(width))
+                        if width.isdigit() and 16 <= int(width) <= 512
+                        else target.read_bytes()
+                    )
+                    self._send(200, body, "image/webp", cache)
                 elif method == "GET" and (m := ANIM_RE.fullmatch(path)):
                     html = ANIM_PAGE.read_text(encoding="utf-8").replace("__CODE__", m[1])
                     self._send(

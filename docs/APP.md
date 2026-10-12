@@ -149,3 +149,5 @@ Thème, transitions entre onglets, apparitions, particules et micro-interactions
 
 ## Audit
 Sécurité et performances : voir `docs/AUDIT.md`.
+
+Vitrine dans l'application : images par adresse `/media/<profil>/<fichier>` (sans jeton, comme `/profile/<id>`, réservé à l'ordinateur local ; `?w=` pour une vignette), page gardée en mémoire. Les fichiers `.e7v` et pages exportées restent autonomes (images intégrées).

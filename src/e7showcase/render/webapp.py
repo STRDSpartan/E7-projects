@@ -37,7 +37,7 @@ PAYLOAD_VERSION = 2
 ANIM_MAX_HEIGHT = 400  # modèle animé réduit pour garder un fichier partageable
 ANIM_BUDGET = 1_500_000  # octets par modèle animé intégré
 GEAR_ICONS = ("weapon", "helmet", "armor", "necklace", "ring", "boots")
-IMAGE_KINDS = ("face", "portrait", "artifact", "anim", *GEAR_ICONS)
+IMAGE_KINDS = ("face", "portrait", "thumb", "artifact", "anim", *GEAR_ICONS)
 
 
 def anim_data_uri(

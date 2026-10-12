@@ -174,7 +174,7 @@ def test_server_flow(app: Any) -> None:
     assert job["finished"] and job["done"] == job["total"] and not job["error"]
     assert job["report"]["heroes"] == ["Kise"] and state.importer.calls[0] == [("a.png", b"fake")]
     page = call(base, "GET", f"/profile/{pid}").decode()
-    assert "Kise" in page and "data:image/webp;base64" in page
+    assert "Kise" in page and f"/media/{pid}/kise.webp?v=" in page  # image par adresse
     exported = call(base, "GET", f"/api/profiles/{pid}/export", token=t)
     rid = call(base, "POST", "/api/open", {"data": base64.b64encode(exported).decode()}, t)["id"]
     received = call(base, "GET", f"/api/profiles/{rid}", token=t)
@@ -731,3 +731,28 @@ def test_concurrent_edits_are_not_lost(app: Any) -> None:
         list(pool.map(put, pids))
     members = call(base, "GET", "/api/gvg", token=t)["members"]
     assert {m["id"]: m["defense"]["tower"] for m in members} == {p: p for p in pids}
+
+
+def test_vitrine_images_served_by_url_and_page_cached(app: Any) -> None:
+    import re as re_
+
+    state, base = app
+    pid = state.store.create("Spartan")
+    state.store.add_hero(pid, Hero(name="Kise"), Image.new("RGB", (640, 900), (200, 40, 40)))
+    page = call(base, "GET", f"/profile/{pid}").decode()
+    url = re_.search(rf"/media/{pid}/kise\.webp\?v=\d+", page)
+    assert url and "data:image/webp" not in page
+    with urllib.request.urlopen(base + url[0]) as res:
+        assert res.headers["Content-Type"] == "image/webp"
+        assert "immutable" in res.headers["Cache-Control"]
+        full = res.read()
+    with urllib.request.urlopen(base + url[0] + "&w=160") as res:
+        thumb = Image.open(io.BytesIO(res.read()))
+    assert thumb.width == 160 and len(full) > 0
+    assert call(base, "GET", f"/profile/{pid}").decode() == page  # page gardée en mémoire
+    state.store.add_hero(pid, Hero(name="Aria"), None)
+    assert "Aria" in call(base, "GET", f"/profile/{pid}").decode()  # invalidée au changement
+    for bad in (f"/media/{pid}/../meta.json", f"/media/{pid}/profile.json", "/media/x/kise.webp"):
+        with pytest.raises(urllib.error.HTTPError) as err:
+            call(base, "GET", bad)
+        assert err.value.code == 404
