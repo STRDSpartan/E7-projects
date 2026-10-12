@@ -179,7 +179,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     api._window = window  # noqa: SLF001 - jamais exposé à JavaScript
     window.events.loaded += lambda: log.info("Fenêtre chargée [window-loaded]")
-    window.events.closed += lambda: _quit(server)
+    window.events.closed += lambda: _quit(server, state)
     try:
         webview.start()
     except Exception:  # noqa: BLE001 - composant d'affichage absent (WebView2)
@@ -191,21 +191,24 @@ def main(argv: list[str] | None = None) -> int:
             "https://go.microsoft.com/fwlink/p/?LinkId=2124703 puis relancez l'application."
         )
         return 1
-    state.publisher.flush_pending()  # plan GvG modifié juste avant la fermeture : publié
-    from e7showcase.calc.battle import shutdown_pool
-
-    shutdown_pool()  # processus du simulateur
-    _quit(server)
+    _quit(server, state)
     return 0
 
 
-def _quit(server: Any) -> None:
+def _quit(server: Any, state: Any = None) -> None:
     """Termine VRAIMENT le processus à la fermeture de la fenêtre.
 
     Sans cela, l'arrêt normal de Python peut rester bloqué (runtime .NET de pywebview,
     threads du moteur OCR) et laisser E7Showcase.exe tourner en arrière-plan.
     Toutes les écritures de profils sont synchrones : rien n'est perdu.
     """
+    if state is not None:
+        with contextlib.suppress(Exception):
+            state.publisher.flush_pending()  # plan GvG modifié juste avant la fermeture : publié
+        from e7showcase.calc.battle import shutdown_pool
+
+        with contextlib.suppress(Exception):
+            shutdown_pool()  # processus du simulateur (sinon orphelins après os._exit)
     log.info("Fermeture de l'application [app-closed]")
     with contextlib.suppress(Exception):
         threading.Thread(target=server.shutdown, daemon=True).start()
