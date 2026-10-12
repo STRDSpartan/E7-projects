@@ -960,3 +960,21 @@ def test_estimated_heroes_fight() -> None:
     assert zio.stat("effect_res") == pytest.approx(before)
     res = simulate([_hero("Mei Lin"), _hero("Silvertide Christy")], [_hero("Zio")], runs=10)
     assert sum(res["win_rate"]) + res["draws"] == pytest.approx(100)
+
+
+def test_sample_fight_has_replay_frames(tmp_path: Path) -> None:
+    store = ProfileStore(tmp_path)
+    body = {
+        "team_a": [{"name": "Belian", "estimate": True}],
+        "team_b": [{"name": "Lua", "estimate": True}],
+        "runs": 5,
+    }
+    sample = battle(store, body)["sample"]
+    units, frames = sample["units"], sample["frames"]
+    assert [u["team"] for u in units] == [0, 1] and all(u["max_hp"] > 0 for u in units)
+    assert frames and all(len(f["hp"]) == 2 and 0 <= f["actor"] < 2 for f in frames)
+    lines = [f["line"] for f in frames]
+    assert lines == sorted(lines) and lines[-1] == len(sample["log"])
+    loser = 1 - sample["winner"] if sample["winner"] is not None else None
+    if loser is not None:
+        assert frames[-1]["hp"][loser] == 0

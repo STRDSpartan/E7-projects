@@ -344,6 +344,9 @@ class BattleResult:
     log: list[str]
     remaining_hp: list[list[float]]
     stats: dict[str, float] = field(default_factory=dict)
+    # rejeu (journal conservé) : état des PV après chaque tour, ligne du journal atteinte
+    frames: list[dict[str, Any]] = field(default_factory=list)
+    units: list[dict[str, Any]] = field(default_factory=list)
 
 
 class _Battle:
@@ -359,6 +362,7 @@ class _Battle:
         self.units = [_Unit(f, 0, f.hp) for f in team_a] + [_Unit(f, 1, f.hp) for f in team_b]
         self.rng, self.cds, self.opts, self.keep_log = rng, cooldowns, options, keep_log
         self.log: list[str] = []
+        self.frames: list[dict[str, Any]] = []
         self.stats = {
             "healed": 0.0,
             "shielded": 0.0,
@@ -1535,6 +1539,18 @@ class _Battle:
                 self.fire(u, "death", dead)
 
     def end_turn(self, u: _Unit) -> None:
+        self._end_turn(u)
+        if self.keep_log:
+            self.frames.append(
+                {
+                    "line": len(self.log),
+                    "actor": self.units.index(u),
+                    "hp": [round(max(0.0, x.hp)) for x in self.units],
+                    "shield": [round(x.barrier) for x in self.units],
+                }
+            )
+
+    def _end_turn(self, u: _Unit) -> None:
         self.fire(u, "turn_end")
         for other in [x for x in self.units if x.alive and x is not u]:
             self.fire(other, "any_turn_end", u)
@@ -1736,6 +1752,10 @@ class _Battle:
             log=self.log,
             remaining_hp=[[round(u.hp) for u in self.units if u.team == t] for t in (0, 1)],
             stats=self.stats,
+            frames=self.frames,
+            units=[{"name": u.name, "team": u.team, "max_hp": round(u.max_hp)} for u in self.units]
+            if self.keep_log
+            else [],
         )
 
     def note(self, text: str, at: int | None = None) -> None:
@@ -1802,5 +1822,7 @@ def simulate(
             "winner": sample.winner,
             "log": sample.log,
             "remaining_hp": sample.remaining_hp,
+            "frames": sample.frames,
+            "units": sample.units,
         },
     }

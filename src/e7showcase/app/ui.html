@@ -293,6 +293,47 @@ tr.atk td:first-child { box-shadow:inset 3px 0 0 var(--ok); } tr.atk.loss td:fir
 .counter-row { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:6px 10px; border-radius:10px; background:rgba(13,17,26,.5); border:1px solid var(--line); }
 .counter-row.good { border-color:rgba(127,224,160,.35); } .counter-row.bad { border-color:rgba(226,96,96,.3); opacity:.85; } .counter-row.mixed { border-color:rgba(232,194,106,.3); }
 .counter-row .score { font-variant-numeric:tabular-nums; font-size:13px; } .score .w { color:var(--ok); } .score .l { color:var(--danger); }
+
+/* --- v0.41 : rejeu animé du combat --- */
+.acts-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.replay { width:100%; display:grid; gap:10px; padding:14px; border-radius:14px; border:1px solid var(--line);
+  background:radial-gradient(600px 220px at 50% 0%, rgba(232,194,106,.08), transparent 70%), rgba(10,13,20,.7); }
+.arena { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:center; }
+.side { display:grid; gap:10px; } .side-label { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+.side-0 .side-label { color:#7fb8ff; } .side-1 .side-label { color:#ff9b9b; text-align:right; }
+.vs-mid { font-weight:900; font-style:italic; font-size:26px; color:var(--gold); text-shadow:0 0 18px var(--glow); animation:float 3s ease-in-out infinite; }
+.fighter { position:relative; display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto auto auto; column-gap:12px; align-items:center;
+  padding:8px 10px; border-radius:12px; border:1px solid var(--line); background:rgba(20,25,37,.8); transition:transform .3s var(--ease-out), box-shadow .3s, opacity .5s, filter .5s; }
+.fighter .hp { grid-row:1 / 4; }
+.side-1 .fighter { grid-template-columns:1fr auto; } .side-1 .fighter .hp { grid-column:2; } .side-1 .fname, .side-1 .hpnum { text-align:right; }
+.side-1 .fighter > :not(.hp):not(.dmg) { grid-column:1; }
+.fname { font-weight:700; font-size:13px; }
+.hpbar { position:relative; height:10px; border-radius:5px; background:#1a0f12; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(255,255,255,.06); }
+.hpfill, .hplag, .hpshield { position:absolute; left:0; top:0; bottom:0; border-radius:5px; }
+.side-1 .hpfill, .side-1 .hplag, .side-1 .hpshield { left:auto; right:0; }
+.hpfill { background:linear-gradient(180deg, #8ff0a8, #3fb868); transition:width .35s var(--ease-out), background .3s; z-index:2; }
+.hpfill.low { background:linear-gradient(180deg, #ff9a7a, #d9473a); animation:lowpulse 1s ease-in-out infinite; }
+@keyframes lowpulse { 50% { filter:brightness(1.35); } }
+.hplag { background:#f3d48a; transition:width .9s ease .35s; z-index:1; }
+.hpshield { background:repeating-linear-gradient(-45deg, rgba(200,220,255,.85) 0 4px, rgba(150,180,255,.6) 4px 8px); z-index:3; height:4px; top:auto; transition:width .35s; }
+.hpnum { font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums; }
+.fighter.active { transform:scale(1.04); box-shadow:0 0 0 2px var(--gold), 0 0 24px var(--glow); z-index:2; }
+.side-0 .fighter.active { transform:scale(1.04) translateX(6px); } .side-1 .fighter.active { transform:scale(1.04) translateX(-6px); }
+.fighter.ko { opacity:.45; filter:grayscale(1); } .fighter.ko .fname::after { content:" ✝"; color:var(--danger); }
+.fighter.shake { animation:shake .35s ease; }
+@keyframes shake { 20% { translate:-4px 0; } 40% { translate:4px 0; } 60% { translate:-3px 0; } 80% { translate:2px 0; } }
+.dmg { position:absolute; top:4px; font-weight:900; font-size:18px; pointer-events:none; z-index:5; animation:dmg 1.1s var(--ease-out) forwards;
+  text-shadow:0 2px 0 rgba(0,0,0,.6), 0 0 12px currentColor; }
+.dmg.hit { color:#ff6b5a; } .dmg.heal { color:#7fe0a0; }
+@keyframes dmg { 0% { transform:translateY(6px) scale(.6); opacity:0; } 15% { transform:translateY(-6px) scale(1.25); opacity:1; } 100% { transform:translateY(-34px) scale(1); opacity:0; } }
+.replay-log { min-height:64px; max-height:110px; overflow:auto; font:12.5px/1.6 ui-monospace, Consolas, monospace; color:#cfd6e4;
+  background:#0d111a; border:1px solid var(--line); border-radius:8px; padding:8px 10px; }
+.replay-log div { animation:reveal .35s var(--ease-out) both; } .replay-log .sub { color:var(--muted); padding-left:14px; }
+.replay-banner { justify-self:center; font-size:20px; font-weight:900; letter-spacing:.04em; padding:8px 26px; border-radius:999px;
+  animation:dlg .5s var(--ease-spring); color:#1d1606; background:linear-gradient(180deg, #fff0c2, var(--gold)); box-shadow:0 0 30px var(--glow); }
+.replay-banner.t0 { background:linear-gradient(180deg, #bfe0ff, #4ab3ff); box-shadow:0 0 30px rgba(74,179,255,.45); }
+.replay-banner.t1 { background:linear-gradient(180deg, #ffd0c8, #e26060); box-shadow:0 0 30px rgba(226,96,96,.45); }
+@media (max-width: 760px) { .arena { grid-template-columns:1fr; } .vs-mid { text-align:center; } }
 html.no-fx *, html.no-fx *::before, html.no-fx *::after { animation:none !important; transition:none !important; }
 html.no-fx #fx { display:none; }
 @media (prefers-reduced-motion: reduce) {
@@ -793,6 +834,86 @@ async function guildPage() {
 // héros adverses connus par leur nom (stats types de leur classe, « estimés »)
 const asEnemy = (names) => names.map((n) => n.trim()).filter(Boolean).map((name) => ({ name, estimate: true }));
 const asRefs = (member, names) => names.filter(Boolean).map((n) => `${member}/${n}`);
+
+// Rejeu animé du combat type : barres de PV, chiffres de dégâts et de soins, héros actif, K.O.
+function replay(sample, labels) {
+  const units = sample.units, frames = sample.frames, log = sample.log;
+  const clean = (n) => n.replace(/ \(estimé\)$/, "");
+  const cards = units.map((u) => {
+    const fill = el("div", { class: "hpfill" }), shield = el("div", { class: "hpshield" }), lag = el("div", { class: "hplag" });
+    const num = el("span", { class: "hpnum" });
+    const card = el("div", { class: "fighter" }, portrait(clean(u.name), { size: "lg" }),
+      el("div", { class: "fname" }, clean(u.name)), el("div", { class: "hpbar" }, lag, fill, shield), num);
+    return { card, fill, shield, lag, num, u };
+  });
+  const side = (t) => el("div", { class: "side side-" + t }, el("div", { class: "side-label" }, labels[t]), ...cards.filter((c) => c.u.team === t).map((c) => c.card));
+  const caption = el("div", { class: "replay-log", "aria-live": "polite" });
+  const banner = el("div", { class: "replay-banner", hidden: "" });
+  const turn = el("span", { class: "note" });
+  let i = -1, timer = 0, speed = 1, playing = true;
+  const prevHp = units.map((u) => u.max_hp);
+  const paint = (hp, shield) => cards.forEach((c, k) => {
+    const pct = Math.max(0, 100 * hp[k] / c.u.max_hp);
+    c.fill.style.width = pct + "%"; c.lag.style.width = pct + "%";
+    c.fill.classList.toggle("low", pct < 30);
+    c.shield.style.width = Math.min(100, 100 * (shield?.[k] || 0) / c.u.max_hp) + "%";
+    c.num.textContent = `${Math.round(hp[k]).toLocaleString("fr-FR")} / ${c.u.max_hp.toLocaleString("fr-FR")}`;
+    c.card.classList.toggle("ko", hp[k] <= 0);
+  });
+  const pop = (card, text, kind) => {
+    const n = el("span", { class: "dmg " + kind }, text);
+    n.style.left = 30 + Math.random() * 40 + "%";
+    card.append(n); n.addEventListener("animationend", () => n.remove());
+  };
+  const step = () => {
+    i += 1;
+    if (i >= frames.length) { finish(); return; }
+    const f = frames[i], from = i ? frames[i - 1].line : 0;
+    cards.forEach((c, k) => c.card.classList.toggle("active", k === f.actor));
+    cards.forEach((c, k) => {
+      const d = f.hp[k] - prevHp[k];
+      if (Math.abs(d) >= 1) {
+        pop(c.card, (d < 0 ? "−" : "+") + Math.abs(Math.round(d)).toLocaleString("fr-FR"), d < 0 ? "hit" : "heal");
+        if (d < 0) { c.card.classList.remove("shake"); void c.card.offsetWidth; c.card.classList.add("shake"); }
+        if (d < 0 && f.hp[k] <= 0) { const r = c.card.getBoundingClientRect(); fx.burst(r.left + r.width / 2, r.top + 30, 18); }
+      }
+      prevHp[k] = f.hp[k];
+    });
+    paint(f.hp, f.shield);
+    caption.replaceChildren(...log.slice(from, f.line).map((l) => el("div", { class: l.trim().startsWith("↳") ? "sub" : "" }, l.trim())));
+    turn.textContent = `Tour ${i + 1} / ${frames.length}`;
+    timer = setTimeout(step, 900 / speed);
+  };
+  const finish = () => {
+    playing = false; playBtn.textContent = "↻ Rejouer";
+    cards.forEach((c) => c.card.classList.remove("active"));
+    banner.hidden = false;
+    banner.textContent = sample.winner == null ? "Match nul" : `Victoire : ${labels[sample.winner]}`;
+    banner.className = "replay-banner " + (sample.winner == null ? "draw" : "t" + sample.winner);
+    const r = banner.getBoundingClientRect(); fx.burst(r.left + r.width / 2, r.top + r.height / 2, 40);
+  };
+  const restart = () => {
+    clearTimeout(timer); i = -1; banner.hidden = true; caption.replaceChildren();
+    units.forEach((u, k) => { prevHp[k] = u.max_hp; }); paint(prevHp, null);
+    playing = true; playBtn.textContent = "⏸ Pause"; timer = setTimeout(step, 500);
+  };
+  const playBtn = el("button", { class: "ghost", onclick: () => {
+    if (i >= frames.length) return restart();
+    playing = !playing; playBtn.textContent = playing ? "⏸ Pause" : "▶ Lecture";
+    if (playing) step(); else clearTimeout(timer);
+  } }, "⏸ Pause");
+  const speedBtn = el("button", { class: "ghost", onclick: () => { speed = speed === 1 ? 2 : speed === 2 ? 4 : 1; speedBtn.textContent = `Vitesse ×${speed}`; } }, "Vitesse ×1");
+  const box = el("div", { class: "replay" },
+    el("div", { class: "arena" }, side(0), el("div", { class: "vs-mid" }, "VS"), side(1)), banner, caption,
+    el("div", { class: "acts-row" }, playBtn, speedBtn, el("button", { class: "ghost", onclick: () => {
+      if (i >= frames.length) return;
+      clearTimeout(timer); i = frames.length - 2; step(); clearTimeout(timer); i = frames.length; finish();
+    } }, "⏭ Fin"), turn));
+  const stop = new MutationObserver(() => { if (!box.isConnected) { clearTimeout(timer); stop.disconnect(); } });
+  stop.observe(document.body, { childList: true, subtree: true });
+  restart();
+  return box;
+}
 function simBox(label, build) {
   const out = el("div", {});
   const run = async () => {
@@ -810,7 +931,9 @@ function simBox(label, build) {
           el("div", { style: `width:${wb}%;background:#b33f3f` }, wb >= 10 ? `${teams.labels[1]} ${wb} %` : "")),
         el("p", { class: "note" }, `${r.teams[0].join(", ")} : ${wa} % de victoires contre ${r.teams[1].join(", ")} (${wb} %, nuls ${r.draws} %) sur ${r.runs} combats.`
           + (r.teams.flat().some((n) => n.endsWith("(estimé)")) ? " Héros « estimés » : stats types de leur classe, leurs vraies stats sont inconnues." : "")),
-        el("button", { class: "ghost", style: "padding:3px 10px;font-size:12px", onclick: () => { log.hidden = !log.hidden; } }, "Déroulé d'un combat type"), log));
+        el("div", { class: "acts-row" },
+          r.sample.frames?.length ? el("button", { style: "padding:3px 12px;font-size:12px", onclick: (e) => { e.target.replaceWith(replay(r.sample, teams.labels)); } }, "▶ Revoir le combat type") : "",
+          el("button", { class: "ghost", style: "padding:3px 10px;font-size:12px", onclick: () => { log.hidden = !log.hidden; } }, "Déroulé d'un combat type")), log));
     } catch (e) { out.replaceChildren(el("p", { class: "note", style: "color:var(--danger)" }, e.message)); }
   };
   return el("div", { class: "simbox" }, el("button", { class: "ghost", onclick: run }, "⚔ " + label), out);

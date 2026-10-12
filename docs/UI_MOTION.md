@@ -21,6 +21,7 @@ Tout est dans `src/e7showcase/app/ui.html` (CSS en fin de `<style>`, module JS `
 | Portraits de héros | `portrait(nom)` : visage (assets locaux, sinon portrait découpé d'une capture, sinon initiales) dans un cadre à la couleur de l'élément (feu, glace, terre, lumière, ténèbres), étoiles en bas, élément/classe en info-bulle, reflet au survol. Infos chargées par lots : `POST /api/portraits` (`app/portraits.py`) |
 | GvG | défenses : avatar du membre, tour avec icône, aperçu des équipes en portraits (emplacements vides en pointillés) au-dessus des sélecteurs ; attaques : portraits des deux équipes, badge « VS », résultat en pastille, liseré vert/rouge ; attaques restantes en jauges ; contres : portraits de la défense, barre victoires/défaites, lignes colorées selon le bilan |
 | Guilde, armurerie | héros phares en portraits ; mini-portrait du porteur sur chaque pièce |
+| Rejeu de combat | bouton « ▶ Revoir le combat type » sous chaque simulation : arène attaque/défense avec portraits, barres de PV (traînée dorée des dégâts, barre rouge pulsante sous 30 %, bouclier hachuré), héros actif mis en avant, chiffres de dégâts (rouge) et de soins (vert) qui s'envolent, secousse à l'impact, K.O. en gris avec étincelles, journal du tour, bannière du vainqueur ; pause, vitesse ×1/×2/×4, aller à la fin. Données : `sample.frames` / `sample.units` de `calc.battle.simulate` (PV après chaque tour) |
 | Dialogues | ouverture à ressort, fond flouté |
 
 ## Accessibilité et performance

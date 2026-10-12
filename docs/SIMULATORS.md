@@ -242,3 +242,8 @@ partiel, contre-attaque quand un allié est attaqué, dégâts doublés hors de 
 **Non simulés** : mécaniques uniques non encore décrites dans `hero_mechanics.json` (balles de
 Renoa, vitesse fixe de Harsetti, marques...), Bombes, partage de dégâts, transferts, artefacts,
 bonus de stats permanents des passifs (déjà inclus dans les stats affichées en jeu).
+
+## Rejeu du combat type
+`simulate()` renvoie aussi, pour le combat type (`sample`), `units` (nom, équipe, PV max) et
+`frames` : après chaque tour, l'acteur, les PV et la barrière de chaque héros et la ligne du
+journal atteinte. L'application s'en sert pour le rejeu animé (`docs/UI_MOTION.md`).
