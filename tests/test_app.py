@@ -301,3 +301,41 @@ def test_armory_and_guild_api(app: Any) -> None:
     assert {m["id"] for m in guild["members"]} == {pid, rid}
     state.store.delete(rid)  # un profil supprimé disparaît de la guilde
     assert [m["id"] for m in call(base, "GET", "/api/guild", token=t)["members"]] == [pid]
+
+
+def test_gvg_api(app: Any) -> None:
+    state, base = app
+    t = state.token
+    pid = call(base, "POST", "/api/profiles", {"player": "Spartan"}, t)["id"]
+    for name in ("Belian", "Lilias", "Aria", "Ruele of Light"):
+        state.store.add_hero(pid, Hero(name=name), None)
+    assert call(base, "GET", "/api/gvg", token=t)["members"] == []  # guilde vide
+    call(base, "PATCH", "/api/guild", {"members": [pid]}, t)
+    g = call(base, "PUT", f"/api/gvg/defense/{pid}",
+             {"tower": "Château", "teams": [["belian", "Lilias"], ["Aria"]]}, t)  # fmt: skip
+    assert g["members"][0]["defense"] == {
+        "teams": [["Belian", "Lilias"], ["Aria"]],
+        "tower": "Château",
+    }
+    for bad in ({"teams": [["Belian"], ["Belian"]]}, {"teams": [["Inconnu"]]},
+                {"teams": [["Belian", "Lilias", "Aria", "Ruele of Light"]]}):  # fmt: skip
+        with pytest.raises(urllib.error.HTTPError) as err:
+            call(base, "PUT", f"/api/gvg/defense/{pid}", bad, t)
+        assert err.value.code == 400
+    g = call(base, "POST", "/api/gvg/wars", {"opponent": "Les Ombres", "date": "2026-10-12"}, t)
+    war = g["wars"][0]["id"]
+    attack = {"member": pid, "team": ["Aria", "Belian"], "enemy_team": ["Lua", "Riolet", "Cerise"],
+              "result": "win"}  # fmt: skip
+    call(base, "POST", f"/api/gvg/wars/{war}/attacks", attack, t)
+    g = call(base, "POST", f"/api/gvg/wars/{war}/attacks", {**attack, "result": "loss"}, t)
+    w = g["wars"][0]
+    assert (w["wins"], w["losses"], w["remaining"][pid]) == (1, 1, 0)
+    counter = g["counters"][0]
+    assert counter["enemy_team"] == ["Cerise", "Lua", "Riolet"] and counter["teams"][0]["wins"] == 1
+    with pytest.raises(urllib.error.HTTPError):  # résultat invalide
+        call(base, "POST", f"/api/gvg/wars/{war}/attacks", {**attack, "result": "nul"}, t)
+    g = call(base, "DELETE", f"/api/gvg/wars/{war}/attacks/{w['attacks'][0]['id']}", token=t)
+    assert len(g["wars"][0]["attacks"]) == 1
+    g = call(base, "PATCH", "/api/gvg/settings", {"attacks_per_member": 3, "towers": ["Fort A"]}, t)
+    assert g["settings"] == {"attacks_per_member": 3, "towers": ["Fort A"]}
+    assert call(base, "DELETE", f"/api/gvg/wars/{war}", token=t)["wars"] == []

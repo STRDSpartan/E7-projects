@@ -106,6 +106,13 @@ table.members th, table.members td { padding:8px 10px; border-bottom:1px solid v
 table.members td.num { text-align:right; font-variant-numeric:tabular-nums; }
 table.members td .acts { display:flex; gap:6px; flex-wrap:wrap; }
 table.members td .acts button { padding:4px 10px; font-size:12px; }
+.team { display:grid; grid-template-columns:repeat(3, minmax(90px, 1fr)); gap:6px; }
+.team select, .team input, .page .card > input, .grid2 .field input { min-width:0; background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:6px; font:inherit; }
+table.gvg td { min-width:120px; }
+table.gvg input { width:100%; min-width:0; background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:6px; font:inherit; }
+.note[role="status"]:empty { display:none; }
+.wide { display:grid; grid-template-columns:repeat(auto-fit, minmax(380px, 1fr)); gap:12px; }
+.page .card > input[type="search"] { width:100%; }
 .stat-tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; }
 .tile { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 14px; }
 .tile b { display:block; font-size:22px; color:var(--gold); font-variant-numeric:tabular-nums; } .tile span { font-size:12px; color:var(--muted); }
@@ -540,11 +547,142 @@ async function guildPage() {
         : el("div", { class: "empty" }, "Aucun membre pour l'instant : ajoutez votre profil et les vitrines de vos coéquipiers.")));
 }
 
-// --- GvG : à venir
-function gvgPage() {
-  $("#content").replaceChildren(el("div", { class: "empty" }, el("h2", {}, "Guerre de guilde"),
-    el("p", {}, "Cet onglet accueillera la préparation des guerres de guilde (défenses, attaques, suivi des combats)."),
-    el("p", { class: "note" }, "Fonctionnalité à venir.")));
+// --- GvG : défenses des membres, suivi des guerres, contres connus (stockage local gvg.json)
+let gvgSub = "defense", gvgWar = null;
+async function gvgPage(sub = gvgSub) {
+  gvgSub = sub;
+  let g;
+  try { g = await json("GET", "/gvg"); } catch (e) { $("#content").replaceChildren(el("p", { class: "note" }, e.message)); return; }
+  const tabs = el("div", { class: "tabs" }, ...[["defense", "Défenses"], ["wars", "Guerres"], ["counters", "Contres"]].map(([k, t]) =>
+    el("button", { "aria-pressed": String(sub === k), onclick: () => gvgPage(k) }, t)));
+  const bar = el("div", { class: "bar" }, el("h1", {}, "Guerre de guilde" + (g.guild ? ` — ${g.guild}` : "")), tabs);
+  const page = el("div", { class: "page" });
+  const status = el("p", { class: "note", role: "status" });
+  const send = async (method, path, body, after) => {
+    try { await json(method, "/gvg" + path, body); status.textContent = "Enregistré."; status.style.color = "var(--ok)"; if (after) after(); }
+    catch (e) { status.textContent = e.message; status.style.color = "var(--danger)"; }
+  };
+  if (!g.members.length) {
+    page.append(el("div", { class: "empty" }, el("h2", {}, "Aucun membre"),
+      el("p", {}, "Ajoutez d'abord les membres dans l'onglet Guilde (votre profil et les vitrines de vos coéquipiers) : leurs héros servent aux défenses et aux attaques."),
+      el("button", { onclick: () => setTab("guild") }, "Ouvrir l'onglet Guilde")));
+  } else if (sub === "defense") gvgDefense(page, g, send);
+  else if (sub === "wars") gvgWars(page, g, send);
+  else gvgCounters(page, g);
+  page.prepend(status);
+  $("#content").replaceChildren(bar, page);
+}
+const heroSelect = (heroes, value, label) => {
+  const s = el("select", { "aria-label": label }, el("option", { value: "" }, "—"), ...heroes.map((h) => el("option", { value: h }, h)));
+  s.value = value || ""; return s;
+};
+function gvgDefense(page, g, send) {
+  const towerList = el("datalist", { id: "gvg-towers" }, ...g.settings.towers.map((t) => el("option", { value: t })));
+  const tileMembers = el("b", {}), tileHeroes = el("b", {});
+  const counts = () => {
+    const picks = rows.map((r) => r.teams.flat().filter((x) => x.value).length);
+    tileMembers.textContent = `${picks.filter(Boolean).length}/${g.members.length}`;
+    tileHeroes.textContent = fmtN(picks.reduce((a, b) => a + b, 0));
+  };
+  const rows = g.members.map((m) => {
+    const teams = [0, 1].map((ti) => [0, 1, 2].map((i) => heroSelect(m.heroes, m.defense.teams[ti]?.[i], `${m.player} équipe ${ti + 1} héros ${i + 1}`)));
+    const tower = el("input", { list: "gvg-towers", value: m.defense.tower || "", placeholder: "Tour", maxlength: "40", "aria-label": `Tour de ${m.player}` });
+    const save = () => send("PUT", "/defense/" + m.id, { tower: tower.value, teams: teams.map((t) => t.map((s) => s.value).filter(Boolean)) }, counts);
+    [tower, ...teams.flat()].forEach((n) => n.addEventListener("change", save));
+    const row = el("tr", {}, el("td", {}, el("strong", {}, m.player), el("div", { class: "note" }, `${m.heroes.length} héros`)),
+      el("td", {}, tower), ...teams.map((t) => el("td", {}, el("div", { class: "team" }, ...t))));
+    return { row, teams };
+  });
+  counts();
+  page.append(
+    el("div", { class: "stat-tiles" },
+      el("div", { class: "tile" }, tileMembers, el("span", {}, "membres avec une défense")),
+      el("div", { class: "tile" }, tileHeroes, el("span", {}, "héros en défense"))),
+    el("div", { class: "card" }, el("h3", {}, "Défenses des membres"),
+      el("p", { class: "note" }, "Deux équipes de 3 héros par membre (un héros ne défend que dans une équipe). Les choix sont enregistrés aussitôt."),
+      towerList,
+      el("div", { style: "overflow:auto" }, el("table", { class: "members gvg" },
+        el("thead", {}, el("tr", {}, ...["Membre", "Tour", "Équipe 1", "Équipe 2"].map((t) => el("th", {}, t)))), el("tbody", {}, ...rows.map((r) => r.row))))),
+    gvgSettings(g, send));
+}
+function gvgSettings(g, send) {
+  const per = el("input", { type: "number", min: "1", max: "10", value: g.settings.attacks_per_member });
+  const towers = el("input", { value: g.settings.towers.join(", "), maxlength: "400" });
+  per.addEventListener("change", () => send("PATCH", "/settings", { attacks_per_member: per.value }));
+  towers.addEventListener("change", () => send("PATCH", "/settings", { towers: towers.value.split(",") }, () => gvgPage()));
+  return el("div", { class: "card" }, el("h3", {}, "Réglages"), el("div", { class: "grid2" },
+    field("Attaques par membre et par guerre", per), field("Tours proposées (séparées par des virgules)", towers)));
+}
+function gvgWars(page, g, send) {
+  const opponent = el("input", { placeholder: "Guilde adverse", maxlength: "40" });
+  const day = el("input", { type: "date", value: new Date().toISOString().slice(0, 10) });
+  const create = el("button", { onclick: () => opponent.value.trim() && send("POST", "/wars", { opponent: opponent.value, date: day.value }, () => { gvgWar = null; gvgPage("wars"); }) }, "Nouvelle guerre");
+  page.append(el("div", { class: "card" }, el("h3", {}, "Nouvelle guerre"), el("div", { class: "filters" }, opponent, day, create)));
+  if (!g.wars.length) { page.append(el("div", { class: "empty" }, "Aucune guerre enregistrée pour l'instant.")); return; }
+  const war = g.wars.find((w) => w.id === gvgWar) || g.wars[0];
+  gvgWar = war.id;
+  const choose = el("select", { "aria-label": "Guerre" }, ...g.wars.map((w) => el("option", { value: w.id }, `${w.date} — contre ${w.opponent} (${w.wins} V / ${w.losses} D)`)));
+  choose.value = war.id;
+  choose.addEventListener("change", () => { gvgWar = choose.value; gvgPage("wars"); });
+  const total = war.wins + war.losses;
+  page.append(el("div", { class: "card" }, el("div", { class: "filters" }, choose,
+      el("button", { class: "danger", onclick: () => confirm(`Supprimer la guerre contre ${war.opponent} ?`) && send("DELETE", "/wars/" + war.id, null, () => { gvgWar = null; gvgPage("wars"); }) }, "Supprimer cette guerre"))),
+    el("div", { class: "stat-tiles" },
+      el("div", { class: "tile" }, el("b", {}, fmtN(total)), el("span", {}, "attaques jouées")),
+      el("div", { class: "tile" }, el("b", {}, total ? `${Math.round(100 * war.wins / total)} %` : "—"), el("span", {}, "de victoires")),
+      el("div", { class: "tile" }, el("b", {}, fmtN(Object.values(war.remaining).reduce((a, b) => a + b, 0))), el("span", {}, "attaques restantes"))));
+  // formulaire d'attaque
+  const member = el("select", { "aria-label": "Attaquant" }, ...g.members.map((m) => el("option", { value: m.id }, `${m.player} (${war.remaining[m.id] ?? 0} restante(s))`)));
+  const teamBox = el("div", { class: "team" });
+  let team = [];
+  const fillTeam = () => { const m = g.members.find((x) => x.id === member.value); team = [0, 1, 2].map((i) => heroSelect(m.heroes, "", `Héros ${i + 1}`)); teamBox.replaceChildren(...team); };
+  member.addEventListener("change", fillTeam); fillTeam();
+  const names = el("datalist", { id: "gvg-heroes" }, ...g.hero_names.map((n) => el("option", { value: n })));
+  const enemy = [0, 1, 2].map((i) => el("input", { list: "gvg-heroes", placeholder: `Héros ennemi ${i + 1}`, maxlength: "40" }));
+  const enemyPlayer = el("input", { placeholder: "Joueur adverse", maxlength: "40" });
+  const tower = el("input", { list: "gvg-towers", placeholder: "Tour", maxlength: "40" });
+  const result = el("select", { "aria-label": "Résultat" }, el("option", { value: "win" }, "Victoire"), el("option", { value: "loss" }, "Défaite"));
+  const note = el("input", { placeholder: "Note (facultative)", maxlength: "200" });
+  const add = el("button", { onclick: () => send("POST", `/wars/${war.id}/attacks`, {
+    member: member.value, team: team.map((s) => s.value).filter(Boolean), enemy_team: enemy.map((i) => i.value),
+    enemy_player: enemyPlayer.value, tower: tower.value, result: result.value, note: note.value }, () => gvgPage("wars")) }, "Enregistrer l'attaque");
+  page.append(el("div", { class: "card" }, el("h3", {}, "Ajouter une attaque"), names,
+    el("datalist", { id: "gvg-towers" }, ...g.settings.towers.map((t) => el("option", { value: t }))),
+    el("div", { class: "wide" }, field("Attaquant", member), field("Équipe utilisée", teamBox),
+      field("Défense ennemie", el("div", { class: "team" }, ...enemy)), field("Joueur et tour adverses", el("div", { class: "team" }, enemyPlayer, tower, el("span"))),
+      field("Résultat", result), field("Note", note)),
+    el("div", { style: "margin-top:12px" }, add)));
+  // attaques et suivi des membres
+  const rows = war.attacks.slice().reverse().map((a) => el("tr", {},
+    el("td", {}, a.player), el("td", {}, a.team.join(", ")),
+    el("td", {}, (a.enemy_team.join(", ") || "—") + (a.enemy_player || a.tower ? ` (${[a.enemy_player, a.tower].filter(Boolean).join(" · ")})` : "")),
+    el("td", { style: `color:var(${a.result === "win" ? "--ok" : "--danger"});font-weight:700` }, a.result === "win" ? "Victoire" : "Défaite"),
+    el("td", { class: "note" }, a.note || ""),
+    el("td", {}, el("button", { class: "danger", style: "padding:3px 10px;font-size:12px", onclick: () => send("DELETE", `/wars/${war.id}/attacks/${a.id}`, null, () => gvgPage("wars")) }, "×"))));
+  page.append(el("div", { class: "card" }, el("h3", {}, `Attaques contre ${war.opponent}`),
+    war.attacks.length ? el("div", { style: "overflow:auto" }, el("table", { class: "members" },
+      el("thead", {}, el("tr", {}, ...["Attaquant", "Équipe", "Défense ennemie", "Résultat", "Note", ""].map((t) => el("th", {}, t)))), el("tbody", {}, ...rows)))
+      : el("p", { class: "note" }, "Aucune attaque enregistrée.")),
+    el("div", { class: "card" }, el("h3", {}, "Attaques restantes par membre"),
+      el("div", { class: "chips" }, ...g.members.map((m) => el("span", { class: "chip", style: `padding-left:10px;${war.remaining[m.id] ? "" : "opacity:.55"}` },
+        `${m.player} : ${war.remaining[m.id]}/${g.settings.attacks_per_member}`)))));
+}
+function gvgCounters(page, g) {
+  if (!g.counters.length) { page.append(el("div", { class: "empty" }, "Les contres apparaissent ici dès que des attaques avec une défense ennemie renseignée sont enregistrées.")); return; }
+  const q = el("input", { type: "search", placeholder: "Rechercher un héros ennemi…", "aria-label": "Recherche" });
+  const list = el("div", { class: "grid2" });
+  const draw = () => {
+    const f = q.value.trim().toLowerCase();
+    list.replaceChildren(...g.counters.filter((c) => !f || c.enemy_team.some((h) => h.toLowerCase().includes(f))).map((c) => el("div", { class: "card" },
+      el("h3", {}, c.enemy_team.join(" · ")),
+      el("p", { class: "note" }, `${c.wins} victoire(s), ${c.losses} défaite(s) contre cette défense`),
+      el("table", { class: "res" }, el("thead", {}, el("tr", {}, el("th", {}, "Équipe"), el("th", {}, "V"), el("th", {}, "D"))),
+        el("tbody", {}, ...c.teams.map((t) => el("tr", {}, el("td", {}, t.team.join(", ")),
+          el("td", { class: "exp" }, t.wins), el("td", { style: "color:var(--danger)" }, t.losses))))))));
+  };
+  q.addEventListener("input", draw);
+  page.append(el("div", { class: "card" }, q), list);
+  draw();
 }
 
 $("#new").onclick = () => { $("#dlg-name").value = ""; $("#dlg").showModal(); };

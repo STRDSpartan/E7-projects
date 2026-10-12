@@ -35,7 +35,14 @@ la même application sur son ordinateur.
   d'infobulle. Les icônes voyagent dans le `.e7v` (`images/item-<id>.webp`). Filtres par emplacement, set, stat principale, état (de côté / portée), recherche et
   tris ; résumé des pièces de côté par set. Les pièces de côté sont rangées dans
   `Roster.inventory` (champ facultatif : les anciens profils et fichiers `.e7v` restent lisibles).
-- **GvG** : à venir.
+- **GvG** (`gvg.py`, stockage local `<données>/gvg.json`, API `/api/gvg`) :
+  - *Défenses* : pour chaque membre de la guilde, la tour défendue et deux équipes de 3 héros
+    choisis dans son roster (un héros ne défend que dans une équipe), enregistrées aussitôt ;
+  - *Guerres* : guerre contre une guilde adverse (date), attaques enregistrées (attaquant, équipe
+    utilisée, défense ennemie, joueur et tour adverses, victoire ou défaite, note), taux de
+    victoire et attaques restantes par membre (nombre d'attaques par guerre réglable) ;
+  - *Contres* : pour chaque défense ennemie rencontrée, les équipes qui l'ont battue ou non,
+    cumulées sur toutes les guerres, avec recherche par héros.
 
 ## Architecture (`src/e7showcase/app/`)
 | Fichier | Rôle |
@@ -44,6 +51,7 @@ la même application sur son ordinateur.
 | `server.py` | serveur HTTP local (127.0.0.1, port aléatoire), API JSON, jeton de session + contrôle de l'en-tête Host ; import en arrière-plan suivi par `/api/jobs/<id>` (barre de progression) |
 | `ui.html` | interface (HTML/JS sans dépendance) |
 | `armory.py` | armurerie : pièces portées et non équipées d'un profil, blasons des sets (API `/api/profiles/<id>/armory`, `DELETE …/items/<id>`) |
+| `gvg.py` | guerre de guilde : défenses, guerres, attaques, contres (API `/api/gvg`, `PUT /defense/<membre>`, `POST /wars`, `POST /wars/<id>/attacks`, `PATCH /settings`) |
 | `guild.py` | guilde locale (API `/api/guild` : `GET`, `PATCH` nom et membres ; `/api/open` avec `guild: true` ajoute la vitrine ouverte) |
 | `simulator.py` | simulateurs de dégâts et de combat (API `/api/sim/*`, voir `docs/SIMULATORS.md`) |
 | `anim.html` | modèle animé du héros dans la fiche : rendu en direct depuis les fichiers publics d'E7 Codex (lecteur Spine du site), dans un cadre isolé (`sandbox`, CSP limitée à e7codex.com) sans accès à l'application ; la pose de la capture reste affichée hors ligne |

@@ -23,6 +23,7 @@ from urllib.parse import unquote, urlparse
 from e7showcase import __version__
 from e7showcase.app.armory import armory
 from e7showcase.app.guild import GuildStore
+from e7showcase.app.gvg import GvgError, GvgStore
 from e7showcase.app.importer import ScreenshotImporter
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.app.viewer import profile_page
@@ -54,6 +55,7 @@ class AppState:
         self.store = ProfileStore(data_root / "profiles")
         self.assets = AssetStore(data_root / "assets")
         self.guild = GuildStore(data_root / "guild.json", self.store)
+        self.gvg = GvgStore(data_root / "gvg.json", self.store, self.guild)
         self.importer = importer or ScreenshotImporter(data_root / "templates" / "sets")
         self.token = secrets.token_urlsafe(24)
         self.lock = threading.Lock()  # un import OCR à la fois
@@ -207,6 +209,8 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 except simulator.SimError as exc:
                     raise ApiError(400, str(exc)) from exc
                 raise ApiError(404, "introuvable")
+            if path == "/gvg" or path.startswith("/gvg/"):
+                return self._gvg(method, path[4:])
             if path == "/guild":
                 if method == "GET":
                     return self._json(state.guild.summary())
@@ -281,11 +285,41 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 return self._send(204, b"", "text/plain")
             raise ApiError(404, "introuvable")
 
+        def _gvg(self, method: str, rest: str) -> None:
+            gvg = state.gvg
+            try:
+                if rest == "" and method == "GET":
+                    return self._json(gvg.summary())
+                if rest == "/settings" and method == "PATCH":
+                    gvg.update_settings(self._body())
+                elif (d := re.fullmatch(r"/defense/([a-z0-9-]+)", rest)) and method == "PUT":
+                    gvg.set_defense(d[1], self._body())
+                elif rest == "/wars" and method == "POST":
+                    gvg.add_war(self._body())
+                elif (w := re.fullmatch(r"/wars/([0-9a-f]{1,16})", rest)) and method == "DELETE":
+                    gvg.delete_war(w[1])
+                elif (w := re.fullmatch(r"/wars/([0-9a-f]{1,16})/attacks", rest)) and (
+                    method == "POST"
+                ):
+                    gvg.add_attack(w[1], self._body())
+                elif (
+                    a := re.fullmatch(r"/wars/([0-9a-f]{1,16})/attacks/([0-9a-f]{1,16})", rest)
+                ) and method == "DELETE":
+                    gvg.delete_attack(a[1], a[2])
+                else:
+                    raise ApiError(404, "introuvable")
+            except (GvgError, ValueError, TypeError) as exc:
+                raise ApiError(400, str(exc)) from exc
+            return self._json(gvg.summary())
+
         def do_GET(self) -> None:  # noqa: N802
             self._dispatch("GET")
 
         def do_POST(self) -> None:  # noqa: N802
             self._dispatch("POST")
+
+        def do_PUT(self) -> None:  # noqa: N802
+            self._dispatch("PUT")
 
         def do_PATCH(self) -> None:  # noqa: N802
             self._dispatch("PATCH")
