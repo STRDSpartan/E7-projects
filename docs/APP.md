@@ -48,7 +48,9 @@ la même application sur son ordinateur.
     2 000 caractères (bouton « Copier »), ou fichier `.md` / `.csv` (séparateur « ; », formules
     neutralisées) ;
   - *Contres dans le plan* (case « Inclure les contres connus », réglage `plan_counters`) : le
-    texte Discord, le fichier `.md` et le plan publié se terminent par les contres connus ; le
+    texte Discord, le fichier `.md` et le plan publié se terminent par les contres connus, et le
+    `.csv` reçoit un second tableau sous les défenses (défense ennemie, équipe d'attaque,
+    victoires, défaites, bilan) ; le
     plan publié en mise à jour automatique suit alors aussi chaque nouvelle attaque ;
   - *Publication sur Discord* : bouton « Envoyer sur Discord » (après confirmation) qui publie le
     plan dans le salon de la guilde par **webhook** (`publish/webhook.post_messages`, aucune

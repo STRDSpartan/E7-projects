@@ -299,6 +299,25 @@ def defense_plan(summary: dict[str, Any], today: date | None = None) -> dict[str
         lines.append("Aucune défense n'est encore placée.")
     if summary["settings"].get("plan_counters") and summary.get("counters"):
         lines += ["", "**Contres connus**", *counter_lines(summary["counters"])]
+        rows += [[], ["Défense ennemie", "Équipe d'attaque", "Victoires", "Défaites", "Bilan"]]
+        for c in summary["counters"]:  # second tableau, sous les défenses
+            for t in c["teams"]:
+                verdict = (
+                    "gagnée"
+                    if t["wins"] and not t["losses"]
+                    else "perdue"
+                    if not t["wins"]
+                    else "mitigée"
+                )
+                rows.append(
+                    [
+                        " · ".join(c["enemy_team"]),
+                        ", ".join(t["team"]),
+                        str(t["wins"]),
+                        str(t["losses"]),
+                        verdict,
+                    ]
+                )
     messages: list[str] = []
     for line in lines:  # découpe en messages Discord, sans couper une ligne
         if messages and len(messages[-1]) + len(line) + 1 <= DISCORD_LIMIT:
