@@ -41,3 +41,27 @@ def test_parse_fortress_keeps_only_player_names() -> None:
         parse_war_map(lines("gvg_fortress_ocr.json"), SIZE) is None
         or not parse_war_map(lines("gvg_fortress_ocr.json"), SIZE).fortresses
     )  # type: ignore[union-attr]
+
+
+def test_parse_fortress_snowy_view_without_taskbar() -> None:
+    """Vue d'une forteresse plein écran : barre de titre en haut, jauge de Ravage à gauche,
+    pseudos sous les portraits (y compris non latins) ; seuls les pseudos restent."""
+    w, h = 2000, 1088
+
+    def box(t: str, x: int, y: int) -> OcrLine:
+        return OcrLine(t, 0.95, y - 15, (x - 60, y - 15, x + 60, y + 15))
+
+    ocr = [
+        box("Epic Seven", 40, 9),
+        box("Guerre", 157, 68),
+        box("3/3", 1485, 68),
+        box("Ravage", 75, 157),
+        box("2140", 92, 199),
+        box("1540", 92, 471),
+        box("Joueur1", 571, 373),
+        box("Joueur2", 1272, 311),
+        box("ゆうしゃ", 997, 996),
+        box("Joueur3", 1705, 906),
+    ]
+    names = [p.name for p in parse_fortress(ocr, (w, h))]
+    assert names == ["Joueur2", "Joueur1", "Joueur3", "ゆうしゃ"]

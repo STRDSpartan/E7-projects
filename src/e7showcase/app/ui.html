@@ -462,6 +462,10 @@ select { cursor:pointer; }
 .wm-count { position:absolute; right:-6px; top:-6px; min-width:20px; height:20px; border-radius:10px; display:grid; place-items:center; font-size:11px; font-weight:800; color:#1d1606; background:var(--gold); }
 .wm-check { position:absolute; inset:0; display:grid; place-items:center; font-size:26px; color:var(--ok); text-shadow:0 0 8px #000; }
 .wm-player { position:sticky; top:10px; }
+/* v0.51 : nœud ancré sur le pseudo lu (l'avatar au-dessus), joueurs absents */
+.wm-node.enemy-p { translate:-50% calc(-100% + .9em); }
+.wm-node.absent { opacity:.28; }
+.wm-roster { display:flex; flex-wrap:wrap; gap:6px 14px; }
 /* --- v0.49 : coller une capture --- */
 .paste-hint { color:var(--gold); opacity:.8; }
 .drop.pasted { animation:pasted .9s var(--ease-out); }
@@ -1584,7 +1588,7 @@ function gvgFortress(page, g, send, m, f, bg) {
     const nodes = f.players.map((p, k) => {
       const sc = scoutedOf(g, p.name);
       const face = sc.length ? portrait(sc[0].heroes[0].name, { size: "md", stars: false }) : el("span", { class: "wm-initial" }, p.name.slice(0, 1).toUpperCase());
-      return el("button", { class: "wm-node" + (p.beaten ? " beaten" : "") + (k === gvgPlayer ? " selected" : ""), style: `left:${p.x * 100}%;top:${p.y * 100}%`,
+      return el("button", { class: "wm-node enemy-p" + (p.beaten ? " beaten" : "") + (p.present === false ? " absent" : "") + (k === gvgPlayer ? " selected" : ""), style: `left:${p.x * 100}%;top:${p.y * 100}%`,
         onclick: () => { gvgPlayer = k; stage.querySelectorAll(".wm-node").forEach((n, j) => n.classList.toggle("selected", j === k)); drawPlayer(); } },
         el("span", { class: "wm-avatar" }, face, sc.length ? el("span", { class: "wm-count" }, String(sc.length)) : "", p.beaten ? el("span", { class: "wm-check" }, "✓") : ""),
         el("span", { class: "wm-pname" }, p.name));
@@ -1593,8 +1597,17 @@ function gvgFortress(page, g, send, m, f, bg) {
     page.append(el("div", { class: "wm-split" }, stage, side));
     drawPlayer();
   }
+  if (f.players.length) {
+    page.append(el("div", { class: "card" }, el("h3", {}, "Joueurs présents dans la GvG"),
+      el("p", { class: "note" }, "Décochez un pseudo mal lu ou un joueur absent : il est grisé sur la carte."),
+      el("div", { class: "wm-roster" }, ...f.players.map((p, k) => {
+        const box = el("input", { type: "checkbox", ...(p.present !== false ? { checked: "" } : {}) });
+        box.addEventListener("change", () => send("PATCH", `/map/fortress/${f.id}/players/${k}`, { present: box.checked }, () => gvgPage("map")));
+        return el("label", { class: "autosend" }, box, " ", p.name);
+      }))));
+  }
   page.append(el("div", { class: "card" }, el("h3", {}, f.players.length ? "Mettre à jour les défenseurs" : "Importer les défenseurs"),
-    el("p", { class: "note" }, "Capture de la vue de cette forteresse dans le jeu : l'application lit les pseudos des défenseurs et leur place (la capture n'est pas affichée)."),
+    el("p", { class: "note" }, "Capture de la vue de cette forteresse dans le jeu : l'application lit les pseudos des défenseurs et leur position ; portraits, cadres cosmétiques et décor du jeu sont ignorés (la capture n'est ni affichée ni conservée). Ctrl+V fonctionne aussi."),
     captureZone("Capture de la forteresse — glissez-la ou cliquez", `/gvg/map/fortress?id=${f.id}`, () => gvgPage("map"))));
 }
 // Relevés : capture de fin de combat → héros adverses reconnus (portraits) et leurs stats,

@@ -188,7 +188,7 @@ l'adversaire à droite (défenses restantes), un bouton nommé sur chaque châte
 deux guildes en dessous. Fond : image choisie une fois par le joueur (`POST`/`DELETE
 /api/gvg/background`, gardée dans `<données>/gvg_map/background.webp`, servie par
 `/gvgmap/background.webp`) ou panorama dessiné (SVG intégré) ; aucune image du jeu n'est livrée.
-Dans une forteresse adverse, les joueurs sont placés comme dans le jeu. Un joueur : pseudo
+Portraits, cadres cosmétiques et décor de la capture sont ignorés : seuls pseudo et position sont gardés. Une liste « Joueurs présents » permet de décocher un pseudo mal lu ou un absent (`present: false`, grisé). Dans une forteresse adverse, les joueurs sont placés comme dans le jeu. Un joueur : pseudo
 corrigeable, case « défense battue » (`PATCH /api/gvg/map/fortress/fN/players/<i>`), ses
 défenses relevées (Relevés, même pseudo) avec le test de vos équipes, et un raccourci pour lire
 un écran de fin de combat contre lui. Les noms des forteresses remplacent les tours par défaut

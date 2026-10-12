@@ -840,6 +840,8 @@ def test_gvg_war_map_and_fortress_flow(app: Any) -> None:
     dard = g["map"]["fortresses"][0]
     assert len(dard["players"]) == 10 and dard["image"] is None
     call(base, "PATCH", "/api/gvg/map/fortress/f0/players/0", {"beaten": True, "name": "Zed"}, t)
+    g = call(base, "PATCH", "/api/gvg/map/fortress/f0/players/1", {"present": False}, t)
+    assert g["map"]["fortresses"][0]["players"][1]["present"] is False
     engine.name = "gvg_war_map_ocr.json"
     g = upload("/gvg/map")  # même guerre : joueurs et capture de forteresse conservés
     first = g["map"]["fortresses"][0]["players"][0]

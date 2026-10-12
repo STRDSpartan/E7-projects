@@ -301,6 +301,8 @@ class GvgStore:
             player["name"] = _text(body["name"])
         if "beaten" in body:
             player["beaten"] = bool(body["beaten"])
+        if "present" in body:
+            player["present"] = bool(body["present"])
         self._write(data)
 
     def clear_map(self) -> list[str]:
