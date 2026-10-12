@@ -985,6 +985,10 @@ def test_parallel_simulation_matches_in_process() -> None:
     seq = simulate(a, b, runs=300, seed=5, parallel=False)
     par = simulate(a, b, runs=300, seed=5)  # mêmes lots et graines, sur plusieurs processus
     assert par == seq
+    import e7showcase.calc.battle as engine
+
+    procs = list(engine._POOL._processes.values())
     shutdown_pool()
+    assert procs and not any(p.is_alive() for p in procs)  # aucun processus orphelin
     assert simulate(a, b, runs=300, seed=5) == seq  # processus relancés au besoin
     shutdown_pool()

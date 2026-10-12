@@ -37,6 +37,7 @@ valeur type (signalée `estimated` dans les données). Le résultat reste un ord
 
 from __future__ import annotations
 
+import contextlib
 import random
 import threading
 from dataclasses import dataclass, field, replace
@@ -1865,12 +1866,26 @@ def warm_pool() -> None:
 
 
 def shutdown_pool() -> None:
-    """Arrête les processus de calcul (fermeture de l'application)."""
+    """Arrête VRAIMENT les processus de calcul (fermeture de l'application).
+
+    L'application se termine ensuite par `os._exit` : un arrêt « poli » n'aurait pas le temps
+    de prévenir les processus, qui resteraient orphelins (E7Showcase.exe en arrière-plan).
+    """
     global _POOL
     with _POOL_LOCK:
         pool, _POOL = _POOL, None
-    if pool is not None:
-        pool.shutdown(wait=False, cancel_futures=True)
+    if pool is None:
+        return
+    procs = list((getattr(pool, "_processes", None) or {}).values())
+    pool.shutdown(wait=False, cancel_futures=True)
+    for proc in procs:
+        with contextlib.suppress(Exception):
+            proc.terminate()
+    for proc in procs:
+        with contextlib.suppress(Exception):
+            proc.join(timeout=2)
+            if proc.is_alive():
+                proc.kill()
 
 
 def _run_chunks(
