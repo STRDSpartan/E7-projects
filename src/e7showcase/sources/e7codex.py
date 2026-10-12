@@ -174,6 +174,48 @@ def sync_assets(
     return report
 
 
+def face_jobs() -> list[tuple[str, str]]:
+    """(code, chemin distant) des icônes de visage de tous les héros et skins du référentiel."""
+    from e7showcase.reference import load
+
+    jobs: list[tuple[str, str]] = []
+    for h in load("heroes")["heroes"]:
+        for variant in [h, *(h.get("skins") or [])]:
+            if variant.get("face"):
+                jobs.append((variant["code"], variant["face"]))
+    return list(dict.fromkeys(jobs))
+
+
+def sync_faces(
+    store: AssetStore,
+    client: Any,
+    *,
+    delay: float = 0.02,
+    on_progress: Callable[[int, int], None] | None = None,
+) -> SyncReport:
+    """Télécharge les icônes de visage manquantes (reconnaissance des portraits en GvG)."""
+    report = SyncReport()
+    jobs = face_jobs()
+    for i, (code, path) in enumerate(jobs, start=1):
+        if (store.root / "faces" / f"{code}.webp").exists():
+            report.skipped.append(code)
+        else:
+            try:
+                response = client.get(
+                    f"{BASE_URL}/{path}", headers={"User-Agent": USER_AGENT}, timeout=60
+                )
+                response.raise_for_status()
+                store.save_image("faces", code, response.content, MAX_SIZE["faces"])
+                report.downloaded.append(code)
+            except Exception as exc:  # réseau, 404 : on continue
+                report.missing.append(f"{code} ({exc.__class__.__name__})")
+            if delay:
+                time.sleep(delay)
+        if on_progress:
+            on_progress(i, len(jobs))
+    return report
+
+
 def hero_known(hero: Hero) -> bool:
     from e7showcase.reference import hero_info
 

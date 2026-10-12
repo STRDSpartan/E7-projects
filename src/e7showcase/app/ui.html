@@ -383,6 +383,26 @@ select { cursor:pointer; }
 @keyframes vdPop { 0% { transform:scale(0) rotate(-30deg); } 70% { transform:scale(1.25) rotate(8deg); } }
 @keyframes vdRise { from { opacity:0; transform:translateY(8px); } }
 @keyframes vdSweep { to { transform:translateX(120%); } }
+
+/* --- v0.47 : relevés GvG (capture de fin de combat) --- */
+.scout-faces { border:1px dashed rgba(232,194,106,.5); border-radius:12px; padding:12px 14px; margin-bottom:10px; background:rgba(232,194,106,.05); }
+.scout-teams { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width: 1000px) { .scout-teams { grid-template-columns:1fr; } }
+.scout-team { border:1px solid var(--line); border-radius:12px; padding:10px; opacity:.7; transition:opacity var(--t-med), border-color var(--t-med), box-shadow var(--t-med); }
+.scout-team.enemy { opacity:1; border-color:rgba(226,96,96,.5); box-shadow:0 0 20px rgba(226,96,96,.12); background:linear-gradient(180deg, rgba(226,96,96,.07), transparent 60%); }
+.scout-pick { display:flex; align-items:center; gap:6px; font-weight:700; margin-bottom:8px; cursor:pointer; }
+.scout-grid { display:grid; gap:8px; }
+.scout-hero { border:1px solid var(--line); border-radius:10px; padding:8px; background:rgba(13,17,26,.5); display:grid; gap:6px; }
+.scout-head { display:flex; gap:10px; align-items:center; } .scout-head > div { display:grid; gap:4px; flex:1; }
+.scout-head input { background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:6px; font:inherit; font-weight:700; }
+.scout-face { width:52px; height:52px; border-radius:50%; flex:none; box-shadow:0 0 0 2px rgba(232,194,106,.4); }
+.scout-badge { justify-self:start; font-size:11px; border-radius:999px; padding:1px 8px; font-weight:700; }
+.scout-badge.ok { color:#0b0e15; background:var(--ok); } .scout-badge.check { color:#1d1606; background:var(--gold); animation:lowpulse 1.6s ease-in-out infinite; }
+.chip-btn { padding:2px 10px; font-size:12px; border-radius:999px; }
+.scout-stats { display:grid; grid-template-columns:repeat(auto-fill, minmax(96px, 1fr)); gap:6px; }
+.scout-stats label { display:grid; gap:2px; font-size:11px; color:var(--muted); }
+.scout-stats input { background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:6px; padding:4px 6px; font:inherit; font-size:13px; min-width:0; }
+.hidden-stats { opacity:.85; }
 html.no-fx *, html.no-fx *::before, html.no-fx *::after { animation:none !important; transition:none !important; }
 html.no-fx #fx { display:none; }
 @media (prefers-reduced-motion: reduce) {
@@ -1045,7 +1065,7 @@ async function gvgPage(sub = gvgSub) {
   gvgSub = sub;
   let g;
   try { g = await json("GET", "/gvg"); } catch (e) { $("#content").replaceChildren(el("p", { class: "note" }, e.message)); return; }
-  const tabs = el("div", { class: "tabs" }, ...[["defense", "Défenses"], ["wars", "Guerres"], ["counters", "Contres"]].map(([k, t]) =>
+  const tabs = el("div", { class: "tabs" }, ...[["defense", "Défenses"], ["wars", "Guerres"], ["counters", "Contres"], ["scout", "Relevés"]].map(([k, t]) =>
     el("button", { "aria-pressed": String(sub === k), onclick: () => gvgPage(k) }, t)));
   const bar = el("div", { class: "bar" }, el("h1", {}, "Guerre de guilde" + (g.guild ? ` — ${g.guild}` : "")), tabs);
   const page = el("div", { class: "page" });
@@ -1060,6 +1080,7 @@ async function gvgPage(sub = gvgSub) {
       el("button", { onclick: () => setTab("guild") }, "Ouvrir l'onglet Guilde")));
   } else if (sub === "defense") gvgDefense(page, g, send);
   else if (sub === "wars") gvgWars(page, g, send);
+  else if (sub === "scout") gvgScout(page, g, send);
   else gvgCounters(page, g);
   page.prepend(status);
   $("#content").replaceChildren(bar, page);
@@ -1323,6 +1344,109 @@ function gvgWars(page, g, send) {
           el("div", { class: "pips" }, ...Array.from({ length: max }, (_, i) => el("span", { class: i < max - left ? "used" : "" }))),
           el("span", { class: "note" }, left ? `${left} restante(s)` : "terminé ✓"));
       }))));
+}
+
+// Relevés : capture de fin de combat → héros adverses reconnus (portraits) et leurs stats,
+// testés contre les équipes des membres avec ces stats réelles
+let gvgReport = null;
+const STAT_FIELDS = [["atk", "Attaque"], ["def", "Défense"], ["hp", "PV"], ["spd", "Vitesse"], ["crit_chance", "Crit. %"],
+  ["crit_dmg", "Dégâts crit. %"], ["effectiveness", "Efficacité %"], ["effect_res", "Résistance %"], ["dual_attack", "Att. double %"]];
+const enemyRefs = (heroes) => heroes.filter((h) => h.name).map((h) => h.stats ? { name: h.name, stats: h.stats } : { name: h.name, estimate: true });
+function teamTest(g, enemies, label = "Tester une équipe contre cette défense :") {
+  const member = el("select", { "aria-label": "Membre" }, ...g.members.map((m) => el("option", { value: m.id }, m.player)));
+  const box = el("div", { class: "team" });
+  let picks = [];
+  const fill = () => { const m = g.members.find((x) => x.id === member.value); picks = [0, 1, 2].map((i) => heroSelect(m.heroes, "", `Héros ${i + 1}`)); box.replaceChildren(...picks); };
+  member.addEventListener("change", fill); fill();
+  return el("div", { class: "simbox" }, el("div", { class: "note" }, label), member, box,
+    simBox("Simuler avec les stats relevées", () => {
+      const b = enemyRefs(enemies());
+      if (!b.length) throw new Error("Indiquez au moins un héros adverse.");
+      return { a: asRefs(member.value, picks.map((x) => x.value)), b, labels: ["Attaque", "Défense"] };
+    }));
+}
+function scoutHero(h, names) {
+  const name = el("input", { list: "gvg-heroes", value: h.name, placeholder: "Nom du héros", maxlength: "40", "aria-label": "Héros" });
+  const badge = el("span", { class: "scout-badge " + (h.confident ? "ok" : "check") }, h.confident ? "reconnu" : "à vérifier");
+  name.addEventListener("input", () => { h.name = name.value.trim(); h.confident = true; badge.className = "scout-badge ok"; badge.textContent = "corrigé"; });
+  const alts = h.confident ? "" : el("div", { class: "chips" }, ...h.candidates.slice(h.name ? 1 : 0).map((c) =>
+    el("button", { class: "ghost chip-btn", title: `ressemblance ${Math.round(c.score * 100)} %`, onclick: () => { name.value = c.name; name.dispatchEvent(new Event("input")); } }, c.name)));
+  const stats = h.stats ? el("div", { class: "scout-stats" }, ...STAT_FIELDS.map(([k, label]) => {
+    const input = el("input", { type: "number", value: h.stats[k] ?? "", min: "0", step: "any", "aria-label": label });
+    input.addEventListener("input", () => { h.stats[k] = input.value === "" ? null : Number(input.value); });
+    return el("label", {}, el("span", {}, label), input);
+  })) : el("p", { class: "note" }, `Stats cachées${h.hp ? ` (PV ${fmtN(h.hp)})` : ""} : héros simulé avec les stats types de sa classe.`);
+  return el("div", { class: "scout-hero" + (h.stats ? "" : " hidden-stats") },
+    el("div", { class: "scout-head" }, el("img", { class: "scout-face", src: h.portrait, alt: "" }), el("div", {}, name, badge)), alts, stats);
+}
+function gvgScout(page, g, send) {
+  const names = el("datalist", { id: "gvg-heroes" }, ...g.hero_names.map((n) => el("option", { value: n })));
+  const status = el("div", {});
+  const faceBox = el("div", {});
+  const file = el("input", { type: "file", accept: "image/*", hidden: "" });
+  let pending = null;
+  const read = async (f) => {
+    pending = f;
+    status.replaceChildren(el("p", { class: "note" }, "Lecture de la capture… (la première fois, le chargement du moteur de lecture prend quelques secondes)"));
+    try {
+      const res = await fetch("/api/gvg/report", { method: "POST", body: f, headers: { "X-E7-Token": TOKEN, "Content-Type": "application/octet-stream" } });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `erreur ${res.status}`);
+      gvgReport = data; pending = null; gvgPage("scout");
+    } catch (e) { status.replaceChildren(el("p", { class: "note", style: "color:var(--danger)" }, e.message)); }
+  };
+  file.addEventListener("change", () => { const f = file.files[0]; file.value = ""; if (f) read(f); });
+  const drop = el("div", { class: "drop", tabindex: "0", role: "button" }, "Glissez ici la capture de fin de combat de GvG (les deux équipes et leurs stats) — ou cliquez pour la choisir");
+  drop.addEventListener("click", () => file.click());
+  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); const f = e.dataTransfer.files[0]; if (f) read(f); });
+  // visages : téléchargés une fois pour reconnaître les héros sur leurs portraits
+  const drawFaces = async () => {
+    const st = await json("GET", "/gvg/faces");
+    if (st.count >= st.total * 0.9 && !st.running) { faceBox.replaceChildren(); return; }
+    if (st.running) {
+      const pct = st.total ? Math.round(100 * st.done / st.total) : 0;
+      faceBox.replaceChildren(el("div", { class: "progress" }, el("div", { class: "head" }, el("span", { class: "msg" }, "Téléchargement des visages des héros"), el("b", {}, `${pct} %`)),
+        el("div", { class: "track" }, el("div", { class: "fill", style: `width:${pct}%` }))));
+      setTimeout(() => { if (faceBox.isConnected) drawFaces(); }, 700);
+      return;
+    }
+    faceBox.replaceChildren(el("div", { class: "scout-faces" },
+      el("p", {}, `Pour reconnaître les héros adverses sur leurs portraits, l'application a besoin de leurs visages (E7 Codex, environ 4 Mo, une seule fois). ${st.count ? `${st.count}/${st.total} déjà présents.` : ""}`),
+      st.error ? el("p", { class: "note", style: "color:var(--danger)" }, st.error) : "",
+      el("button", { onclick: async () => { await json("POST", "/gvg/faces/sync"); drawFaces(); } }, "Télécharger les visages")));
+  };
+  drawFaces();
+  page.append(el("div", { class: "card" }, el("h3", {}, "Lire un écran de fin de combat"), names,
+    el("p", { class: "note" }, "Après une victoire, l'écran de résultat montre les stats de la défense battue. L'application reconnaît les héros à leur portrait, lit leurs stats et vous permet de tester vos équipes contre cette défense avec ses vraies stats."),
+    faceBox, drop, file, status));
+  if (gvgReport) {
+    gvgReport.sets.forEach((pair, si) => {
+      let enemyIdx = Math.max(0, pair.findIndex((t) => t.known));  // l'équipe dont les stats sont visibles
+      const player = el("input", { placeholder: "Joueur adverse (facultatif)", maxlength: "40" });
+      const teamsBox = el("div", { class: "scout-teams" });
+      const draw = () => teamsBox.replaceChildren(...pair.map((t, ti) => el("div", { class: "scout-team" + (ti === enemyIdx ? " enemy" : "") },
+        el("label", { class: "scout-pick" }, el("input", { type: "radio", name: `enemy-${si}`, ...(ti === enemyIdx ? { checked: "" } : {}), onchange: () => { enemyIdx = ti; draw(); } }),
+          ti === enemyIdx ? " Défense adverse" : " Défense adverse ?", t.known ? el("span", { class: "note" }, " · stats visibles") : el("span", { class: "note" }, " · stats cachées")),
+        el("div", { class: "scout-grid" }, ...t.heroes.map((h) => scoutHero(h))))));
+      draw();
+      page.append(el("div", { class: "card scout-set" }, el("h3", {}, `Set ${si + 1}`), teamsBox,
+        el("div", { class: "filters" }, player,
+          el("button", { onclick: () => send("POST", "/scouted", { player: player.value, heroes: pair[enemyIdx].heroes.filter((h) => h.name).map((h) => ({ name: h.name, stats: h.stats || {} })) }, () => gvgPage("scout")) }, "Enregistrer cette défense")),
+        teamTest(g, () => pair[enemyIdx].heroes)));
+    });
+  }
+  if (g.scouted.length) {
+    page.append(el("div", { class: "card" }, el("h3", {}, "Défenses relevées"),
+      el("div", { class: "grid2" }, ...g.scouted.map((sc) => el("div", { class: "card scout-saved" },
+        el("div", { class: "counter-head" }, teamRow(sc.heroes.map((h) => h.name), "md", 0),
+          el("div", {}, el("strong", {}, sc.heroes.map((h) => h.name).join(" · ")),
+            el("div", { class: "note" }, [sc.player, sc.date].filter(Boolean).join(" · ")))),
+        el("div", { class: "note" }, sc.heroes.map((h) => `${h.name} : ${h.stats.spd ? `${fmtN(h.stats.spd)} VIT, ` : ""}${h.stats.hp ? `${fmtN(h.stats.hp)} PV` : "stats cachées"}`).join(" · ")),
+        teamTest(g, () => sc.heroes.map((h) => ({ name: h.name, stats: Object.keys(h.stats).length ? h.stats : null }))),
+        el("button", { class: "danger", style: "margin-top:8px", onclick: () => confirm("Supprimer cette défense relevée ?") && send("DELETE", "/scouted/" + sc.id, null, () => gvgPage("scout")) }, "Supprimer"))))));
+  }
 }
 function counterTest(g, c) {
   const member = el("select", { "aria-label": "Membre" }, ...g.members.map((m) => el("option", { value: m.id }, m.player)));

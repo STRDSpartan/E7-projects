@@ -151,3 +151,22 @@ Thème, transitions entre onglets, apparitions, particules et micro-interactions
 Sécurité et performances : voir `docs/AUDIT.md`.
 
 Vitrine dans l'application : images par adresse `/media/<profil>/<fichier>` (sans jeton, comme `/profile/<id>`, réservé à l'ordinateur local ; `?w=` pour une vignette), page gardée en mémoire. Les fichiers `.e7v` et pages exportées restent autonomes (images intégrées).
+
+## GvG — Relevés (écran de fin de combat)
+Onglet GvG → **Relevés** : déposer la capture de l'écran de résultat d'un combat (les deux
+équipes de chaque set et leurs stats). `POST /api/gvg/report` (image en binaire) :
+- **stats** : lues par l'OCR (`parsers/battle_report.py`) ; la ligne des PV (nombres ≥ 1 000
+  alignés) donne les colonnes et l'échelle, l'écart entre colonnes sépare les équipes ; 9
+  valeurs par héros (attaque, défense, PV, vitesse, critiques, efficacité, résistance,
+  attaque double) ; héros aux stats cachées : PV seuls ;
+- **héros** : reconnus à leur portrait (`vision/hero_faces.py`), comparé aux icônes de visage
+  d'E7 Codex (disque intérieur, icône de classe ignorée, insensible à l'assombrissement des
+  héros vaincus). Score ≥ 0,80 : « reconnu » ; sinon « à vérifier » avec deux autres
+  propositions, et le nom reste modifiable ;
+- **visages** : téléchargés une fois à la demande (bouton, `POST /api/gvg/faces/sync`,
+  progression `GET /api/gvg/faces`) dans `<données>/assets/faces/` (~456 icônes, ~4 Mo) ;
+- l'équipe aux stats visibles est proposée comme défense adverse (modifiable) ; « Simuler avec
+  les stats relevées » teste une équipe d'un membre contre elle (`{"name", "stats"}` dans
+  `/api/sim/battle` ; héros aux stats cachées simulés avec les stats types de leur classe) ;
+- « Enregistrer cette défense » la garde dans `gvg.json` (`scouted`, 200 au plus) pour la
+  retester plus tard (`POST` / `DELETE /api/gvg/scouted`).

@@ -756,3 +756,45 @@ def test_vitrine_images_served_by_url_and_page_cached(app: Any) -> None:
         with pytest.raises(urllib.error.HTTPError) as err:
             call(base, "GET", bad)
         assert err.value.code == 404
+
+
+def test_gvg_scouted_defense_and_simulation_with_read_stats(app: Any) -> None:
+    state, base = app
+    t = state.token
+    bellona = {"atk": 4653, "def": 1567, "hp": 19325, "spd": 106, "crit_chance": 15,
+               "crit_dmg": 279, "effectiveness": 0, "effect_res": 0, "dual_attack": 3}  # fmt: skip
+    body = {"player": "Ombre", "heroes": [{"name": "Bellona Lune solitaire", "stats": bellona},
+                                          {"name": "Lua", "stats": {}}, {"name": ""}]}  # fmt: skip
+    g = call(base, "POST", "/api/gvg/scouted", body, t)
+    sc = g["scouted"][0]
+    assert sc["player"] == "Ombre" and [h["name"] for h in sc["heroes"]] == [
+        "Bellona Lune solitaire",
+        "Lua",
+    ]
+    assert sc["heroes"][0]["stats"]["crit_dmg"] == 279 and sc["heroes"][1]["stats"] == {}
+    sim = {
+        "team_a": [{"name": "Kise", "estimate": True}],
+        "team_b": [{"name": "Bellona Lune solitaire", "stats": bellona},
+                   {"name": "Lua", "estimate": True}],
+        "runs": 20,
+    }  # fmt: skip
+    r = call(base, "POST", "/api/sim/battle", sim, t)
+    assert r["teams"][1] == ["Bellona Lune solitaire (relevé)", "Lua (estimé)"]
+    call(base, "DELETE", f"/api/gvg/scouted/{sc['id']}", token=t)
+    assert call(base, "GET", "/api/gvg", token=t)["scouted"] == []
+    with pytest.raises(urllib.error.HTTPError) as err:
+        call(base, "POST", "/api/gvg/scouted", {"heroes": []}, t)
+    assert err.value.code == 400
+    status = call(base, "GET", "/api/gvg/faces", token=t)
+    assert status["count"] == 0 and status["total"] > 300 and not status["running"]
+
+
+def test_gvg_report_rejects_other_images(app: Any) -> None:
+    state, base = app
+    buf = io.BytesIO()
+    Image.new("RGB", (400, 200), (20, 30, 40)).save(buf, "PNG")
+    req = urllib.request.Request(base + "/api/gvg/report", method="POST", data=buf.getvalue())
+    req.add_header("X-E7-Token", state.token)
+    with pytest.raises(urllib.error.HTTPError) as err:
+        urllib.request.urlopen(req)
+    assert err.value.code == 400 and "fin de combat" in json.loads(err.value.read())["error"]

@@ -29,6 +29,11 @@ TEAM_SIZE = 3
 TEAMS = 2
 MAX_TEXT = 40
 RESULTS = ("win", "loss")
+MAX_SCOUTED = 200
+SCOUT_STATS = (
+    "atk", "def", "hp", "spd", "crit_chance", "crit_dmg", "effectiveness", "effect_res",
+    "dual_attack",
+)  # fmt: skip
 DEFAULT_TOWERS = [
     "Bastion nord",
     "Bastion sud",
@@ -71,6 +76,7 @@ class GvgStore:
             },
             "defenses": defenses,
             "wars": wars,
+            "scouted": [s for s in data.get("scouted", []) if isinstance(s, dict) and s.get("id")],
         }
 
     def _write(self, data: dict[str, Any]) -> None:
@@ -187,6 +193,41 @@ class GvgStore:
         war["attacks"] = kept
         self._write(data)
 
+    def add_scouted(self, body: dict[str, Any]) -> str:
+        """Défense adverse relevée sur un écran de résultat (héros et stats), pour la retester."""
+        heroes = []
+        for h in body.get("heroes", [])[: TEAM_SIZE + 1]:
+            if not isinstance(h, dict) or not _text(h.get("name")):
+                continue
+            raw: dict[str, Any] = h["stats"] if isinstance(h.get("stats"), dict) else {}
+            stats = {
+                k: float(v)
+                for k, v in raw.items()
+                if k in SCOUT_STATS and isinstance(v, int | float) and 0 <= v <= 200000
+            }
+            heroes.append({"name": _text(h.get("name")), "stats": stats})
+        if not heroes:
+            raise GvgError("aucun héros adverse")
+        data = self._read()
+        entry = {
+            "id": secrets.token_hex(5),
+            "player": _text(body.get("player")),
+            "note": _text(body.get("note"), 200),
+            "date": date.today().isoformat(),
+            "heroes": heroes,
+        }
+        data["scouted"] = [entry, *data["scouted"]][:MAX_SCOUTED]
+        self._write(data)
+        return str(entry["id"])
+
+    def delete_scouted(self, scout_id: str) -> None:
+        data = self._read()
+        kept = [s for s in data["scouted"] if s.get("id") != scout_id]
+        if len(kept) == len(data["scouted"]):
+            raise GvgError("défense relevée introuvable")
+        data["scouted"] = kept
+        self._write(data)
+
     # --- lecture
     def summary(self) -> dict[str, Any]:
         data = self._read()
@@ -230,6 +271,7 @@ class GvgStore:
             "members": members,
             "wars": wars,
             "counters": self.counters(data["wars"]),
+            "scouted": data["scouted"],
             "hero_names": sorted(
                 {h.get("fr") or h["en"] for h in load("heroes")["heroes"] if h.get("stars")}
             ),

@@ -26,6 +26,7 @@ Tout est dans `src/e7showcase/app/ui.html` (CSS en fin de `<style>`, module JS `
 | Profils (barre latérale) | pastille ronde à l'initiale, couleur propre à chaque joueur (liseré bleu pour une vitrine reçue, halo doré pour le profil ouvert) |
 | Formulaires | cases à cocher dorées, rebond au clic |
 | Verdict | à la fin de chaque simulation (simulateur, tests GvG) : bandeau « Victoire » aux couleurs de l'équipe gagnante (A bleu, B rouge), trophée qui surgit, rayons qui tournent, reflet qui balaie, taux de victoire qui monte jusqu'à sa valeur, gerbe d'étincelles ; « Combat serré » ⚖ en or si l'écart est sous 10 points ; amené à l'écran automatiquement |
+| Relevés GvG | équipe adverse encadrée de rouge, badges « reconnu » (vert) / « à vérifier » (or, pulsant), propositions en pastilles, portraits découpés sur la capture |
 | Dialogues | ouverture à ressort, fond flouté |
 
 ## Accessibilité et performance

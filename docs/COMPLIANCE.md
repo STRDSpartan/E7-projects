@@ -28,6 +28,12 @@ Super Creative ; robots.txt `Allow: /`) : le dépôt ne contient que des donnée
 `scripts/update_reference.py`. `e7showcase assets sync` ne télécharge que les héros du roster
 du joueur (sauf `--all` explicite), une seule fois (cache local), avec une pause entre requêtes
 et un User-Agent identifiable. Contact du site pour toute demande : contact@e7codex.com.
+L'application télécharge aussi, **à la demande du joueur** (bouton de l'onglet GvG → Relevés),
+les petites icônes de visage de tous les héros (~4 Mo, une seule fois, dans son dossier local,
+User-Agent identifiable, courte pause entre requêtes) pour reconnaître les portraits d'une
+capture de fin de combat. Ces images ne quittent jamais l'ordinateur du joueur. Les tests
+utilisent des visages synthétiques ; la fixture `gvg_battle_report_ocr.json` ne contient que
+le texte des stats lu sur une capture (aucune image, aucun pseudo).
 
 **Modèles animés** (`render --animated`) : le projet n'embarque pas le moteur d'animation Spine
 (soumis à sa propre licence). Il ouvre la visionneuse publique d'E7 Codex dans un navigateur sans

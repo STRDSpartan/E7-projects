@@ -26,6 +26,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 from e7showcase import __version__
 from e7showcase.app.armory import armory
+from e7showcase.app.battle_report import read_report
 from e7showcase.app.discord_settings import DiscordSettings, Publisher
 from e7showcase.app.guild import GuildStore, guild_csv, members_csv
 from e7showcase.app.guild_import import GuildImportError, import_guild_csv
@@ -51,13 +52,19 @@ from e7showcase.app.vitrine_file import (
     suggested_filename,
 )
 from e7showcase.assets import AssetStore
+from e7showcase.vision.hero_faces import FaceMatcher
 
 log = logging.getLogger(__name__)
 UI = Path(__file__).resolve().parent / "ui.html"
 MAX_BODY = 400 * 1024 * 1024
 MAX_UPLOAD = 40 * 1024 * 1024  # une capture
 UPLOAD_TTL = 600.0
-UNLOCKED = ("/api/sim/", "/api/portraits")  # calculs sans écriture, parfois longs
+UNLOCKED = (
+    "/api/sim/",
+    "/api/portraits",
+    "/api/gvg/report",
+    "/api/gvg/faces",
+)  # calculs sans écriture, parfois longs
 
 
 ANIM_PAGE = Path(__file__).with_name("anim.html")
@@ -94,6 +101,10 @@ class AppState:
         self.lock = threading.Lock()  # un import OCR à la fois
         self.jobs: dict[str, ImportJob] = {}
         self._ui: bytes | None = None
+        self._ocr: Any = None
+        self.lock_ocr = threading.Lock()
+        self.faces = FaceMatcher(data_root / "assets" / "faces")
+        self.face_sync: dict[str, Any] = {"running": False, "done": 0, "total": 0, "error": None}
         self._pages: dict[str, tuple[tuple[int, int, int], bytes]] = {}
         self.uploads: dict[str, tuple[float, str, bytes]] = {}
         self.lock_uploads = threading.Lock()
@@ -137,6 +148,51 @@ class AppState:
         if self._ui is None:
             self._ui = UI.read_text(encoding="utf-8").replace("__TOKEN__", self.token).encode()
         return self._ui
+
+    def ocr(self) -> Any:
+        """Moteur OCR partagé (chargé au premier besoin : plusieurs secondes)."""
+        with self.lock_ocr:
+            if self._ocr is None:
+                from e7showcase.vision.ocr import get_engine
+
+                self._ocr = get_engine()
+            return self._ocr
+
+    def face_sync_status(self) -> dict[str, Any]:
+        from e7showcase.sources.e7codex import face_jobs
+
+        return {
+            **self.face_sync,
+            "count": self.faces.count(),
+            "total": self.face_sync.get("total") or len(face_jobs()),
+        }
+
+    def start_face_sync(self) -> None:
+        """Télécharge en tâche de fond les icônes de visage (reconnaissance des portraits)."""
+        if self.face_sync.get("running"):
+            return
+        self.face_sync = {"running": True, "done": 0, "total": 0, "error": None}
+
+        def work() -> None:
+            import httpx
+
+            from e7showcase.sources.e7codex import sync_faces
+
+            def progress(done: int, total: int) -> None:
+                self.face_sync.update(done=done, total=total)
+
+            try:
+                with httpx.Client(follow_redirects=True) as client:
+                    report = sync_faces(self.assets, client, on_progress=progress)
+                if report.missing and not report.downloaded and not report.skipped:
+                    self.face_sync["error"] = "téléchargement impossible : vérifiez la connexion"
+            except Exception:  # noqa: BLE001 - affiché dans l'interface
+                log.exception("Téléchargement des visages impossible")
+                self.face_sync["error"] = "téléchargement impossible : vérifiez la connexion"
+            finally:
+                self.face_sync["running"] = False
+
+        threading.Thread(target=work, daemon=True).start()
 
     def guild_ids(self) -> list[str]:
         """Profils où chercher un portrait découpé : membres de la guilde, puis les autres."""
@@ -462,6 +518,23 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             gvg = state.gvg
             try:
                 if rest == "" and method == "GET":
+                    return self._json(gvg.summary())
+                if rest == "/report" and method == "POST":  # capture de fin de combat (binaire)
+                    try:
+                        found = read_report(self._raw(MAX_UPLOAD), state.ocr(), state.faces)
+                    except ValueError as exc:
+                        raise ApiError(400, str(exc)) from exc
+                    return self._json(found)
+                if rest == "/faces" and method == "GET":
+                    return self._json(state.face_sync_status())
+                if rest == "/faces/sync" and method == "POST":
+                    state.start_face_sync()
+                    return self._json(state.face_sync_status(), 202)
+                if rest == "/scouted" and method == "POST":
+                    gvg.add_scouted(self._body())
+                    return self._json(gvg.summary(), 201)
+                if (sc := re.fullmatch(r"/scouted/([0-9a-f]{1,16})", rest)) and method == "DELETE":
+                    gvg.delete_scouted(sc[1])
                     return self._json(gvg.summary())
                 if rest == "/plan" and method == "GET":
                     return self._json(defense_plan(gvg.summary()))

@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Any
 
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.calc.battle import simulate
 from e7showcase.calc.damage import ATTACK_BUFFS, DEFENSE_BUFFS, Fighter, Options, damage_table
 from e7showcase.calc.damage import hero_skills as skills_of
-from e7showcase.models.hero import Hero
+from e7showcase.models.hero import Hero, HeroStats
 
 MAX_TEAM = 4
 MAX_RUNS = 5000
@@ -60,6 +61,31 @@ def estimated_fighter(name: str) -> Fighter:
         effect_res=s["res"],
         role=role,
     )
+
+
+def scouted_fighter(name: str, stats: dict[str, Any]) -> Fighter:
+    """Héros adverse aux stats relevées sur l'écran de résultat de GvG."""
+    from e7showcase.reference import hero_info
+
+    info = hero_info(name) or {}
+    real = info.get("fr") or info.get("en") or name
+    if not skills_of(real):
+        raise SimError(f"héros inconnu ou non simulable : {name}")
+    values = {
+        k: _number(stats.get(k), 0, limit, 0)
+        for k, limit in (
+            ("atk", 20000), ("def", 10000), ("hp", 200000), ("spd", 500),
+            ("crit_chance", 100), ("crit_dmg", 500), ("effectiveness", 500),
+            ("effect_res", 500),
+        )
+    }  # fmt: skip
+    hero = Hero(
+        name=real,
+        element=info.get("element"),
+        stats=HeroStats.model_validate({**values, "def": values.pop("def")}),
+    )
+    out = fighter(hero)
+    return replace(out, name=f"{real} (relevé)")
 
 
 def fighter(hero: Hero) -> Fighter:
@@ -175,7 +201,9 @@ def battle(store: ProfileStore, body: dict[str, Any]) -> dict[str, Any]:
         if not isinstance(refs, list) or not 1 <= len(refs) <= MAX_TEAM:
             raise SimError(f"chaque équipe compte de 1 à {MAX_TEAM} héros")
         team = [
-            estimated_fighter(str(r.get("name", ""))[:40])
+            scouted_fighter(str(r.get("name", ""))[:40], r["stats"])
+            if isinstance(r, dict) and isinstance(r.get("stats"), dict)
+            else estimated_fighter(str(r.get("name", ""))[:40])
             if isinstance(r, dict) and r.get("estimate")
             else fighter(_hero(store, r))
             for r in refs
