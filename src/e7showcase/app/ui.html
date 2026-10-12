@@ -722,7 +722,7 @@ function planCard(g) {
   };
   drawHook().catch((e) => say(e.message, false));
   return el("div", { class: "card" }, el("h3", {}, "Exporter le plan de défense"),
-    el("p", { class: "note" }, "À partager avec la guilde : texte prêt pour Discord (découpé en messages de 2 000 caractères au plus), ou fichier .md / tableur .csv."),
+    el("p", { class: "note" }, "À partager avec la guilde : texte prêt pour Discord (découpé en messages de 2 000 caractères au plus), ou fichier .md / tableur .csv (avec le suivi des guerres)."),
     el("label", { class: "autosend" }, withCounters, " Inclure les contres connus dans le plan (défenses ennemies rencontrées et équipes qui les battent) — texte Discord, fichier .md et plan publié"),
     el("div", { class: "filters" },
       el("button", { onclick: show }, "Préparer le texte Discord"),

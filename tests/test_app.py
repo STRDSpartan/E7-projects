@@ -576,6 +576,8 @@ def test_defense_plan_can_include_counters(app: Any) -> None:
     csv = call(base, "GET", "/api/gvg/plan", token=t)["csv"]
     assert "Défense ennemie;Équipe d'attaque;Victoires;Défaites;Bilan" in csv
     assert "Lua;Aria;1;0;gagnée" in csv
+    assert "Guerre;Date;Membre;Équipe;Défense ennemie;Joueur ennemi;Tour;Résultat;Note" in csv
+    assert ";Spartan;Aria;Lua;;;victoire;" in csv and "Attaques restantes" in csv
     calls: list[str] = []
 
     def discord(request: httpx.Request) -> httpx.Response:

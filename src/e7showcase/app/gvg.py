@@ -318,6 +318,7 @@ def defense_plan(summary: dict[str, Any], today: date | None = None) -> dict[str
                         verdict,
                     ]
                 )
+    rows += _war_rows(summary)
     messages: list[str] = []
     for line in lines:  # découpe en messages Discord, sans couper une ligne
         if messages and len(messages[-1]) + len(line) + 1 <= DISCORD_LIMIT:
@@ -326,6 +327,35 @@ def defense_plan(summary: dict[str, Any], today: date | None = None) -> dict[str
             messages.append(line[:DISCORD_LIMIT])
     csv = "\n".join(";".join(_csv_cell(c) for c in row) for row in rows)
     return {"text": "\n".join(lines), "messages": messages, "csv": "﻿" + csv + "\n"}
+
+
+def _war_rows(summary: dict[str, Any]) -> list[list[str]]:
+    """Suivi des guerres pour le CSV : attaques, puis attaques restantes par membre."""
+    if not summary.get("wars"):
+        return []
+    head = ["Guerre", "Date", "Membre", "Équipe", "Défense ennemie", "Joueur ennemi", "Tour"]
+    rows = [[], [*head, "Résultat", "Note"]]
+    limit = summary["settings"]["attacks_per_member"]
+    left: list[list[str]] = [[], ["Guerre", "Date", "Membre", "Attaques restantes"]]
+    for w in summary["wars"]:
+        for a in w["attacks"]:
+            rows.append(
+                [
+                    w["opponent"],
+                    w["date"],
+                    a["player"],
+                    ", ".join(a["team"]),
+                    ", ".join(a["enemy_team"]),
+                    a.get("enemy_player") or "",
+                    a.get("tower") or "",
+                    "victoire" if a["result"] == "win" else "défaite",
+                    a.get("note") or "",
+                ]
+            )
+        for m in summary["members"]:
+            remaining = w["remaining"].get(m["id"], limit)
+            left.append([w["opponent"], w["date"], m["player"], f"{remaining}/{limit}"])
+    return rows + left
 
 
 def _csv_cell(value: str) -> str:
