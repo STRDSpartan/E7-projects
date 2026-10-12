@@ -38,9 +38,9 @@ Détails : `docs/ARCHITECTURE.md` ; étapes et état du projet : `docs/PLAN.md`.
 
 ## Agents (`.claude/agents/`) et skills (`.claude/skills/`)
 Voir `docs/AGENTS.md`. En bref : `e7-architect` planifie, puis `vision-ocr-engineer`,
-`e7-game-data-specialist`, `showcase-designer`, `discord-integrator` implémentent,
+`e7-game-data-specialist`, `showcase-designer`, `ui-motion-designer`, `discord-integrator` implémentent,
 `qa-engineer` teste, `compliance-reviewer` valide. Skills : `e7-domain`,
-`calibrate-ocr-regions`, `e7-reference-data`, `render-showcase`, `discord-integration`, `dev-checks`.
+`calibrate-ocr-regions`, `e7-reference-data`, `render-showcase`, `ui-motion`, `discord-integration`, `dev-checks`.
 
 ## Environnement
 - Le scan réel nécessite Windows + le client lancé ; ailleurs, travailler sur des captures

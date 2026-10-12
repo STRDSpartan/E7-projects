@@ -11,6 +11,7 @@ Le projet embarque une équipe d'agents spécialisés (`.claude/agents/`) et des
 | `vision-ocr-engineer` | opus | lecture/écriture/bash | Capture, ROI, OCR, template matching, fixtures de captures |
 | `e7-game-data-specialist` | sonnet | lecture/écriture/bash/web | Règles du jeu, référentiels, modèles, parseurs, import Fribbels |
 | `showcase-designer` | sonnet | lecture/écriture/bash | Templates, CSS, rendu PNG, lisibilité Discord |
+| `ui-motion-designer` | sonnet | lecture/écriture/bash | Esthétique et animations de l'application de bureau (`ui.html`) |
 | `discord-integrator` | sonnet | lecture/écriture/bash/web | Webhook, bot slash-commands, données des membres |
 | `qa-engineer` | sonnet | lecture/écriture/bash | Tests, non-régression OCR, définition de « terminé » |
 | `compliance-reviewer` | sonnet | lecture seule (+bash) | CGU, secrets, vie privée, PI — verdict APPROUVÉ/BLOQUÉ |
@@ -23,6 +24,7 @@ Le projet embarque une équipe d'agents spécialisés (`.claude/agents/`) et des
 | `calibrate-ocr-regions` | zone OCR fausse, mise à jour UI, nouveau ratio | vision |
 | `e7-reference-data` | nouveau héros / set / langue | game-data |
 | `render-showcase` | modification du rendu, production d'une vitrine | designer |
+| `ui-motion` | thème, transitions, particules de l'application ; vérification Chromium | ui-motion-designer |
 | `discord-integration` | webhook, bot, partage guilde | discord |
 | `dev-checks` | fin de chaque tâche, avant commit | tous |
 

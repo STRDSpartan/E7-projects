@@ -142,3 +142,7 @@ explique comment l'installer.
 `tests/test_app.py` : profils, aller-retour `.e7v`, fichiers hostiles, API (jeton, Host,
 lecture seule des vitrines reçues). Bout en bout vérifié avec Playwright sur l'exécutable
 PyInstaller : 6 captures réelles → 3 héros, 4 sets appris → export → ouverture ailleurs.
+
+## Esthétique et animations
+Thème, transitions entre onglets, apparitions, particules et micro-interactions : voir
+`docs/UI_MOTION.md` (désactivables par le bouton « ✨ Effets visuels » et `prefers-reduced-motion`).
