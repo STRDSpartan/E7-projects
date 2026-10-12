@@ -9,7 +9,7 @@
 ; - raccourcis menu Démarrer / Bureau, association des fichiers .e7v ;
 ; - désinstallation : les profils sont conservés, sauf si l'utilisateur demande leur suppression.
 #ifndef AppVersion
-  #define AppVersion "0.52.0"
+  #define AppVersion "0.53.0"
 #endif
 #define AppName "E7 Showcase"
 #define AppExe "E7Showcase.exe"

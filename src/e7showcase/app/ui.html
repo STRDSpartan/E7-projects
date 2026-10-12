@@ -390,6 +390,7 @@ select { cursor:pointer; }
 @media (max-width: 1000px) { .scout-teams { grid-template-columns:1fr; } }
 .scout-team { border:1px solid var(--line); border-radius:12px; padding:10px; opacity:.7; transition:opacity var(--t-med), border-color var(--t-med), box-shadow var(--t-med); }
 .scout-team.enemy { opacity:1; border-color:rgba(226,96,96,.5); box-shadow:0 0 20px rgba(226,96,96,.12); background:linear-gradient(180deg, rgba(226,96,96,.07), transparent 60%); }
+.scout-team.ally { border-color:rgba(63,184,104,.5); }
 .scout-pick { display:flex; align-items:center; gap:6px; font-weight:700; margin-bottom:8px; cursor:pointer; }
 .scout-grid { display:grid; gap:8px; }
 .scout-hero { border:1px solid var(--line); border-radius:10px; padding:8px; background:rgba(13,17,26,.5); display:grid; gap:6px; }
@@ -1657,7 +1658,14 @@ function gvgScout(page, g, send) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `erreur ${res.status}`);
       gvgReport = data; pending = null; gvgPage("scout");
+      if (data.faces_missing) waitFaces(f);
     } catch (e) { status.replaceChildren(el("p", { class: "note", style: "color:var(--danger)" }, e.message)); }
+  };
+  // sans visages, aucun nom : on attend la fin du téléchargement puis on relit la même capture
+  const waitFaces = async (f) => {
+    const st = await json("GET", "/gvg/faces");
+    if (st.running) { setTimeout(() => waitFaces(f), 1000); return; }
+    if (st.count >= 50) { toast("Visages des héros prêts : nouvelle lecture de la capture"); read(f); }
   };
   file.addEventListener("change", () => { const f = file.files[0]; file.value = ""; if (f) read(f); });
   const drop = el("div", { class: "drop", tabindex: "0", role: "button" }, "Glissez ici la capture de fin de combat de GvG (les deux équipes et leurs stats) — ou cliquez pour la choisir");
@@ -1691,10 +1699,12 @@ function gvgScout(page, g, send) {
       let enemyIdx = Math.max(0, pair.findIndex((t) => t.known));  // l'équipe dont les stats sont visibles
       const player = el("input", { placeholder: "Joueur adverse (facultatif)", maxlength: "40", value: gvgScoutPlayer });
       const teamsBox = el("div", { class: "scout-teams" });
-      const draw = () => teamsBox.replaceChildren(...pair.map((t, ti) => el("div", { class: "scout-team" + (ti === enemyIdx ? " enemy" : "") },
-        el("label", { class: "scout-pick" }, el("input", { type: "radio", name: `enemy-${si}`, ...(ti === enemyIdx ? { checked: "" } : {}), onchange: () => { enemyIdx = ti; draw(); } }),
-          ti === enemyIdx ? " Défense adverse" : " Défense adverse ?", t.known ? el("span", { class: "note" }, " · stats visibles") : el("span", { class: "note" }, " · stats cachées")),
-        el("div", { class: "scout-grid" }, ...t.heroes.map((h) => scoutHero(h))))));
+      // équipe adverse (stats visibles) à gauche, notre équipe à droite
+      const draw = () => teamsBox.replaceChildren(...[enemyIdx, 1 - enemyIdx].filter((ti) => pair[ti]).map((ti) => { const t = pair[ti], foe = ti === enemyIdx; return el("div", { class: "scout-team" + (foe ? " enemy" : " ally") },
+        el("div", { class: "scout-pick" }, el("strong", {}, foe ? "⚔ Équipe adverse" : "🛡 Notre équipe"),
+          el("span", { class: "note" }, t.known ? " · stats visibles" : " · stats cachées"),
+          pair.length > 1 ? el("button", { class: "ghost chip-btn", style: "margin-left:auto", title: "Inverser adverse / alliée", onclick: () => { enemyIdx = 1 - enemyIdx; draw(); } }, "⇄") : ""),
+        el("div", { class: "scout-grid" }, ...t.heroes.map((h) => scoutHero(h)))); }));
       draw();
       page.append(el("div", { class: "card scout-set" }, el("h3", {}, `Set ${si + 1}`), teamsBox,
         el("div", { class: "filters" }, player,

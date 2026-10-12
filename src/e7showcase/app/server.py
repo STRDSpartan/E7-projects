@@ -57,6 +57,8 @@ from e7showcase.assets import AssetStore
 from e7showcase.parsers.war_map import parse_fortress, parse_war_map
 from e7showcase.vision.hero_faces import FaceMatcher
 
+FACES_MIN = 50  # en dessous, la reconnaissance des portraits n'a pas de quoi comparer
+
 log = logging.getLogger(__name__)
 UI = Path(__file__).resolve().parent / "ui.html"
 MAX_BODY = 400 * 1024 * 1024
@@ -563,6 +565,9 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                         found = read_report(self._raw(MAX_UPLOAD), engine, state.faces)
                     except ValueError as exc:
                         raise ApiError(400, str(exc)) from exc
+                    if state.faces.count() < FACES_MIN:  # visages absents : téléchargement lancé
+                        state.start_face_sync()
+                        found["faces_missing"] = True
                     return self._json(found)
                 if rest in ("/map", "/map/fortress") and method == "POST":  # captures (binaire)
                     raw = self._raw(MAX_UPLOAD)

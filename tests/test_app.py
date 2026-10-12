@@ -862,3 +862,24 @@ def test_gvg_war_map_and_fortress_flow(app: Any) -> None:
         with pytest.raises(urllib.error.HTTPError) as err:
             call(base, "GET", bad)
         assert err.value.code == 404
+
+
+def test_gvg_report_without_faces_starts_download(app: Any) -> None:
+    from tests.test_battle_report import lines
+
+    state, base = app
+
+    class Fixture:  # moteur OCR factice : texte relevé sur une vraie capture
+        def read_boxes(self, image: Any) -> list[Any]:
+            return lines()
+
+    started: list[bool] = []
+    state._ocr = Fixture()
+    state.start_face_sync = lambda: started.append(True)
+    buf = io.BytesIO()
+    Image.new("RGB", (2000, 1125), (20, 30, 40)).save(buf, "PNG")
+    req = urllib.request.Request(base + "/api/gvg/report", method="POST", data=buf.getvalue())
+    req.add_header("X-E7-Token", state.token)
+    with urllib.request.urlopen(req) as res:
+        found = json.loads(res.read())
+    assert found["faces_missing"] is True and started == [True]
