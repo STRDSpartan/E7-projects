@@ -38,6 +38,7 @@ valeur type (signalée `estimated` dans les données). Le résultat reste un ord
 from __future__ import annotations
 
 import random
+import threading
 from dataclasses import dataclass, field, replace
 from typing import Any
 
@@ -1804,6 +1805,88 @@ def fight(
     ).run()
 
 
+# Les combats sont répartis en CHUNKS lots aux graines fixes : le résultat est le même quel que
+# soit le nombre de cœurs (ou sans parallélisme), et les lots tournent sur plusieurs processus.
+CHUNKS = 8
+PARALLEL_MIN = 120  # en dessous, lancer des processus coûte plus que les combats
+_POOL: Any = None
+_POOL_LOCK = threading.Lock()
+ChunkResult = tuple[list[int], int, int, dict[str, float]]
+TOTAL_KEYS = ("healed", "shielded", "buffs", "debuffs", "counters", "passives", "extra_turns")
+
+
+def _chunk(
+    job: tuple[list[Fighter], list[Fighter], int, int, dict[str, int] | None, Options | None],
+) -> ChunkResult:
+    """Un lot de combats sans journal : victoires, nuls, actions et totaux."""
+    team_a, team_b, runs, seed, cooldowns, options = job
+    rng = random.Random(seed)
+    wins, draws, actions = [0, 0], 0, 0
+    totals = dict.fromkeys(TOTAL_KEYS, 0.0)
+    for _ in range(runs):
+        res = fight(team_a, team_b, rng=rng, cooldowns=cooldowns, options=options, keep_log=False)
+        actions += res.actions
+        for k in totals:
+            totals[k] += res.stats.get(k, 0)
+        if res.winner is None:
+            draws += 1
+        else:
+            wins[res.winner] += 1
+    return wins, draws, actions, totals
+
+
+def _pool() -> Any:
+    """Processus de calcul partagés (créés au premier gros calcul, gardés ensuite)."""
+    global _POOL
+    with _POOL_LOCK:
+        if _POOL is None:
+            import atexit
+            import os
+            from concurrent.futures import ProcessPoolExecutor
+
+            workers = min(CHUNKS, os.cpu_count() or 1)
+            if workers < 2:
+                return None
+            _POOL = ProcessPoolExecutor(max_workers=workers)
+            atexit.register(_POOL.shutdown, wait=False, cancel_futures=True)
+        return _POOL
+
+
+def _ready() -> bool:
+    return True
+
+
+def warm_pool() -> None:
+    """Démarre les processus de calcul à l'avance (sous Windows, chacun met ~1 s à démarrer)."""
+    pool = _pool()
+    if pool is not None:
+        for f in [pool.submit(_ready) for _ in range(CHUNKS)]:
+            f.result()
+
+
+def shutdown_pool() -> None:
+    """Arrête les processus de calcul (fermeture de l'application)."""
+    global _POOL
+    with _POOL_LOCK:
+        pool, _POOL = _POOL, None
+    if pool is not None:
+        pool.shutdown(wait=False, cancel_futures=True)
+
+
+def _run_chunks(
+    jobs: list[Any], parallel: bool
+) -> list[tuple[list[int], int, int, dict[str, float]]]:
+    pool = _pool() if parallel else None
+    if pool is not None:
+        try:
+            return list(pool.map(_chunk, jobs))
+        except Exception:  # noqa: BLE001 - processus indisponibles : calcul sur place
+            global _POOL
+            with _POOL_LOCK:
+                _POOL = None
+    return [_chunk(j) for j in jobs]
+
+
 def simulate(
     team_a: list[Fighter],
     team_b: list[Fighter],
@@ -1811,25 +1894,24 @@ def simulate(
     seed: int = 7,
     cooldowns: dict[str, int] | None = None,
     options: Options | None = None,
+    parallel: bool = True,
 ) -> dict[str, Any]:
     """Taux de victoire sur `runs` combats et le journal détaillé d'un combat type."""
-    rng = random.Random(seed)
-    wins = [0, 0]
-    draws = 0
-    total_actions = 0
-    totals = {
-        k: 0.0
-        for k in ("healed", "shielded", "buffs", "debuffs", "counters", "passives", "extra_turns")
-    }
-    for _ in range(runs):
-        res = fight(team_a, team_b, rng=rng, cooldowns=cooldowns, options=options, keep_log=False)
-        total_actions += res.actions
+    sizes = [runs // CHUNKS + (i < runs % CHUNKS) for i in range(CHUNKS)]
+    jobs = [
+        (team_a, team_b, n, seed * 1_000_003 + i, cooldowns, options)
+        for i, n in enumerate(sizes)
+        if n
+    ]
+    wins, draws, total_actions = [0, 0], 0, 0
+    totals = dict.fromkeys(TOTAL_KEYS, 0.0)
+    for w, d, act, tot in _run_chunks(jobs, parallel and runs >= PARALLEL_MIN):
+        wins[0] += w[0]
+        wins[1] += w[1]
+        draws += d
+        total_actions += act
         for k in totals:
-            totals[k] += res.stats.get(k, 0)
-        if res.winner is None:
-            draws += 1
-        else:
-            wins[res.winner] += 1
+            totals[k] += tot[k]
     sample = fight(team_a, team_b, rng=random.Random(seed), cooldowns=cooldowns, options=options)
     return {
         "runs": runs,

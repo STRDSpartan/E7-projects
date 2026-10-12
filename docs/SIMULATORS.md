@@ -247,3 +247,12 @@ bonus de stats permanents des passifs (déjà inclus dans les stats affichées e
 `simulate()` renvoie aussi, pour le combat type (`sample`), `units` (nom, équipe, PV max) et
 `frames` : après chaque tour, l'acteur, les PV et la barrière de chaque héros et la ligne du
 journal atteinte. L'application s'en sert pour le rejeu animé (`docs/UI_MOTION.md`).
+
+## Calcul sur plusieurs cœurs
+`simulate()` découpe les combats en `CHUNKS` (8) lots aux graines fixes (`seed * 1 000 003 + i`)
+et les calcule dans un `ProcessPoolExecutor` (« spawn ») partagé : les taux sont identiques
+quel que soit le nombre de cœurs, et avec `parallel=False`. Sous `PARALLEL_MIN` (120) combats,
+ou si les processus ne peuvent pas démarrer, le calcul reste sur place. L'application démarre
+les processus au lancement (`warm_pool`) et les arrête à la fermeture (`shutdown_pool`) ;
+l'exécutable Windows appelle `multiprocessing.freeze_support()`. Un script qui appelle
+`simulate()` doit protéger son code par `if __name__ == "__main__":` (processus « spawn »).

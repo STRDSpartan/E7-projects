@@ -131,6 +131,16 @@ class WindowApi:
         return str(target)
 
 
+def _warm_simulator() -> None:
+    """Processus du simulateur démarrés en tâche de fond : la première simulation est rapide."""
+    from e7showcase.calc.battle import warm_pool
+
+    try:
+        warm_pool()
+    except Exception:  # noqa: BLE001 - le simulateur calculera alors sur place
+        log.warning("Processus du simulateur indisponibles", exc_info=True)
+
+
 def main(argv: list[str] | None = None) -> int:
     log_kwargs: dict[str, Any] = {
         "level": logging.INFO,
@@ -153,6 +163,7 @@ def main(argv: list[str] | None = None) -> int:
             log.error("Impossible d'ouvrir %s : %s", path, exc)
 
     server = start_server(state)
+    threading.Thread(target=_warm_simulator, daemon=True).start()
     url = f"http://127.0.0.1:{server.server_address[1]}/" + (f"#p={start_id}" if start_id else "")
     try:
         import webview
@@ -181,6 +192,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
     state.publisher.flush_pending()  # plan GvG modifié juste avant la fermeture : publié
+    from e7showcase.calc.battle import shutdown_pool
+
+    shutdown_pool()  # processus du simulateur
     _quit(server)
     return 0
 
@@ -214,4 +228,7 @@ def _fatal(message: str) -> None:
 
 
 if __name__ == "__main__":
+    import multiprocessing
+
+    multiprocessing.freeze_support()  # exécutable Windows : processus de calcul du simulateur
     raise SystemExit(main())

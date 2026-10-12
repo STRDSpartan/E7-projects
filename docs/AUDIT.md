@@ -21,6 +21,11 @@ Mesures : guilde de 30 membres × 40 héros entièrement équipés, 5 guerres de
   résultats (même sans image) gardés jusqu'au prochain changement ou 2 min.
 - **Simulateur** : passifs indexés par évènement, vitesse effective calculée une fois par
   action (résultats identiques, combat reproductible).
+- **Simulateur sur plusieurs cœurs** (v0.43.0) : les combats sont répartis en 8 lots aux
+  graines fixes, calculés par des processus partagés (`calc.battle`, démarrés en tâche de fond
+  au lancement, arrêtés à la fermeture). 4 contre 4, 500 combats, 4 cœurs : 2,9 s → 0,8 s.
+  Le résultat ne dépend pas du nombre de cœurs (identique avec ou sans parallélisme) ; sans
+  processus disponibles, calcul sur place. Sous 120 combats, tout reste dans le même processus.
 - **Import de captures** : envoi binaire, une requête par capture et 3 en parallèle
   (`POST /api/profiles/<id>/uploads`), au lieu d'un seul JSON en base64 (+33 % de taille, deux
   copies en mémoire). L'ancien format reste accepté.
@@ -51,7 +56,5 @@ webhook validé par expression régulière, jamais renvoyé en clair, mentions d
 aucun `eval`, `pickle`, `shell=True` ni désactivation TLS.
 
 ## Restant
-- Une simulation 4 contre 4 à 500 combats prend encore 2 à 3 s (moteur Python pur) ; piste :
-  répartir les combats sur plusieurs processus.
 - La vitrine (`/profile/<id>`) réintègre ses images à chaque ouverture (~50 ms).
 - `ui.html` est gardé en mémoire : relancer l'application après l'avoir modifié.

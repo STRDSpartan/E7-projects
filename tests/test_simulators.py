@@ -12,7 +12,7 @@ import pytest
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.app.server import AppState, start_server
 from e7showcase.app.simulator import SimError, battle, damage
-from e7showcase.calc.battle import fight, simulate
+from e7showcase.calc.battle import fight, shutdown_pool, simulate
 from e7showcase.calc.damage import Fighter, Options, damage_table, hero_skills, skill_damage
 from e7showcase.models.hero import Hero, HeroStats
 from e7showcase.reference import load
@@ -978,3 +978,13 @@ def test_sample_fight_has_replay_frames(tmp_path: Path) -> None:
     loser = 1 - sample["winner"] if sample["winner"] is not None else None
     if loser is not None:
         assert frames[-1]["hp"][loser] == 0
+
+
+def test_parallel_simulation_matches_in_process() -> None:
+    a, b = [kise()], [Fighter("Cible", 1500, 20000, 1000, 100, 15, 150, "earth", kise().skills)]
+    seq = simulate(a, b, runs=300, seed=5, parallel=False)
+    par = simulate(a, b, runs=300, seed=5)  # mêmes lots et graines, sur plusieurs processus
+    assert par == seq
+    shutdown_pool()
+    assert simulate(a, b, runs=300, seed=5) == seq  # processus relancés au besoin
+    shutdown_pool()
