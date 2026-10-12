@@ -526,6 +526,25 @@ async function guildPage() {
     try { await json("POST", "/open", { name: f.name, data: await toB64(f), guild: true }); await refresh(); guildPage(); }
     catch (err) { alert(err.message); }
   });
+  // tableur « toute la guilde » : membres (vitrines reçues), héros, armureries, défenses, guerres
+  const csvFile = el("input", { type: "file", accept: ".csv,text/csv", hidden: "" });
+  csvFile.addEventListener("change", async () => {
+    const f = csvFile.files[0]; csvFile.value = "";
+    if (!f) return;
+    try {
+      const r = await json("POST", "/guild/import", { csv: await f.text() });
+      const parts = [
+        r.created.length && `${r.created.length} membre(s) ajouté(s)`,
+        r.updated.length && `${r.updated.length} vitrine(s) reçue(s) mise(s) à jour`,
+        r.kept.length && `vos profils non modifiés : ${r.kept.join(", ")}`,
+        `${r.heroes} héros, ${r.items} pièces`,
+        r.defenses && `${r.defenses} défense(s)`,
+        r.wars && `${r.wars} guerre(s) (${r.attacks} attaque(s))`,
+      ].filter(Boolean);
+      alert("Import terminé : " + parts.join(" · ") + (r.errors.length ? `\n\nLignes ignorées :\n${r.errors.slice(0, 15).join("\n")}` : ""));
+      await refresh(); guildPage();
+    } catch (err) { alert(err.message); }
+  });
   const open = (id, where) => { current = id; tab = where; render(); };
   const power = g.members.reduce((t, m) => t + m.power, 0);
   const table = el("table", { class: "members" },
@@ -548,7 +567,8 @@ async function guildPage() {
         el("div", { class: "tile" }, el("b", {}, fmtN(power)), el("span", {}, "puissance cumulée"))),
       el("div", { class: "card" }, el("h3", {}, "Ajouter des membres"),
         el("p", { class: "note" }, "Chaque membre vous envoie sa vitrine (.e7v, bouton « Exporter la vitrine ») : ouvrez-la ici pour l'ajouter à la guilde."),
-        el("div", { class: "filters" }, add, el("button", { onclick: () => file.click() }, "Ajouter une vitrine (.e7v)")), file),
+        el("div", { class: "filters" }, add, el("button", { onclick: () => file.click() }, "Ajouter une vitrine (.e7v)"),
+          el("button", { class: "ghost", title: "Fichier « Exporter toute la guilde (.csv) »", onclick: () => csvFile.click() }, "Importer toute la guilde (.csv)")), file, csvFile),
       g.members.length ? el("div", { class: "card" }, el("h3", {}, "Membres"), table,
         el("button", { class: "ghost", onclick: () => saveCsv("save_guild_csv", "/guild/csv", "membres-guilde.csv", "Membres enregistrés") }, "Exporter les membres (.csv)"),
         el("button", { class: "ghost", title: "Membres, héros et armurerie de chacun, défenses, contres et guerres", onclick: () => saveCsv("save_guild_full_csv", "/guild/full.csv", "guilde-complete.csv", "Tableur enregistré") }, "Exporter toute la guilde (.csv)"))

@@ -24,6 +24,7 @@ from e7showcase import __version__
 from e7showcase.app.armory import armory
 from e7showcase.app.discord_settings import DiscordSettings, Publisher
 from e7showcase.app.guild import GuildStore, guild_csv, members_csv
+from e7showcase.app.guild_import import GuildImportError, import_guild_csv
 from e7showcase.app.gvg import (
     GvgError,
     GvgStore,
@@ -233,6 +234,17 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 raise ApiError(404, "introuvable")
             if path == "/gvg" or path.startswith("/gvg/"):
                 return self._gvg(method, path[4:])
+            if path == "/guild/import" and method == "POST":
+                text = self._body().get("csv")
+                if not isinstance(text, str):
+                    raise ApiError(400, "fichier CSV manquant")
+                try:
+                    report = import_guild_csv(text, store, state.guild, state.gvg)
+                except GuildImportError as exc:
+                    raise ApiError(400, str(exc)) from exc
+                state.publisher.changed("plan")  # défenses et contres importés
+                state.publisher.changed("counters")
+                return self._json(asdict(report))
             if path == "/guild/full.csv" and method == "GET":
                 csv = guild_csv(state.guild.summary(), state.store, state.gvg.summary())
                 return self._json({"csv": csv})

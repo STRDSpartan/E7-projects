@@ -30,7 +30,13 @@ la même application sur son ordinateur.
   (origine, héros, puissance, pièces, héros les plus puissants, mise à jour). Bouton « Exporter
   toute la guilde (.csv) » (`GET /api/guild/full.csv`) : un seul fichier avec les membres, les
   héros et l'armurerie de chacun (colonne « Membre »), puis les défenses GvG, les contres connus
-  et le suivi des guerres.
+  et le suivi des guerres. Bouton « Importer toute la guilde (.csv) » (`POST /api/guild/import`,
+  `app/guild_import.py`) : relit ce fichier sur un autre ordinateur. Chaque membre est rapproché
+  d'un profil par son nom : vitrine reçue mise à jour (héros, armurerie), ou créée si absente ;
+  les profils du joueur lui-même ne sont jamais écrasés. Les défenses sont replacées et les
+  guerres absentes (même adversaire, même date) recréées avec leurs attaques ; contres et
+  attaques restantes s'en déduisent. Les icônes des objets et les portraits ne sont pas dans le
+  CSV (seulement dans les `.e7v`).
 - **Armurerie** : toutes les pièces du profil choisi. Les pièces **portées** viennent des fiches
   « Infos de héros » (icône découpée sur la capture, set, rang, niveau, amélioration, stats) ; les
   pièces **non équipées** viennent de captures de l'infobulle d'un objet de l'inventaire, glissées

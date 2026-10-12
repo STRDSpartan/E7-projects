@@ -611,3 +611,57 @@ def test_defense_plan_can_include_counters(app: Any) -> None:
     call(base, "POST", f"/api/gvg/wars/{wid}/attacks", {**attack, "result": "loss"}, t)
     time.sleep(0.4)
     assert calls == ["POST", "PATCH"]  # nouvelle attaque : le plan publié (avec contres) suit
+
+
+def test_guild_csv_round_trip(app: Any, tmp_path: Path) -> None:
+    from e7showcase.app.server import AppState
+    from e7showcase.models.gear import Gear, GearSet, GearSlot, StatLine
+    from e7showcase.models.stats import StatType
+
+    state, base = app
+    t = state.token
+    pid = call(base, "POST", "/api/profiles", {"player": "Spartan"}, t)["id"]
+    mate = call(base, "POST", "/api/profiles", {"player": "Lua=1"}, t)["id"]
+    boots = Gear(slot=GearSlot.BOOTS, set=GearSet.SPEED, enhance=15,
+                 main=StatLine(stat=StatType.SPD, value=45),
+                 substats=[StatLine(stat=StatType.CRIT_CHANCE, value=12)])  # fmt: skip
+    ring = Gear(slot=GearSlot.RING, set=GearSet.DESTRUCTION, enhance=12,
+                main=StatLine(stat=StatType.ATK_PCT, value=47))  # fmt: skip
+    for p in (pid, mate):
+        state.store.add_hero(pid if p == pid else mate, Hero(name="Belian", power=900), None)
+        state.store.add_hero(p, Hero(name="Aria", power=500, gear={GearSlot.BOOTS: boots}), None)
+    state.store.add_item(mate, ring)
+    call(base, "PATCH", "/api/guild", {"members": [pid, mate]}, t)
+    call(base, "PUT", f"/api/gvg/defense/{mate}", {"tower": "Fort", "teams": [["Belian"]]}, t)
+    wid = call(base, "POST", "/api/gvg/wars", {"opponent": "Ombres", "date": "2026-10-01"}, t)
+    attack = {"member": mate, "team": ["Aria"], "enemy_team": ["Lua", "Cerise"], "result": "win"}
+    call(base, "POST", f"/api/gvg/wars/{wid['wars'][0]['id']}/attacks", attack, t)
+    exported = call(base, "GET", "/api/guild/full.csv", token=t)["csv"]
+
+    # autre ordinateur : le joueur a son propre profil « Spartan », rien d'autre
+    other = AppState(tmp_path / "other")
+    own = other.store.create("Spartan")
+    from e7showcase.app.guild_import import import_guild_csv
+
+    report = import_guild_csv(exported, other.store, other.guild, other.gvg)
+    assert report.created == ["Lua=1"] and report.kept == ["Spartan"] and not report.errors
+    assert report.defenses == 1 and report.wars == 1 and report.attacks == 1
+    members = other.guild.summary()["members"]
+    assert {m["player"] for m in members} == {"Spartan", "Lua=1"}
+    rid = next(m["id"] for m in members if m["player"] == "Lua=1")
+    assert other.store.is_received(rid) and not other.store.load(own).heroes
+    roster = other.store.load(rid)
+    aria = next(h for h in roster.heroes if h.name == "Aria")
+    assert aria.power == 500 and aria.gear[GearSlot.BOOTS] == boots
+    assert [i.gear for i in roster.inventory] == [ring]
+    g = other.gvg.summary()
+    assert g["counters"][0]["enemy_team"] == ["Cerise", "Lua"]
+    assert g["wars"][0]["opponent"] == "Ombres" and g["wars"][0]["date"] == "2026-10-01"
+    # réimport : rien n'est dupliqué, la vitrine reçue est mise à jour
+    again = import_guild_csv(exported, other.store, other.guild, other.gvg)
+    assert again.updated == ["Lua=1"] and again.wars == 0
+    assert len(other.gvg.summary()["wars"]) == 1 and len(other.store.list()) == 2
+    with pytest.raises(ValueError, match="toute la guilde"):
+        import_guild_csv("a;b\n1;2\n", other.store, other.guild, other.gvg)
+    r = call(base, "POST", "/api/guild/import", {"csv": exported}, t)
+    assert sorted(r["kept"]) == ["Lua=1", "Spartan"]  # profils locaux jamais écrasés
