@@ -187,6 +187,20 @@
        "chance": 1.0
       }
      ]
+    },
+    "s2_atk": {
+     "set": {
+      "trigger": null
+     },
+     "effects": [
+      {
+       "type": "static_stat",
+       "stat": "atk",
+       "per": "hp",
+       "value": 0.08
+      }
+     ],
+     "source": "At the start of the first battle, increases Attack proportional to max Health. (E7Calc : 8 % des PV max)"
     }
    }
   },
@@ -252,7 +266,11 @@
       "trigger": {
        "event": "ally_attacked",
        "chance": 1.0,
-       "counter": true
+       "counter": true,
+       "condition": {
+        "kind": "damage_at_least",
+        "value": 0.2
+       }
       }
      },
      "effects": [
@@ -302,6 +320,21 @@
        "type": "lifesteal",
        "ratio": 0.2,
        "estimated": true
+      },
+      {
+       "type": "debuff",
+       "effect": "erosion",
+       "target": "target",
+       "turns": 2,
+       "chance": 1.0,
+       "estimated": true
+      },
+      {
+       "type": "detonate",
+       "what": [
+        "erosion"
+       ],
+       "if_crit": true
       }
      ]
     },
@@ -429,6 +462,10 @@
        "effect": "offering",
        "target": "front",
        "turns": 99
+      },
+      {
+       "type": "static_flag",
+       "flag": "cr_mirror"
       }
      ]
     },
@@ -671,6 +708,24 @@
        ]
       }
      ]
+    },
+    "s2_fragrance": {
+     "set": {
+      "trigger": {
+       "event": "enemy_turn_start",
+       "chance": 1.0
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "fragrance",
+       "target": "allies",
+       "turns": 1,
+       "estimated": true
+      }
+     ],
+     "source": "At the start of an enemy's turn, grants lingering fragrance to all allies for 1 turn. (effet non défini par le jeu : réduction des dégâts estimée à 15 %)"
     }
    }
   },
@@ -876,7 +931,10 @@
     "s3": {
      "source": "Attacks the enemy, dispelling two buffs before decreasing Combat Readiness by 40%. Grants deify to the caster for 3 turns (crit chance +50% when attacking, damage suffered −50%). Cannot trigger a critical hit.",
      "set": {
-      "no_crit": true
+      "no_crit": true,
+      "dynamic": {
+       "target_hp": 0.1875
+      }
      },
      "effects": [
       {
@@ -1268,6 +1326,14 @@
        "ratio": 1.0
       }
      ]
+    },
+    "s1": {
+     "set": {
+      "aftermath_if": {
+       "if_buff": "god"
+      }
+     },
+     "source": "God of Battle: Attacks the enemy and deals additional damage proportional to the caster's max Health. (E7Calc : 15 % des PV max)"
     }
    }
   },
@@ -1333,6 +1399,10 @@
        "target": "self",
        "turns": 999,
        "unique": true
+      },
+      {
+       "type": "static_flag",
+       "flag": "debuff_cr"
       }
      ]
     },
@@ -1437,7 +1507,10 @@
     "s1_bis": {
      "source": "Vollzanbel: Attacks all enemies with flame magic.",
      "set": {
-      "passive": true
+      "passive": true,
+      "dynamic": {
+       "target_lost_hp": 0.35
+      }
      }
     },
     "s2": {
@@ -1458,6 +1531,10 @@
        "amount": 10,
        "target": "allies",
        "chance": 1.0
+      },
+      {
+       "type": "static_flag",
+       "flag": "resource_boost"
       }
      ]
     },
@@ -1644,6 +1721,14 @@
        "target": "allies",
        "stat": "max",
        "ratio": 1.0
+      },
+      {
+       "type": "buff",
+       "effect": "time_reversal",
+       "target": "other_allies",
+       "turns": 2,
+       "if_mark": "divinity",
+       "estimated": true
       }
      ]
     }
@@ -1808,6 +1893,11 @@
        "type": "extra_turn",
        "chance": 1.0,
        "on_kill": false
+      },
+      {
+       "type": "clone",
+       "target": "self",
+       "estimated": true
       }
      ]
     }
@@ -1915,6 +2005,11 @@
        "amount": 50,
        "target": "self",
        "chance": 1.0
+      },
+      {
+       "type": "aftermath",
+       "skill": "s2_splash",
+       "target": "enemies"
       }
      ]
     },
@@ -2137,8 +2232,23 @@
       {
        "type": "static_flag",
        "flag": "res_aura"
+      },
+      {
+       "type": "static_stat",
+       "stat": "effect_res",
+       "per": "hp",
+       "value": 0.0065
       }
      ]
+    },
+    "s3": {
+     "set": {
+      "dynamic": {
+       "pen_stack": 0.35,
+       "pen_max": 2
+      }
+     },
+     "source": "Increases Defense penetration of this skill by 35%. Penetration increase can stack up to 2 times."
     }
    }
   },
@@ -2386,7 +2496,9 @@
        "type": "fixed",
        "amount": 4000,
        "per_debuff": false,
-       "on_crit": false
+       "on_crit": false,
+       "grow": 4000,
+       "grow_max": 2
       }
      ]
     }
@@ -2408,7 +2520,12 @@
         "on": "attacked",
         "estimated": true
        }
-      }
+      },
+      "flat": null,
+      "dynamic": {
+       "caster_lost_hp": 0.4
+      },
+      "consume_hp": true
      },
      "effects": [
       {
@@ -2631,11 +2748,21 @@
     "s3": {
      "source": "Smashes the enemy with a sword and attacks. When the enemy is defeated, inflicts extinction. Penetrates the target's Defense by 50%. (Bonus contre les héros Ténèbres : non simulé.)",
      "set": {
-      "always_crit": true
+      "always_crit": true,
+      "dynamic": {
+       "vs_element": "dark",
+       "vs_mult": 0.35
+      }
      },
      "effects": [
       {
        "type": "extinction"
+      },
+      {
+       "type": "aftermath",
+       "skill": "s3_splash",
+       "target": "other_enemies",
+       "if_target_element": "dark"
       }
      ]
     }
@@ -2792,6 +2919,11 @@
        "type": "extra_turn",
        "chance": 1.0,
        "on_kill": false
+      },
+      {
+       "type": "strip",
+       "target": "allies",
+       "only": "off_mission"
       }
      ]
     },
@@ -2830,6 +2962,11 @@
        "type": "extra_turn",
        "chance": 1.0,
        "on_kill": false
+      },
+      {
+       "type": "strip",
+       "target": "allies",
+       "only": "def_mission"
       }
      ]
     },
@@ -2852,6 +2989,48 @@
        "on_crit": false
       }
      ]
+    },
+    "s2_off_start": {
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0,
+       "condition": {
+        "kind": "front_row"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "off_mission",
+       "target": "allies",
+       "turns": 999,
+       "unique": true
+      }
+     ],
+     "source": "★ Offensive / Defensive Mission: Increases Attack (max Health) of all allies by 10% (définition E7GW)"
+    },
+    "s2_def_start": {
+     "set": {
+      "trigger": {
+       "event": "battle_start",
+       "chance": 1.0,
+       "condition": {
+        "kind": "not_front"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "def_mission",
+       "target": "allies",
+       "turns": 999,
+       "unique": true
+      }
+     ],
+     "source": "★ Offensive / Defensive Mission: Increases Attack (max Health) of all allies by 10% (définition E7GW)"
     }
    }
   },
@@ -3577,6 +3756,14 @@
        "target": "self",
        "chance": 1.0,
        "per_hit": true
+      },
+      {
+       "type": "debuff",
+       "effect": "resource_down",
+       "target": "enemies",
+       "turns": 2,
+       "chance": 1.0,
+       "estimated": true
       }
      ]
     },
@@ -3674,6 +3861,46 @@
        "chance": 1.0
       }
      ]
+    },
+    "s2_first_enemy": {
+     "set": {
+      "trigger": {
+       "event": "first_turn",
+       "chance": 1.0,
+       "condition": {
+        "kind": "first_enemy"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "immunity",
+       "target": "allies",
+       "turns": 3
+      }
+     ],
+     "source": "At the start of the first battle, if an enemy takes the first turn, grants immunity to all allies for 3 turns, and if an ally takes the first turn, grants increased Effectiveness to all allies for 3 turns."
+    },
+    "s2_first_ally": {
+     "set": {
+      "trigger": {
+       "event": "first_turn",
+       "chance": 1.0,
+       "condition": {
+        "kind": "first_ally"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "eff_up",
+       "target": "allies",
+       "turns": 3
+      }
+     ],
+     "source": "At the start of the first battle, if an enemy takes the first turn, grants immunity to all allies for 3 turns, and if an ally takes the first turn, grants increased Effectiveness to all allies for 3 turns."
     }
    }
   },
@@ -3881,6 +4108,11 @@
        "effect": "stealth",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "static_aura",
+       "aura": "resource_dampen",
+       "value": 0.5
       }
      ]
     },
@@ -4553,9 +4785,44 @@
      "source": "When the target is a Hero, ignores damage reduction and damage sharing effects.",
      "set": {
       "ignore_share": true,
-      "ignore_reduction": true
+      "ignore_reduction": true,
+      "dynamic": {
+       "vs_element": "light",
+       "vs_mult": 1.0
+      }
      },
      "effects": []
+    },
+    "s2_sura": {
+     "set": {
+      "trigger": {
+       "event": "ally_attacked",
+       "chance": 1.0,
+       "every": 3,
+       "condition": {
+        "kind": "damage_at_least",
+        "value": 0.4
+       }
+      },
+      "rate": 1.8,
+      "pow": 0.95,
+      "enhance": [
+       0.05,
+       0.05,
+       0.1,
+       0.1,
+       0.15
+      ],
+      "ignore_share": true,
+      "ignore_reduction": true,
+      "random_target": true,
+      "dynamic": {
+       "vs_element": "light",
+       "vs_mult": 1.0
+      }
+     },
+     "effects": [],
+     "source": "After an ally except for the caster is attacked, when the damage suffered is 40% or more of max Health, activates Sura: Reave the Skies against a random enemy. Can only be activated once every 3 turns."
     }
    }
   },
@@ -5003,7 +5270,8 @@
        "type": "buff",
        "effect": "rampage",
        "target": "allies",
-       "turns": 3
+       "turns": 3,
+       "element": "dark"
       },
       {
        "type": "buff",
@@ -5432,9 +5700,21 @@
     "s3": {
      "source": "Attacks the enemy with a sword. Cannot trigger a critical hit. (Dégâts additionnels de zone : non chiffrés, non simulés.)",
      "set": {
-      "no_crit": true
+      "no_crit": true,
+      "dynamic": {
+       "pen_low_hp": [
+        0.3,
+        0.7
+       ]
+      }
      },
-     "effects": []
+     "effects": [
+      {
+       "type": "aftermath",
+       "skill": "s3_splash",
+       "target": "enemies"
+      }
+     ]
     }
    }
   },
@@ -5565,7 +5845,7 @@
      "source": "After an ally except for the caster is attacked by a Single Attack, increases Combat Readiness of the caster by 10%. (Toute attaque, estimé.)",
      "set": {
       "trigger": {
-       "event": "ally_attacked",
+       "event": "ally_single_attacked",
        "chance": 1.0
       }
      },
@@ -6477,6 +6757,13 @@
        "effect": "atk_up",
        "target": "self",
        "turns": 1
+      },
+      {
+       "type": "extra_attack",
+       "skill": "s1_bite",
+       "own_turn": true,
+       "once_per_turn": true,
+       "if_buff": "rage"
       }
      ]
     },
@@ -6533,7 +6820,25 @@
     },
     "s3": {
      "source": "Attacks the enemy with a sword. Penetrates the target's Defense. (Dégâts de zone sur critique : non chiffrés, non simulés.)",
-     "effects": []
+     "effects": [
+      {
+       "type": "aftermath",
+       "skill": "s3_splash",
+       "target": "other_enemies",
+       "if_crit": true
+      }
+     ]
+    },
+    "s1_bite": {
+     "set": {
+      "rate": 1,
+      "pow": 0.9,
+      "enhance": [],
+      "passive": true,
+      "estimated": true
+     },
+     "effects": [],
+     "source": "Bite (absente d'E7Calc) : multiplicateurs de la S1 (estimés)"
     }
    }
   },
@@ -6685,7 +6990,7 @@
      "source": "After an ally suffers an extra attack, counterattack, or Dual Attack, uses Soaring Arrow (once every 2 turns): attacks all enemies, dispels one debuff from all allies, Combat Readiness +30%. (Déclenché par toute attaque subie par un allié, estimé.)",
      "set": {
       "trigger": {
-       "event": "ally_attacked",
+       "event": "ally_bonus_hit",
        "chance": 1.0,
        "every": 2
       }
@@ -7015,7 +7320,13 @@
        "type": "fixed",
        "amount": 5000,
        "per_debuff": false,
-       "on_crit": false
+       "on_crit": false,
+       "plus_stack": {
+        "skill": "s2",
+        "per": 100,
+        "max": 10000,
+        "consume": true
+       }
       }
      ]
     }
@@ -7207,9 +7518,21 @@
     "s2": {
      "source": "When the enemy uses a non-attack skill, increases Defense of the caster and damage dealt by Ancient Beast by 10%, and Effectiveness by 5% (up to 8 times). (Cumul : non simulé.)",
      "set": {
-      "trigger": null
+      "trigger": {
+       "event": "enemy_skill",
+       "chance": 1.0,
+       "condition": {
+        "kind": "non_attack"
+       }
+      }
      },
-     "effects": []
+     "effects": [
+      {
+       "type": "mark",
+       "mark": "ancient",
+       "target": "self"
+      }
+     ]
     },
     "s3": {
      "source": "Summons an ancient beast to attack all enemies, with a 80% chance to silence for 1 turn.",
@@ -7222,7 +7545,15 @@
        "chance": 0.8,
        "ignore_resist": false
       }
-     ]
+     ],
+     "set": {
+      "dynamic": {
+       "mark_mult": {
+        "mark": "ancient",
+        "per": 0.1
+       }
+      }
+     }
     }
    }
   },
@@ -7293,6 +7624,21 @@
        "chance": 1.0
       }
      ]
+    }
+   }
+  },
+  "sez": {
+   "skills": {
+    "s3": {
+     "effects_add": [
+      {
+       "type": "aftermath",
+       "skill": "s3_splash",
+       "target": "other_enemies",
+       "if_kill": true
+      }
+     ],
+     "source": "When the enemy is defeated, inflicts extinction, and deals additional damage proportional to the caster's Attack to all enemies except for the target. (E7Calc : 150 % de l'attaque)"
     }
    }
   }

@@ -34,6 +34,20 @@ for (const [key, hero] of Object.entries(Heroes as any)) {
     };
     if (s.soulburn) { e.rate_sb = call(s.rate, true, iv, false); e.pow_sb = call(s.pow, true, iv) ?? e.pow; }
     if (Object.keys(flat).length) e.flat = flat;
+    // Dégâts additionnels (« aftermath ») : statistique × part, défense pénétrée à 70 % par défaut
+    const after = (sb: boolean, ivx: any) => { try { const r = s.afterMath ? s.afterMath("crit", ivx, sb) : null; return r ? (r.o ?? r) : null; } catch { return null; } };
+    const truthy: any = new Proxy({}, { get: (_t, p: any) => (String(p).startsWith("casterFinal") || String(p).startsWith("targetFinal") ? () => 0 : 1) });
+    let am: any = after(false, iv), amCond = false;
+    if (!am && after(false, truthy)) { am = after(false, truthy); amCond = true; }
+    if (am) {
+      const keys: any = { attackPercent: "atk", hpPercent: "hp", defensePercent: "def", targetMaxHPPercent: "target_hp" };
+      const k = Object.keys(keys).find((x) => am[x]);
+      if (k) {
+        e.aftermath = { stat: keys[k], ratio: am[k], pen: am.penetrate ?? 0.7, ...(amCond ? { conditional: true } : {}) };
+        const sbv = s.soulburn ? after(true, amCond ? truthy : iv) : null;
+        if (sbv && sbv[k] !== am[k]) e.aftermath.ratio_sb = sbv[k];
+      }
+    }
     const cond = [...tips(s.multTip), ...tips(s.penetrateTip), ...tips(s.rateTip), ...tips(s.powTip), ...tips(s.flatTip)];
     if (s.mult || s.fixed || s.aftermath || s.detonate) e.conditional = cond.length ? cond : ["oui"];
     if (e.rate === null) bad++;

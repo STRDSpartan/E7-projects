@@ -848,3 +848,70 @@ def test_lot6_unique_mechanics() -> None:
     battle.fire(kayron, "battle_start")
     battle.counter(kayron, foe)
     assert battle.stats["counters"] == 1
+
+
+def test_missing_mechanics_now_simulated() -> None:
+    # dégâts additionnels extraits d'E7Calc : Monarch Iseria S3 = 155 % de l'attaque en plus
+    s3 = hero_skills("Monarch of the Sword Iseria")["skills"]["s3"]  # type: ignore[index]
+    assert s3["aftermath"]["ratio"] == pytest.approx(1.55)
+    battle, iseria, foe = _duel("Monarch of the Sword Iseria", "Zio")
+    plain = {k: v for k, v in s3.items() if k != "aftermath"}
+    battle.rng = random.Random(3)
+    battle.hit(iseria, plain, foe)
+    without = foe.fighter.hp - foe.hp
+    foe.hp = foe.fighter.hp
+    battle.rng = random.Random(3)
+    battle.hit(iseria, s3, foe)
+    assert foe.fighter.hp - foe.hp > without
+    # Zio S3 : dégâts ∝ PV actuels de la cible
+    battle, zio, foe = _duel("Zio", "Renoa")
+    full = battle.dynamic(zio, zio.fighter.skills["s3"], foe)["flat_abs"]
+    foe.hp /= 2
+    assert battle.dynamic(zio, zio.fighter.skills["s3"], foe)["flat_abs"] == pytest.approx(full / 2)
+    # Aria S3 : pénétration +35 % par utilisation précédente (2 cumuls)
+    battle, aria, foe = _duel("Disciplinary Prefect Aria", "Zio")
+    s3 = aria.fighter.skills["s3"]
+    aria.stacks["uses:" + str(s3.get("name"))] = 5
+    assert battle.dynamic(aria, s3, foe)["pen"] == pytest.approx(0.7)
+    # Estelle : contre-attaque seulement si l'allié perd 20 % de ses PV max
+    team = _Battle([_hero("Estelle"), _hero("Zio")], [_hero("Renoa")],
+                   random.Random(1), {}, Options(), True)  # fmt: skip
+    estelle, zio, foe = team.units
+    team.current = foe
+    zio.last_damage = 0.05 * zio.max_hp
+    team.fire(estelle, "ally_attacked", zio)
+    assert team.stats["counters"] == 0
+    zio.last_damage = 0.3 * zio.max_hp
+    team.fire(estelle, "ally_attacked", zio)
+    assert team.stats["counters"] == 1
+    # Frieren : ressources +40 % ; Lidica : −60 %
+    team = _Battle([_hero("Frieren"), _hero("Estelle")], [_hero("Lidica")],
+                   random.Random(1), {}, Options(), True)  # fmt: skip
+    res = {"kind": "spirit"}
+    assert team.resource_mult(team.units[1], res) == pytest.approx(1.4)
+    team.units[1].debuffs["resource_down"] = 2
+    assert team.resource_mult(team.units[1], res) == pytest.approx(1.4 * 0.4)
+    # Dame de la Balance : +50 % des gains de jauge ennemis
+    battle, lady, foe = _duel("Lady of the Scales", "Zio")
+    lady.gauge = foe.gauge = 0
+    battle.apply(foe, {"type": "gauge", "amount": 40, "target": "self"}, [])
+    assert lady.gauge == pytest.approx(20)
+    # Salome : clone les compétences d'un héros puis redevient elle-même
+    battle, salome, foe = _duel("Salome", "Zio")
+    battle.current = salome
+    battle.apply(salome, {"type": "clone", "target": "self"}, [])
+    assert salome.fighter.skills is foe.fighter.skills
+    battle.end_turn(salome)
+    battle.end_turn(salome)
+    assert salome.fighter.skills is not foe.fighter.skills
+    # Zeno : cumuls de Bête ancestrale (défense +10 %, S3 +10 %)
+    battle, zeno, foe = _duel("Zeno", "Zio")
+    defense = zeno.stat("defense")
+    battle.fire(zeno, "enemy_skill", foe, non_attack=True)
+    assert zeno.marks["ancient"] == 1 and zeno.stat("defense") == pytest.approx(1.1 * defense)
+    # Kayron : 100 dégâts fixes par point d'Esprit combatif, jusqu'à 10 000
+    battle, kayron, foe = _duel("Twisted Eidolon Kayron", "Zio")
+    kayron.stacks["s2"] = 100
+    hp = foe.hp
+    battle.hit(kayron, kayron.fighter.skills["s3"], foe)
+    assert hp - foe.hp > 15000

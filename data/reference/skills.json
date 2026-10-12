@@ -1,5 +1,5 @@
 {
- "_comment": "Multiplicateurs de compétences (taux, puissance, amélioration, pénétration, bonus fixes) extraits du calculateur E7Calc (github.com/tyopoyt/epic7-damage-calc, licence ISC) par scripts/update_skills.py le 2026-10-11. 'conditional' : bonus conditionnels non appliqués par défaut. 'cooldown', 'passive', 'effects' : pages héros d'E7GW (e7gw.xyz), analysées par parsers/skill_effects.py. Ne pas éditer à la main.",
+ "_comment": "Multiplicateurs de compétences (taux, puissance, amélioration, pénétration, bonus fixes) extraits du calculateur E7Calc (github.com/tyopoyt/epic7-damage-calc, licence ISC) par scripts/update_skills.py le 2026-10-12. 'conditional' : bonus conditionnels non appliqués par défaut. 'cooldown', 'passive', 'effects' : pages héros d'E7GW (e7gw.xyz), analysées par parsers/skill_effects.py. Ne pas éditer à la main.",
  "heroes": {
   "abigail": {
    "element": "fire",
@@ -793,6 +793,11 @@
      "no_crit": false,
      "flat": {
       "caster_Defense": 0.5
+     },
+     "aftermath": {
+      "stat": "def",
+      "ratio": 1.4,
+      "pen": 0.7
      },
      "name": "I'll Blow You Away!",
      "cooldown": 3,
@@ -1819,6 +1824,11 @@
      "no_crit": false,
      "flat": {
       "caster_MaxHP": 0.09
+     },
+     "aftermath": {
+      "stat": "hp",
+      "ratio": 0.07,
+      "pen": 0.7
      },
      "name": "No Need for Words",
      "cooldown": 0,
@@ -3243,7 +3253,12 @@
      "aoe": true,
      "single": false,
      "pen": 0,
-     "no_crit": false
+     "no_crit": false,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 0.4,
+      "pen": 0.7
+     }
     },
     "s3": {
      "rate": 1,
@@ -6644,6 +6659,11 @@
      "single": true,
      "pen": 0,
      "no_crit": false,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 0.3,
+      "pen": 0.7
+     },
      "name": "Fallen Flower",
      "cooldown": 0,
      "passive": false,
@@ -6672,6 +6692,11 @@
      "single": false,
      "pen": 0,
      "no_crit": false,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 0.3,
+      "pen": 0.7
+     },
      "name": "Cursed Thorn",
      "cooldown": 4,
      "passive": false,
@@ -7097,7 +7122,8 @@
        "type": "static_immune",
        "effects": [
         "stun",
-        "sleep"
+        "sleep",
+        "fear"
        ]
       }
      ],
@@ -8487,7 +8513,8 @@
        "type": "static_immune",
        "effects": [
         "stun",
-        "sleep"
+        "sleep",
+        "fear"
        ]
       }
      ],
@@ -10847,7 +10874,8 @@
        "type": "static_immune",
        "effects": [
         "stun",
-        "sleep"
+        "sleep",
+        "fear"
        ]
       }
      ],
@@ -12235,7 +12263,8 @@
        "type": "static_immune",
        "effects": [
         "stun",
-        "sleep"
+        "sleep",
+        "fear"
        ]
       },
       {
@@ -14697,6 +14726,11 @@
      "single": false,
      "pen": 0,
      "no_crit": false,
+     "aftermath": {
+      "stat": "hp",
+      "ratio": 0.4,
+      "pen": 0.7
+     },
      "name": "It's Okay, It Won't Show",
      "cooldown": 4,
      "passive": false,
@@ -15856,7 +15890,8 @@
        "type": "static_immune",
        "effects": [
         "stun",
-        "sleep"
+        "sleep",
+        "fear"
        ]
       }
      ],
@@ -16058,6 +16093,11 @@
      "no_crit": false,
      "flat": {
       "caster_Defense": 0.85
+     },
+     "aftermath": {
+      "stat": "def",
+      "ratio": 0.6,
+      "pen": 0.7
      },
      "name": "Crimson Flame",
      "cooldown": 0,
@@ -17709,6 +17749,11 @@
      "single": true,
      "pen": 0,
      "no_crit": true,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 0.35,
+      "pen": 0.7
+     },
      "name": "Supersonic Kick",
      "cooldown": 0,
      "passive": false,
@@ -18421,7 +18466,13 @@
      "pen": 0,
      "no_crit": true,
      "rate_sb": 0,
-     "pow_sb": 0
+     "pow_sb": 0,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 0.6,
+      "pen": 0.7,
+      "ratio_sb": 0.8
+     }
     },
     "s2": {
      "rate": null,
@@ -19112,7 +19163,12 @@
      "aoe": false,
      "single": false,
      "pen": 0,
-     "no_crit": true
+     "no_crit": true,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 0.6,
+      "pen": 0.7
+     }
     },
     "s2": {
      "rate": null,
@@ -20105,6 +20161,12 @@
      "single": true,
      "pen": 0,
      "no_crit": false,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 0.6,
+      "pen": 0.7,
+      "conditional": true
+     },
      "name": "Hey There!",
      "cooldown": 0,
      "passive": false,
@@ -22555,7 +22617,12 @@
      "aoe": false,
      "single": false,
      "pen": 0,
-     "no_crit": true
+     "no_crit": true,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 1.2,
+      "pen": 0.7
+     }
     },
     "s2": {
      "rate": null,
@@ -22579,7 +22646,8 @@
        "type": "static_immune",
        "effects": [
         "stun",
-        "sleep"
+        "sleep",
+        "fear"
        ]
       }
      ],
@@ -22636,7 +22704,12 @@
      "aoe": false,
      "single": false,
      "pen": 0,
-     "no_crit": true
+     "no_crit": true,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 1.2,
+      "pen": 0.7
+     }
     }
    }
   },
@@ -22793,6 +22866,11 @@
      "no_crit": false,
      "rate_sb": 1,
      "pow_sb": 1,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 0.25,
+      "pen": 0.7
+     },
      "name": "Bash",
      "cooldown": 0,
      "passive": false,
@@ -24976,6 +25054,11 @@
      "single": true,
      "pen": 0,
      "no_crit": false,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 1.25,
+      "pen": 0.7
+     },
      "name": "Elbris's Successor",
      "cooldown": 0,
      "passive": true,
@@ -25006,6 +25089,11 @@
      "single": false,
      "pen": 0,
      "no_crit": false,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 1.55,
+      "pen": 0.7
+     },
      "name": "Dawnbreaker",
      "cooldown": 0,
      "passive": true,
@@ -25303,7 +25391,8 @@
        "type": "static_immune",
        "effects": [
         "stun",
-        "sleep"
+        "sleep",
+        "fear"
        ]
       }
      ],
@@ -25882,7 +25971,8 @@
        "type": "static_immune",
        "effects": [
         "stun",
-        "sleep"
+        "sleep",
+        "fear"
        ]
       }
      ],
@@ -26188,7 +26278,12 @@
      "aoe": false,
      "single": false,
      "pen": 0,
-     "no_crit": true
+     "no_crit": true,
+     "aftermath": {
+      "stat": "hp",
+      "ratio": 0.16,
+      "pen": 0.7
+     }
     },
     "s3": {
      "rate": null,
@@ -26243,6 +26338,12 @@
      "no_crit": false,
      "flat": {
       "caster_MaxHP": 0.1
+     },
+     "aftermath": {
+      "stat": "hp",
+      "ratio": 0.15,
+      "pen": 0.7,
+      "conditional": true
      },
      "name": "Divinity Release",
      "cooldown": 0,
@@ -28648,7 +28749,8 @@
        "type": "static_immune",
        "effects": [
         "stun",
-        "sleep"
+        "sleep",
+        "fear"
        ]
       }
      ],
@@ -28700,6 +28802,11 @@
      "single": true,
      "pen": 0,
      "no_crit": true,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 0.5,
+      "pen": 0.7
+     },
      "name": "Touch of Darkness",
      "cooldown": 0,
      "passive": false,
@@ -31071,6 +31178,11 @@
      "flat": {
       "caster_MaxHP": 0.15
      },
+     "aftermath": {
+      "stat": "hp",
+      "ratio": 0.17,
+      "pen": 0.7
+     },
      "name": "Nggdrasil's Judgment",
      "cooldown": 4,
      "passive": false,
@@ -31702,6 +31814,11 @@
      "single": true,
      "pen": 0,
      "no_crit": true,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 0.45,
+      "pen": 0.7
+     },
      "name": "Indomitable Spirit",
      "cooldown": 0,
      "passive": true,
@@ -33041,7 +33158,12 @@
      "aoe": false,
      "single": false,
      "pen": 0,
-     "no_crit": true
+     "no_crit": true,
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 1.5,
+      "pen": 0.7
+     }
     },
     "s2": {
      "rate": null,
@@ -34012,6 +34134,11 @@
      "no_crit": false,
      "flat": {
       "target_MaxHP": 0.05
+     },
+     "aftermath": {
+      "stat": "atk",
+      "ratio": 0.4,
+      "pen": 0.7
      },
      "name": "Tyrant Rave ver. Beta",
      "cooldown": 4,
@@ -37337,7 +37464,8 @@
        "type": "static_immune",
        "effects": [
         "stun",
-        "sleep"
+        "sleep",
+        "fear"
        ]
       },
       {

@@ -205,6 +205,27 @@ partiel, contre-attaque quand un allié est attaqué, dégâts doublés hors de 
   recharge ou un débuff. Non simulés : Morsure de Jenua et cumuls de Zeno (multiplicateurs
   inconnus), dégâts de zone additionnels non chiffrés (Amiki, Jenua), bonus d'Esprit de Kayron ;
   déclencheurs approchés pour Fenris et Arowell (toute attaque subie par un allié).
+- **Mécaniques manquantes intégrées** (v0.19.0) : l'extracteur E7Calc lit désormais les
+  dégâts additionnels (`aftermath` : statistique × part × 1,871, 70 % de défense ignorée), perdus
+  jusque-là pour 23 compétences (Monarch of the Sword Iseria, Salome, Requiem Roana, Lone Wolf
+  Peira, Festive Eda, Senya, Sol, AE Karina, Albedo...) ; dégâts de zone additionnels de Luna,
+  Little Queen Charlotte (contre les Ténèbres, dégâts +35 %), Jenua (sur critique), Inheritor
+  Amiki, Sez (si la cible meurt), Notos (sous Dieu de la guerre). Formules dynamiques E7Calc
+  (`dynamic`) : PV actuels de la cible (Zio), PV perdus de la cible (Frieren), écart de PV
+  (Fenris), PV perdus du lanceur et PV consommés (Setsuka), pénétration sous 30 % des PV (Amiki)
+  ou cumulable (Aria), élément de la cible (Bystander Hwayoung ×2 contre la Lumière). Aussi :
+  Bête ancestrale de Zeno (cumuls), Esprit combatif consommé par Kayron (+100 par point), dégâts
+  fixes croissants de Schniel, attaque ∝ PV de l'infirmière Yulha (8 %), résistance ∝ PV d'Aria,
+  seuils de dégâts subis (Estelle 20 %, riposte Sura de Bystander Hwayoung 40 %), recopie de jauge
+  de la Dame de la Balance (50 %) et de Tidal Rift Elvira (25 % par débuff infligé), ressources
+  +40 % (Frieren), −60 % (Lidica, durée estimée à 2 tours) et −50 % (Sea Phantom Politis),
+  missions de Politis (attaque ou PV max +10 %), premier tour d'Aram, Saccage réservé aux
+  Ténèbres, Morsure de Jenua (multiplicateurs de la S1, estimés), clone de Salome (compétences du
+  héros le plus offensif, estimé), retour temporel de Lisette (PV et débuffs remis à zéro à la
+  mort), déclencheurs exacts de Fenris (attaque supplémentaire, double ou contre-attaque subie
+  par un allié) et d'Arowell (attaque à cible unique). Non définis par le jeu, donc estimés :
+  érosion de Rhianna (comme un saignement, explosée sur critique) et parfum persistant de Byblis
+  (dégâts subis −15 %). Toujours impossibles : Mei Lin et Silvertide Christy (absentes d'E7Calc).
 - **Suite** : le classement public d'epic7rtastats s'arrête au rang 105 (filtre « Remove Low
   Pick Data ») ; les héros restants pourront suivre par listes fournies.
 

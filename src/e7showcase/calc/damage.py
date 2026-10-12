@@ -132,6 +132,7 @@ def skill_damage(
         "target_MaxHP": target.hp,
     }
     flat = sum(ratio * stats.get(stat, 0) for stat, ratio in (skill.get("flat") or {}).items())
+    flat += float(skill.get("flat_abs", 0))  # bonus déjà chiffré par le simulateur de combat
     atk = attacker.atk * (1 + ATTACK_BUFFS.get(o.attack_buff, 0))
     advantage = (
         o.elemental_advantage
