@@ -27,7 +27,7 @@ Tout est dans `src/e7showcase/app/ui.html` (CSS en fin de `<style>`, module JS `
 | Formulaires | cases à cocher dorées, rebond au clic |
 | Verdict | à la fin de chaque simulation (simulateur, tests GvG) : bandeau « Victoire » aux couleurs de l'équipe gagnante (A bleu, B rouge), trophée qui surgit, rayons qui tournent, reflet qui balaie, taux de victoire qui monte jusqu'à sa valeur, gerbe d'étincelles ; « Combat serré » ⚖ en or si l'écart est sous 10 points ; amené à l'écran automatiquement |
 | Relevés GvG | équipe adverse encadrée de rouge, badges « reconnu » (vert) / « à vérifier » (or, pulsant), propositions en pastilles, portraits découpés sur la capture |
-| Carte de la guerre | capture du jeu assombrie en fond ; panneaux des guildes (liseré vert / rouge), forteresses en anneaux de progression rouges qui surgissent et s'illuminent au survol ; forteresse : joueurs à leur place (pastille, nombre de relevés en or, grisé + ✓ si battu, halo doré si sélectionné) |
+| Carte de la guerre | panorama (image de fond du joueur ou panorama dessiné) au ratio exact de l'image pour que les boutons restent sur les châteaux ; nos forteresses à gauche (anneau vert, 🛡), adverses à droite (anneau rouge, ⚔), plaque avec le nom court ; « VS » et temps restant au centre ; barre de Ravage. Boutons centrés avec `translate` (les effets de survol des boutons modifient `transform`) : ils ne bougent plus au survol ; pas d'ondulation sur ces boutons |
 | Coller (Ctrl+V) | mention dorée « ou collez-la avec Ctrl+V » dans chaque zone d'import ; onde dorée sur la zone qui reçoit la capture, notification « Capture collée » |
 | Dialogues | ouverture à ressort, fond flouté |
 

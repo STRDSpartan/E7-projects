@@ -24,6 +24,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, unquote, urlparse
 
+from PIL import Image
+
 from e7showcase import __version__
 from e7showcase.app.armory import armory
 from e7showcase.app.battle_report import read_capture, read_report
@@ -79,7 +81,7 @@ APP_CSP = (
 APP_HEADERS = {"Content-Security-Policy": APP_CSP, "Referrer-Policy": "no-referrer"}
 MAP_HELP = "capture non reconnue : utilisez l'écran principal de la guerre (guildes et forteresses)"
 FORTRESS_HELP = "aucun joueur reconnu : utilisez la vue d'une forteresse (pseudos des défenseurs)"
-WARMAP_RE = re.compile(r"/gvgmap/([0-9a-f]{16}\.webp)")
+WARMAP_RE = re.compile(r"/gvgmap/([0-9a-f]{16}\.webp|background\.webp)")
 MEDIA_RE = re.compile(r"/media/([a-z0-9-]{1,60})/([a-z0-9-]{1,80}(?:\.[a-z]{1,10})?\.webp)")
 ANIM_RE = re.compile(r"/anim/(c\d{4}(?:_[a-z0-9]{1,8}){0,2})")
 # Page du modèle animé : seuls le lecteur et les fichiers publics d'E7 Codex sont autorisés
@@ -198,6 +200,14 @@ class AppState:
                 self.face_sync["running"] = False
 
         threading.Thread(target=work, daemon=True).start()
+
+    def background(self) -> dict[str, Any]:
+        """Image de fond de la GvG choisie par le joueur (gardée sur son ordinateur)."""
+        target = self.war_images / "background.webp"
+        try:
+            return {"background": f"/gvgmap/background.webp?v={target.stat().st_mtime_ns}"}
+        except OSError:
+            return {"background": None}
 
     def save_war_image(self, image: Any) -> str:
         """Capture de guerre gardée localement (réencodée, 2 000 px au plus) pour la carte."""
@@ -543,7 +553,7 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             gvg = state.gvg
             try:
                 if rest == "" and method == "GET":
-                    return self._json(gvg.summary())
+                    return self._json(gvg.summary() | state.background())
                 if rest == "/report" and method == "POST":  # capture de fin de combat (binaire)
                     try:
                         engine = state.ocr()
@@ -568,19 +578,13 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                         war_map = parse_war_map(lines, image.size)
                         if war_map is None or not war_map.fortresses:
                             raise ApiError(400, MAP_HELP)
-                        name = state.save_war_image(image)
-                        state.drop_war_images(gvg.set_map(asdict(war_map), name))
+                        state.drop_war_images(gvg.set_map(asdict(war_map), None))
                     else:
                         players = parse_fortress(lines, image.size)
                         if not players:
                             raise ApiError(400, FORTRESS_HELP)
                         fid = parse_qs(urlparse(self.path).query).get("id", [None])[0]
-                        name = state.save_war_image(image)
-                        try:
-                            _, old = gvg.set_fortress(fid, [asdict(p) for p in players], name)
-                        except GvgError:
-                            state.drop_war_images([name])
-                            raise
+                        _, old = gvg.set_fortress(fid, [asdict(p) for p in players], None)
                         state.drop_war_images([old] if old else [])
                     return self._json(gvg.summary())
                 if (
@@ -588,6 +592,19 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 ) and method == "PATCH":
                     gvg.update_player(pl[1], int(pl[2]), self._body())
                     return self._json(gvg.summary())
+                if rest == "/background" and method == "POST":  # image de fond (binaire)
+                    try:
+                        with Image.open(io.BytesIO(self._raw(MAX_UPLOAD))) as src:
+                            bg = src.convert("RGB")
+                    except OSError as exc:
+                        raise ApiError(400, "image illisible (PNG, JPG, WebP)") from exc
+                    bg.thumbnail((2600, 2600))
+                    state.war_images.mkdir(parents=True, exist_ok=True)
+                    bg.save(state.war_images / "background.webp", "WEBP", quality=86)
+                    return self._json(gvg.summary() | state.background())
+                if rest == "/background" and method == "DELETE":
+                    (state.war_images / "background.webp").unlink(missing_ok=True)
+                    return self._json(gvg.summary() | state.background())
                 if rest == "/map" and method == "DELETE":
                     state.drop_war_images(gvg.clear_map())
                     return self._json(gvg.summary())

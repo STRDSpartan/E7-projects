@@ -404,45 +404,64 @@ select { cursor:pointer; }
 .scout-stats input { background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:6px; padding:4px 6px; font:inherit; font-size:13px; min-width:0; }
 .hidden-stats { opacity:.85; }
 
-/* --- v0.48 : carte de la guerre --- */
-.warmap { position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--line); box-shadow:0 20px 50px rgba(0,0,0,.45); background:#0b1220; }
-.wm-bg { display:block; width:100%; filter:saturate(.85) brightness(.55); } .wm-bg.empty { aspect-ratio:16/9; background:radial-gradient(circle at 60% 40%, #24344f, #0b1220); filter:none; }
-.wm-overlay { position:absolute; inset:0; background:linear-gradient(90deg, rgba(8,12,20,.75), transparent 35%), radial-gradient(circle at 50% 120%, rgba(74,179,255,.15), transparent 60%); }
-.warmap.fortress .wm-overlay { background:radial-gradient(circle at 50% 50%, transparent 30%, rgba(8,12,20,.55)); }
-.wm-hud { position:absolute; left:2%; top:14%; display:grid; gap:18px; width:min(28%, 260px); }
-.wm-guild { padding:10px 12px; border-radius:12px; background:rgba(10,14,22,.78); backdrop-filter:blur(4px); box-shadow:inset 4px 0 0 var(--ok); display:grid; gap:2px; font-size:13px; animation:reveal .6s var(--ease-out) both; }
-.wm-guild.enemy { box-shadow:inset 4px 0 0 var(--danger); animation-delay:.12s; }
+/* --- v0.50 : panorama de la guerre --- */
+.wm-pano { position:relative; width:100%; aspect-ratio:2000/384; border-radius:16px; overflow:hidden; border:1px solid var(--line);
+  background-size:cover; background-position:center; box-shadow:0 20px 50px rgba(0,0,0,.45); }
+.wm-tint { position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(90deg, rgba(47,143,85,.28), transparent 38%, transparent 62%, rgba(179,63,63,.30)), linear-gradient(180deg, rgba(8,12,20,.25), transparent 40%, rgba(8,12,20,.45)); }
+.wm-center { position:absolute; left:50%; top:10%; translate:-50% 0; display:grid; justify-items:center; gap:4px; pointer-events:none; }
+.wm-vs { font-weight:900; font-style:italic; font-size:clamp(26px, 3.4vw, 46px); color:#fff; text-shadow:0 0 18px rgba(226,96,96,.8), 0 3px 8px #000; }
+.wm-timer { font-size:13px; color:#dfe6f2; background:rgba(8,12,20,.6); padding:3px 12px; border-radius:999px; } .wm-timer b { color:#fff; }
+.wm-side { position:absolute; bottom:6%; font-weight:900; font-size:clamp(13px, 1.4vw, 18px); padding:4px 14px; border-radius:999px; color:#fff; text-shadow:0 2px 4px #000; }
+.wm-side.ally { left:2%; background:rgba(47,143,85,.55); } .wm-side.enemy { right:2%; background:rgba(179,63,63,.55); }
+/* boutons de forteresse : centrés avec « translate » (les effets de survol des boutons agissent sur « transform ») */
+.wm-fort { position:absolute; translate:-50% -50%; background:none !important; box-shadow:none !important; padding:0; overflow:visible !important;
+  display:grid; justify-items:center; gap:6px; color:var(--text); cursor:pointer; filter:none !important; }
+.wm-fort:hover, .wm-fort:active { transform:none !important; }
+.wm-ring { width:clamp(40px, 3.8vw, 58px); aspect-ratio:1; border-radius:50%; display:grid; place-items:center;
+  background:conic-gradient(var(--ring) calc(var(--pct) * 1%), rgba(255,255,255,.22) 0); box-shadow:0 0 0 3px rgba(8,12,20,.7), 0 0 22px var(--ring-glow);
+  transition:transform var(--t-med) var(--ease-spring), box-shadow var(--t-med); }
+.wm-fort.ally { --ring:#3fb868; --ring-glow:rgba(63,184,104,.45); } .wm-fort.enemy { --ring:#e2603f; --ring-glow:rgba(226,96,63,.5); }
+.wm-core { width:82%; aspect-ratio:1; border-radius:50%; display:grid; place-items:center; background:radial-gradient(circle, #2a2f3a, #10141c); }
+.wm-swords { font-size:clamp(16px, 1.8vw, 24px); }
+.wm-plate { display:grid; justify-items:center; padding:3px 9px; border-radius:9px; max-width:9.5vw; text-align:center; background:rgba(8,12,20,.78); border:1px solid rgba(255,255,255,.12); white-space:nowrap;
+  box-shadow:0 6px 16px rgba(0,0,0,.45); transition:border-color var(--t-med), background var(--t-med); }
+.wm-plate b { font-size:clamp(10px, .9vw, 13px); white-space:normal; line-height:1.15; } .wm-plate small { font-size:10px; color:var(--muted); }
+.wm-fort.ally .wm-plate { border-color:rgba(63,184,104,.45); } .wm-fort.enemy .wm-plate { border-color:rgba(226,96,63,.45); }
+.wm-fort:hover .wm-ring { transform:scale(1.1); box-shadow:0 0 0 3px var(--gold), 0 0 30px var(--glow); }
+.wm-fort:hover .wm-plate { border-color:var(--gold); background:rgba(20,16,6,.88); }
+.wm-guilds { display:grid; grid-template-columns:1fr minmax(180px, 1.2fr) 1fr; gap:12px; align-items:center; }
+@media (max-width: 900px) { .wm-guilds { grid-template-columns:1fr; } }
+.wm-guild { padding:10px 14px; border-radius:12px; background:var(--panel); border:1px solid var(--line); box-shadow:inset 4px 0 0 var(--ok); display:grid; gap:2px; font-size:13px; }
+.wm-guild.enemy { box-shadow:inset -4px 0 0 var(--danger); text-align:right; } .wm-guild.enemy .wm-gname { justify-content:flex-end; }
 .wm-gname { display:flex; gap:8px; align-items:center; font-size:17px; flex-wrap:wrap; }
 .wm-server { font-size:11px; padding:1px 8px; border-radius:6px; background:rgba(127,224,160,.2); color:var(--ok); } .enemy .wm-server { background:rgba(226,96,96,.2); color:#ff9b9b; }
 .wm-members { font-weight:800; font-size:16px; color:var(--ok); } .enemy .wm-members { color:#ff8a8a; }
-.wm-timer { position:absolute; left:2%; top:4%; font-size:14px; color:var(--muted); background:rgba(10,14,22,.7); padding:4px 12px; border-radius:999px; }
-.wm-timer b { color:var(--text); font-size:18px; margin-left:4px; }
-.wm-fort { position:absolute; transform:translate(-50%, -50%); background:none !important; box-shadow:none !important; padding:0; display:grid; justify-items:center; gap:4px; color:var(--text); }
-.wm-ring { width:clamp(64px, 9vw, 112px); aspect-ratio:1; border-radius:50%; display:grid; place-items:center;
-  background:conic-gradient(var(--danger) calc(var(--pct) * 1%), rgba(255,255,255,.18) 0); box-shadow:0 0 0 3px rgba(0,0,0,.5), 0 0 24px rgba(226,96,96,.35);
-  transition:transform var(--t-med) var(--ease-spring), box-shadow var(--t-med); animation:dlg .6s var(--ease-spring) both; }
-.wm-core { width:84%; aspect-ratio:1; border-radius:50%; display:grid; place-items:center; align-content:center; background:radial-gradient(circle, #2a2f3a, #12161f); }
-.wm-swords { font-size:clamp(16px, 2vw, 26px); opacity:.6; } .wm-core b { font-size:clamp(14px, 1.6vw, 22px); }
-.wm-fname { font-weight:800; font-size:clamp(12px, 1.3vw, 18px); text-shadow:0 2px 6px #000, 0 0 2px #000; white-space:nowrap; }
-.wm-fsub { font-size:11px; color:var(--muted); text-shadow:0 1px 3px #000; }
-.wm-fort:hover .wm-ring { transform:scale(1.08); box-shadow:0 0 0 3px var(--gold), 0 0 34px var(--glow); }
+.wm-tug { display:grid; gap:4px; } .wm-tug-label { text-align:center; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+.wm-tug-bar { display:flex; height:26px; border-radius:8px; overflow:hidden; font-weight:800; font-size:13px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
+.wm-tug-bar.small { width:220px; height:22px; font-size:12px; }
+.wm-tug-bar span { display:grid; place-items:center; min-width:34px; transition:flex .8s var(--ease-out); } .wm-tug-bar .ours { background:linear-gradient(90deg, #237a46, #3fb868); } .wm-tug-bar .enemy { background:linear-gradient(90deg, #d0473a, #8e2c2c); }
 .wm-fhead { display:flex; gap:14px; align-items:center; flex-wrap:wrap; } .wm-fhead > div:nth-child(2) { flex:1; }
-.wm-ravage { display:flex; width:220px; height:22px; border-radius:6px; overflow:hidden; font-size:12px; font-weight:800; }
-.wm-ravage span { display:grid; place-items:center; min-width:30px; } .wm-ravage .ours { background:#2f8f55; } .wm-ravage .enemy { background:#a33a3a; }
+.wm-fhead.ally { box-shadow:inset 4px 0 0 var(--ok); }
+.wm-stage { position:relative; width:100%; aspect-ratio:16/9; max-height:68vh; border-radius:16px; overflow:hidden; border:1px solid var(--line); background-size:420% auto; background-repeat:no-repeat; }
+.wm-stage-veil { position:absolute; inset:0; backdrop-filter:blur(3px) brightness(.55); background:radial-gradient(circle at 50% 55%, rgba(120,170,230,.18), rgba(8,12,20,.5) 70%); }
 .wm-split { display:grid; grid-template-columns:minmax(0, 2.2fr) minmax(260px, 1fr); gap:14px; align-items:start; }
 @media (max-width: 1100px) { .wm-split { grid-template-columns:1fr; } }
-.wm-node { position:absolute; transform:translate(-50%, -100%); background:none !important; box-shadow:none !important; padding:0; display:grid; justify-items:center; gap:2px; color:var(--text); }
-.wm-avatar { position:relative; width:clamp(32px, 3.2vw, 50px); aspect-ratio:1; border-radius:50%; display:grid; place-items:center; overflow:visible;
+.wm-node { position:absolute; translate:-50% -50%; background:none !important; box-shadow:none !important; padding:0; overflow:visible !important; filter:none !important;
+  display:grid; justify-items:center; gap:3px; color:var(--text); }
+.wm-node:hover, .wm-node:active { transform:none !important; }
+.wm-avatar { position:relative; width:clamp(34px, 3.2vw, 50px); aspect-ratio:1; border-radius:50%; display:grid; place-items:center;
   background:radial-gradient(circle, #3a2a2a, #150c0c); box-shadow:0 0 0 3px #b33f3f, 0 6px 16px rgba(0,0,0,.6); transition:transform var(--t-med) var(--ease-spring), box-shadow var(--t-med); }
+.wm-node.ally .wm-avatar { background:radial-gradient(circle, #1f3a2a, #0b150f); box-shadow:0 0 0 3px #3fb868, 0 6px 16px rgba(0,0,0,.6); }
 .wm-avatar .hp { width:100%; height:100%; border-radius:50%; box-shadow:none; }
 .wm-initial { font-weight:900; font-size:clamp(13px, 1.4vw, 20px); }
-.wm-pname { font-weight:800; font-size:clamp(11px, 1.1vw, 16px); text-shadow:0 2px 5px #000, 0 0 2px #000; white-space:nowrap; }
+.wm-pname { font-weight:800; font-size:clamp(11px, 1vw, 14px); padding:1px 8px; border-radius:6px; background:rgba(8,12,20,.7); white-space:nowrap; }
+.wm-teams { display:grid; gap:2px; justify-items:center; }
 .wm-node:hover .wm-avatar { transform:scale(1.1); } .wm-node.selected .wm-avatar { box-shadow:0 0 0 3px var(--gold), 0 0 26px var(--glow); }
 .wm-node.beaten .wm-avatar { filter:grayscale(1) brightness(.6); box-shadow:0 0 0 3px #555; }
 .wm-count { position:absolute; right:-6px; top:-6px; min-width:20px; height:20px; border-radius:10px; display:grid; place-items:center; font-size:11px; font-weight:800; color:#1d1606; background:var(--gold); }
-.wm-check { position:absolute; inset:0; display:grid; place-items:center; font-size:28px; color:var(--ok); text-shadow:0 0 8px #000; filter:none; }
+.wm-check { position:absolute; inset:0; display:grid; place-items:center; font-size:26px; color:var(--ok); text-shadow:0 0 8px #000; }
 .wm-player { position:sticky; top:10px; }
-
 /* --- v0.49 : coller une capture --- */
 .paste-hint { color:var(--gold); opacity:.8; }
 .drop.pasted { animation:pasted .9s var(--ease-out); }
@@ -1451,50 +1470,108 @@ function scoutedOf(g, name) {
   const key = (name || "").trim().toLowerCase();
   return g.scouted.filter((sc) => key && sc.player.trim().toLowerCase() === key);
 }
+// Panorama de la guerre : nos 3 forteresses à gauche, celles de l'adversaire à droite.
+// Fond : image choisie par le joueur (gardée sur son PC) ou panorama dessiné ci-dessous.
+const CASTLES = { ally: [[0.145, 0.34], [0.228, 0.36], [0.322, 0.47]], enemy: [[0.712, 0.47], [0.815, 0.36], [0.915, 0.36]] };
+const PANORAMA_SVG = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 384' preserveAspectRatio='xMidYMid slice'>
+<defs><linearGradient id='s' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#1b2c5a'/><stop offset='.55' stop-color='#5b86c4'/><stop offset='1' stop-color='#c9dcf2'/></linearGradient>
+<linearGradient id='n' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#eef4fb'/><stop offset='1' stop-color='#9fb6d3'/></linearGradient>
+<linearGradient id='c' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#3a4660'/><stop offset='1' stop-color='#202838'/></linearGradient></defs>
+<rect width='2000' height='384' fill='url(#s)'/><circle cx='720' cy='-60' r='190' fill='#9fb6e0' opacity='.25'/>
+<path d='M0 250 L180 160 L320 210 L470 150 L640 220 L820 170 L1000 215 L1180 165 L1360 220 L1530 150 L1700 205 L1850 160 L2000 230 V384 H0Z' fill='#8aa3c4' opacity='.7'/>
+<path d='M0 300 L210 205 L360 250 L520 200 L700 270 L1000 240 L1300 270 L1480 200 L1650 250 L1800 205 L2000 290 V384 H0Z' fill='url(#n)'/>
+<g fill='url(#c)'>${[[290, 120], [455, 130], [640, 175], [1420, 175], [1630, 130], [1830, 130]].map(([x, y]) =>
+  `<rect x='${x - 55}' y='${y}' width='110' height='70'/><rect x='${x - 18}' y='${y - 55}' width='36' height='60'/><polygon points='${x - 22},${y - 55} ${x},${y - 95} ${x + 22},${y - 55}'/><rect x='${x - 52}' y='${y - 20}' width='18' height='24'/><rect x='${x + 34}' y='${y - 20}' width='18' height='24'/>`).join("")}</g>
+<path d='M0 330 Q500 290 1000 320 T2000 330 V384 H0Z' fill='#dfe9f5'/></svg>`);
+const shortFort = (name) => name.replace(/^(forteresse|fortress|stronghold)\s+/i, "");
 function gvgMap(page, g, send) {
   const m = g.map;
-  if (!m) {
-    page.append(el("div", { class: "card" }, el("h3", {}, "Carte de la guerre"),
-      el("p", { class: "note" }, "À chaque GvG, importez la capture de l'écran principal de la guerre (les deux guildes et les forteresses), puis celle de chaque forteresse (ses défenseurs). L'application reproduit la carte : cliquez sur une forteresse puis sur un joueur pour tester vos équipes contre ses défenses relevées."),
-      captureZone("Glissez ici la capture de l'écran principal de la guerre — ou cliquez pour la choisir", "/gvg/map", () => gvgPage("map"))));
-    return;
-  }
-  const fort = m.fortresses.find((f) => f.id === gvgFort);
-  if (fort) return gvgFortress(page, g, send, m, fort);
+  const bg = g.background || PANORAMA_SVG;
+  const fort = m && m.fortresses.find((f) => f.id === gvgFort);
+  if (fort) return gvgFortress(page, g, send, m, fort, bg);
+  if (gvgFort && gvgFort.startsWith("ally")) return gvgAllyFortress(page, g, gvgFort, bg);
   gvgFort = null;
-  const overlay = el("div", { class: "wm-overlay" },
-    el("div", { class: "wm-hud" }, guildCard(m.ours, "ours"), guildCard(m.enemy, "enemy")),
-    m.ends_in ? el("div", { class: "wm-timer" }, "La guerre se termine ", el("b", {}, m.ends_in)) : "",
-    ...m.fortresses.map((f) => {
-      const pct = f.total ? Math.round(100 * (f.left ?? 0) / f.total) : 0;
-      const beaten = f.players.filter((p) => p.beaten).length;
-      return el("button", { class: "wm-fort", style: `left:${f.x * 100}%;top:${f.y * 100}%;--pct:${pct}`, onclick: () => { gvgFort = f.id; gvgPlayer = null; gvgPage("map"); }, title: `Ouvrir ${f.name}` },
-        el("span", { class: "wm-ring" }, el("span", { class: "wm-core" }, el("span", { class: "wm-swords", "aria-hidden": "true" }, "⚔"), el("b", {}, ratioText([f.left ?? "?", f.total ?? "?"])))),
-        el("span", { class: "wm-fname" }, f.name),
-        el("span", { class: "wm-fsub" }, f.players.length ? `${f.players.length} joueurs${beaten ? ` · ${beaten} battu(s)` : ""}` : "capture à importer"));
-    }));
-  page.append(el("div", { class: "warmap" }, m.image ? el("img", { class: "wm-bg", src: "/gvgmap/" + m.image, alt: "" }) : el("div", { class: "wm-bg empty" }), overlay),
-    el("div", { class: "card" }, el("h3", {}, "Mettre à jour"),
-      el("p", { class: "note" }, `Carte du ${m.date} contre ${m.enemy.name || "la guilde adverse"}. Une nouvelle capture de la carte met à jour les compteurs ; pour une nouvelle guerre, les forteresses repartent à zéro.`),
-      captureZone("Nouvelle capture de l'écran principal de la guerre", "/gvg/map", () => gvgPage("map")),
-      el("button", { class: "danger", style: "margin-top:8px", onclick: () => confirm("Effacer la carte de la guerre et ses captures ?") && send("DELETE", "/map", null, () => gvgPage("map")) }, "Effacer la carte")));
+  const enemies = m ? m.fortresses.slice(0, 3) : [];
+  const allyNames = enemies.length ? enemies.map((f) => f.name) : g.settings.towers.slice(0, 3);
+  const defenders = (name) => g.members.filter((mb) => (mb.defense.tower || "").trim().toLowerCase() === name.trim().toLowerCase() && mb.defense.teams.some((t) => t.length));
+  const fortBtn = (side, i, label, sub, pct, open) => {
+    const [x, y] = CASTLES[side][i];
+    return el("button", { class: `wm-fort ${side}`, style: `left:${x * 100}%;top:${y * 100}%;--pct:${pct}`, onclick: open, title: label },
+      el("span", { class: "wm-ring" }, el("span", { class: "wm-core" }, el("span", { class: "wm-swords", "aria-hidden": "true" }, side === "ally" ? "🛡" : "⚔"))),
+      el("span", { class: "wm-plate" }, el("b", {}, shortFort(label)), el("small", {}, sub)));
+  };
+  const buttons = [
+    ...allyNames.map((name, i) => {
+      const n = defenders(name).length;
+      return fortBtn("ally", i, name, `${n} défenseur${n > 1 ? "s" : ""}`, Math.min(100, n * 10), () => { gvgFort = "ally" + i; gvgPage("map"); });
+    }),
+    ...enemies.map((f, i) => {
+      const pct = f.total ? Math.round(100 * (f.left ?? 0) / f.total) : 100;
+      return fortBtn("enemy", i, f.name, `${f.left ?? "?"}/${f.total ?? "?"}`, pct, () => { gvgFort = f.id; gvgPlayer = null; gvgPage("map"); });
+    }),
+  ];
+  const pano = el("div", { class: "wm-pano", style: `background-image:url("${bg}")` },
+    el("div", { class: "wm-tint" }),
+    el("div", { class: "wm-center" }, el("div", { class: "wm-vs" }, "VS"), m && m.ends_in ? el("div", { class: "wm-timer" }, "Fin de la guerre ", el("b", {}, m.ends_in)) : ""),
+    el("div", { class: "wm-side ally" }, m ? m.ours.name || "Notre guilde" : g.guild || "Notre guilde"),
+    el("div", { class: "wm-side enemy" }, m ? m.enemy.name || "Adversaire" : "Adversaire"),
+    ...buttons);
+  page.append(pano);
+  if (m) {
+    const ro = m.ours.ravage || 0, re = m.enemy.ravage || 0;
+    page.append(el("div", { class: "wm-guilds" }, guildCard(m.ours, "ours"),
+      el("div", { class: "wm-tug", title: "Ravage" }, el("div", { class: "wm-tug-label" }, "Ravage"),
+        el("div", { class: "wm-tug-bar" }, el("span", { class: "ours", style: `flex:${ro || 0.0001}` }, fmtN(ro)), el("span", { class: "enemy", style: `flex:${re || 0.0001}` }, fmtN(re)))),
+      guildCard(m.enemy, "enemy")));
+  }
+  page.append(el("div", { class: "card" }, el("h3", {}, m ? "Mettre à jour la guerre" : "Commencer une guerre"),
+    el("p", { class: "note" }, m ? `Données du ${m.date} contre ${m.enemy.name || "la guilde adverse"}. Une nouvelle capture de l'écran principal met à jour les compteurs (joueurs et défenses battues conservés pour la même guerre).`
+      : "Importez la capture de l'écran principal de la guerre (guildes et forteresses) : l'application en lit les informations, puis cliquez sur une forteresse adverse pour importer ses défenseurs. Les captures servent seulement à lire les données, elles ne sont pas affichées."),
+    captureZone("Capture de l'écran principal de la guerre — glissez-la ou cliquez", "/gvg/map", () => gvgPage("map")),
+    m ? el("button", { class: "danger", style: "margin-top:8px", onclick: () => confirm("Effacer les données de cette guerre ?") && send("DELETE", "/map", null, () => gvgPage("map")) }, "Effacer la guerre") : ""),
+    el("div", { class: "card" }, el("h3", {}, "Image de fond"),
+      el("p", { class: "note" }, "Choisissez une fois l'image de fond du panorama (par exemple celle de la guerre dans le jeu) : elle reste sur votre ordinateur. Sans image, un panorama dessiné est utilisé. Nos forteresses sont à gauche, celles de l'adversaire à droite."),
+      captureZone("Image de fond — glissez-la ou cliquez", "/gvg/background", () => gvgPage("map")),
+      g.background ? el("button", { class: "ghost", style: "margin-top:8px", onclick: () => send("DELETE", "/background", null, () => gvgPage("map")) }, "Revenir au panorama dessiné") : ""));
 }
-function gvgFortress(page, g, send, m, f) {
-  const total = (m.ours.ravage || 0) + (m.enemy.ravage || 0) || 1;
-  const head = el("div", { class: "card wm-fhead" },
-    el("button", { class: "ghost", onclick: () => { gvgFort = null; gvgPlayer = null; gvgPage("map"); } }, "← Carte"),
-    el("div", {}, el("h3", { style: "margin:0" }, f.name), el("div", { class: "note" }, `Défenses restantes : ${ratioText([f.left ?? "?", f.total ?? "?"])} · ${f.players.filter((p) => p.beaten).length} joueur(s) marqué(s) battu(s)`)),
-    el("div", { class: "wm-ravage", title: "Ravage" },
-      el("span", { class: "ours", style: `flex:${m.ours.ravage || 0}` }, m.ours.ravage ?? ""), el("span", { class: "enemy", style: `flex:${m.enemy.ravage || 0}` }, m.enemy.ravage ?? "")));
-  page.append(head);
+function fortressStage(bg, side, i, nodes) {
+  const [x] = CASTLES[side][i] || [0.5];
+  return el("div", { class: "wm-stage", style: `background-image:url("${bg}");background-position:${x * 100}% 30%` }, el("div", { class: "wm-stage-veil" }), ...nodes);
+}
+function gvgAllyFortress(page, g, key, bg) {
+  const i = Number(key.slice(4));
+  const m = g.map, enemies = m ? m.fortresses.slice(0, 3) : [];
+  const name = (enemies.length ? enemies.map((f) => f.name) : g.settings.towers)[i] || "Forteresse";
+  const members = g.members.filter((mb) => (mb.defense.tower || "").trim().toLowerCase() === name.trim().toLowerCase() && mb.defense.teams.some((t) => t.length));
+  page.append(el("div", { class: "card wm-fhead ally" },
+    el("button", { class: "ghost", onclick: () => { gvgFort = null; gvgPage("map"); } }, "← Panorama"),
+    el("div", {}, el("h3", { style: "margin:0" }, `🛡 ${name}`), el("div", { class: "note" }, `Notre forteresse · ${members.length} défenseur(s) placé(s) (onglet Défenses)`)),
+    el("button", { onclick: () => gvgPage("defense") }, "Organiser les défenses")));
+  const n = Math.max(members.length, 1);
+  const nodes = members.map((mb, k) => {
+    const ang = -Math.PI / 2 + (2 * Math.PI * k) / n, rx = members.length > 1 ? 0.32 : 0, ry = members.length > 1 ? 0.3 : 0;
+    return el("div", { class: "wm-node ally", style: `left:${(0.5 + rx * Math.cos(ang)) * 100}%;top:${(0.58 + ry * Math.sin(ang)) * 100}%` },
+      el("span", { class: "wm-avatar" }, el("span", { class: "wm-initial" }, mb.player.slice(0, 1).toUpperCase())),
+      el("span", { class: "wm-pname" }, mb.player),
+      el("span", { class: "wm-teams" }, ...mb.defense.teams.filter((t) => t.length).map((t) => teamRow(t, "xs", 0))));
+  });
+  page.append(members.length ? fortressStage(bg, "ally", i, nodes)
+    : el("div", { class: "empty" }, el("h2", {}, "Aucun défenseur"), el("p", {}, `Dans l'onglet Défenses, choisissez « ${name} » comme tour pour les membres qui y défendent.`)));
+}
+function gvgFortress(page, g, send, m, f, bg) {
+  const i = Math.max(0, m.fortresses.indexOf(f));
+  page.append(el("div", { class: "card wm-fhead" },
+    el("button", { class: "ghost", onclick: () => { gvgFort = null; gvgPlayer = null; gvgPage("map"); } }, "← Panorama"),
+    el("div", {}, el("h3", { style: "margin:0" }, `⚔ ${f.name}`), el("div", { class: "note" }, `Forteresse adverse · défenses restantes ${f.left ?? "?"}/${f.total ?? "?"} · ${f.players.filter((p) => p.beaten).length} joueur(s) battu(s)`)),
+    el("div", { class: "wm-tug-bar small", title: "Ravage" }, el("span", { class: "ours", style: `flex:${m.ours.ravage || 0.0001}` }, m.ours.ravage ?? ""), el("span", { class: "enemy", style: `flex:${m.enemy.ravage || 0.0001}` }, m.enemy.ravage ?? ""))));
   const side = el("div", { class: "card wm-player" });
   const drawPlayer = () => {
-    const i = gvgPlayer, p = f.players[i];
-    if (p == null) { side.replaceChildren(el("p", { class: "note" }, "Cliquez sur un joueur pour voir ses défenses relevées et tester vos équipes contre lui.")); return; }
+    const k = gvgPlayer, p = f.players[k];
+    if (p == null) { side.replaceChildren(el("h3", {}, "Joueur"), el("p", { class: "note" }, "Cliquez sur un joueur pour voir ses défenses relevées et tester vos équipes contre lui.")); return; }
     const name = el("input", { value: p.name, maxlength: "40", "aria-label": "Pseudo" });
-    name.addEventListener("change", () => send("PATCH", `/map/fortress/${f.id}/players/${i}`, { name: name.value }, () => gvgPage("map")));
+    name.addEventListener("change", () => send("PATCH", `/map/fortress/${f.id}/players/${k}`, { name: name.value }, () => gvgPage("map")));
     const beaten = el("input", { type: "checkbox", ...(p.beaten ? { checked: "" } : {}) });
-    beaten.addEventListener("change", () => send("PATCH", `/map/fortress/${f.id}/players/${i}`, { beaten: beaten.checked }, () => gvgPage("map")));
+    beaten.addEventListener("change", () => send("PATCH", `/map/fortress/${f.id}/players/${k}`, { beaten: beaten.checked }, () => gvgPage("map")));
     const mine = scoutedOf(g, p.name);
     side.replaceChildren(el("h3", {}, "Joueur"), el("div", { class: "filters" }, name, el("label", { class: "autosend" }, beaten, " Défense battue")),
       mine.length ? el("div", { class: "scout-grid" }, ...mine.map((sc) => el("div", { class: "scout-saved card" },
@@ -1504,23 +1581,22 @@ function gvgFortress(page, g, send, m, f) {
       el("button", { style: "margin-top:8px", onclick: () => { gvgScoutPlayer = p.name; gvgPage("scout"); } }, `Lire un écran de fin de combat contre ${p.name}`));
   };
   if (f.players.length) {
-    const nodes = el("div", { class: "wm-overlay" }, ...f.players.map((p, i) => {
+    const nodes = f.players.map((p, k) => {
       const sc = scoutedOf(g, p.name);
       const face = sc.length ? portrait(sc[0].heroes[0].name, { size: "md", stars: false }) : el("span", { class: "wm-initial" }, p.name.slice(0, 1).toUpperCase());
-      return el("button", { class: "wm-node" + (p.beaten ? " beaten" : "") + (i === gvgPlayer ? " selected" : ""), style: `left:${p.x * 100}%;top:${p.y * 100}%`,
-        onclick: () => { gvgPlayer = i; nodesEl.querySelectorAll(".wm-node").forEach((n, k) => n.classList.toggle("selected", k === i)); drawPlayer(); } },
+      return el("button", { class: "wm-node" + (p.beaten ? " beaten" : "") + (k === gvgPlayer ? " selected" : ""), style: `left:${p.x * 100}%;top:${p.y * 100}%`,
+        onclick: () => { gvgPlayer = k; stage.querySelectorAll(".wm-node").forEach((n, j) => n.classList.toggle("selected", j === k)); drawPlayer(); } },
         el("span", { class: "wm-avatar" }, face, sc.length ? el("span", { class: "wm-count" }, String(sc.length)) : "", p.beaten ? el("span", { class: "wm-check" }, "✓") : ""),
         el("span", { class: "wm-pname" }, p.name));
-    }));
-    const nodesEl = el("div", { class: "warmap fortress" }, f.image ? el("img", { class: "wm-bg", src: "/gvgmap/" + f.image, alt: "" }) : el("div", { class: "wm-bg empty" }), nodes);
-    page.append(el("div", { class: "wm-split" }, nodesEl, side));
+    });
+    const stage = fortressStage(bg, "enemy", i, nodes);
+    page.append(el("div", { class: "wm-split" }, stage, side));
     drawPlayer();
   }
   page.append(el("div", { class: "card" }, el("h3", {}, f.players.length ? "Mettre à jour les défenseurs" : "Importer les défenseurs"),
-    el("p", { class: "note" }, "Capture de la vue de cette forteresse (pseudos des joueurs en défense)."),
-    captureZone("Glissez ici la capture de la forteresse — ou cliquez pour la choisir", `/gvg/map/fortress?id=${f.id}`, () => gvgPage("map"))));
+    el("p", { class: "note" }, "Capture de la vue de cette forteresse dans le jeu : l'application lit les pseudos des défenseurs et leur place (la capture n'est pas affichée)."),
+    captureZone("Capture de la forteresse — glissez-la ou cliquez", `/gvg/map/fortress?id=${f.id}`, () => gvgPage("map"))));
 }
-
 // Relevés : capture de fin de combat → héros adverses reconnus (portraits) et leurs stats,
 // testés contre les équipes des membres avec ces stats réelles
 let gvgReport = null;
@@ -1798,7 +1874,7 @@ const fx = (() => {
   // ondulation au clic et halo qui suit la souris sur les cartes
   document.addEventListener("pointerdown", (e) => {
     const b = e.target.closest("button");
-    if (!b || b.disabled || !active()) return;
+    if (!b || b.disabled || !active() || b.matches(".wm-fort, .wm-node")) return;
     const r = b.getBoundingClientRect(), size = Math.max(r.width, r.height);
     const dot = el("span", { class: "ripple" });
     Object.assign(dot.style, { width: size + "px", height: size + "px", left: e.clientX - r.left - size / 2 + "px", top: e.clientY - r.top - size / 2 + "px" });

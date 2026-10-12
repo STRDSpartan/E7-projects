@@ -250,6 +250,9 @@ class GvgStore:
             "fortresses": fortresses,
             "image": image,
         }
+        names = [f["name"] for f in fortresses]
+        if names and data["settings"]["towers"] == DEFAULT_TOWERS:
+            data["settings"]["towers"] = names  # nos forteresses portent les mêmes noms
         opponent = _text(war_map["enemy"].get("name"))
         if opponent and not any(  # la guerre du jour apparaît aussi dans le suivi
             w["opponent"] == opponent and w["date"] == date.today().isoformat()

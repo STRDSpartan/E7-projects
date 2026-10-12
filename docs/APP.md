@@ -181,12 +181,18 @@ Onglet GvG → **Carte** (premier sous-onglet). À chaque guerre :
 2. capture de **chaque forteresse** (`POST /api/gvg/map/fortress[?id=fN]`) :
    `parse_fortress` lit les pseudos des défenseurs et leur position ; sans `id`, la forteresse
    est choisie d'après le nombre de joueurs (ex. 10 joueurs → « 10/10 »).
-L'interface reproduit l'écran du jeu : la capture (réduite, gardée seulement dans
-`<données>/gvg_map/`, servie par `/gvgmap/<fichier>`) sert de fond, avec par-dessus les
-panneaux des guildes, les forteresses cliquables (anneau de progression) puis, dans une
-forteresse, les joueurs à leur place. Un joueur : pseudo corrigeable, case « défense battue »
-(`PATCH /api/gvg/map/fortress/fN/players/<i>`), ses défenses relevées (Relevés, même pseudo)
-avec le test de vos équipes, et un raccourci pour lire un écran de fin de combat contre lui.
+Les captures servent seulement à **lire** les données : elles ne sont ni gardées ni affichées.
+L'interface montre un **panorama** : nos 3 forteresses à gauche (mêmes noms que celles de
+l'adversaire ; elles listent les membres placés sur cette tour dans l'onglet Défenses), celles de
+l'adversaire à droite (défenses restantes), un bouton nommé sur chaque château, le Ravage des
+deux guildes en dessous. Fond : image choisie une fois par le joueur (`POST`/`DELETE
+/api/gvg/background`, gardée dans `<données>/gvg_map/background.webp`, servie par
+`/gvgmap/background.webp`) ou panorama dessiné (SVG intégré) ; aucune image du jeu n'est livrée.
+Dans une forteresse adverse, les joueurs sont placés comme dans le jeu. Un joueur : pseudo
+corrigeable, case « défense battue » (`PATCH /api/gvg/map/fortress/fN/players/<i>`), ses
+défenses relevées (Relevés, même pseudo) avec le test de vos équipes, et un raccourci pour lire
+un écran de fin de combat contre lui. Les noms des forteresses remplacent les tours par défaut
+de l'onglet Défenses.
 Une nouvelle capture de carte de la même guerre garde joueurs et captures des forteresses ;
 `DELETE /api/gvg/map` efface tout.
 

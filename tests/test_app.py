@@ -834,19 +834,25 @@ def test_gvg_war_map_and_fortress_flow(app: Any) -> None:
     m = g["map"]
     assert m["enemy"]["name"] == "Omega" and [f["total"] for f in m["fortresses"]] == [10, 7, 6]
     assert g["wars"][0]["opponent"] == "Omega"  # la guerre du jour rejoint le suivi
-    with urllib.request.urlopen(base + "/gvgmap/" + m["image"]) as res:
-        assert res.headers["Content-Type"] == "image/webp"
+    assert m["image"] is None  # captures lues seulement, ni gardées ni affichées
     engine.name = "gvg_fortress_ocr.json"
     g = upload("/gvg/map/fortress")  # 10 joueurs : la forteresse « 10/10 », sans la désigner
     dard = g["map"]["fortresses"][0]
-    assert len(dard["players"]) == 10 and dard["image"]
+    assert len(dard["players"]) == 10 and dard["image"] is None
     call(base, "PATCH", "/api/gvg/map/fortress/f0/players/0", {"beaten": True, "name": "Zed"}, t)
     engine.name = "gvg_war_map_ocr.json"
     g = upload("/gvg/map")  # même guerre : joueurs et capture de forteresse conservés
     first = g["map"]["fortresses"][0]["players"][0]
     assert first["name"] == "Zed" and first["beaten"] and len(g["wars"]) == 1
-    images = list(state.war_images.glob("*.webp"))
-    assert len(images) == 2  # l'ancienne carte a été remplacée
+    assert g["settings"]["towers"][:3] == [f["name"] for f in g["map"]["fortresses"]]
+    req = urllib.request.Request(base + "/api/gvg/background", method="POST", data=shot)
+    req.add_header("X-E7-Token", t)
+    with urllib.request.urlopen(req) as res:
+        bg = json.loads(res.read())["background"]
+    with urllib.request.urlopen(base + bg) as res:  # image de fond servie localement
+        assert res.headers["Content-Type"] == "image/webp"
+    call(base, "DELETE", "/api/gvg/background", token=t)
+    assert call(base, "GET", "/api/gvg", token=t)["background"] is None
     call(base, "DELETE", "/api/gvg/map", token=t)
     assert call(base, "GET", "/api/gvg", token=t)["map"] is None
     assert not list(state.war_images.glob("*.webp"))
