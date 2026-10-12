@@ -16,8 +16,50 @@ LIFESTEAL_SET = 20  # % (sets.json : « Absorbs 20% of damage dealt as Health »
 COUNTER_SET_CHANCE = 30  # % (data/reference/sets.json : « 30% chance to counterattack »)
 
 
+# Héros adverse connu par son seul nom (défense ennemie en GvG) : stats types d'un héros équipé
+# pour le JcJ, selon sa classe (ordre de grandeur, signalé « estimé » dans le résultat)
+_STAT_KEYS = ("atk", "hp", "def", "spd", "cc", "cd", "eff", "res")
+ESTIMATED_STATS: dict[str, dict[str, float]] = {
+    role: dict(zip(_STAT_KEYS, values, strict=True))
+    for role, values in {
+        "warrior": (4000, 17000, 1000, 230, 70, 250, 0, 50),
+        "knight": (1800, 25000, 1800, 210, 15, 150, 50, 100),
+        "thief": (3800, 15000, 850, 260, 80, 260, 0, 50),
+        "ranger": (3800, 15500, 900, 240, 75, 250, 50, 50),
+        "mage": (3800, 14500, 850, 230, 70, 250, 80, 50),
+        "soul-weaver": (1500, 20000, 1300, 250, 15, 150, 150, 150),
+    }.items()
+}
+
+
 class SimError(ValueError):
     pass
+
+
+def estimated_fighter(name: str) -> Fighter:
+    """Combattant adverse aux stats types de sa classe (compétences réelles du héros)."""
+    from e7showcase.reference import hero_info
+
+    info = hero_info(name) or {}
+    data = skills_of(name) or {}
+    if not data:
+        raise SimError(f"héros inconnu ou non simulable : {name}")
+    role = str(data.get("class") or info.get("role") or "warrior")
+    s = ESTIMATED_STATS.get(role, ESTIMATED_STATS["warrior"])
+    return Fighter(
+        name=f"{info.get('fr') or info.get('en') or name} (estimé)",
+        atk=s["atk"],
+        hp=s["hp"],
+        defense=s["def"],
+        spd=s["spd"],
+        crit_chance=s["cc"],
+        crit_dmg=s["cd"],
+        element=data.get("element") or info.get("element"),
+        skills=data.get("skills", {}),
+        effectiveness=s["eff"],
+        effect_res=s["res"],
+        role=role,
+    )
 
 
 def fighter(hero: Hero) -> Fighter:
@@ -132,7 +174,12 @@ def battle(store: ProfileStore, body: dict[str, Any]) -> dict[str, Any]:
         refs = body.get(key)
         if not isinstance(refs, list) or not 1 <= len(refs) <= MAX_TEAM:
             raise SimError(f"chaque équipe compte de 1 à {MAX_TEAM} héros")
-        team = [fighter(_hero(store, r)) for r in refs]
+        team = [
+            estimated_fighter(str(r.get("name", ""))[:40])
+            if isinstance(r, dict) and r.get("estimate")
+            else fighter(_hero(store, r))
+            for r in refs
+        ]
         if missing := [f.name for f in team if not f.skills]:
             raise SimError("multiplicateurs inconnus pour " + ", ".join(missing))
         teams.append(team)

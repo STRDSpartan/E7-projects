@@ -113,6 +113,9 @@ table.gvg input { width:100%; min-width:0; background:var(--panel-2); color:var(
 .note[role="status"]:empty { display:none; }
 .wide { display:grid; grid-template-columns:repeat(auto-fit, minmax(380px, 1fr)); gap:12px; }
 .page .card > input[type="search"] { width:100%; }
+.simbox > select { background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:6px; font:inherit; }
+.simbox { display:grid; gap:8px; margin-top:10px; justify-items:start; } .simbox > div { width:100%; }
+.simbox .wins { margin-top:4px; }
 .stat-tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; }
 .tile { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 14px; }
 .tile b { display:block; font-size:22px; color:var(--gold); font-variant-numeric:tabular-nums; } .tile span { font-size:12px; color:var(--muted); }
@@ -547,6 +550,33 @@ async function guildPage() {
         : el("div", { class: "empty" }, "Aucun membre pour l'instant : ajoutez votre profil et les vitrines de vos coéquipiers.")));
 }
 
+// Test d'équipe dans le simulateur de combat : héros des profils (ref « profil/héros ») contre
+// héros adverses connus par leur nom (stats types de leur classe, « estimés »)
+const asEnemy = (names) => names.map((n) => n.trim()).filter(Boolean).map((name) => ({ name, estimate: true }));
+const asRefs = (member, names) => names.filter(Boolean).map((n) => `${member}/${n}`);
+function simBox(label, build) {
+  const out = el("div", {});
+  const run = async () => {
+    let teams;
+    try { teams = build(); } catch (e) { out.replaceChildren(el("p", { class: "note", style: "color:var(--danger)" }, e.message)); return; }
+    if (!teams.a.length || !teams.b.length) { out.replaceChildren(el("p", { class: "note", style: "color:var(--danger)" }, "Renseignez les deux équipes.")); return; }
+    out.replaceChildren(el("p", { class: "note" }, "Simulation de 500 combats…"));
+    try {
+      const r = await json("POST", "/sim/battle", { team_a: teams.a, team_b: teams.b, runs: 500 });
+      const [wa, wb] = r.win_rate;
+      const log = el("div", { class: "log", hidden: "" }, r.sample.log.join("\n") || "—");
+      out.replaceChildren(el("div", { class: "simres" },
+        el("div", { class: "wins" }, el("div", { style: `width:${wa}%;background:#2f6fb3` }, wa >= 10 ? `${teams.labels[0]} ${wa} %` : ""),
+          el("div", { style: `width:${r.draws}%;background:#555` }, r.draws >= 10 ? `Nul ${r.draws} %` : ""),
+          el("div", { style: `width:${wb}%;background:#b33f3f` }, wb >= 10 ? `${teams.labels[1]} ${wb} %` : "")),
+        el("p", { class: "note" }, `${r.teams[0].join(", ")} : ${wa} % de victoires contre ${r.teams[1].join(", ")} (${wb} %, nuls ${r.draws} %) sur ${r.runs} combats.`
+          + (r.teams.flat().some((n) => n.endsWith("(estimé)")) ? " Héros « estimés » : stats types de leur classe, leurs vraies stats sont inconnues." : "")),
+        el("button", { class: "ghost", style: "padding:3px 10px;font-size:12px", onclick: () => { log.hidden = !log.hidden; } }, "Déroulé d'un combat type"), log));
+    } catch (e) { out.replaceChildren(el("p", { class: "note", style: "color:var(--danger)" }, e.message)); }
+  };
+  return el("div", { class: "simbox" }, el("button", { class: "ghost", onclick: run }, "⚔ " + label), out);
+}
+
 // --- GvG : défenses des membres, suivi des guerres, contres connus (stockage local gvg.json)
 let gvgSub = "defense", gvgWar = null;
 async function gvgPage(sub = gvgSub) {
@@ -594,6 +624,19 @@ function gvgDefense(page, g, send) {
     return { row, teams };
   });
   counts();
+  const names = el("datalist", { id: "gvg-heroes" }, ...g.hero_names.map((n) => el("option", { value: n })));
+  const who = el("select", { "aria-label": "Défense testée" }, ...g.members.flatMap((m, mi) => [0, 1].map((ti) =>
+    el("option", { value: `${mi}:${ti}` }, `${m.player} — équipe ${ti + 1}`))));
+  const attackers = [0, 1, 2].map((i) => el("input", { list: "gvg-heroes", placeholder: `Attaquant ennemi ${i + 1}`, maxlength: "40" }));
+  const defenseTest = el("div", { class: "card" }, el("h3", {}, "Tester une défense"), names,
+    el("p", { class: "note" }, "Simule une attaque ennemie supposée (héros aux stats types de leur classe) contre une équipe de défense telle qu'elle est choisie ci-dessus."),
+    el("div", { class: "wide" }, field("Défense", who), field("Attaque ennemie", el("div", { class: "team" }, ...attackers))),
+    simBox("Simuler", () => {
+      const [mi, ti] = who.value.split(":").map(Number);
+      const picks = rows[mi].teams[ti].map((s) => s.value).filter(Boolean);
+      if (!picks.length) throw new Error("Cette équipe de défense est vide.");
+      return { a: asEnemy(attackers.map((i) => i.value)), b: asRefs(g.members[mi].id, picks), labels: ["Attaque", "Défense"] };
+    }));
   page.append(
     el("div", { class: "stat-tiles" },
       el("div", { class: "tile" }, tileMembers, el("span", {}, "membres avec une défense")),
@@ -603,7 +646,7 @@ function gvgDefense(page, g, send) {
       towerList,
       el("div", { style: "overflow:auto" }, el("table", { class: "members gvg" },
         el("thead", {}, el("tr", {}, ...["Membre", "Tour", "Équipe 1", "Équipe 2"].map((t) => el("th", {}, t)))), el("tbody", {}, ...rows.map((r) => r.row))))),
-    gvgSettings(g, send));
+    defenseTest, gvgSettings(g, send));
 }
 function gvgSettings(g, send) {
   const per = el("input", { type: "number", min: "1", max: "10", value: g.settings.attacks_per_member });
@@ -646,12 +689,14 @@ function gvgWars(page, g, send) {
   const add = el("button", { onclick: () => send("POST", `/wars/${war.id}/attacks`, {
     member: member.value, team: team.map((s) => s.value).filter(Boolean), enemy_team: enemy.map((i) => i.value),
     enemy_player: enemyPlayer.value, tower: tower.value, result: result.value, note: note.value }, () => gvgPage("wars")) }, "Enregistrer l'attaque");
+  const test = simBox("Tester cette attaque dans le simulateur", () => ({
+    a: asRefs(member.value, team.map((s) => s.value)), b: asEnemy(enemy.map((i) => i.value)), labels: ["Attaque", "Défense"] }));
   page.append(el("div", { class: "card" }, el("h3", {}, "Ajouter une attaque"), names,
     el("datalist", { id: "gvg-towers" }, ...g.settings.towers.map((t) => el("option", { value: t }))),
     el("div", { class: "wide" }, field("Attaquant", member), field("Équipe utilisée", teamBox),
       field("Défense ennemie", el("div", { class: "team" }, ...enemy)), field("Joueur et tour adverses", el("div", { class: "team" }, enemyPlayer, tower, el("span"))),
       field("Résultat", result), field("Note", note)),
-    el("div", { style: "margin-top:12px" }, add)));
+    el("div", { style: "margin-top:12px" }, add), test));
   // attaques et suivi des membres
   const rows = war.attacks.slice().reverse().map((a) => el("tr", {},
     el("td", {}, a.player), el("td", {}, a.team.join(", ")),
@@ -667,6 +712,15 @@ function gvgWars(page, g, send) {
       el("div", { class: "chips" }, ...g.members.map((m) => el("span", { class: "chip", style: `padding-left:10px;${war.remaining[m.id] ? "" : "opacity:.55"}` },
         `${m.player} : ${war.remaining[m.id]}/${g.settings.attacks_per_member}`)))));
 }
+function counterTest(g, c) {
+  const member = el("select", { "aria-label": "Membre" }, ...g.members.map((m) => el("option", { value: m.id }, m.player)));
+  const box = el("div", { class: "team" });
+  let picks = [];
+  const fill = () => { const m = g.members.find((x) => x.id === member.value); picks = [0, 1, 2].map((i) => heroSelect(m.heroes, "", `Héros ${i + 1}`)); box.replaceChildren(...picks); };
+  member.addEventListener("change", fill); fill();
+  return el("div", { class: "simbox" }, el("div", { class: "note" }, "Tester une équipe contre cette défense :"), member, box,
+    simBox("Simuler", () => ({ a: asRefs(member.value, picks.map((s) => s.value)), b: asEnemy(c.enemy_team), labels: ["Attaque", "Défense"] })));
+}
 function gvgCounters(page, g) {
   if (!g.counters.length) { page.append(el("div", { class: "empty" }, "Les contres apparaissent ici dès que des attaques avec une défense ennemie renseignée sont enregistrées.")); return; }
   const q = el("input", { type: "search", placeholder: "Rechercher un héros ennemi…", "aria-label": "Recherche" });
@@ -678,7 +732,8 @@ function gvgCounters(page, g) {
       el("p", { class: "note" }, `${c.wins} victoire(s), ${c.losses} défaite(s) contre cette défense`),
       el("table", { class: "res" }, el("thead", {}, el("tr", {}, el("th", {}, "Équipe"), el("th", {}, "V"), el("th", {}, "D"))),
         el("tbody", {}, ...c.teams.map((t) => el("tr", {}, el("td", {}, t.team.join(", ")),
-          el("td", { class: "exp" }, t.wins), el("td", { style: "color:var(--danger)" }, t.losses))))))));
+          el("td", { class: "exp" }, t.wins), el("td", { style: "color:var(--danger)" }, t.losses))))),
+      counterTest(g, c))));
   };
   q.addEventListener("input", draw);
   page.append(el("div", { class: "card" }, q), list);

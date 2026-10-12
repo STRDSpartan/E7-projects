@@ -82,6 +82,12 @@ def test_service_damage_and_battle(store: tuple[ProfileStore, str]) -> None:
             damage(st, bad)
     with pytest.raises(SimError):
         battle(st, {"team_a": [], "team_b": [f"{pid}/Kise"]})
+    # GvG : défense ennemie connue par les noms seuls → stats types de la classe (« estimé »)
+    enemy = [{"name": "Lua", "estimate": True}, {"name": "Vildred arbitre", "estimate": True}]
+    gvg = battle(st, {"team_a": [f"{pid}/Kise"], "team_b": enemy, "runs": 20})
+    assert gvg["teams"][1] == ["Lua (estimé)", "Vildred arbitre (estimé)"]
+    with pytest.raises(SimError):
+        battle(st, {"team_a": [f"{pid}/Kise"], "team_b": [{"name": "Personne", "estimate": True}]})
 
 
 def test_sim_api_requires_token(tmp_path: Path) -> None:

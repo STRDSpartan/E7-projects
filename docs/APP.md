@@ -43,6 +43,11 @@ la même application sur son ordinateur.
     victoire et attaques restantes par membre (nombre d'attaques par guerre réglable) ;
   - *Contres* : pour chaque défense ennemie rencontrée, les équipes qui l'ont battue ou non,
     cumulées sur toutes les guerres, avec recherche par héros.
+  - *Tests dans le simulateur de combat* (500 combats) : une attaque saisie contre la défense
+    ennemie notée, une équipe d'un membre contre une défense de l'onglet Contres, ou une défense
+    de la guilde contre une attaque ennemie supposée. Les héros adverses, connus par leur seul
+    nom, prennent les stats types d'un héros équipé pour le JcJ selon leur classe (signalés
+    « estimé » ; `simulator.ESTIMATED_STATS`) ; les héros de la guilde gardent leurs vraies stats.
 
 ## Architecture (`src/e7showcase/app/`)
 | Fichier | Rôle |
