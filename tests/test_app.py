@@ -394,6 +394,8 @@ def test_gvg_plan_sent_to_discord_webhook(app: Any) -> None:
     assert err.value.code == 502
     exported = call(base, "GET", f"/api/profiles/{pid}/export", token=t)
     assert b"webhooks" not in exported  # l'adresse ne voyage jamais dans une vitrine
+    status = call(base, "PUT", "/api/gvg/webhook", {"auto": True}, t)
+    assert status["auto"] and status["last_error"] is None
     assert call(base, "PUT", "/api/gvg/webhook", {"url": ""}, t)["configured"] is False
 
 
@@ -412,9 +414,67 @@ def test_post_messages_respects_rate_limit(monkeypatch: pytest.MonkeyPatch) -> N
 
     monkeypatch.setattr(webhook.time, "sleep", lambda _s: None)
     sent = webhook.post_messages(HOOK, ["un", "deux"], transport=httpx.MockTransport(discord))
-    assert sent == 2 and calls == ["un", "deux", "deux"]
+    assert len(sent) == 2 and calls == ["un", "deux", "deux"]
     assert webhook.mask_webhook(HOOK).startswith("webhook 1234…5678")
     for bad in ("http://discord.com/api/webhooks/123456789/" + "a" * 30, "https://discord.com/x"):
         assert not webhook.valid_webhook(bad)
     with pytest.raises(ValueError):
         webhook.post_messages("https://evil.example", ["x"])
+
+
+def test_sync_messages_edits_reposts_and_deletes() -> None:
+    import httpx
+
+    from e7showcase.publish.webhook import sync_messages
+
+    seen: list[tuple[str, str]] = []
+
+    def discord(request: httpx.Request) -> httpx.Response:
+        seen.append((request.method, request.url.path.rsplit("/", 1)[-1]))
+        if request.method == "PATCH" and request.url.path.endswith("/11111"):
+            return httpx.Response(404)  # message supprimé à la main dans Discord
+        if request.method == "POST":
+            return httpx.Response(200, json={"id": "99999"})
+        return httpx.Response(200 if request.method == "PATCH" else 204, json={})
+
+    ids = sync_messages(HOOK, ["a", "b"], ["10000", "11111", "12222"],
+                        transport=httpx.MockTransport(discord))  # fmt: skip
+    assert ids == ["10000", "99999"]
+    assert seen == [("PATCH", "10000"), ("PATCH", "11111"), ("POST", "a" * 68),
+                    ("DELETE", "12222")]  # fmt: skip
+
+
+def test_auto_publish_groups_changes_and_updates_message(tmp_path: Path) -> None:
+    import httpx
+
+    from e7showcase.app.discord_settings import DiscordSettings, PlanPublisher
+
+    calls: list[str] = []
+
+    def discord(request: httpx.Request) -> httpx.Response:
+        calls.append(request.method)
+        return httpx.Response(200, json={"id": "55555"})
+
+    settings = DiscordSettings(tmp_path / "discord.json")
+    plan = ["plan v1"]
+    pub = PlanPublisher(settings, lambda: plan, lambda: httpx.MockTransport(discord), delay=0.05)
+    pub.changed()  # pas de webhook / auto désactivé : rien
+    time.sleep(0.15)
+    assert calls == []
+    settings.set_webhook(HOOK)
+    settings.update(auto=True)
+    for _ in range(5):  # cinq modifications rapprochées → une seule publication
+        pub.changed()
+    time.sleep(0.3)
+    assert calls == ["POST"] and settings.message_ids() == ["55555"]
+    plan[0] = "plan v2"
+    pub.changed()
+    time.sleep(0.3)
+    assert calls == ["POST", "PATCH"]  # le message publié est modifié, pas reposté
+    assert settings.status()["last_sent"] and not settings.status()["last_error"]
+    pub.delay = 60
+    pub.changed()
+    pub.flush_pending()  # fermeture de l'application : publication immédiate
+    assert calls == ["POST", "PATCH", "PATCH"]
+    settings.set_webhook(HOOK.replace("1234", "4321"))  # autre salon : on repart de zéro
+    assert settings.message_ids() == []

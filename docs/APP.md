@@ -52,6 +52,12 @@ la même application sur son ordinateur.
     mention déclenchée, limite de débit respectée). L'adresse du webhook, qui donne le droit
     d'écrire dans le salon, est validée (domaines Discord seulement), rangée dans
     `<données>/discord.json`, jamais renvoyée en clair à l'interface ni exportée dans un `.e7v` ;
+  - *Mise à jour automatique* (case à cocher) : à chaque modification du plan (défenses, tours,
+    nom ou membres de la guilde), le plan publié est **modifié dans Discord** 20 s après la
+    dernière modification (les changements rapprochés sont regroupés), sans nouveau message ;
+    un message supprimé à la main est republié, les messages en trop sont effacés. Une mise à
+    jour en attente part à la fermeture de l'application ; la dernière publication (ou son
+    erreur) est affichée ;
   - *Tests dans le simulateur de combat* (500 combats) : une attaque saisie contre la défense
     ennemie notée, une équipe d'un membre contre une défense de l'onglet Contres, ou une défense
     de la guilde contre une attaque ennemie supposée. Les héros adverses, connus par leur seul

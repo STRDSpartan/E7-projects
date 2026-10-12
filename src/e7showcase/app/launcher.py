@@ -127,6 +127,7 @@ def main(argv: list[str] | None = None) -> int:
             "https://go.microsoft.com/fwlink/p/?LinkId=2124703 puis relancez l'application."
         )
         return 1
+    state.publisher.flush_pending()  # plan GvG modifié juste avant la fermeture : publié
     _quit(server)
     return 0
 

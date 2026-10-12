@@ -66,6 +66,23 @@ def mask_webhook(url: str) -> str:
     return f"webhook {m[1][:4]}…{m[1][-4:]} (jeton masqué)" if m else ""
 
 
+def _call(client: httpx.Client, method: str, url: str, **kw: object) -> httpx.Response:
+    """Requête vers Discord ; une limite de débit (429) est respectée une fois."""
+    r = client.request(method, url, **kw)  # type: ignore[arg-type]
+    if r.status_code == 429:
+        try:
+            wait = float(r.json().get("retry_after", 1))
+        except ValueError:
+            wait = 1.0
+        time.sleep(min(max(wait, 0.0), MAX_RETRY_WAIT))
+        r = client.request(method, url, **kw)  # type: ignore[arg-type]
+    return r
+
+
+def _payload(text: str, username: str) -> dict[str, object]:
+    return {"username": username, "content": text[:2000], "allowed_mentions": {"parse": []}}
+
+
 def post_messages(
     webhook_url: str,
     messages: list[str],
@@ -73,30 +90,70 @@ def post_messages(
     username: str = "E7 Showcase",
     timeout: float = 30,
     transport: httpx.BaseTransport | None = None,
-) -> int:
-    """Envoie des messages texte (≤ 2 000 caractères chacun), dans l'ordre ; renvoie leur nombre.
+) -> list[str]:
+    """Publie des messages texte (≤ 2 000 caractères chacun), dans l'ordre ; renvoie leurs id.
 
-    Aucune mention n'est déclenchée (@everyone, rôles, membres) ; une limite de débit (429)
-    est respectée une fois en attendant le délai demandé par Discord.
+    Aucune mention n'est déclenchée (@everyone, rôles, membres).
     """
     if not valid_webhook(webhook_url):
         raise ValueError("adresse de webhook Discord invalide")
-    sent = 0
+    url = webhook_url.strip()
+    ids: list[str] = []
     with httpx.Client(timeout=timeout, transport=transport) as client:
         for text in messages:
-            payload = {
-                "username": username,
-                "content": text[:2000],
-                "allowed_mentions": {"parse": []},
-            }
-            r = client.post(webhook_url.strip(), json=payload)
-            if r.status_code == 429:
-                try:
-                    wait = float(r.json().get("retry_after", 1))
-                except ValueError:
-                    wait = 1.0
-                time.sleep(min(max(wait, 0.0), MAX_RETRY_WAIT))
-                r = client.post(webhook_url.strip(), json=payload)
+            r = _call(client, "POST", url, params={"wait": "true"}, json=_payload(text, username))
             r.raise_for_status()
-            sent += 1
-    return sent
+            ids.append(_message_id(r))
+    return ids
+
+
+def sync_messages(
+    webhook_url: str,
+    messages: list[str],
+    previous: list[str],
+    *,
+    username: str = "E7 Showcase",
+    timeout: float = 30,
+    transport: httpx.BaseTransport | None = None,
+) -> list[str]:
+    """Met à jour les messages déjà publiés par ce webhook au lieu d'en poster de nouveaux.
+
+    Un message existant est modifié ; s'il a été supprimé dans Discord (404), il est republié ;
+    les messages en trop sont supprimés. Renvoie les id des messages à jour.
+    """
+    if not valid_webhook(webhook_url):
+        raise ValueError("adresse de webhook Discord invalide")
+    url = webhook_url.strip()
+    ids: list[str] = []
+    with httpx.Client(timeout=timeout, transport=transport) as client:
+        for i, text in enumerate(messages):
+            body = _payload(text, username)
+            old = (
+                previous[i]
+                if i < len(previous) and re.fullmatch(r"\d{5,30}", previous[i])
+                else None
+            )
+            if old:
+                edit = {k: body[k] for k in ("content", "allowed_mentions")}
+                r = _call(client, "PATCH", f"{url}/messages/{old}", json=edit)
+                if r.status_code != 404:
+                    r.raise_for_status()
+                    ids.append(old)
+                    continue
+            r = _call(client, "POST", url, params={"wait": "true"}, json=body)
+            r.raise_for_status()
+            ids.append(_message_id(r))
+        for old in previous[len(messages) :]:
+            if re.fullmatch(r"\d{5,30}", old):
+                r = _call(client, "DELETE", f"{url}/messages/{old}")
+                if r.status_code not in (204, 404):
+                    r.raise_for_status()
+    return ids
+
+
+def _message_id(response: httpx.Response) -> str:
+    try:
+        value = str(response.json().get("id", ""))
+    except ValueError:
+        return ""
+    return value if re.fullmatch(r"\d{5,30}", value) else ""

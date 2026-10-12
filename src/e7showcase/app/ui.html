@@ -114,6 +114,8 @@ table.gvg input { width:100%; min-width:0; background:var(--panel-2); color:var(
 .wide { display:grid; grid-template-columns:repeat(auto-fit, minmax(380px, 1fr)); gap:12px; }
 .page .card > input[type="search"] { width:100%; }
 .simbox > select { background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:6px; font:inherit; }
+.autosend { display:flex; gap:8px; align-items:flex-start; font-size:13px; }
+.autosend input { margin-top:3px; flex:none; }
 .simbox { display:grid; gap:8px; margin-top:10px; justify-items:start; } .simbox > div { width:100%; }
 .simbox .wins { margin-top:4px; }
 .stat-tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; }
@@ -696,10 +698,21 @@ function planCard() {
       finally { sendBtn.disabled = false; }
     } }, "Envoyer sur Discord");
     if (!st.configured) sendBtn.disabled = true;
+    const auto = el("input", { type: "checkbox" });
+    auto.checked = st.auto; auto.disabled = !st.configured;
+    auto.addEventListener("change", async () => {
+      try { await json("PUT", "/gvg/webhook", { auto: auto.checked }); say(auto.checked ? "Mise à jour automatique activée." : "Mise à jour automatique désactivée.", true); drawHook(); }
+      catch (e) { say(e.message, false); }
+    });
+    const state = el("div", { class: "note" }, st.last_error ? `⚠ Dernière publication automatique : ${st.last_error}`
+      : st.last_sent ? `Dernière publication : ${st.last_sent}` : "Aucune publication pour l'instant.");
+    if (st.last_error) state.style.color = "var(--danger)";
     hook.replaceChildren(
       el("div", { class: "note" }, st.configured ? `Salon configuré : ${st.hint}. Collez une autre adresse pour la remplacer, ou enregistrez un champ vide pour la retirer.`
         : "Webhook Discord du salon de la guilde : Paramètres du salon → Intégrations → Webhooks → Nouveau webhook → Copier l'URL."),
-      el("div", { class: "filters", style: "width:100%" }, url, saveHook, sendBtn), msg);
+      el("div", { class: "filters", style: "width:100%" }, url, saveHook, sendBtn),
+      el("label", { class: "autosend" }, auto, " Mettre à jour automatiquement le plan publié à chaque modification (défenses, tours, membres) — le message Discord est modifié, sans nouveau message, 20 s après la dernière modification"),
+      state, msg);
   };
   drawHook().catch((e) => say(e.message, false));
   return el("div", { class: "card" }, el("h3", {}, "Exporter le plan de défense"),

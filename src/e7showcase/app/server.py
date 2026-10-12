@@ -22,7 +22,7 @@ from urllib.parse import unquote, urlparse
 
 from e7showcase import __version__
 from e7showcase.app.armory import armory
-from e7showcase.app.discord_settings import DiscordSettings
+from e7showcase.app.discord_settings import DiscordSettings, PlanPublisher
 from e7showcase.app.guild import GuildStore
 from e7showcase.app.gvg import GvgError, GvgStore, defense_plan
 from e7showcase.app.importer import ScreenshotImporter
@@ -59,6 +59,11 @@ class AppState:
         self.gvg = GvgStore(data_root / "gvg.json", self.store, self.guild)
         self.discord = DiscordSettings(data_root / "discord.json")
         self.webhook_transport: Any = None  # tests : transport httpx simulé
+        self.publisher = PlanPublisher(
+            self.discord,
+            lambda: defense_plan(self.gvg.summary())["messages"],
+            lambda: self.webhook_transport,
+        )
         self.importer = importer or ScreenshotImporter(data_root / "templates" / "sets")
         self.token = secrets.token_urlsafe(24)
         self.lock = threading.Lock()  # un import OCR à la fois
@@ -224,6 +229,7 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                         name=str(body["name"]) if "name" in body else None,
                         members=[str(m) for m in members] if isinstance(members, list) else None,
                     )
+                    state.publisher.changed()  # nom ou membres : le plan publié change aussi
                     return self._json(state.guild.summary())
             if (j := re.fullmatch(r"/jobs/([0-9a-f]+)", path)) and method == "GET":
                 job = state.jobs.get(j[1])
@@ -292,21 +298,14 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             """Publie le plan de défense dans le salon Discord du webhook enregistré."""
             import httpx
 
-            from e7showcase.publish.webhook import post_messages
+            from e7showcase.app.discord_settings import _describe
 
-            url = state.discord.webhook()
-            if not url:
+            if not state.discord.webhook():
                 raise ApiError(400, "aucun webhook Discord enregistré")
-            messages = defense_plan(state.gvg.summary())["messages"]
             try:
-                sent = post_messages(url, messages, transport=state.webhook_transport)
-            except httpx.HTTPStatusError as exc:
-                code = exc.response.status_code
-                hint = " (webhook supprimé ?)" if code in (401, 404) else ""
-                raise ApiError(502, f"Discord a refusé l'envoi : erreur {code}{hint}") from exc
+                return {"sent": state.publisher.send_now()}
             except httpx.HTTPError as exc:
-                raise ApiError(502, "Discord injoignable : vérifiez la connexion") from exc
-            return {"sent": sent}
+                raise ApiError(502, _describe(exc)) from exc
 
         def _gvg(self, method: str, rest: str) -> None:
             gvg = state.gvg
@@ -318,14 +317,22 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 if rest == "/webhook" and method == "GET":
                     return self._json(state.discord.status())
                 if rest == "/webhook" and method == "PUT":
-                    state.discord.set_webhook(str(self._body().get("url", ""))[:300])
+                    body = self._body()
+                    if "url" in body:
+                        state.discord.set_webhook(str(body.get("url", ""))[:300])
+                    if "auto" in body:
+                        state.discord.update(auto=bool(body["auto"]))
+                        if not body["auto"]:
+                            state.publisher.cancel()
                     return self._json(state.discord.status())
                 if rest == "/plan/send" and method == "POST":
                     return self._json(self._send_plan())
                 if rest == "/settings" and method == "PATCH":
                     gvg.update_settings(self._body())
+                    state.publisher.changed()
                 elif (d := re.fullmatch(r"/defense/([a-z0-9-]+)", rest)) and method == "PUT":
                     gvg.set_defense(d[1], self._body())
+                    state.publisher.changed()  # plan modifié : republication automatique
                 elif rest == "/wars" and method == "POST":
                     gvg.add_war(self._body())
                 elif (w := re.fullmatch(r"/wars/([0-9a-f]{1,16})", rest)) and method == "DELETE":
