@@ -61,34 +61,76 @@ class DiscordSettings:
                 "(Paramètres du salon → Intégrations → Webhooks)"
             )
         # nouveau salon : les messages publiés par l'ancien webhook ne sont plus modifiables
-        self.update(gvg_webhook=url, message_ids=[], last_error=None)
+        self.update(gvg_webhook=url, message_ids=[], publications={})
 
-    def auto(self) -> bool:
-        return bool(self._read().get("auto")) and bool(self.webhook())
+    def auto(self, kind: str = "plan") -> bool:
+        """Mise à jour automatique activée : `plan` (défenses) ou `wars` (suivi des guerres)."""
+        flag = "auto" if kind == "plan" else "auto_wars"
+        return bool(self._read().get(flag)) and bool(self.webhook())
 
-    def message_ids(self) -> list[str]:
-        ids = self._read().get("message_ids", [])
+    def publications(self) -> dict[str, dict[str, Any]]:
+        pubs = self._read().get("publications", {})
+        return pubs if isinstance(pubs, dict) else {}
+
+    def message_ids(self, key: str = "plan") -> list[str]:
+        """Messages Discord d'une publication (`plan`, `war:<id>`), modifiés aux mises à jour."""
+        data = self._read()
+        pub = self.publications().get(key, {})
+        ids = pub.get("ids") if isinstance(pub, dict) else None
+        if ids is None and key == "plan":
+            ids = data.get("message_ids", [])  # ancien emplacement (v0.25.0)
         return [str(i) for i in ids if isinstance(i, str | int)] if isinstance(ids, list) else []
+
+    def record(self, key: str, *, ids: list[str] | None = None, error: str | None = None) -> None:
+        pubs = self.publications()
+        pub = dict(pubs.get(key, {}))
+        if ids is not None:
+            pub.update(ids=ids, last_sent=_now(), last_error=None)
+        else:
+            pub["last_error"] = error
+        pubs[key] = pub
+        self.update(publications=pubs)
+
+    def forget(self, key: str) -> None:
+        pubs = self.publications()
+        pubs.pop(key, None)
+        self.update(publications=pubs)
 
     def status(self) -> dict[str, object]:
         data, url = self._read(), self.webhook()
+        plan = self.publications().get("plan", {})
         return {
             "configured": bool(url),
             "hint": mask_webhook(url),
             "auto": bool(data.get("auto")),
+            "auto_wars": bool(data.get("auto_wars")),
             "published": bool(self.message_ids()),
-            "last_sent": data.get("last_sent"),
-            "last_error": data.get("last_error"),
+            "last_sent": plan.get("last_sent") or data.get("last_sent"),
+            "last_error": plan.get("last_error"),
+            "wars": {
+                k.split(":", 1)[1]: {
+                    "published": bool(v.get("ids")),
+                    "last_sent": v.get("last_sent"),
+                    "last_error": v.get("last_error"),
+                }
+                for k, v in self.publications().items()
+                if k.startswith("war:") and isinstance(v, dict)
+            },
         }
 
 
-class PlanPublisher:
-    """Publie le plan de défense : à la demande, ou automatiquement après les modifications."""
+class Publisher:
+    """Publications Discord tenues à jour : plan de défense (`plan`) et guerres (`war:<id>`).
+
+    À la demande, de nouveaux messages sont postés ; ensuite, quand la mise à jour automatique
+    est activée, chaque modification relance (après `delay` secondes sans autre modification)
+    la mise à jour des messages déjà publiés.
+    """
 
     def __init__(
         self,
         settings: DiscordSettings,
-        messages: Callable[[], list[str]],
+        messages: Callable[[str], list[str] | None],
         transport: Callable[[], Any] = lambda: None,
         delay: float = AUTO_DELAY,
     ):
@@ -98,56 +140,67 @@ class PlanPublisher:
             transport,
             delay,
         )
-        self._timer: threading.Timer | None = None
+        self._timers: dict[str, threading.Timer] = {}
         self._lock = threading.Lock()
 
-    def send_now(self) -> int:
+    def send_now(self, key: str = "plan") -> int:
         """Nouvelle publication (nouveaux messages), qui devient celle mise à jour ensuite."""
         url = self.settings.webhook()
         if not url:
             raise ValueError("aucun webhook Discord enregistré")
+        texts = self.messages(key)
+        if texts is None:
+            raise ValueError("rien à publier")
         with self._lock:
-            ids = post_messages(url, self.messages(), transport=self.transport())
-            self.settings.update(message_ids=ids, last_sent=_now(), last_error=None)
+            ids = post_messages(url, texts, transport=self.transport())
+            self.settings.record(key, ids=ids)
         return len(ids)
 
-    def changed(self) -> None:
-        """Le plan a changé : publication automatique différée (modifications regroupées)."""
-        if not self.settings.auto():
+    def changed(self, key: str = "plan") -> None:
+        """Une publication a changé : mise à jour automatique différée (changements regroupés)."""
+        kind = "plan" if key == "plan" else "wars"
+        if not self.settings.auto(kind):
             return
-        if self._timer is not None:
-            self._timer.cancel()
-        self._timer = threading.Timer(self.delay, self.flush)
-        self._timer.daemon = True
-        self._timer.start()
+        if kind == "wars" and not self.settings.message_ids(key):
+            return  # guerre jamais publiée : on attend un premier envoi à la demande
+        if old := self._timers.pop(key, None):
+            old.cancel()
+        timer = threading.Timer(self.delay, self.flush, args=(key,))
+        timer.daemon = True
+        self._timers[key] = timer
+        timer.start()
 
-    def flush(self) -> None:
+    def flush(self, key: str = "plan") -> None:
         """Met à jour les messages déjà publiés (ou publie le plan s'il ne l'a jamais été)."""
-        self._timer = None
+        self._timers.pop(key, None)
         url = self.settings.webhook()
         if not url:
             return
         with self._lock:
+            texts = self.messages(key)
             try:
                 ids = sync_messages(
-                    url, self.messages(), self.settings.message_ids(), transport=self.transport()
+                    url, texts or [], self.settings.message_ids(key), transport=self.transport()
                 )
             except Exception as exc:  # noqa: BLE001 - erreur affichée dans l'interface
-                log.warning("Publication automatique du plan GvG impossible : %s", exc)
-                self.settings.update(last_error=_describe(exc))
+                log.warning("Publication automatique %s impossible : %s", key, exc)
+                self.settings.record(key, error=_describe(exc))
                 return
-            self.settings.update(message_ids=ids, last_sent=_now(), last_error=None)
+            if texts is None:  # guerre supprimée : ses messages ont été effacés
+                self.settings.forget(key)
+            else:
+                self.settings.record(key, ids=ids)
 
     def flush_pending(self) -> None:
-        """Publie tout de suite une mise à jour encore en attente (fermeture de l'application)."""
-        if self._timer is not None:
-            self._timer.cancel()
-            self.flush()
+        """Publie tout de suite les mises à jour encore en attente (fermeture de l'application)."""
+        for key, timer in list(self._timers.items()):
+            timer.cancel()
+            self.flush(key)
 
-    def cancel(self) -> None:
-        if self._timer is not None:
-            self._timer.cancel()
-            self._timer = None
+    def cancel(self, kind: str | None = None) -> None:
+        for key in list(self._timers):
+            if kind is None or (key == "plan") == (kind == "plan"):
+                self._timers.pop(key).cancel()
 
 
 def _now() -> str:

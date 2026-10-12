@@ -58,6 +58,13 @@ la même application sur son ordinateur.
     un message supprimé à la main est republié, les messages en trop sont effacés. Une mise à
     jour en attente part à la fermeture de l'application ; la dernière publication (ou son
     erreur) est affichée ;
+  - *Suivi des guerres sur Discord* (page Guerres, même webhook) : score, attaques (✅ / ❌,
+    équipe, défense ennemie, joueur et tour, note) et attaques restantes de chaque membre
+    (`gvg.war_report`, `POST /api/gvg/wars/<id>/send`). Option de mise à jour automatique
+    (distincte de celle du plan) : le message de suivi déjà publié est modifié à chaque attaque
+    enregistrée ou supprimée, 20 s après la dernière ; une guerre supprimée dans l'application
+    laisse ses messages dans Discord. Publications et messages suivis : `discord.json`
+    (`publications` : `plan`, `war:<id>`) ;
   - *Tests dans le simulateur de combat* (500 combats) : une attaque saisie contre la défense
     ennemie notée, une équipe d'un membre contre une défense de l'onglet Contres, ou une défense
     de la guilde contre une attaque ennemie supposée. Les héros adverses, connus par leur seul

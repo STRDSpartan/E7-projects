@@ -310,3 +310,48 @@ def _csv_cell(value: str) -> str:
     if text[:1] in ("=", "+", "-", "@"):
         text = "'" + text
     return f'"{text}"' if any(c in text for c in ';"\n') or text != value else text
+
+
+def _chunks(lines: list[str]) -> list[str]:
+    """Regroupe des lignes en messages Discord (≤ 2 000 caractères), sans couper une ligne."""
+    messages: list[str] = []
+    for line in lines:
+        if messages and len(messages[-1]) + len(line) + 1 <= DISCORD_LIMIT:
+            messages[-1] += "\n" + line
+        else:
+            messages.append(line[:DISCORD_LIMIT])
+    return messages
+
+
+def war_report(summary: dict[str, Any], war_id: str) -> list[str] | None:
+    """Suivi d'une guerre pour Discord : score, attaques, attaques restantes ; None si absente."""
+    war = next((w for w in summary["wars"] if w["id"] == war_id), None)
+    if war is None:
+        return None
+    total = war["wins"] + war["losses"]
+    rate = f" ({round(100 * war['wins'] / total)} % de victoires)" if total else ""
+    guild = summary["guild"] or "Notre guilde"
+    lines = [
+        f"**Guerre de guilde — {guild} contre {war['opponent']}** ({war['date']})",
+        f"Score : **{war['wins']} victoire(s)** · {war['losses']} défaite(s){rate}",
+    ]
+    if war["attacks"]:
+        lines += ["", "__Attaques__"]
+        for a in war["attacks"]:
+            mark = "✅" if a["result"] == "win" else "❌"
+            target = ", ".join(a["enemy_team"]) or "défense non notée"
+            where = " · ".join(x for x in (a.get("enemy_player"), a.get("tower")) if x)
+            line = f"{mark} **{a['player']}** ({', '.join(a['team'])}) → {target}"
+            line += f" [{where}]" if where else ""
+            line += f" — {a['note']}" if a.get("note") else ""
+            lines.append(line)
+    else:
+        lines += ["", "Aucune attaque enregistrée pour l'instant."]
+    limit = summary["settings"]["attacks_per_member"]
+    left = [
+        f"{m['player']} ({war['remaining'].get(m['id'], limit)}/{limit})"
+        for m in summary["members"]
+        if war["remaining"].get(m["id"], limit) > 0
+    ]
+    lines += ["", "Attaques restantes : " + (", ".join(left) if left else "aucune, bravo !")]
+    return _chunks(lines)

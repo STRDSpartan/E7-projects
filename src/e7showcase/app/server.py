@@ -22,9 +22,9 @@ from urllib.parse import unquote, urlparse
 
 from e7showcase import __version__
 from e7showcase.app.armory import armory
-from e7showcase.app.discord_settings import DiscordSettings, PlanPublisher
+from e7showcase.app.discord_settings import DiscordSettings, Publisher
 from e7showcase.app.guild import GuildStore
-from e7showcase.app.gvg import GvgError, GvgStore, defense_plan
+from e7showcase.app.gvg import GvgError, GvgStore, defense_plan, war_report
 from e7showcase.app.importer import ScreenshotImporter
 from e7showcase.app.profiles import ProfileStore
 from e7showcase.app.viewer import profile_page
@@ -59,15 +59,17 @@ class AppState:
         self.gvg = GvgStore(data_root / "gvg.json", self.store, self.guild)
         self.discord = DiscordSettings(data_root / "discord.json")
         self.webhook_transport: Any = None  # tests : transport httpx simulé
-        self.publisher = PlanPublisher(
-            self.discord,
-            lambda: defense_plan(self.gvg.summary())["messages"],
-            lambda: self.webhook_transport,
-        )
+        self.publisher = Publisher(self.discord, self.publication, lambda: self.webhook_transport)
         self.importer = importer or ScreenshotImporter(data_root / "templates" / "sets")
         self.token = secrets.token_urlsafe(24)
         self.lock = threading.Lock()  # un import OCR à la fois
         self.jobs: dict[str, ImportJob] = {}
+
+    def publication(self, key: str) -> list[str] | None:
+        """Messages Discord d'une publication : plan de défense ou suivi d'une guerre."""
+        if key == "plan":
+            return list(defense_plan(self.gvg.summary())["messages"])
+        return war_report(self.gvg.summary(), key.removeprefix("war:"))
 
     def start_import(self, profile_id: str, files: list[tuple[str, bytes]]) -> ImportJob:
         job = ImportJob(id=secrets.token_hex(6), total=max(1, len(files) * 2))
@@ -294,7 +296,7 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 return self._send(204, b"", "text/plain")
             raise ApiError(404, "introuvable")
 
-        def _send_plan(self) -> dict[str, Any]:
+        def _send_plan(self, key: str = "plan") -> dict[str, Any]:
             """Publie le plan de défense dans le salon Discord du webhook enregistré."""
             import httpx
 
@@ -303,7 +305,7 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             if not state.discord.webhook():
                 raise ApiError(400, "aucun webhook Discord enregistré")
             try:
-                return {"sent": state.publisher.send_now()}
+                return {"sent": state.publisher.send_now(key)}
             except httpx.HTTPError as exc:
                 raise ApiError(502, _describe(exc)) from exc
 
@@ -320,10 +322,11 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     body = self._body()
                     if "url" in body:
                         state.discord.set_webhook(str(body.get("url", ""))[:300])
-                    if "auto" in body:
-                        state.discord.update(auto=bool(body["auto"]))
-                        if not body["auto"]:
-                            state.publisher.cancel()
+                    for flag, kind in (("auto", "plan"), ("auto_wars", "wars")):
+                        if flag in body:
+                            state.discord.update(**{flag: bool(body[flag])})
+                            if not body[flag]:
+                                state.publisher.cancel(kind)
                     return self._json(state.discord.status())
                 if rest == "/plan/send" and method == "POST":
                     return self._json(self._send_plan())
@@ -337,14 +340,21 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     gvg.add_war(self._body())
                 elif (w := re.fullmatch(r"/wars/([0-9a-f]{1,16})", rest)) and method == "DELETE":
                     gvg.delete_war(w[1])
+                    state.discord.forget("war:" + w[1])  # les messages déjà publiés restent
+                elif (w := re.fullmatch(r"/wars/([0-9a-f]{1,16})/send", rest)) and method == "POST":
+                    if w[1] not in {x["id"] for x in gvg.summary()["wars"]}:
+                        raise GvgError("guerre introuvable")
+                    return self._json(self._send_plan("war:" + w[1]))
                 elif (w := re.fullmatch(r"/wars/([0-9a-f]{1,16})/attacks", rest)) and (
                     method == "POST"
                 ):
                     gvg.add_attack(w[1], self._body())
+                    state.publisher.changed("war:" + w[1])  # suivi publié : mis à jour
                 elif (
                     a := re.fullmatch(r"/wars/([0-9a-f]{1,16})/attacks/([0-9a-f]{1,16})", rest)
                 ) and method == "DELETE":
                     gvg.delete_attack(a[1], a[2])
+                    state.publisher.changed("war:" + a[1])
                 else:
                     raise ApiError(404, "introuvable")
             except (GvgError, ValueError, TypeError) as exc:

@@ -783,6 +783,7 @@ function gvgWars(page, g, send) {
     war.attacks.length ? el("div", { style: "overflow:auto" }, el("table", { class: "members" },
       el("thead", {}, el("tr", {}, ...["Attaquant", "Équipe", "Défense ennemie", "Résultat", "Note", ""].map((t) => el("th", {}, t)))), el("tbody", {}, ...rows)))
       : el("p", { class: "note" }, "Aucune attaque enregistrée.")),
+    warDiscord(war),
     el("div", { class: "card" }, el("h3", {}, "Attaques restantes par membre"),
       el("div", { class: "chips" }, ...g.members.map((m) => el("span", { class: "chip", style: `padding-left:10px;${war.remaining[m.id] ? "" : "opacity:.55"}` },
         `${m.player} : ${war.remaining[m.id]}/${g.settings.attacks_per_member}`)))));
@@ -795,6 +796,41 @@ function counterTest(g, c) {
   member.addEventListener("change", fill); fill();
   return el("div", { class: "simbox" }, el("div", { class: "note" }, "Tester une équipe contre cette défense :"), member, box,
     simBox("Simuler", () => ({ a: asRefs(member.value, picks.map((s) => s.value)), b: asEnemy(c.enemy_team), labels: ["Attaque", "Défense"] })));
+}
+// Suivi d'une guerre publié sur Discord (même webhook que le plan de défense)
+function warDiscord(war) {
+  const box = el("div", { class: "card" }, el("h3", {}, "Publier le suivi sur Discord"));
+  const msg = el("p", { class: "note", role: "status" });
+  const say = (text, ok) => { msg.textContent = text; msg.style.color = `var(${ok ? "--ok" : "--danger"})`; };
+  const draw = async () => {
+    const st = await json("GET", "/gvg/webhook");
+    if (!st.configured) {
+      box.replaceChildren(box.firstChild, el("p", { class: "note" }, "Enregistrez d'abord le webhook du salon dans l'onglet Défenses (carte « Exporter le plan de défense »)."));
+      return;
+    }
+    const info = st.wars[war.id] || {};
+    const send = el("button", { onclick: async () => {
+      if (!confirm(`Publier le suivi de la guerre contre ${war.opponent} sur Discord ?`)) return;
+      send.disabled = true; say("Envoi en cours…", true);
+      try { const r = await json("POST", `/gvg/wars/${war.id}/send`); say(`Suivi publié (${r.sent} message${r.sent > 1 ? "s" : ""}).`, true); draw(); }
+      catch (e) { say(e.message, false); send.disabled = false; }
+    } }, info.published ? "Publier un nouveau message de suivi" : "Envoyer le suivi sur Discord");
+    const auto = el("input", { type: "checkbox" });
+    auto.checked = st.auto_wars;
+    auto.addEventListener("change", async () => {
+      try { await json("PUT", "/gvg/webhook", { auto_wars: auto.checked }); say(auto.checked ? "Mise à jour automatique des guerres activée." : "Mise à jour automatique des guerres désactivée.", true); }
+      catch (e) { say(e.message, false); }
+    });
+    const state = el("div", { class: "note" }, info.last_error ? `⚠ ${info.last_error}` : info.last_sent ? `Dernière publication : ${info.last_sent}` : "Pas encore publié.");
+    if (info.last_error) state.style.color = "var(--danger)";
+    box.replaceChildren(box.firstChild,
+      el("p", { class: "note" }, "Score, attaques (✅ / ❌ contre quelle défense) et attaques restantes de chaque membre, dans le salon du webhook enregistré."),
+      el("div", { class: "simbox" }, send,
+        el("label", { class: "autosend" }, auto, " Mettre à jour automatiquement le suivi publié à chaque attaque enregistrée ou supprimée (message modifié 20 s après la dernière, sans nouveau message)"),
+        state, msg));
+  };
+  draw().catch((e) => say(e.message, false));
+  return box;
 }
 function gvgCounters(page, g) {
   if (!g.counters.length) { page.append(el("div", { class: "empty" }, "Les contres apparaissent ici dès que des attaques avec une défense ennemie renseignée sont enregistrées.")); return; }

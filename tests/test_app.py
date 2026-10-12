@@ -447,7 +447,7 @@ def test_sync_messages_edits_reposts_and_deletes() -> None:
 def test_auto_publish_groups_changes_and_updates_message(tmp_path: Path) -> None:
     import httpx
 
-    from e7showcase.app.discord_settings import DiscordSettings, PlanPublisher
+    from e7showcase.app.discord_settings import DiscordSettings, Publisher
 
     calls: list[str] = []
 
@@ -457,7 +457,7 @@ def test_auto_publish_groups_changes_and_updates_message(tmp_path: Path) -> None
 
     settings = DiscordSettings(tmp_path / "discord.json")
     plan = ["plan v1"]
-    pub = PlanPublisher(settings, lambda: plan, lambda: httpx.MockTransport(discord), delay=0.05)
+    pub = Publisher(settings, lambda _k: plan, lambda: httpx.MockTransport(discord), delay=0.05)
     pub.changed()  # pas de webhook / auto désactivé : rien
     time.sleep(0.15)
     assert calls == []
@@ -478,3 +478,46 @@ def test_auto_publish_groups_changes_and_updates_message(tmp_path: Path) -> None
     assert calls == ["POST", "PATCH", "PATCH"]
     settings.set_webhook(HOOK.replace("1234", "4321"))  # autre salon : on repart de zéro
     assert settings.message_ids() == []
+
+
+def test_war_report_sent_and_updated_on_each_attack(app: Any) -> None:
+    import httpx
+
+    state, base = app
+    t = state.token
+    pid = call(base, "POST", "/api/profiles", {"player": "Spartan"}, t)["id"]
+    for name in ("Belian", "Aria"):
+        state.store.add_hero(pid, Hero(name=name), None)
+    call(base, "PATCH", "/api/guild", {"name": "Spartiates", "members": [pid]}, t)
+    war = call(base, "POST", "/api/gvg/wars", {"opponent": "Les Ombres", "date": "2026-10-12"}, t)
+    wid = war["wars"][0]["id"]
+    attack = {"member": pid, "team": ["Aria"], "enemy_team": ["Lua"], "enemy_player": "Shadow",
+              "result": "win", "note": "facile"}  # fmt: skip
+    call(base, "POST", f"/api/gvg/wars/{wid}/attacks", attack, t)
+    report = state.publication("war:" + wid)
+    assert report is not None and len(report) == 1
+    text = report[0]
+    assert "Spartiates contre Les Ombres" in text and "1 victoire(s)" in text
+    assert "✅ **Spartan** (Aria) → Lua [Shadow] — facile" in text
+    assert "Attaques restantes : Spartan (1/2)" in text
+    calls: list[str] = []
+
+    def discord(request: httpx.Request) -> httpx.Response:
+        calls.append(request.method)
+        return httpx.Response(200, json={"id": "424242"})
+
+    state.webhook_transport = httpx.MockTransport(discord)
+    call(base, "PUT", "/api/gvg/webhook", {"url": HOOK, "auto_wars": True}, t)
+    assert call(base, "POST", f"/api/gvg/wars/{wid}/send", {}, t) == {"sent": 1}
+    state.publisher.delay = 0.05
+    call(base, "POST", f"/api/gvg/wars/{wid}/attacks", {**attack, "result": "loss"}, t)
+    time.sleep(0.4)
+    assert calls == ["POST", "PATCH"]  # le suivi publié est modifié, pas reposté
+    status = call(base, "GET", "/api/gvg/webhook", token=t)
+    assert status["wars"][wid]["published"] and status["wars"][wid]["last_sent"]
+    with pytest.raises(urllib.error.HTTPError) as err:
+        call(base, "POST", "/api/gvg/wars/abcdef/send", {}, t)
+    assert err.value.code == 400
+    call(base, "DELETE", f"/api/gvg/wars/{wid}", token=t)
+    assert wid not in call(base, "GET", "/api/gvg/webhook", token=t)["wars"]
+    assert state.publication("war:" + wid) is None
