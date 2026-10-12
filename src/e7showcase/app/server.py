@@ -30,6 +30,7 @@ from e7showcase.app.gvg import (
     counters_csv,
     counters_report,
     defense_plan,
+    defenses_csv,
     war_report,
     wars_csv,
 )
@@ -326,6 +327,8 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     return self._json(gvg.summary())
                 if rest == "/plan" and method == "GET":
                     return self._json(defense_plan(gvg.summary()))
+                if rest == "/defense/csv" and method == "GET":
+                    return self._json({"csv": defenses_csv(gvg.summary())})
                 if rest == "/counters/csv" and method == "GET":
                     return self._json({"csv": counters_csv(gvg.summary())})
                 if rest == "/wars/csv" and method == "GET":

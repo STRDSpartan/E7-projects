@@ -49,7 +49,8 @@ la même application sur son ordinateur.
     neutralisées) ; le `.csv` ajoute le suivi des guerres (une ligne par attaque, puis les
     attaques restantes de chaque membre) ; le suivi seul s'exporte aussi depuis l'onglet
     Guerres (bouton « Exporter le suivi (.csv) », `GET /api/gvg/wars/csv`), et les contres connus seuls depuis l'onglet
-    Contres (bouton « Exporter les contres (.csv) », `GET /api/gvg/counters/csv`) ;
+    Contres (bouton « Exporter les contres (.csv) », `GET /api/gvg/counters/csv`), et les défenses seules depuis l'onglet
+    Défenses (bouton « Exporter les défenses (.csv) », `GET /api/gvg/defense/csv`) ;
   - *Contres dans le plan* (case « Inclure les contres connus », réglage `plan_counters`) : le
     texte Discord, le fichier `.md` et le plan publié se terminent par les contres connus, et le
     `.csv` reçoit un second tableau sous les défenses (défense ennemie, équipe d'attaque,

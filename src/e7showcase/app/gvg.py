@@ -328,6 +328,12 @@ def _counter_rows(counters: list[dict[str, Any]]) -> list[list[str]]:
     return rows
 
 
+def defenses_csv(summary: dict[str, Any]) -> str:
+    """Défenses seules, en tableur (sans contres ni suivi des guerres)."""
+    settings = {**summary["settings"], "plan_counters": False}
+    return str(defense_plan({**summary, "settings": settings, "wars": []})["csv"])
+
+
 def counters_csv(summary: dict[str, Any]) -> str:
     """Contres connus seuls, en tableur."""
     rows = _counter_rows(summary["counters"]) if summary["counters"] else []

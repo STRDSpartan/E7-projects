@@ -83,6 +83,12 @@ class WindowApi:
 
         return self._save_csv("suivi-guerres-gvg.csv", wars_csv(self._state.gvg.summary()))
 
+    def save_defenses_csv(self) -> str | None:
+        """Défenses GvG seules, enregistrées en .csv (tableur)."""
+        from e7showcase.app.gvg import defenses_csv
+
+        return self._save_csv("defenses-gvg.csv", defenses_csv(self._state.gvg.summary()))
+
     def save_counters_csv(self) -> str | None:
         """Contres connus GvG seuls, enregistrés en .csv (tableur)."""
         from e7showcase.app.gvg import counters_csv

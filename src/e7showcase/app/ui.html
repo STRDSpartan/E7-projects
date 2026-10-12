@@ -645,6 +645,7 @@ function gvgDefense(page, g, send) {
       el("div", { class: "tile" }, tileHeroes, el("span", {}, "héros en défense"))),
     el("div", { class: "card" }, el("h3", {}, "Défenses des membres"),
       el("p", { class: "note" }, "Deux équipes de 3 héros par membre (un héros ne défend que dans une équipe). Les choix sont enregistrés aussitôt."),
+      el("button", { class: "ghost", onclick: () => saveCsv("save_defenses_csv", "/gvg/defense/csv", "defenses-gvg.csv", "Défenses enregistrées") }, "Exporter les défenses (.csv)"),
       towerList,
       el("div", { style: "overflow:auto" }, el("table", { class: "members gvg" },
         el("thead", {}, el("tr", {}, ...["Membre", "Tour", "Équipe 1", "Équipe 2"].map((t) => el("th", {}, t)))), el("tbody", {}, ...rows.map((r) => r.row))))),
