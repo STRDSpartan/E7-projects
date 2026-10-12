@@ -307,6 +307,10 @@ def test_armory_and_guild_api(app: Any) -> None:
     csv = call(base, "GET", "/api/guild/csv", token=t)["csv"]
     assert csv.startswith("\ufeffMembre;Origine;Héros;Puissance;Pièces;Héros les plus puissants")
     assert "Spartan;Mon profil;1;1000;1;Kise (1000);" in csv and "Spartan;Vitrine reçue;" in csv
+    full = call(base, "GET", "/api/guild/full.csv", token=t)["csv"]
+    assert full.startswith("\ufeffMembre;Origine;") and "\nMembre;Héros;Étoiles;" in full
+    assert full.count("\nSpartan;Kise;;") == 2 and "\nMembre;Porté par;Emplacement;" in full
+    assert full.count("\nSpartan;Kise;Bottes;Vitesse;;;15;Vitesse 45;") == 2
     state.store.delete(rid)  # un profil supprimé disparaît de la guilde
     assert [m["id"] for m in call(base, "GET", "/api/guild", token=t)["members"]] == [pid]
 

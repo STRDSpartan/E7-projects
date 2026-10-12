@@ -40,12 +40,64 @@ def _gear_row(owner: str, gear: Gear, sets: dict[str, str]) -> list[str]:
     ]
 
 
-def profile_csv(roster: Roster) -> str:
-    sets = {
+HERO_HEAD = [
+    "Héros",
+    "Étoiles",
+    "Niveau",
+    "Éveil",
+    "Élément",
+    "Classe",
+    "Puissance",
+    "Artefact",
+] + [
+    "Attaque",
+    "PV",
+    "Défense",
+    "Vitesse",
+    "Chances crit.",
+    "Dégâts crit.",
+    "Efficacité",
+    "Résistance",
+    "Double attaque",
+]
+GEAR_HEAD = ["Porté par", "Emplacement", "Set", "Rang", "Niveau", "Amélioration"] + [
+    "Stat principale",
+    "Sous-stat 1",
+    "Sous-stat 2",
+    "Sous-stat 3",
+    "Sous-stat 4",
+]
+
+
+def _sets() -> dict[str, str]:
+    return {
         k: str(v.get("fr") or v.get("en") or k)
         for k, v in load("sets").items()
         if not k.startswith("_")
     }
+
+
+def hero_rows(roster: Roster) -> list[list[str]]:
+    rows = []
+    for h in sorted(roster.heroes, key=lambda h: -(h.power or 0)):
+        s = h.stats
+        rows.append(
+            [h.name, *(str(v) if v is not None else "" for v in (h.stars, h.level, h.awakening))]
+            + [h.element or "", h.role or "", str(h.power or ""), h.artifact or ""]
+            + [str(v) for v in (s.atk, s.hp, s.defense, s.spd)]
+            + [f"{v:g}" for v in (s.crit_chance, s.crit_dmg, s.effectiveness)]
+            + [f"{v:g}" for v in (s.effect_res, s.dual_attack)]
+        )
+    return rows
+
+
+def gear_rows(roster: Roster, sets: dict[str, str] | None = None) -> list[list[str]]:
+    sets = sets if sets is not None else _sets()
+    rows = [_gear_row(h.name, g, sets) for h in roster.heroes for g in h.gear.values()]
+    return rows + [_gear_row("Non équipée", item.gear, sets) for item in roster.inventory]
+
+
+def profile_csv(roster: Roster) -> str:
     worn = sum(len(h.gear) for h in roster.heroes)
     rows: list[list[str]] = [
         ["Joueur", "Guilde", "Serveur", "Héros", "Pièces portées", "Pièces non équipées"]
@@ -60,25 +112,10 @@ def profile_csv(roster: Roster) -> str:
             roster.updated_at.strftime("%d/%m/%Y"),
         ],
         [],
-        ["Héros", "Étoiles", "Niveau", "Éveil", "Élément", "Classe", "Puissance", "Artefact"]
-        + ["Attaque", "PV", "Défense", "Vitesse", "Chances crit.", "Dégâts crit."]
-        + ["Efficacité", "Résistance", "Double attaque"],
-    ]
-    for h in sorted(roster.heroes, key=lambda h: -(h.power or 0)):
-        s = h.stats
-        rows.append(
-            [h.name, *(str(v) if v is not None else "" for v in (h.stars, h.level, h.awakening))]
-            + [h.element or "", h.role or "", str(h.power or ""), h.artifact or ""]
-            + [str(v) for v in (s.atk, s.hp, s.defense, s.spd)]
-            + [f"{v:g}" for v in (s.crit_chance, s.crit_dmg, s.effectiveness)]
-            + [f"{v:g}" for v in (s.effect_res, s.dual_attack)]
-        )
-    rows += [
+        HERO_HEAD,
+        *hero_rows(roster),
         [],
-        ["Porté par", "Emplacement", "Set", "Rang", "Niveau", "Amélioration", "Stat principale"]
-        + ["Sous-stat 1", "Sous-stat 2", "Sous-stat 3", "Sous-stat 4"],
+        GEAR_HEAD,
+        *gear_rows(roster),
     ]
-    for h in roster.heroes:
-        rows += [_gear_row(h.name, g, sets) for g in h.gear.values()]
-    rows += [_gear_row("Non équipée", item.gear, sets) for item in roster.inventory]
     return _csv(rows)

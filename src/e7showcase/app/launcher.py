@@ -104,6 +104,14 @@ class WindowApi:
 
         return self._save_csv("membres-guilde.csv", members_csv(self._state.guild.summary()))
 
+    def save_guild_full_csv(self) -> str | None:
+        """Toute la guilde (membres, héros, armureries, GvG) en un seul .csv (tableur)."""
+        from e7showcase.app.guild import guild_csv
+
+        state = self._state
+        text = guild_csv(state.guild.summary(), state.store, state.gvg.summary())
+        return self._save_csv("guilde-complete.csv", text)
+
     def save_counters_csv(self) -> str | None:
         """Contres connus GvG seuls, enregistrés en .csv (tableur)."""
         from e7showcase.app.gvg import counters_csv

@@ -297,6 +297,7 @@ def defense_plan(summary: dict[str, Any], today: date | None = None) -> dict[str
         lines += ["", "Sans défense : " + ", ".join(idle)]
     if len(lines) == 1:
         lines.append("Aucune défense n'est encore placée.")
+    defenses = [list(r) for r in rows]  # tableau des défenses seul (exports tableur)
     if summary["settings"].get("plan_counters") and summary.get("counters"):
         lines += ["", "**Contres connus**", *counter_lines(summary["counters"])]
         rows += [[], *_counter_rows(summary["counters"])]
@@ -308,7 +309,12 @@ def defense_plan(summary: dict[str, Any], today: date | None = None) -> dict[str
         else:
             messages.append(line[:DISCORD_LIMIT])
     csv = "\n".join(";".join(_csv_cell(c) for c in row) for row in rows)
-    return {"text": "\n".join(lines), "messages": messages, "csv": "﻿" + csv + "\n"}
+    return {
+        "text": "\n".join(lines),
+        "messages": messages,
+        "csv": "﻿" + csv + "\n",
+        "defenses": defenses,
+    }
 
 
 def _counter_rows(counters: list[dict[str, Any]]) -> list[list[str]]:
@@ -330,8 +336,7 @@ def _counter_rows(counters: list[dict[str, Any]]) -> list[list[str]]:
 
 def defenses_csv(summary: dict[str, Any]) -> str:
     """Défenses seules, en tableur (sans contres ni suivi des guerres)."""
-    settings = {**summary["settings"], "plan_counters": False}
-    return str(defense_plan({**summary, "settings": settings, "wars": []})["csv"])
+    return _csv(defense_plan(summary)["defenses"])
 
 
 def counters_csv(summary: dict[str, Any]) -> str:

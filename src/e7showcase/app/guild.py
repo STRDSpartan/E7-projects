@@ -83,6 +83,10 @@ def members_csv(summary: dict[str, Any]) -> str:
     """Membres de la guilde en tableur : un membre par ligne, du plus puissant au moins puissant."""
     from e7showcase.app.gvg import _csv  # même format que les exports GvG
 
+    return _csv(_member_rows(summary))
+
+
+def _member_rows(summary: dict[str, Any]) -> list[list[str]]:
     head = ["Membre", "Origine", "Héros", "Puissance", "Pièces", "Héros les plus puissants"]
     rows = [[*head, "Mise à jour"]]
     for m in summary["members"]:
@@ -92,4 +96,28 @@ def members_csv(summary: dict[str, Any]) -> str:
             [m["player"], origin, str(m["heroes"]), str(m["power"]), str(m["items"]), top]
             + [m["updated_at"]]
         )
+    return rows
+
+
+def guild_csv(summary: dict[str, Any], profiles: ProfileStore, gvg: dict[str, Any]) -> str:
+    """Toute la guilde dans un seul tableur : membres, héros et armurerie de chacun, puis GvG
+    (défenses, contres connus, suivi des guerres)."""
+    from e7showcase.app.gvg import _counter_rows, _csv, _war_rows, defense_plan
+    from e7showcase.app.profile_csv import GEAR_HEAD, HERO_HEAD, _sets, gear_rows, hero_rows
+
+    sets = _sets()
+    rows = _member_rows(summary)
+    heroes: list[list[str]] = [["Membre", *HERO_HEAD]]
+    gear: list[list[str]] = [["Membre", *GEAR_HEAD]]
+    for m in summary["members"]:
+        roster = profiles.load(m["id"])
+        heroes += [[m["player"], *r] for r in hero_rows(roster)]
+        gear += [[m["player"], *r] for r in gear_rows(roster, sets)]
+    rows += [[], *heroes, [], *gear]
+    defenses = defense_plan(gvg)["defenses"]
+    if len(defenses) > 1:  # au moins une défense placée
+        rows += [[], *defenses]
+    if gvg.get("counters"):
+        rows += [[], *_counter_rows(gvg["counters"])]
+    rows += _war_rows(gvg)
     return _csv(rows)
