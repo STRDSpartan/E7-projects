@@ -1811,6 +1811,7 @@ def fight(
 CHUNKS = 8
 PARALLEL_MIN = 120  # en dessous, lancer des processus coûte plus que les combats
 _POOL: Any = None
+_CLOSING = False
 _POOL_LOCK = threading.Lock()
 ChunkResult = tuple[list[int], int, int, dict[str, float]]
 TOTAL_KEYS = ("healed", "shielded", "buffs", "debuffs", "counters", "passives", "extra_turns")
@@ -1840,6 +1841,8 @@ def _pool() -> Any:
     """Processus de calcul partagés (créés au premier gros calcul, gardés ensuite)."""
     global _POOL
     with _POOL_LOCK:
+        if _CLOSING:
+            return None
         if _POOL is None:
             import atexit
             import os
@@ -1870,22 +1873,35 @@ def shutdown_pool() -> None:
 
     L'application se termine ensuite par `os._exit` : un arrêt « poli » n'aurait pas le temps
     de prévenir les processus, qui resteraient orphelins (E7Showcase.exe en arrière-plan).
+    Les processus encore en train de démarrer (préchauffage) sont rattrapés aussi.
     """
-    global _POOL
+    import multiprocessing
+    import time
+
+    global _POOL, _CLOSING
     with _POOL_LOCK:
+        _CLOSING = True  # plus aucun processus ne sera lancé
         pool, _POOL = _POOL, None
-    if pool is None:
-        return
-    procs = list((getattr(pool, "_processes", None) or {}).values())
-    pool.shutdown(wait=False, cancel_futures=True)
-    for proc in procs:
-        with contextlib.suppress(Exception):
-            proc.terminate()
-    for proc in procs:
-        with contextlib.suppress(Exception):
-            proc.join(timeout=2)
-            if proc.is_alive():
-                proc.kill()
+    if pool is not None:
+        pool.shutdown(wait=False, cancel_futures=True)
+    deadline = time.monotonic() + 3
+    while True:
+        children = multiprocessing.active_children()
+        for proc in children:
+            with contextlib.suppress(Exception):
+                proc.terminate()
+        for proc in children:
+            with contextlib.suppress(Exception):
+                proc.join(timeout=1)
+                if proc.is_alive():
+                    proc.kill()
+        if not children and (pool is None or time.monotonic() > deadline - 2.5):
+            break
+        if time.monotonic() > deadline:
+            break
+        time.sleep(0.1)  # un démarrage en cours peut encore apparaître
+    with _POOL_LOCK:
+        _CLOSING = False  # (tests) un calcul suivant peut relancer des processus
 
 
 def _run_chunks(
