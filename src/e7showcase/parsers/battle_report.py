@@ -32,6 +32,9 @@ STAT_ROWS = (
 HP_ROW = STAT_ROWS.index("hp")
 PERCENT = {"crit_chance", "crit_dmg", "effectiveness", "effect_res", "dual_attack"}
 _CELL_RE = re.compile(r"^(\?|\d{1,6}(?:[.,]\d{1,2})?)(%?)$")
+# maximum plausible par ligne : au-delà, l'icône de la stat a été lue comme un chiffre en tête
+# (ex. « 23.0% » pour 3.0 % d'attaque double, qui ne vient pas de l'équipement)
+PLAUSIBLE_MAX = {"crit_chance": 100.0, "dual_attack": 15.0}
 TEAM_GAP = 1.6  # écart entre colonnes au-delà duquel une nouvelle équipe commence
 
 
@@ -68,6 +71,18 @@ def _cell(text: str) -> tuple[float | None, bool] | None:
         return None
     raw, pct = m.groups()
     return (None if raw == "?" else float(raw.replace(",", "."))), bool(pct)
+
+
+def _plausible(key: str, value: float | None, text: str) -> float | None:
+    limit = PLAUSIBLE_MAX.get(key)
+    if value is None or limit is None or value <= limit:
+        return value
+    digits = re.sub(r"[^0-9.,]", "", text)[1:]
+    try:
+        fixed = float(digits.replace(",", "."))
+    except ValueError:
+        return value
+    return fixed if fixed <= limit else value
 
 
 def _center(b: OcrLine) -> tuple[float, float]:
@@ -119,7 +134,7 @@ def parse_report(lines: list[OcrLine]) -> Report | None:
         key = STAT_ROWS[row]
         if (key in PERCENT) != pct and val is not None:
             continue  # ex. « +15 » d'un équipement, ou « ?% » mal lu
-        col.values.setdefault(key, val)
+        col.values.setdefault(key, _plausible(key, val, b.text))
     for col in columns:  # « ?% » lu « 2% » : sans attaque ni défense, rien n'est fiable
         if not col.known:
             col.values = {k: (col.values.get(k) if k == "hp" else None) for k in STAT_ROWS}

@@ -17,7 +17,10 @@ from e7showcase.parsers.battle_report import STAT_ROWS, parse_report
 from e7showcase.reference import load
 from e7showcase.vision.hero_faces import FaceMatcher, locate
 
-CONFIDENT = 0.80  # score au-delà duquel le héros est considéré comme reconnu
+# héros « reconnu » : ressemblance très forte, ou forte ET nettement devant le 2e candidat
+# (mesuré sur de vraies captures : bonnes réponses ≥ 0,76 avec ≥ 0,16 d'avance ; erreurs à
+# moins de 0,08 d'avance)
+SURE, LIKELY, MARGIN = 0.85, 0.75, 0.15
 MAX_SIDE = 2600  # px : les captures plus grandes sont réduites avant lecture
 
 
@@ -72,10 +75,13 @@ def read_report(data: bytes, engine: Any, matcher: FaceMatcher) -> dict[str, Any
             if all(c["name"] != name for c in candidates):
                 candidates.append({"name": name, "score": round(score, 3)})
         best = candidates[0] if candidates else None
+        gap = best["score"] - candidates[1]["score"] if len(candidates) > 1 else 1.0  # type: ignore[index]
         heroes.append(
             {
                 "name": best["name"] if best else "",
-                "confident": bool(best and best["score"] >= CONFIDENT),
+                "confident": bool(
+                    best and (best["score"] >= SURE or (best["score"] >= LIKELY and gap >= MARGIN))
+                ),
                 "candidates": candidates[:3],
                 "stats": {k: col.values.get(k) for k in STAT_ROWS} if col.known else None,
                 "hp": col.values.get("hp"),

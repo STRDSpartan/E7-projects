@@ -99,3 +99,21 @@ def test_sync_faces_downloads_missing_icons(tmp_path: Path) -> None:
     assert len(report.downloaded) == len(jobs) - 1 and report.skipped == [jobs[0][0]]
     assert progress[-1] == len(jobs) and all("e7showcase" in ua for ua in seen)
     assert len(list((tmp_path / "faces").glob("*.webp"))) == len(jobs)
+
+
+@pytest.mark.parametrize(
+    ("name", "second"),
+    [
+        ("gvg_battle_report_ocr_17.json", [1765, 1343, 15607, 281, 15, 158, 194, 33, 3]),
+        ("gvg_battle_report_ocr_18.json", [1765, 1343, 15607, 281, 15, 158, 194, 33, 3]),
+    ],
+)
+def test_parse_report_smaller_pc_capture(name: str, second: list[float]) -> None:
+    """Capture PC plus petite (1151 × 678) ; l'icône d'attaque double lue « 2 » est écartée."""
+    rows = json.loads((FIXTURE.parent / name).read_text("utf-8"))
+    report = parse_report([OcrLine(t, 1.0, b[1], (b[0], b[1], b[2], b[3])) for t, b in rows])
+    assert report is not None and report.teams == [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9, 10, 11]]
+    known = [c for c in report.columns if c.known]
+    assert len(known) == 6 and all(c.values["dual_attack"] == 3 for c in known)
+    keys = ("atk", "def", "hp", "spd", "crit_chance", "crit_dmg", "effectiveness")
+    assert [known[3].values[k] for k in (*keys, "effect_res", "dual_attack")] == second

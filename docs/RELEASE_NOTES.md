@@ -1,4 +1,4 @@
-# E7 Showcase 0.48.0
+# E7 Showcase 0.48.1
 
 La guerre de guilde passe un cap : carte de la guerre reproduite depuis vos captures, lecture
 des écrans de fin de combat et simulations contre les vraies stats adverses.
@@ -16,6 +16,8 @@ des écrans de fin de combat et simulations contre les vraies stats adverses.
   (noms à vérifier proposés, corrigeables). Testez vos équipes contre cette défense avec ses
   vraies stats et enregistrez-la pour plus tard.
   La reconnaissance des portraits télécharge une fois les visages des héros (environ 4 Mo).
+  Vérifié sur trois écrans réels : toutes les stats justes, tous les héros aux stats visibles
+  reconnus sur les captures PC.
 
 ## Simulateur
 - Équipes face à face autour d'un « VS », portraits des héros choisis.
