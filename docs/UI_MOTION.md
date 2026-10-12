@@ -22,6 +22,9 @@ Tout est dans `src/e7showcase/app/ui.html` (CSS en fin de `<style>`, module JS `
 | GvG | défenses : avatar du membre, tour avec icône, aperçu des équipes en portraits (emplacements vides en pointillés) au-dessus des sélecteurs ; attaques : portraits des deux équipes, badge « VS », résultat en pastille, liseré vert/rouge ; attaques restantes en jauges ; contres : portraits de la défense, barre victoires/défaites, lignes colorées selon le bilan |
 | Guilde, armurerie | héros phares en portraits ; mini-portrait du porteur sur chaque pièce |
 | Rejeu de combat | bouton « ▶ Revoir le combat type » sous chaque simulation : arène attaque/défense avec portraits, barres de PV (traînée dorée des dégâts, barre rouge pulsante sous 30 %, bouclier hachuré), héros actif mis en avant, chiffres de dégâts (rouge) et de soins (vert) qui s'envolent, secousse à l'impact, K.O. en gris avec étincelles, journal du tour, bannière du vainqueur ; pause, vitesse ×1/×2/×4, aller à la fin. Données : `sample.frames` / `sample.units` de `calc.battle.simulate` (PV après chaque tour) |
+| Simulateur | équipes A (bleu) et B (rouge) face à face autour d'un « VS », 4 places en portraits mises à jour à chaque choix ; rejeu animé aussi dans le simulateur principal |
+| Profils (barre latérale) | pastille ronde à l'initiale, couleur propre à chaque joueur (liseré bleu pour une vitrine reçue, halo doré pour le profil ouvert) |
+| Formulaires | cases à cocher dorées, rebond au clic |
 | Dialogues | ouverture à ressort, fond flouté |
 
 ## Accessibilité et performance

@@ -318,7 +318,7 @@ tr.atk td:first-child { box-shadow:inset 3px 0 0 var(--ok); } tr.atk.loss td:fir
 .hpshield { background:repeating-linear-gradient(-45deg, rgba(200,220,255,.85) 0 4px, rgba(150,180,255,.6) 4px 8px); z-index:3; height:4px; top:auto; transition:width .35s; }
 .hpnum { font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums; }
 .fighter.active { transform:scale(1.04); box-shadow:0 0 0 2px var(--gold), 0 0 24px var(--glow); z-index:2; }
-.side-0 .fighter.active { transform:scale(1.04) translateX(6px); } .side-1 .fighter.active { transform:scale(1.04) translateX(-6px); }
+.side-0 .fighter.active { transform:scale(1.03) translateX(-3px); } .side-1 .fighter.active { transform:scale(1.03) translateX(3px); }
 .fighter.ko { opacity:.45; filter:grayscale(1); } .fighter.ko .fname::after { content:" ✝"; color:var(--danger); }
 .fighter.shake { animation:shake .35s ease; }
 @keyframes shake { 20% { translate:-4px 0; } 40% { translate:4px 0; } 60% { translate:-3px 0; } 80% { translate:2px 0; } }
@@ -334,6 +334,29 @@ tr.atk td:first-child { box-shadow:inset 3px 0 0 var(--ok); } tr.atk.loss td:fir
 .replay-banner.t0 { background:linear-gradient(180deg, #bfe0ff, #4ab3ff); box-shadow:0 0 30px rgba(74,179,255,.45); }
 .replay-banner.t1 { background:linear-gradient(180deg, #ffd0c8, #e26060); box-shadow:0 0 30px rgba(226,96,96,.45); }
 @media (max-width: 760px) { .arena { grid-template-columns:1fr; } .vs-mid { text-align:center; } }
+
+/* --- v0.45 : simulateur, liste des profils, cases à cocher --- */
+.versus { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.versus-badge { align-self:center; font-weight:900; font-style:italic; font-size:30px; color:var(--gold); text-shadow:0 0 22px var(--glow);
+  animation:float 3s ease-in-out infinite; }
+.team-card.side-a { border-color:rgba(74,179,255,.35); background:linear-gradient(160deg, rgba(74,179,255,.10), rgba(20,25,37,.92) 45%); }
+.team-card.side-b { border-color:rgba(226,96,96,.35); background:linear-gradient(200deg, rgba(226,96,96,.10), rgba(20,25,37,.92) 45%); }
+.team-card.side-a h3 { color:#8fc8ff; } .team-card.side-a h3::before { background:#4ab3ff; box-shadow:0 0 10px #4ab3ff; }
+.team-card.side-b h3 { color:#ff9b9b; } .team-card.side-b h3::before { background:var(--danger); box-shadow:0 0 10px var(--danger); }
+.team-preview.big { min-height:68px; margin-bottom:10px; } .side-b .team-preview.big { display:flex; justify-content:flex-end; }
+.team-picks { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+@media (max-width: 900px) { .versus { grid-template-columns:1fr; } .versus-badge { justify-self:center; } }
+.item { display:flex !important; align-items:center; gap:10px; }
+.pavatar { width:34px; height:34px; flex:none; border-radius:50%; display:grid; place-items:center; font-weight:800; color:#fff;
+  background:linear-gradient(135deg, hsl(var(--h) 60% 55%), hsl(calc(var(--h) + 40) 55% 35%)); box-shadow:0 0 0 2px rgba(255,255,255,.08);
+  transition:transform var(--t-med) var(--ease-spring), box-shadow var(--t-med); }
+.pavatar.recv { box-shadow:0 0 0 2px rgba(74,179,255,.5); }
+.item:hover .pavatar { transform:scale(1.08) rotate(-4deg); } .item.active .pavatar { box-shadow:0 0 0 2px var(--gold), 0 0 14px var(--glow); }
+.pinfo { display:grid; min-width:0; } .pinfo b { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+input[type="checkbox"], input[type="radio"] { accent-color:var(--gold); width:16px; height:16px; cursor:pointer; }
+input[type="checkbox"] { transition:transform var(--t-fast) var(--ease-spring); } input[type="checkbox"]:active { transform:scale(.85); }
+label:has(> input[type="checkbox"]) { cursor:pointer; transition:color var(--t-fast); } label:has(> input[type="checkbox"]:checked) { color:var(--text); }
+select { cursor:pointer; }
 html.no-fx *, html.no-fx *::before, html.no-fx *::after { animation:none !important; transition:none !important; }
 html.no-fx #fx { display:none; }
 @media (prefers-reduced-motion: reduce) {
@@ -409,8 +432,12 @@ async function refresh(select) {
   for (const [title, group] of [["Mes profils", mine], ["Vitrines reçues", recv]]) {
     if (!group.length) continue;
     list.append(el("h3", {}, title));
-    for (const p of group) list.append(el("button", { class: "item" + (p.id === (select || current) ? " active" : ""), "data-id": p.id, onclick: () => selectProfile(p.id) },
-      p.player, el("small", {}, `${p.heroes} héros · ${p.updated_at}`)));
+    for (const p of group) {
+      const hue = [...p.player].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);  // couleur stable par joueur
+      list.append(el("button", { class: "item" + (p.id === (select || current) ? " active" : ""), "data-id": p.id, onclick: () => selectProfile(p.id) },
+        el("span", { class: "pavatar" + (p.received ? " recv" : ""), style: `--h:${hue}`, "aria-hidden": "true" }, p.player.slice(0, 1).toUpperCase()),
+        el("span", { class: "pinfo" }, el("b", {}, p.player), el("small", {}, `${p.heroes} héros · ${p.updated_at}`))));
+    }
   }
   if (select) { current = select; render(); } else if (!current && tab === "vitrine") welcome();
 }
@@ -686,14 +713,22 @@ function battlePage(body, heroes) {
           el("div", { style: `width:${wb}%;background:#b33f3f` }, wb >= 8 ? `B ${wb} %` : "")),
         el("p", {}, `Équipe A (${r.teams[0].join(", ")}) : ${wa} % de victoires · Équipe B (${r.teams[1].join(", ")}) : ${wb} % · ${r.avg_actions} actions en moyenne.`),
         el("p", { class: "note" }, `Par combat, en moyenne : ${fmtN(r.avg.healed)} PV soignés · ${fmtN(r.avg.shielded)} de barrières · ${r.avg.buffs} buffs · ${r.avg.debuffs} débuffs appliqués · ${r.avg.counters} contre-attaques · ${r.avg.passives} passifs déclenchés · ${r.avg.extra_turns} tours supplémentaires.`),
+        r.sample.frames?.length ? el("div", { class: "acts-row", style: "margin-top:10px" },
+          el("button", { onclick: (e) => e.target.replaceWith(replay(r.sample, ["Équipe A", "Équipe B"])) }, "▶ Revoir le combat type")) : "",
         el("h3", { style: "margin-top:12px" }, "Déroulé d'un combat type"),
         el("div", { class: "log" }, r.sample.log.join("\n") || "—"),
         el("p", { class: "note" }, "Simulés : jauge selon la vitesse, recharges réelles, soins (montant type si le jeu ne le chiffre pas), barrières, buffs (attaque, défense, vitesse, critiques, immunité, invincibilité, camouflage, immortalité), débuffs (défense, attaque, vitesse, étourdissement, sommeil, silence, provocation, anti-soin) selon efficacité/résistance, jauge, retraits de buffs et débuffs. Non simulés : passifs et déclencheurs (contre-attaques, attaques supplémentaires, résurrection), artefacts, esquive, âme brûlée.")));
     } catch (e) { out.replaceChildren(el("p", { class: "note", style: "color:var(--danger)" }, e.message)); }
   };
-  body.append(el("div", { class: "grid2" },
-      el("div", { class: "card" }, el("h3", {}, "Équipe A"), ...a.map((s, i) => field(`Héros ${i + 1}`, s))),
-      el("div", { class: "card" }, el("h3", {}, "Équipe B"), ...b.map((s, i) => field(`Héros ${i + 1}`, s)))),
+  // équipes : aperçu en portraits (4 places) au-dessus des choix, A en bleu, B en rouge
+  const teamCard = (label, selects, side) => {
+    const preview = el("div", { class: "team-preview big" });
+    const draw = () => preview.replaceChildren(teamRow(selects.map((x) => x.value.split("/").slice(1).join("/")), "lg", 4));
+    selects.forEach((x) => x.addEventListener("change", draw)); draw();
+    return el("div", { class: "card team-card side-" + side }, el("h3", {}, label), preview,
+      el("div", { class: "team-picks" }, ...selects.map((x, i) => field(`Héros ${i + 1}`, x))));
+  };
+  body.append(el("div", { class: "versus" }, teamCard("Équipe A", a, "a"), el("div", { class: "versus-badge", "aria-hidden": "true" }, "VS"), teamCard("Équipe B", b, "b")),
     el("div", { class: "card" }, el("h3", {}, "Paramètres"),
       el("div", { class: "grid2" }, field("Nombre de combats simulés", runs), field("Recharge S2 par défaut (tours)", cd2), field("Recharge S3 par défaut (tours)", cd3)),
       el("div", { style: "margin-top:12px" }, el("button", { onclick: run }, "Lancer la simulation"))), opts, out);
