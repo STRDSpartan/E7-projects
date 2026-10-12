@@ -389,8 +389,8 @@ def test_hero_mechanics_rules_are_valid_and_applied() -> None:
     heroes = load("skills")["heroes"]
     rules = load("hero_mechanics")["heroes"]
     for key, rule in rules.items():
-        assert key in heroes, key
-        assert set(rule) <= {"skills", "lot"}
+        assert key in heroes or rule.get("hero", {}).get("estimated"), key
+        assert set(rule) <= {"skills", "lot", "hero"}
         for sid, change in rule["skills"].items():
             assert change.get("source"), f"{key} {sid} : texte du jeu manquant"
             assert set(change) <= {"source", "set", "effects", "effects_add"}
@@ -665,13 +665,14 @@ LOT4 = [
     "Little Queen Charlotte",
     "Ivana",
     "Uncharted Pioneer Politis",
+    "Silvertide Christy",
 ]
 
 
 def test_lot4_arena_heroes_have_rules_and_fight() -> None:
     rules = load("hero_mechanics")["heroes"]
-    assert sum(1 for r in rules.values() if r.get("lot") == 4) == 9
-    assert hero_skills("Silvertide Christy") is None  # pas de multiplicateurs (E7Calc)
+    assert sum(1 for r in rules.values() if r.get("lot") == 4) == 10
+    assert hero_skills("Silvertide Christy") is not None  # multiplicateurs estimés
     for first, second in ((LOT4[:4], LOT4[4:8]), (LOT4[5:], LOT3[:4])):
         res = simulate([_hero(n) for n in first[:4]], [_hero(n) for n in second[:4]], runs=30)
         assert sum(res["win_rate"]) + res["draws"] == pytest.approx(100)
@@ -792,15 +793,15 @@ LOT6 = [
     "Silver Blade Aramintha", "Midnight Gala Lilias", "Sinful Angelica", "Abyssal Yufine",
     "Dragon King Sharun", "Diene", "Jenua", "Designer Lilibet", "Yulha", "Fenris", "Lilias",
     "Death Dealer Ray", "Surin", "Westwind Executioner Schuri", "Twisted Eidolon Kayron",
-    "Dragon Bride Senya", "Last Rider Krau", "Zeno",
+    "Dragon Bride Senya", "Last Rider Krau", "Zeno", "Mei Lin",
 ]  # fmt: skip
 
 
 def test_lot6_arena_heroes_have_rules_and_fight() -> None:
     rules = load("hero_mechanics")["heroes"]
-    assert sum(1 for r in rules.values() if r.get("lot") == 6) == 29
-    assert hero_skills("Mei Lin") is None  # pas de multiplicateurs (E7Calc)
-    for i in range(0, 29, 8):
+    assert sum(1 for r in rules.values() if r.get("lot") == 6) == 30
+    assert hero_skills("Mei Lin") is not None  # multiplicateurs estimés (absente d'E7Calc)
+    for i in range(0, 30, 8):
         group = LOT6[i : i + 8]
         first, second = group[:4], group[4:] or LOT6[:4]
         res = simulate([_hero(n) for n in first], [_hero(n) for n in second], runs=15)
@@ -915,3 +916,12 @@ def test_missing_mechanics_now_simulated() -> None:
     hp = foe.hp
     battle.hit(kayron, kayron.fighter.skills["s3"], foe)
     assert hp - foe.hp > 15000
+
+
+def test_estimated_heroes_fight() -> None:
+    # Mei Lin : la plus faible de l'attaque et de la défense devient égale à la plus forte
+    battle, mei, foe = _duel("Mei Lin", "Zio")
+    assert mei.stat("defense") == mei.stat("atk") == 3000
+    assert mei.fighter.skills["s2"]["always_crit"]
+    res = simulate([_hero("Mei Lin"), _hero("Silvertide Christy")], [_hero("Zio")], runs=10)
+    assert sum(res["win_rate"]) + res["draws"] == pytest.approx(100)

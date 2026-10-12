@@ -7641,6 +7641,222 @@
      "source": "When the enemy is defeated, inflicts extinction, and deals additional damage proportional to the caster's Attack to all enemies except for the target. (E7Calc : 150 % de l'attaque)"
     }
    }
+  },
+  "mei_lin": {
+   "lot": 6,
+   "hero": {
+    "element": "fire",
+    "class": "thief",
+    "base": {
+     "atk": 1228,
+     "hp": 5542,
+     "def": 557
+    },
+    "estimated": true
+   },
+   "skills": {
+    "s1": {
+     "set": {
+      "rate": 1.0,
+      "pow": 1.0,
+      "enhance": [
+       0.05,
+       0.05,
+       0.05,
+       0.1,
+       0.15
+      ],
+      "aoe": false,
+      "single": true,
+      "pen": 0,
+      "no_crit": false,
+      "passive": false,
+      "always_crit": true,
+      "cooldown": 0,
+      "name": "Mei Lin S1"
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "cooldown",
+       "amount": -1,
+       "target": "self",
+       "chance": 1.0
+      }
+     ],
+     "source": "Attacks the enemy with a fist, before increasing Combat Readiness of the caster by 20% and decreasing skill cooldowns by 1 turn. A successful attack always results in a critical hit. (multiplicateurs estimés : taux 1,0)"
+    },
+    "s2": {
+     "set": {
+      "rate": 1.3,
+      "pow": 1.0,
+      "enhance": [
+       0.05,
+       0.05,
+       0.05,
+       0.1,
+       0.15
+      ],
+      "aoe": false,
+      "single": true,
+      "pen": 0,
+      "no_crit": false,
+      "passive": false,
+      "always_crit": true,
+      "cooldown": 3,
+      "name": "Rising Dragon Spire"
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "self",
+       "turns": 2
+      },
+      {
+       "type": "extinction"
+      }
+     ],
+     "source": "After granting increased Attack to the caster for 2 turns, attacks the enemy with a kick, and when the enemy is defeated, inflicts extinction. A successful attack always results in a critical hit. (multiplicateurs estimés : taux 1,3, recharge 3 estimée)"
+    },
+    "s3": {
+     "set": {
+      "rate": null,
+      "passive": false,
+      "cooldown": 5,
+      "full_cd_start": true
+     },
+     "effects": [
+      {
+       "type": "heal",
+       "target": "self",
+       "stat": "max",
+       "ratio": 1.0
+      },
+      {
+       "type": "extra_turn",
+       "chance": 1.0,
+       "on_kill": false
+      },
+      {
+       "type": "static_flag",
+       "flag": "equalize"
+      }
+     ],
+     "source": "Fully recovers Health of the caster and grants an extra turn. Begins the first battle with full skill cooldown count, and the lower stat between Attack and Defense becomes equal to the higher stat. (recharge 5 estimée)"
+    }
+   }
+  },
+  "silvertide_christy": {
+   "lot": 4,
+   "hero": {
+    "element": "earth",
+    "class": "knight",
+    "base": {
+     "atk": 667,
+     "hp": 5784,
+     "def": 749
+    },
+    "estimated": true
+   },
+   "skills": {
+    "s1": {
+     "set": {
+      "rate": 0.7,
+      "pow": 1.0,
+      "enhance": [
+       0.05,
+       0.05,
+       0.05,
+       0.1,
+       0.15
+      ],
+      "aoe": false,
+      "single": true,
+      "pen": 0,
+      "no_crit": false,
+      "passive": false,
+      "flat": {
+       "caster_MaxHP": 0.12
+      },
+      "cooldown": 0,
+      "name": "Silvertide Christy S1"
+     },
+     "effects": [
+      {
+       "type": "debuff",
+       "effect": "provoke",
+       "target": "target",
+       "turns": 1,
+       "chance": 0.75
+      }
+     ],
+     "source": "Attacks the enemy, with a 75% chance to provoke for 1 turn. Damage dealt increases proportional to the caster's max Health. (multiplicateurs estimés : taux 0,7 + 12 % des PV max)"
+    },
+    "s2": {
+     "set": {
+      "rate": null,
+      "passive": true,
+      "trigger": {
+       "event": "attacked",
+       "chance": 1.0,
+       "every": 1,
+       "condition": {
+        "kind": "no_debuff"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "self",
+       "chance": 1.0
+      },
+      {
+       "type": "gauge",
+       "amount": 20,
+       "target": "back_row",
+       "chance": 1.0
+      }
+     ],
+     "source": "After being attacked, when the caster does not have a debuff, increases Combat Readiness of the caster and the ally in the back row by 20%. Can only be activated once per turn."
+    },
+    "s3": {
+     "set": {
+      "rate": null,
+      "passive": false,
+      "cooldown": 4
+     },
+     "effects": [
+      {
+       "type": "buff",
+       "effect": "atk_up",
+       "target": "allies",
+       "turns": 2
+      },
+      {
+       "type": "buff",
+       "effect": "eff_up",
+       "target": "self",
+       "turns": 2
+      },
+      {
+       "type": "heal",
+       "target": "self",
+       "stat": "hp",
+       "ratio": 0.15,
+       "estimated": true
+      }
+     ],
+     "source": "Increases Attack of all allies for 2 turns. Increases Effectiveness of the caster for 2 turns and recovers Health proportional to the caster's Max Health. (soin 15 % et recharge 4 estimés)"
+    }
+   }
   }
  }
 }

@@ -47,10 +47,13 @@ def apply_mechanics(heroes: dict[str, Any], rules: dict[str, Any]) -> dict[str, 
 
     Par compétence : `set` (champs remplacés, ex. `trigger`), `effects` (liste remplacée),
     `effects_add` (effets ajoutés). Une compétence absente est créée (passif sans dégâts).
+    `hero` (élément, classe, stats de base) crée un héros absent d'E7Calc (valeurs estimées).
     """
     out = copy.deepcopy(heroes)
     for hero_key, rule in rules.items():
         hero = out.get(hero_key)
+        if hero is None and rule.get("hero"):  # héros absent d'E7Calc : fiche estimée
+            hero = out[hero_key] = {**copy.deepcopy(rule["hero"]), "skills": {}}
         if hero is None:
             continue
         for sid, change in rule.get("skills", {}).items():

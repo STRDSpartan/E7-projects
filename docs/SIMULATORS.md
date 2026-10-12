@@ -225,7 +225,14 @@ partiel, contre-attaque quand un allié est attaqué, dégâts doublés hors de 
   mort), déclencheurs exacts de Fenris (attaque supplémentaire, double ou contre-attaque subie
   par un allié) et d'Arowell (attaque à cible unique). Non définis par le jeu, donc estimés :
   érosion de Rhianna (comme un saignement, explosée sur critique) et parfum persistant de Byblis
-  (dégâts subis −15 %). Toujours impossibles : Mei Lin et Silvertide Christy (absentes d'E7Calc).
+  (dégâts subis −15 %). Mei Lin et Silvertide Christy, absentes d'E7Calc,
+  ont une fiche **estimée** (clé `hero` dans `hero_mechanics.json` : élément, classe, stats de
+  base) : Mei Lin S1 taux 1,0 (critique garanti, jauge +20 %, recharges −1), S2 taux 1,3
+  (critique garanti, extinction), S3 soin complet + tour supplémentaire, attaque et défense
+  égalisées ; Silvertide Christy S1 taux 0,7 + 12 % des PV max (provocation 75 %), S2 jauge +20 %
+  pour elle et le rang arrière après une attaque subie sans débuff, S3 attaque + des alliés et
+  soin de 15 % (estimé). Non simulés : l'attaque supplémentaire de la S3 et le zèle de Mei Lin,
+  le partage de résistance de Christy.
 - **Suite** : le classement public d'epic7rtastats s'arrête au rang 105 (filtre « Remove Low
   Pick Data ») ; les héros restants pourront suivre par listes fournies.
 

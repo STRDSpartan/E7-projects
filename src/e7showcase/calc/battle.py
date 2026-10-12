@@ -265,6 +265,8 @@ class _Unit:
     def stat(self, name: str) -> float:
         """Statistique avec les bonus conditionnels (`static_stat`) et les buffs à pourcentage."""
         value = float(getattr(self.fighter, name))
+        if name in ("atk", "defense") and "equalize" in self.flags:  # Mei Lin
+            value = max(self.fighter.atk, self.fighter.defense)
         for b in self.bonus:
             if b["stat"] == name and (not b.get("while") or b["while"] in self.buffs):
                 per = self.fighter.hp if b.get("per") == "hp" else 1  # « ∝ max Health »
