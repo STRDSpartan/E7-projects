@@ -923,5 +923,16 @@ def test_estimated_heroes_fight() -> None:
     battle, mei, foe = _duel("Mei Lin", "Zio")
     assert mei.stat("defense") == mei.stat("atk") == 3000
     assert mei.fighter.skills["s2"]["always_crit"]
+    # Zèle : gagné quand un allié Feu utilise une compétence (2 cumuls), consommé par la S2
+    for _ in range(3):
+        battle.fire(mei, "team_skill", mei)
+    assert mei.marks["zeal"] == 2
+    s2 = mei.fighter.skills["s2"]
+    assert battle.dynamic(mei, s2, foe)["pow"] == pytest.approx(1.5 * s2["pow"])
+    # S3 : la prochaine attaque est rejouée
+    battle.current = mei
+    for effect in mei.fighter.skills["s3"]["effects"]:
+        battle.apply(mei, effect, [])
+    assert "repeat" in mei.buffs
     res = simulate([_hero("Mei Lin"), _hero("Silvertide Christy")], [_hero("Zio")], runs=10)
     assert sum(res["win_rate"]) + res["draws"] == pytest.approx(100)

@@ -7709,7 +7709,13 @@
       "passive": false,
       "always_crit": true,
       "cooldown": 3,
-      "name": "Rising Dragon Spire"
+      "name": "Rising Dragon Spire",
+      "dynamic": {
+       "mark_mult": {
+        "mark": "zeal",
+        "per": 0.25
+       }
+      }
      },
      "effects": [
       {
@@ -7720,6 +7726,12 @@
       },
       {
        "type": "extinction"
+      },
+      {
+       "type": "mark",
+       "mark": "zeal",
+       "target": "self",
+       "count": -2
       }
      ],
      "source": "After granting increased Attack to the caster for 2 turns, attacks the enemy with a kick, and when the enemy is defeated, inflicts extinction. A successful attack always results in a critical hit. (multiplicateurs estimés : taux 1,3, recharge 3 estimée)"
@@ -7746,9 +7758,37 @@
       {
        "type": "static_flag",
        "flag": "equalize"
+      },
+      {
+       "type": "buff",
+       "effect": "repeat",
+       "target": "self",
+       "turns": 999,
+       "unique": true
       }
      ],
-     "source": "Fully recovers Health of the caster and grants an extra turn. Begins the first battle with full skill cooldown count, and the lower stat between Attack and Defense becomes equal to the higher stat. (recharge 5 estimée)"
+     "source": "Fully recovers Health of the caster and grants an extra turn. Begins the first battle with full skill cooldown count, and the lower stat between Attack and Defense becomes equal to the higher stat. (recharge 5 estimée) On the next attack, grants an extra attack with the same skill."
+    },
+    "s2_zeal": {
+     "set": {
+      "trigger": {
+       "event": "team_skill",
+       "chance": 1.0,
+       "condition": {
+        "kind": "other_element",
+        "element": "fire"
+       }
+      }
+     },
+     "effects": [
+      {
+       "type": "mark",
+       "mark": "zeal",
+       "target": "self",
+       "estimated": true
+      }
+     ],
+     "source": "When a Fire elemental ally uses a skill, grants zeal, which enhances Rising Dragon Spire. ★ Zeal: Increases damage dealt by Rising Dragon Spire. Can stack up to 2 times. Dispelled at the end of the turn after using Rising Dragon Spire. (bonus non chiffré : +25 % par cumul, estimé)"
     }
    }
   },

@@ -231,8 +231,9 @@ partiel, contre-attaque quand un allié est attaqué, dégâts doublés hors de 
   (critique garanti, extinction), S3 soin complet + tour supplémentaire, attaque et défense
   égalisées ; Silvertide Christy S1 taux 0,7 + 12 % des PV max (provocation 75 %), S2 jauge +20 %
   pour elle et le rang arrière après une attaque subie sans débuff, S3 attaque + des alliés et
-  soin de 15 % (estimé). Non simulés : l'attaque supplémentaire de la S3 et le zèle de Mei Lin,
-  le partage de résistance de Christy.
+  soin de 15 % (estimé). Mei Lin : Zèle gagné quand un allié Feu utilise une compétence
+  (2 cumuls, S2 +25 % par cumul, estimé, retiré après la S2) et attaque suivant la S3 rejouée.
+  Non simulé : le partage de résistance de Christy.
 - **Suite** : le classement public d'epic7rtastats s'arrête au rang 105 (filtre « Remove Low
   Pick Data ») ; les héros restants pourront suivre par listes fournies.
 

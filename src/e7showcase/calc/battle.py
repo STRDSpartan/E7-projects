@@ -108,6 +108,7 @@ BUFF_NAMES = {
     "def_mission": "Mission défensive",
     "time_reversal": "Retour temporel",
     "clone": "Clone",
+    "repeat": "Attaque répétée",
 }
 DEBUFF_NAMES = {
     "def_down": "Défense −",
@@ -173,6 +174,7 @@ MARKS = {
     "hunt": ({"atk": 0.2}, 5),  # Peira Loup solitaire : attaque +20 % par début de tour
     "focus": ({}, 5),  # Concentration simple (ex. Schuri)
     "ancient": ({"defense": 0.1}, 8),  # Zeno : défense +10 % (et efficacité +5) par cumul
+    "zeal": ({}, 2),  # Mei Lin : Zèle, S2 renforcée (non chiffré : +25 % estimé)
 }
 FRAGRANCE = 0.15  # parfum persistant (Byblis) : non défini par le jeu, réduction estimée à 15 %
 RESOURCE_BOOST = 0.4  # Frieren : « 40% resource increase » (Esprit combatif, Concentration)
@@ -552,6 +554,8 @@ class _Battle:
             return bool(back) and other is back[0] and other.hp <= 0.5 * other.max_hp
         if kind == "damage_at_least":  # « when the damage suffered is 20% or more of max Health »
             return other is not None and other.last_damage >= float(cond["value"]) * other.max_hp
+        if kind == "other_element":  # ex. « when a Fire elemental ally uses a skill »
+            return other is not None and other.fighter.element == cond["element"]
         if kind == "first_ally":
             return other is not None and other.team == u.team
         if kind == "first_enemy":
@@ -1674,6 +1678,8 @@ class _Battle:
                 self.fire(actor, "after_attack", hit[0])
             for f in self.foes(actor):
                 self.fire(f, "enemy_skill", actor, non_attack=skill.get("rate") is None)
+            for a in self.allies(actor):
+                self.fire(a, "team_skill", actor)
             if skill.get("rate") is None:
                 for a in self.allies(actor):
                     if a is not actor:
@@ -1689,6 +1695,11 @@ class _Battle:
                     if a is not t:
                         self.fire(a, "ally_evaded", t)
             self.specials(actor, skill, hit)
+            if "repeat" in actor.buffs and hit and actor.alive and sid in actor.fighter.skills:
+                del actor.buffs[
+                    "repeat"
+                ]  # Mei Lin : « on the next attack, grants an extra attack »
+                self.extra_attack(actor, {"skill": sid}, hit)
             inflicted = int(self.stats["debuffs"] - debuffs_before)
             for a in self.allies(actor) if inflicted else []:
                 if "debuff_cr" in a.flags and "seal" not in a.debuffs:  # Tidal Rift Elvira
