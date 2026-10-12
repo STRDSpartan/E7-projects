@@ -299,25 +299,7 @@ def defense_plan(summary: dict[str, Any], today: date | None = None) -> dict[str
         lines.append("Aucune défense n'est encore placée.")
     if summary["settings"].get("plan_counters") and summary.get("counters"):
         lines += ["", "**Contres connus**", *counter_lines(summary["counters"])]
-        rows += [[], ["Défense ennemie", "Équipe d'attaque", "Victoires", "Défaites", "Bilan"]]
-        for c in summary["counters"]:  # second tableau, sous les défenses
-            for t in c["teams"]:
-                verdict = (
-                    "gagnée"
-                    if t["wins"] and not t["losses"]
-                    else "perdue"
-                    if not t["wins"]
-                    else "mitigée"
-                )
-                rows.append(
-                    [
-                        " · ".join(c["enemy_team"]),
-                        ", ".join(t["team"]),
-                        str(t["wins"]),
-                        str(t["losses"]),
-                        verdict,
-                    ]
-                )
+        rows += [[], *_counter_rows(summary["counters"])]
     rows += _war_rows(summary)
     messages: list[str] = []
     for line in lines:  # découpe en messages Discord, sans couper une ligne
@@ -329,10 +311,36 @@ def defense_plan(summary: dict[str, Any], today: date | None = None) -> dict[str
     return {"text": "\n".join(lines), "messages": messages, "csv": "﻿" + csv + "\n"}
 
 
+def _counter_rows(counters: list[dict[str, Any]]) -> list[list[str]]:
+    """Contres connus pour le CSV : une ligne par équipe testée contre chaque défense."""
+    rows = [["Défense ennemie", "Équipe d'attaque", "Victoires", "Défaites", "Bilan"]]
+    for c in counters:
+        for t in c["teams"]:
+            verdict = (
+                "gagnée"
+                if t["wins"] and not t["losses"]
+                else "perdue"
+                if not t["wins"]
+                else "mitigée"
+            )
+            enemy, team = " · ".join(c["enemy_team"]), ", ".join(t["team"])
+            rows.append([enemy, team, str(t["wins"]), str(t["losses"]), verdict])
+    return rows
+
+
+def counters_csv(summary: dict[str, Any]) -> str:
+    """Contres connus seuls, en tableur."""
+    rows = _counter_rows(summary["counters"]) if summary["counters"] else []
+    return _csv(rows or [["Aucun contre enregistré"]])
+
+
+def _csv(rows: list[list[str]]) -> str:
+    return "\ufeff" + "\n".join(";".join(_csv_cell(c) for c in row) for row in rows) + "\n"
+
+
 def wars_csv(summary: dict[str, Any]) -> str:
     """Suivi des guerres seul, en tableur (attaques puis attaques restantes)."""
-    rows = _war_rows(summary)[1:] or [["Aucune guerre enregistrée"]]
-    return "\ufeff" + "\n".join(";".join(_csv_cell(c) for c in row) for row in rows) + "\n"
+    return _csv(_war_rows(summary)[1:] or [["Aucune guerre enregistrée"]])
 
 
 def _war_rows(summary: dict[str, Any]) -> list[list[str]]:

@@ -79,19 +79,26 @@ class WindowApi:
 
     def save_wars_csv(self) -> str | None:
         """Suivi des guerres GvG seul, enregistré en .csv (tableur)."""
-        import webview
-
         from e7showcase.app.gvg import wars_csv
 
+        return self._save_csv("suivi-guerres-gvg.csv", wars_csv(self._state.gvg.summary()))
+
+    def save_counters_csv(self) -> str | None:
+        """Contres connus GvG seuls, enregistrés en .csv (tableur)."""
+        from e7showcase.app.gvg import counters_csv
+
+        return self._save_csv("contres-gvg.csv", counters_csv(self._state.gvg.summary()))
+
+    def _save_csv(self, filename: str, text: str) -> str | None:
+        import webview
+
         chosen = self._window.create_file_dialog(
-            webview.SAVE_DIALOG,
-            save_filename="suivi-guerres-gvg.csv",
-            file_types=("Tableur (*.csv)",),
+            webview.SAVE_DIALOG, save_filename=filename, file_types=("Tableur (*.csv)",)
         )
         if not chosen:
             return None
         target = Path(chosen if isinstance(chosen, str) else chosen[0]).with_suffix(".csv")
-        target.write_text(wars_csv(self._state.gvg.summary()), encoding="utf-8")
+        target.write_text(text, encoding="utf-8")
         return str(target)
 
 

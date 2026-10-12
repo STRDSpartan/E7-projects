@@ -27,6 +27,7 @@ from e7showcase.app.guild import GuildStore
 from e7showcase.app.gvg import (
     GvgError,
     GvgStore,
+    counters_csv,
     counters_report,
     defense_plan,
     war_report,
@@ -325,6 +326,8 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     return self._json(gvg.summary())
                 if rest == "/plan" and method == "GET":
                     return self._json(defense_plan(gvg.summary()))
+                if rest == "/counters/csv" and method == "GET":
+                    return self._json({"csv": counters_csv(gvg.summary())})
                 if rest == "/wars/csv" and method == "GET":
                     return self._json({"csv": wars_csv(gvg.summary())})
                 if rest == "/webhook" and method == "GET":
