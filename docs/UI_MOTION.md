@@ -25,6 +25,7 @@ Tout est dans `src/e7showcase/app/ui.html` (CSS en fin de `<style>`, module JS `
 | Simulateur | équipes A (bleu) et B (rouge) face à face autour d'un « VS », 4 places en portraits mises à jour à chaque choix ; rejeu animé aussi dans le simulateur principal |
 | Profils (barre latérale) | pastille ronde à l'initiale, couleur propre à chaque joueur (liseré bleu pour une vitrine reçue, halo doré pour le profil ouvert) |
 | Formulaires | cases à cocher dorées, rebond au clic |
+| Verdict | à la fin de chaque simulation (simulateur, tests GvG) : bandeau « Victoire » aux couleurs de l'équipe gagnante (A bleu, B rouge), trophée qui surgit, rayons qui tournent, reflet qui balaie, taux de victoire qui monte jusqu'à sa valeur, gerbe d'étincelles ; « Combat serré » ⚖ en or si l'écart est sous 10 points ; amené à l'écran automatiquement |
 | Dialogues | ouverture à ressort, fond flouté |
 
 ## Accessibilité et performance

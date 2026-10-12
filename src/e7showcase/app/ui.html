@@ -357,6 +357,32 @@ input[type="checkbox"], input[type="radio"] { accent-color:var(--gold); width:16
 input[type="checkbox"] { transition:transform var(--t-fast) var(--ease-spring); } input[type="checkbox"]:active { transform:scale(.85); }
 label:has(> input[type="checkbox"]) { cursor:pointer; transition:color var(--t-fast); } label:has(> input[type="checkbox"]:checked) { color:var(--text); }
 select { cursor:pointer; }
+
+/* --- v0.46 : verdict de fin de simulation --- */
+.verdict { --c:#e8c26a; --c2:#9c7326; position:relative; overflow:hidden; display:flex; align-items:center; gap:18px; width:100%;
+  padding:16px 22px; border-radius:16px; border:1px solid color-mix(in srgb, var(--c) 55%, transparent);
+  background:linear-gradient(110deg, color-mix(in srgb, var(--c) 22%, #0d111a), #0d111a 70%);
+  box-shadow:0 0 0 1px rgba(0,0,0,.3), 0 12px 40px rgba(0,0,0,.4), 0 0 40px color-mix(in srgb, var(--c) 25%, transparent);
+  animation:vdIn .7s var(--ease-spring) both; margin-bottom:12px; }
+.verdict.t0 { --c:#4ab3ff; --c2:#1e5f99; } .verdict.t1 { --c:#ff6b5a; --c2:#99302a; } .verdict.close { --c:#e8c26a; --c2:#9c7326; }
+.verdict::after { content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(105deg, transparent 35%, rgba(255,255,255,.22) 50%, transparent 65%); transform:translateX(-120%);
+  animation:vdSweep 1.4s ease .5s forwards; }
+.vd-rays { position:absolute; left:-40px; top:50%; width:220px; height:220px; margin-top:-110px; pointer-events:none; opacity:.35;
+  background:repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--c) 60%, transparent) 0 6deg, transparent 6deg 18deg);
+  mask:radial-gradient(circle, #000 20%, transparent 70%); -webkit-mask:radial-gradient(circle, #000 20%, transparent 70%); animation:spin 18s linear infinite; }
+.vd-icon { position:relative; font-size:44px; line-height:1; filter:drop-shadow(0 0 14px var(--c)); animation:vdPop .8s var(--ease-spring) .15s both; }
+.vd-text { position:relative; display:grid; gap:2px; }
+.vd-kicker { font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--c); font-weight:800; }
+.vd-team { font-size:28px; font-weight:900; letter-spacing:.01em; line-height:1.1;
+  background:linear-gradient(180deg, #fff, color-mix(in srgb, var(--c) 70%, #fff)); -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:vdRise .6s var(--ease-out) .25s both; }
+.vd-sub { color:var(--muted); font-size:13px; animation:vdRise .6s var(--ease-out) .4s both; }
+.vd-pct { color:var(--c); font-size:16px; font-variant-numeric:tabular-nums; text-shadow:0 0 12px color-mix(in srgb, var(--c) 60%, transparent); }
+@keyframes vdIn { from { opacity:0; transform:scale(.92) translateY(10px); } }
+@keyframes vdPop { 0% { transform:scale(0) rotate(-30deg); } 70% { transform:scale(1.25) rotate(8deg); } }
+@keyframes vdRise { from { opacity:0; transform:translateY(8px); } }
+@keyframes vdSweep { to { transform:translateX(120%); } }
 html.no-fx *, html.no-fx *::before, html.no-fx *::after { animation:none !important; transition:none !important; }
 html.no-fx #fx { display:none; }
 @media (prefers-reduced-motion: reduce) {
@@ -707,7 +733,7 @@ function battlePage(body, heroes) {
       const r = await json("POST", "/sim/battle", { team_a: a.map((s) => s.value).filter(Boolean), team_b: b.map((s) => s.value).filter(Boolean),
         runs: runs.value, cooldowns: { s2: cd2.value, s3: cd3.value }, options: readOptions(opts) });
       const [wa, wb] = r.win_rate;
-      out.replaceChildren(el("div", { class: "card" }, el("h3", {}, `Résultat sur ${fmtN(r.runs)} combats`),
+      out.replaceChildren(verdict(["Équipe A", "Équipe B"], wa, wb, r.draws, r.runs), el("div", { class: "card" }, el("h3", {}, `Résultat sur ${fmtN(r.runs)} combats`),
         el("div", { class: "wins" }, el("div", { style: `width:${wa}%;background:#2f6fb3` }, wa >= 8 ? `A ${wa} %` : ""),
           el("div", { style: `width:${r.draws}%;background:#555` }, r.draws >= 8 ? `Nul ${r.draws} %` : ""),
           el("div", { style: `width:${wb}%;background:#b33f3f` }, wb >= 8 ? `B ${wb} %` : "")),
@@ -956,6 +982,38 @@ function replay(sample, labels) {
   restart();
   return box;
 }
+
+// Verdict de fin de simulation : vainqueur, taux de victoire qui monte, trophée, étincelles
+function verdict(labels, wa, wb, draws, runs) {
+  const close = Math.abs(wa - wb) < 10;  // écart sous 10 points : combat serré
+  const side = wa >= wb ? 0 : 1, rate = Math.max(wa, wb);
+  const pct = el("b", { class: "vd-pct" }, "0 %");
+  const box = el("div", { class: `verdict ${close ? "close" : "t" + side}`, role: "status" },
+    el("div", { class: "vd-rays", "aria-hidden": "true" }),
+    el("div", { class: "vd-icon", "aria-hidden": "true" }, close ? "⚖" : "🏆"),
+    el("div", { class: "vd-text" },
+      el("span", { class: "vd-kicker" }, close ? "Combat serré" : "Victoire"),
+      el("strong", { class: "vd-team" }, close ? `${labels[0]} ou ${labels[1]}` : labels[side]),
+      el("span", { class: "vd-sub" }, pct, ` de victoires sur ${fmtN(runs)} combats` + (draws ? ` · ${draws} % de nuls` : ""))));
+  const t0 = performance.now();
+  const tick = (t) => {
+    const k = Math.min(1, (t - t0) / 1100), v = rate * (1 - Math.pow(1 - k, 3));
+    pct.textContent = `${v.toFixed(1)} %`;
+    if (k < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+  requestAnimationFrame(() => {  // résultat sous les formulaires : on l'amène à l'écran
+    const r = box.getBoundingClientRect();
+    if (box.isConnected && (r.top < 0 || r.bottom > innerHeight)) box.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+  setTimeout(() => {  // gerbe une fois le bandeau en place
+    if (!box.isConnected) return;
+    const r = box.getBoundingClientRect();
+    fx.burst(r.left + 60, r.top + r.height / 2, close ? 16 : 36);
+    if (!close) fx.burst(r.left + r.width / 2, r.top + r.height / 2, 24);
+  }, 450);
+  return box;
+}
 function simBox(label, build) {
   const out = el("div", {});
   const run = async () => {
@@ -967,7 +1025,7 @@ function simBox(label, build) {
       const r = await json("POST", "/sim/battle", { team_a: teams.a, team_b: teams.b, runs: 500 });
       const [wa, wb] = r.win_rate;
       const log = el("div", { class: "log", hidden: "" }, r.sample.log.join("\n") || "—");
-      out.replaceChildren(el("div", { class: "simres" },
+      out.replaceChildren(verdict(teams.labels, wa, wb, r.draws, r.runs), el("div", { class: "simres" },
         el("div", { class: "wins" }, el("div", { style: `width:${wa}%;background:#2f6fb3` }, wa >= 10 ? `${teams.labels[0]} ${wa} %` : ""),
           el("div", { style: `width:${r.draws}%;background:#555` }, r.draws >= 10 ? `Nul ${r.draws} %` : ""),
           el("div", { style: `width:${wb}%;background:#b33f3f` }, wb >= 10 ? `${teams.labels[1]} ${wb} %` : "")),
