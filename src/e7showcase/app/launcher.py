@@ -16,7 +16,7 @@ import threading
 from pathlib import Path
 from typing import Any
 
-from e7showcase.app.server import AppState, start_server
+from e7showcase.app.server import FACES_MIN, AppState, start_server
 from e7showcase.app.vitrine_file import (
     SUFFIX,
     VitrineFileError,
@@ -164,6 +164,8 @@ def main(argv: list[str] | None = None) -> int:
 
     server = start_server(state)
     threading.Thread(target=_warm_simulator, daemon=True).start()
+    if state.faces.count() < FACES_MIN:  # premier lancement : visages prêts avant la 1re GvG
+        state.start_face_sync()
     url = f"http://127.0.0.1:{server.server_address[1]}/" + (f"#p={start_id}" if start_id else "")
     try:
         import webview
