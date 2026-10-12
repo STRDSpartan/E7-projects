@@ -23,7 +23,7 @@ from urllib.parse import unquote, urlparse
 from e7showcase import __version__
 from e7showcase.app.armory import armory
 from e7showcase.app.discord_settings import DiscordSettings, Publisher
-from e7showcase.app.guild import GuildStore
+from e7showcase.app.guild import GuildStore, members_csv
 from e7showcase.app.gvg import (
     GvgError,
     GvgStore,
@@ -232,6 +232,8 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 raise ApiError(404, "introuvable")
             if path == "/gvg" or path.startswith("/gvg/"):
                 return self._gvg(method, path[4:])
+            if path == "/guild/csv" and method == "GET":
+                return self._json({"csv": members_csv(state.guild.summary())})
             if path == "/guild":
                 if method == "GET":
                     return self._json(state.guild.summary())

@@ -548,7 +548,8 @@ async function guildPage() {
       el("div", { class: "card" }, el("h3", {}, "Ajouter des membres"),
         el("p", { class: "note" }, "Chaque membre vous envoie sa vitrine (.e7v, bouton « Exporter la vitrine ») : ouvrez-la ici pour l'ajouter à la guilde."),
         el("div", { class: "filters" }, add, el("button", { onclick: () => file.click() }, "Ajouter une vitrine (.e7v)")), file),
-      g.members.length ? el("div", { class: "card" }, el("h3", {}, "Membres"), table)
+      g.members.length ? el("div", { class: "card" }, el("h3", {}, "Membres"), table,
+        el("button", { class: "ghost", onclick: () => saveCsv("save_guild_csv", "/guild/csv", "membres-guilde.csv", "Membres enregistrés") }, "Exporter les membres (.csv)"))
         : el("div", { class: "empty" }, "Aucun membre pour l'instant : ajoutez votre profil et les vitrines de vos coéquipiers.")));
 }
 

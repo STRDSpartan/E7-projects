@@ -299,6 +299,9 @@ def test_armory_and_guild_api(app: Any) -> None:
     rid = call(base, "POST", "/api/open", {"data": shared, "guild": True}, t)["id"]
     guild = call(base, "GET", "/api/guild", token=t)
     assert {m["id"] for m in guild["members"]} == {pid, rid}
+    csv = call(base, "GET", "/api/guild/csv", token=t)["csv"]
+    assert csv.startswith("\ufeffMembre;Origine;Héros;Puissance;Pièces;Héros les plus puissants")
+    assert "Spartan;Mon profil;1;1000;1;Kise (1000);" in csv and "Spartan;Vitrine reçue;" in csv
     state.store.delete(rid)  # un profil supprimé disparaît de la guilde
     assert [m["id"] for m in call(base, "GET", "/api/guild", token=t)["members"]] == [pid]
 

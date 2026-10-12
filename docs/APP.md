@@ -24,6 +24,8 @@ la même application sur son ordinateur.
 - **Guilde** : nom de la guilde et membres (son profil + les vitrines `.e7v` reçues des
   coéquipiers) avec héros, puissance cumulée, pièces et héros les plus puissants ; accès direct à
   la vitrine et à l'armurerie de chacun. Stockage local : `<données>/guild.json`.
+  Bouton « Exporter les membres (.csv) » (`GET /api/guild/csv`) : un membre par ligne
+  (origine, héros, puissance, pièces, héros les plus puissants, mise à jour).
 - **Armurerie** : toutes les pièces du profil choisi. Les pièces **portées** viennent des fiches
   « Infos de héros » (icône découpée sur la capture, set, rang, niveau, amélioration, stats) ; les
   pièces **non équipées** viennent de captures de l'infobulle d'un objet de l'inventaire, glissées

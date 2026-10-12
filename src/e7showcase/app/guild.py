@@ -77,3 +77,19 @@ class GuildStore:
             if p.id not in joined
         ]
         return {"name": data["name"], "members": members, "candidates": candidates}
+
+
+def members_csv(summary: dict[str, Any]) -> str:
+    """Membres de la guilde en tableur : un membre par ligne, du plus puissant au moins puissant."""
+    from e7showcase.app.gvg import _csv  # même format que les exports GvG
+
+    head = ["Membre", "Origine", "Héros", "Puissance", "Pièces", "Héros les plus puissants"]
+    rows = [[*head, "Mise à jour"]]
+    for m in summary["members"]:
+        top = ", ".join(h["name"] + (f" ({h['power']})" if h["power"] else "") for h in m["top"])
+        origin = "Vitrine reçue" if m["received"] else "Mon profil"
+        rows.append(
+            [m["player"], origin, str(m["heroes"]), str(m["power"]), str(m["items"]), top]
+            + [m["updated_at"]]
+        )
+    return _csv(rows)
