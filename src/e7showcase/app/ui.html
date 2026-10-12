@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>E7 Showcase</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2l12 7v14l-12 7-12-7V9z' fill='%23141925' stroke='%23e8c26a' stroke-width='2'/%3E%3Ctext x='16' y='21' font-size='12' font-family='sans-serif' font-weight='700' fill='%23e8c26a' text-anchor='middle'%3EE7%3C/text%3E%3C/svg%3E">
 <style>
 :root { --bg:#0b0e15; --panel:#141925; --panel-2:#1b2130; --line:#283044; --text:#e8ecf3; --muted:#8e98aa;
   --gold:#e8c26a; --accent:#4ab3ff; --danger:#e26060; --ok:#7fe0a0; color-scheme: dark; }
@@ -196,6 +197,47 @@ dialog::backdrop { background:rgba(5,7,12,.6); backdrop-filter:blur(4px); animat
 .fx-toggle { margin:0 12px 12px; font-size:12px; }
 ::-webkit-scrollbar { width:10px; height:10px; } ::-webkit-scrollbar-thumb { background:#2a3245; border-radius:10px; border:2px solid transparent; background-clip:padding-box; }
 ::-webkit-scrollbar-thumb:hover { background:#3a4561; background-clip:padding-box; border:2px solid transparent; }
+
+/* --- v0.39 : icônes d'onglets, accueil, notifications, rangs, chargement --- */
+.tab-ico { width:16px; height:16px; vertical-align:-3px; margin-right:7px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:transform var(--t-med) var(--ease-spring); }
+.topnav button:hover .tab-ico { transform:translateY(-1px) scale(1.12); }
+.topnav button[aria-selected="true"] .tab-ico { filter:drop-shadow(0 0 6px var(--glow)); }
+.welcome { max-width:640px; }
+.welcome h2 { font-size:28px; margin:8px 0; background:linear-gradient(90deg, var(--text), var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.emblem { width:150px; height:150px; margin:0 auto; filter:drop-shadow(0 0 24px rgba(232,194,106,.25)); }
+.emblem svg { width:100%; height:100%; overflow:visible; }
+.emblem .ring { transform-origin:100px 100px; } .emblem .r1 { animation:spin 40s linear infinite; } .emblem .r2 { animation:spin 26s linear infinite reverse; }
+.emblem .core { animation:breathe 4s ease-in-out infinite; transform-origin:100px 100px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+@keyframes breathe { 50% { transform:scale(1.03); filter:drop-shadow(0 0 10px rgba(232,194,106,.5)); } }
+ol.steps { list-style:none; padding:0; display:grid; gap:8px; counter-reset:st; margin:18px 0; }
+ol.steps li { counter-increment:st; display:flex; gap:12px; align-items:flex-start; text-align:left; background:rgba(27,33,48,.7);
+  border:1px solid var(--line); border-radius:12px; padding:10px 14px; animation:reveal .55s var(--ease-out) both; }
+ol.steps li:nth-child(2) { animation-delay:.08s; } ol.steps li:nth-child(3) { animation-delay:.16s; } ol.steps li:nth-child(4) { animation-delay:.24s; }
+ol.steps li::before { content:counter(st); flex:none; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; font-weight:800; font-size:12px;
+  color:#1d1606; background:linear-gradient(180deg, #f3d48a, var(--gold)); box-shadow:0 0 12px var(--glow); }
+#toasts { position:fixed; right:18px; bottom:18px; z-index:50; display:grid; gap:10px; width:min(380px, calc(100vw - 36px)); }
+.toast { display:flex; gap:10px; align-items:flex-start; padding:12px 14px; border-radius:12px; cursor:pointer; white-space:pre-wrap; font-size:13px;
+  background:rgba(20,25,37,.92); backdrop-filter:blur(10px); border:1px solid var(--line); box-shadow:0 14px 40px rgba(0,0,0,.45);
+  animation:toastIn .45s var(--ease-spring); position:relative; overflow:hidden; word-break:break-word; }
+.toast .ico { flex:none; width:22px; height:22px; border-radius:50%; display:grid; place-items:center; font-weight:800; font-size:12px; color:#0b0e15; background:var(--ok); }
+.toast.warn .ico { background:var(--gold); } .toast.err .ico { background:var(--danger); }
+.toast.ok { border-color:rgba(127,224,160,.35); } .toast.warn { border-color:rgba(232,194,106,.4); } .toast.err { border-color:rgba(226,96,96,.45); }
+.toast.out { animation:toastOut .3s ease-in forwards; }
+@keyframes toastIn { from { opacity:0; transform:translateX(40px) scale(.96); } }
+@keyframes toastOut { to { opacity:0; transform:translateX(40px); } }
+.gear.rk-epic { border-color:rgba(226,96,96,.35); background:linear-gradient(160deg, rgba(226,96,96,.10), rgba(20,25,37,.85) 45%); }
+.gear.rk-heroic { border-color:rgba(197,140,255,.35); background:linear-gradient(160deg, rgba(197,140,255,.10), rgba(20,25,37,.85) 45%); }
+.gear.rk-rare { border-color:rgba(74,179,255,.3); background:linear-gradient(160deg, rgba(74,179,255,.08), rgba(20,25,37,.85) 45%); }
+.gear.rk-epic:hover { box-shadow:0 10px 30px rgba(0,0,0,.35), 0 0 22px rgba(226,96,96,.18); }
+.gear.rk-heroic:hover { box-shadow:0 10px 30px rgba(0,0,0,.35), 0 0 22px rgba(197,140,255,.18); }
+.gear.free::after { content:"De côté"; position:absolute; top:8px; right:8px; font-size:10px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ok); border:1px solid rgba(127,224,160,.4); border-radius:999px; padding:1px 7px; }
+.skeleton .sk { border-radius:12px; background:linear-gradient(90deg, #161b27 0%, #1f2636 40%, #161b27 80%); background-size:200% 100%; animation:sk 1.2s linear infinite; }
+.sk-bar { height:44px; } .sk-tile { height:74px; } .sk-card { height:180px; } .sk-card.short { height:110px; }
+@keyframes sk { to { background-position:-200% 0; } }
+.card > button + button, .card > button + .ghost { margin-left:8px; }
+.card > button { margin-top:10px; }
 html.no-fx *, html.no-fx *::before, html.no-fx *::after { animation:none !important; transition:none !important; }
 html.no-fx #fx { display:none; }
 @media (prefers-reduced-motion: reduce) {
@@ -218,11 +260,11 @@ html.no-fx #fx { display:none; }
 </aside>
 <main id="main">
   <nav class="topnav" role="tablist" aria-label="Fonctionnalités">
-    <button role="tab" data-tab="vitrine">Vitrine</button>
-    <button role="tab" data-tab="sim">Simulateur de combat</button>
-    <button role="tab" data-tab="guild">Guilde</button>
-    <button role="tab" data-tab="armory">Armurerie</button>
-    <button role="tab" data-tab="gvg">GvG</button>
+    <button role="tab" data-tab="vitrine"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v12H3zM8 21h8M12 17v4"/></svg>Vitrine</button>
+    <button role="tab" data-tab="sim"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19L19 5M14 5h5v5M5 5l5 5M14 14l5 5"/></svg>Simulateur de combat</button>
+    <button role="tab" data-tab="guild"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>Guilde</button>
+    <button role="tab" data-tab="armory"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12l-2 6H8zM8 9l-2 12h12L16 9"/></svg>Armurerie</button>
+    <button role="tab" data-tab="gvg"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V8l4-4 4 4 4-4 4 4v12zM9 20v-5h6v5"/></svg>GvG</button>
   </nav>
   <div id="content"></div>
 </main>
@@ -282,6 +324,16 @@ function selectProfile(id) {
   if (tab !== "armory") tab = "vitrine";
   render();
 }
+// Notifications (toasts) : remplacent les alert(), sans bloquer la fenêtre
+function toast(text, kind = "ok") {
+  let box = $("#toasts");
+  if (!box) { box = el("div", { id: "toasts", role: "status", "aria-live": "polite" }); document.body.append(box); }
+  const node = el("div", { class: "toast " + kind }, el("span", { class: "ico" }, kind === "err" ? "!" : "✓"), el("div", {}, String(text)));
+  const close = () => { node.classList.add("out"); setTimeout(() => node.remove(), 300); };
+  node.addEventListener("click", close);
+  box.append(node);
+  setTimeout(close, kind === "err" ? 9000 : Math.min(12000, 4000 + String(text).length * 30));
+}
 const TAB_ORDER = ["vitrine", "sim", "guild", "armory", "gvg"];
 function setTab(name) {
   if (name === tab) return;
@@ -289,7 +341,19 @@ function setTab(name) {
   tab = name;
   fx.transition(dir, render);
 }
+let skeletonTimer = 0;
 function render() {
+  clearTimeout(skeletonTimer);
+  const content = $("#content"), before = content.firstChild;
+  skeletonTimer = setTimeout(() => {  // page encore en chargement : silhouette scintillante
+    if (content.firstChild !== before) return;
+    content.replaceChildren(el("div", { class: "page skeleton", "aria-busy": "true" },
+      el("div", { class: "sk sk-bar" }), el("div", { class: "stat-tiles" }, ...[0, 1, 2].map(() => el("div", { class: "sk sk-tile" }))),
+      el("div", { class: "sk sk-card" }), el("div", { class: "sk sk-card short" })));
+  }, 180);
+  return renderPage();
+}
+function renderPage() {
   document.querySelectorAll(".topnav button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
   document.querySelectorAll(".item").forEach((b) => b.classList.toggle("active", b.dataset.id === current));
   if (tab === "sim") return simulators();
@@ -305,10 +369,16 @@ function pickFirst(what) {
 document.querySelectorAll(".topnav button").forEach((b) => b.addEventListener("click", () => setTab(b.dataset.tab)));
 
 function welcome() {
-  $("#content").replaceChildren(el("div", { class: "empty" },
+  const emblem = el("div", { class: "emblem", "aria-hidden": "true" });
+  emblem.innerHTML = '<svg viewBox="0 0 200 200"><defs><linearGradient id="eg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0c2"/><stop offset=".5" stop-color="#e8c26a"/><stop offset="1" stop-color="#9c7326"/></linearGradient></defs>'
+    + '<g class="ring r1"><circle cx="100" cy="100" r="92" fill="none" stroke="url(#eg)" stroke-width="1.5" stroke-dasharray="4 10"/></g>'
+    + '<g class="ring r2"><circle cx="100" cy="100" r="78" fill="none" stroke="#4ab3ff" stroke-opacity=".5" stroke-width="1" stroke-dasharray="30 8 2 8"/></g>'
+    + '<path class="core" d="M100 38l52 30v64l-52 30-52-30V68z" fill="#141925" stroke="url(#eg)" stroke-width="3"/>'
+    + '<text x="100" y="114" text-anchor="middle" font-size="40" font-weight="800" fill="url(#eg)" font-family="Segoe UI, sans-serif">E7</text></svg>';
+  $("#content").replaceChildren(el("div", { class: "empty welcome" }, emblem,
     el("h2", {}, "Bienvenue"),
     el("p", {}, "Créez votre profil, puis ajoutez les captures d'écran de vos héros."),
-    el("ol", {},
+    el("ol", { class: "steps" },
       el("li", {}, "Dans le jeu : Héros → choisissez un héros → bouton sous les bottes → « Infos de héros »."),
       el("li", {}, "Faites une capture (Impr. écran ou Win+Maj+S) pour chaque héros."),
       el("li", {}, "Pour reconnaître les sets, ajoutez aussi une capture de la liste des héros (lignes « Set … »)."),
@@ -414,7 +484,7 @@ async function importFiles(files) {
 async function exportVitrine(id, player) {
   if (window.pywebview?.api?.save_vitrine) {
     const path = await window.pywebview.api.save_vitrine(id);
-    if (path) alert("Vitrine enregistrée :\n" + path);
+    if (path) toast("Vitrine enregistrée :\n" + path);
     return;
   }
   const res = await api("GET", `/profiles/${id}/export`);
@@ -555,7 +625,7 @@ async function armoryPage(id) {
     const sub = el("div", { class: "owner" }, g.hero ? `Portée par ${g.hero}` : "Non équipée");
     const desc = el("div", {}, title, el("div", { class: g.rank ? "rank-" + g.rank : "" , style: "font-size:12px" },
       [g.set ? data.sets[g.set].name : "Set inconnu", g.rank ? RANKS[g.rank] : "", g.level ? `niv. ${g.level}` : ""].filter(Boolean).join(" · ")), sub);
-    const node = el("div", { class: "gear" + (g.hero ? "" : " free") }, el("div", { class: "top" }, icon, desc),
+    const node = el("div", { class: "gear" + (g.hero ? "" : " free") + (g.rank ? " rk-" + g.rank : "") }, el("div", { class: "top" }, icon, desc),
       el("ul", {}, el("li", { class: "main" }, el("span", {}, STATS[g.main.stat]), el("span", {}, statText(g.main))),
         ...g.substats.map((s) => el("li", {}, el("span", {}, STATS[s.stat]), el("span", {}, statText(s))))));
     if (!g.hero && !p.received) node.append(el("button", { class: "danger del", onclick: async () => {
@@ -612,7 +682,7 @@ async function guildPage() {
     const f = file.files[0]; file.value = "";
     if (!f) return;
     try { await json("POST", "/open", { name: f.name, data: await toB64(f), guild: true }); await refresh(); guildPage(); }
-    catch (err) { alert(err.message); }
+    catch (err) { toast(err.message, "err"); }
   });
   // tableur « toute la guilde » : membres (vitrines reçues), héros, armureries, défenses, guerres
   const csvFile = el("input", { type: "file", accept: ".csv,text/csv", hidden: "" });
@@ -630,9 +700,9 @@ async function guildPage() {
         r.wars && `${r.wars} guerre(s) (${r.attacks} attaque(s))`,
       ].filter(Boolean);
       fx.burst(innerWidth / 2, innerHeight / 3, 40);
-      alert("Import terminé : " + parts.join(" · ") + (r.errors.length ? `\n\nLignes ignorées :\n${r.errors.slice(0, 15).join("\n")}` : ""));
+      toast("Import terminé : " + parts.join(" · ") + (r.errors.length ? `\n\nLignes ignorées :\n${r.errors.slice(0, 15).join("\n")}` : ""), r.errors.length ? "warn" : "ok");
       await refresh(); guildPage();
-    } catch (err) { alert(err.message); }
+    } catch (err) { toast(err.message, "err"); }
   });
   const open = (id, where) => { current = id; tab = where; render(); };
   const power = g.members.reduce((t, m) => t + m.power, 0);
@@ -789,7 +859,7 @@ function planCard(g) {
   const save = async (fmt) => {
     if (window.pywebview?.api?.save_defense_plan) {
       const path = await window.pywebview.api.save_defense_plan(fmt);
-      if (path) alert("Plan enregistré :\n" + path);
+      if (path) toast("Plan enregistré :\n" + path);
       return;
     }
     const plan = await json("GET", "/gvg/plan");
@@ -855,7 +925,7 @@ function gvgSettings(g, send) {
 async function saveCsv(api, route, filename, done, ...args) {
   if (window.pywebview?.api?.[api]) {
     const path = await window.pywebview.api[api](...args);
-    if (path) alert(done + " :\n" + path);
+    if (path) toast(done + " :\n" + path);
     return;
   }
   const { csv } = await json("GET", route);
@@ -1004,14 +1074,14 @@ $("#dlg-form").addEventListener("submit", async (e) => {
   if (!player) return;
   $("#dlg").close();
   try { const r = await json("POST", "/profiles", { player }); tab = "vitrine"; await refresh(r.id); }
-  catch (err) { alert(err.message); }
+  catch (err) { toast(err.message, "err"); }
 });
 $("#open").onclick = () => $("#open-file").click();
 $("#open-file").addEventListener("change", async (e) => {
   const f = e.target.files[0]; e.target.value = "";
   if (!f) return;
   try { const r = await json("POST", "/open", { name: f.name, data: await toB64(f) }); tab = "vitrine"; refresh(r.id); }
-  catch (err) { alert(err.message); }
+  catch (err) { toast(err.message, "err"); }
 });
 const start = new URLSearchParams(location.hash.slice(1)).get("p");
 refresh(start || undefined).then(() => { if (!start) render(); });

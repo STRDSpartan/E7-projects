@@ -13,6 +13,11 @@ Tout est dans `src/e7showcase/app/ui.html` (CSS en fin de `<style>`, module JS `
 | Compteurs | les chiffres des tuiles montent depuis 0 |
 | Résultats | barre victoires/défaites qui se remplit, gerbe d'étincelles à chaque résultat de simulation et à la fin d'un import de guilde |
 | Particules | poussière dorée et bleue qui monte lentement en fond (canvas, ≤ 70 particules, arrêtée fenêtre cachée) |
+| Icônes | pictogramme SVG par onglet (s'anime au survol, halo sur l'onglet actif) ; icône de fenêtre (hexagone « E7 ») |
+| Accueil | emblème « E7 » animé (anneaux qui tournent, cœur qui respire), étapes numérotées en cartes |
+| Notifications | toasts en bas à droite (succès ✓ vert, avertissement or, erreur ! rouge), fermeture au clic ou automatique ; remplacent les `alert()` (les `confirm()` restent) |
+| Armurerie | cartes teintées par rang (épique rouge, héroïque violet, rare bleu) ; badge « De côté » sur les pièces non équipées |
+| Chargement | silhouette scintillante si une page met plus de 180 ms à arriver |
 | Dialogues | ouverture à ressort, fond flouté |
 
 ## Accessibilité et performance
