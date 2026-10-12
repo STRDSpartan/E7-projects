@@ -941,6 +941,12 @@ def test_estimated_heroes_fight() -> None:
     before = zio.stat("effect_res")
     team.fire(christy, "battle_start")
     assert zio.stat("effect_res") == pytest.approx(before + 0.5 * christy.stat("effect_res"))
+    team.fire(christy, "battle_start")  # buff Résurrection : relevé sur place, bonus perdu
+    zio.buffs["revive_buff"] = 2
+    zio.hp = 1.0
+    team.hit(team.units[2], team.units[2].fighter.skills["s1"], zio)
+    assert zio.alive and zio.stat("effect_res") == pytest.approx(before)
+    team.fire(christy, "battle_start")
     zio.hp = 0  # mort puis résurrection : le bonus est perdu
     team.deaths.append(zio)
     team.after_events()

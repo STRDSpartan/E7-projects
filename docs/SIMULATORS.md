@@ -234,7 +234,8 @@ partiel, contre-attaque quand un allié est attaqué, dégâts doublés hors de 
   soin de 15 % (estimé). Mei Lin : Zèle gagné quand un allié Feu utilise une compétence
   (2 cumuls, S2 +25 % par cumul, estimé, retiré après la S2) et attaque suivant la S3 rejouée.
   Christy donne au départ 50 % de sa résistance à l'allié du rang arrière (sauf si elle y est),
-  perdue définitivement à la mort de cet allié.
+  perdue définitivement à la mort de cet allié, y compris s'il se relève sur place
+  (buff Résurrection, Pacte sacré, passif de résurrection ; l'immortalité n'est pas une mort).
 - **Suite** : le classement public d'epic7rtastats s'arrête au rang 105 (filtre « Remove Low
   Pick Data ») ; les héros restants pourront suivre par listes fournies.
 

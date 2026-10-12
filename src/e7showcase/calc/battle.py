@@ -980,6 +980,10 @@ class _Battle:
             if f.team != u.team
         )
 
+    def forget(self, u: _Unit) -> None:
+        """Bonus perdus à la mort, même suivie d'une résurrection (ex. résistance de Christy)."""
+        u.bonus = [b for b in u.bonus if not b.get("until_death")]
+
     def flagged(self, flag: str) -> bool:
         """Mécanique de champ de bataille portée par un héros vivant (ex. pas de résurrection)."""
         return any(u.alive and flag in u.flags and "seal" not in u.debuffs for u in self.units)
@@ -1144,6 +1148,7 @@ class _Battle:
                 target.hp = ratio * target.max_hp
                 if keeper == "spirit_guard":
                     target.gauge = min(target.gauge + 50, 100)
+                self.forget(target)  # mort puis résurrection sur place
                 return f"{target.name} −{_fmt(amount)}, ressuscite ({_fmt(target.hp)} PV)"
         if target.hp <= 0 and "time_reversal" in target.buffs and not target.extinct:
             del target.buffs["time_reversal"]  # « returns to the state after the start of battle »
@@ -1152,6 +1157,7 @@ class _Battle:
         if target.hp <= 0 and "covenant" in target.buffs and not self.revive_blocked(target):
             del target.buffs["covenant"]  # « upon dying, revives with 100% Health »
             target.hp = target.max_hp
+            self.forget(target)  # mort puis résurrection sur place
             return f"{target.name} −{_fmt(amount)}, ressuscite (pacte sacré)"
         if target.hp <= 0:
             blocked = target.extinct or self.revive_blocked(target)
@@ -1160,6 +1166,7 @@ class _Battle:
                 for effect in passive.get("effects", []):
                     self.apply(target, effect, [])
                 self.stats["passives"] += 1
+                self.forget(target)  # mort puis résurrection sur place
                 return f"{target.name} −{_fmt(amount)}, ressuscite ({_fmt(target.hp)} PV)"
             target.barrier = 0
             self.deaths.append(target)
@@ -1522,8 +1529,8 @@ class _Battle:
                     self.fire(a, "ally_crit", u)
         while self.deaths:
             dead = self.deaths.pop(0)
-            if not dead.alive:  # « dispelled only when the ally is defeated » : perdu à la mort
-                dead.bonus = [b for b in dead.bonus if not b.get("until_death")]
+            if not dead.alive:
+                self.forget(dead)
             for u in [x for x in self.units if x.alive and x is not dead]:
                 self.fire(u, "death", dead)
 
