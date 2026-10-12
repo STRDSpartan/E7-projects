@@ -927,7 +927,7 @@ class _Battle:
                 break
             elif kind == "share_resist" and t is not actor:  # Silvertide Christy
                 value = float(effect["ratio"]) * actor.stat("effect_res")  # taux figé au départ
-                t.bonus.append({"stat": "effect_res", "value": value})
+                t.bonus.append({"stat": "effect_res", "value": value, "until_death": True})
                 notes.append(f"résistance {t.name} +{value:.0f} %")
             elif kind == "random_debuff":
                 pick = self.rng.choice(effect.get("choices", ["stun", "sleep", "redirect"]))
@@ -1522,6 +1522,8 @@ class _Battle:
                     self.fire(a, "ally_crit", u)
         while self.deaths:
             dead = self.deaths.pop(0)
+            if not dead.alive:  # « dispelled only when the ally is defeated » : perdu à la mort
+                dead.bonus = [b for b in dead.bonus if not b.get("until_death")]
             for u in [x for x in self.units if x.alive and x is not dead]:
                 self.fire(u, "death", dead)
 

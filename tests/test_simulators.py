@@ -941,5 +941,10 @@ def test_estimated_heroes_fight() -> None:
     before = zio.stat("effect_res")
     team.fire(christy, "battle_start")
     assert zio.stat("effect_res") == pytest.approx(before + 0.5 * christy.stat("effect_res"))
+    zio.hp = 0  # mort puis résurrection : le bonus est perdu
+    team.deaths.append(zio)
+    team.after_events()
+    zio.hp = zio.max_hp
+    assert zio.stat("effect_res") == pytest.approx(before)
     res = simulate([_hero("Mei Lin"), _hero("Silvertide Christy")], [_hero("Zio")], runs=10)
     assert sum(res["win_rate"]) + res["draws"] == pytest.approx(100)
