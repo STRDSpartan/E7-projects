@@ -677,13 +677,38 @@ function planCard() {
     el("a", { href: url, download: "plan-defense-gvg." + fmt }).click();
     setTimeout(() => URL.revokeObjectURL(url), 5000);
   };
+  // Envoi direct dans le salon de la guilde (webhook Discord enregistré sur cet ordinateur)
+  const hook = el("div", { class: "simbox" });
+  const msg = el("p", { class: "note", role: "status" });
+  const say = (text, ok) => { msg.textContent = text; msg.style.color = `var(${ok ? "--ok" : "--danger"})`; };
+  const drawHook = async () => {
+    const st = await json("GET", "/gvg/webhook");
+    const url = el("input", { type: "password", placeholder: "https://discord.com/api/webhooks/…", autocomplete: "off", style: "width:100%", "aria-label": "Adresse du webhook" });
+    const saveHook = el("button", { class: "ghost", onclick: async () => {
+      try { await json("PUT", "/gvg/webhook", { url: url.value }); say(url.value ? "Webhook enregistré." : "Webhook retiré.", true); drawHook(); }
+      catch (e) { say(e.message, false); }
+    } }, "Enregistrer le webhook");
+    const sendBtn = el("button", { onclick: async () => {
+      if (!confirm("Publier le plan de défense dans le salon Discord ?")) return;
+      sendBtn.disabled = true; say("Envoi en cours…", true);
+      try { const r = await json("POST", "/gvg/plan/send"); say(`Plan publié sur Discord (${r.sent} message${r.sent > 1 ? "s" : ""}).`, true); }
+      catch (e) { say(e.message, false); }
+      finally { sendBtn.disabled = false; }
+    } }, "Envoyer sur Discord");
+    if (!st.configured) sendBtn.disabled = true;
+    hook.replaceChildren(
+      el("div", { class: "note" }, st.configured ? `Salon configuré : ${st.hint}. Collez une autre adresse pour la remplacer, ou enregistrez un champ vide pour la retirer.`
+        : "Webhook Discord du salon de la guilde : Paramètres du salon → Intégrations → Webhooks → Nouveau webhook → Copier l'URL."),
+      el("div", { class: "filters", style: "width:100%" }, url, saveHook, sendBtn), msg);
+  };
+  drawHook().catch((e) => say(e.message, false));
   return el("div", { class: "card" }, el("h3", {}, "Exporter le plan de défense"),
     el("p", { class: "note" }, "À partager avec la guilde : texte prêt pour Discord (découpé en messages de 2 000 caractères au plus), ou fichier .md / tableur .csv."),
     el("div", { class: "filters" },
       el("button", { onclick: show }, "Préparer le texte Discord"),
       el("button", { class: "ghost", onclick: () => save("md") }, "Enregistrer (.md)"),
       el("button", { class: "ghost", onclick: () => save("csv") }, "Enregistrer pour tableur (.csv)")),
-    out);
+    el("h3", { style: "margin-top:14px" }, "Publier sur Discord"), hook, out);
 }
 function gvgSettings(g, send) {
   const per = el("input", { type: "number", min: "1", max: "10", value: g.settings.attacks_per_member });

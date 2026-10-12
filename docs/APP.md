@@ -47,6 +47,11 @@ la même application sur son ordinateur.
     et les membres sans défense ; texte prêt pour Discord, découpé en messages de moins de
     2 000 caractères (bouton « Copier »), ou fichier `.md` / `.csv` (séparateur « ; », formules
     neutralisées) ;
+  - *Publication sur Discord* : bouton « Envoyer sur Discord » (après confirmation) qui publie le
+    plan dans le salon de la guilde par **webhook** (`publish/webhook.post_messages`, aucune
+    mention déclenchée, limite de débit respectée). L'adresse du webhook, qui donne le droit
+    d'écrire dans le salon, est validée (domaines Discord seulement), rangée dans
+    `<données>/discord.json`, jamais renvoyée en clair à l'interface ni exportée dans un `.e7v` ;
   - *Tests dans le simulateur de combat* (500 combats) : une attaque saisie contre la défense
     ennemie notée, une équipe d'un membre contre une défense de l'onglet Contres, ou une défense
     de la guilde contre une attaque ennemie supposée. Les héros adverses, connus par leur seul
@@ -79,7 +84,8 @@ Toute évolution incompatible → incrémenter `VERSION` et garder la lecture de
 
 ## Contenu partagé
 Les poses viennent des **captures du joueur** et ne voyagent que dans ses propres fichiers `.e7v` :
-rien de tout cela n'entre dans le dépôt. Aucune donnée n'est envoyée sur Internet par l'application.
+rien de tout cela n'entre dans le dépôt. Aucune donnée n'est envoyée sur Internet par l'application, sauf le plan de défense GvG que le
+joueur choisit de publier sur Discord (webhook qu'il a lui-même enregistré).
 
 ## Construire l'installateur Windows
 Automatique : workflow GitHub `Application Windows` (artefact `E7Showcase-Windows`, Release sur

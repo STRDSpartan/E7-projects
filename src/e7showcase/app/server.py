@@ -22,6 +22,7 @@ from urllib.parse import unquote, urlparse
 
 from e7showcase import __version__
 from e7showcase.app.armory import armory
+from e7showcase.app.discord_settings import DiscordSettings
 from e7showcase.app.guild import GuildStore
 from e7showcase.app.gvg import GvgError, GvgStore, defense_plan
 from e7showcase.app.importer import ScreenshotImporter
@@ -56,6 +57,8 @@ class AppState:
         self.assets = AssetStore(data_root / "assets")
         self.guild = GuildStore(data_root / "guild.json", self.store)
         self.gvg = GvgStore(data_root / "gvg.json", self.store, self.guild)
+        self.discord = DiscordSettings(data_root / "discord.json")
+        self.webhook_transport: Any = None  # tests : transport httpx simulé
         self.importer = importer or ScreenshotImporter(data_root / "templates" / "sets")
         self.token = secrets.token_urlsafe(24)
         self.lock = threading.Lock()  # un import OCR à la fois
@@ -285,6 +288,26 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 return self._send(204, b"", "text/plain")
             raise ApiError(404, "introuvable")
 
+        def _send_plan(self) -> dict[str, Any]:
+            """Publie le plan de défense dans le salon Discord du webhook enregistré."""
+            import httpx
+
+            from e7showcase.publish.webhook import post_messages
+
+            url = state.discord.webhook()
+            if not url:
+                raise ApiError(400, "aucun webhook Discord enregistré")
+            messages = defense_plan(state.gvg.summary())["messages"]
+            try:
+                sent = post_messages(url, messages, transport=state.webhook_transport)
+            except httpx.HTTPStatusError as exc:
+                code = exc.response.status_code
+                hint = " (webhook supprimé ?)" if code in (401, 404) else ""
+                raise ApiError(502, f"Discord a refusé l'envoi : erreur {code}{hint}") from exc
+            except httpx.HTTPError as exc:
+                raise ApiError(502, "Discord injoignable : vérifiez la connexion") from exc
+            return {"sent": sent}
+
         def _gvg(self, method: str, rest: str) -> None:
             gvg = state.gvg
             try:
@@ -292,6 +315,13 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                     return self._json(gvg.summary())
                 if rest == "/plan" and method == "GET":
                     return self._json(defense_plan(gvg.summary()))
+                if rest == "/webhook" and method == "GET":
+                    return self._json(state.discord.status())
+                if rest == "/webhook" and method == "PUT":
+                    state.discord.set_webhook(str(self._body().get("url", ""))[:300])
+                    return self._json(state.discord.status())
+                if rest == "/plan/send" and method == "POST":
+                    return self._json(self._send_plan())
                 if rest == "/settings" and method == "PATCH":
                     gvg.update_settings(self._body())
                 elif (d := re.fullmatch(r"/defense/([a-z0-9-]+)", rest)) and method == "PUT":

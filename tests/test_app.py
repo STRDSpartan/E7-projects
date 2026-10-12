@@ -356,3 +356,65 @@ def test_defense_plan_splits_discord_messages_and_neutralises_formulas() -> None
     assert len(plan["messages"]) > 1 and all(len(m) <= DISCORD_LIMIT for m in plan["messages"])
     assert "\n".join(plan["messages"]) == plan["text"] and "Sans défense : Absent" in plan["text"]
     assert "'=HYPERLINK()" in plan["csv"]  # pas de formule exécutée à l'ouverture du tableur
+
+
+HOOK = "https://discord.com/api/webhooks/123456789012345678/" + "a" * 68
+
+
+def test_gvg_plan_sent_to_discord_webhook(app: Any) -> None:
+    import httpx
+
+    state, base = app
+    t = state.token
+    pid = call(base, "POST", "/api/profiles", {"player": "Spartan"}, t)["id"]
+    state.store.add_hero(pid, Hero(name="Belian"), None)
+    call(base, "PATCH", "/api/guild", {"members": [pid]}, t)
+    call(base, "PUT", f"/api/gvg/defense/{pid}", {"tower": "Fort", "teams": [["Belian"]]}, t)
+    with pytest.raises(urllib.error.HTTPError) as err:  # rien d'enregistré
+        call(base, "POST", "/api/gvg/plan/send", {}, t)
+    assert err.value.code == 400
+    with pytest.raises(urllib.error.HTTPError) as err:  # adresse qui n'est pas un webhook Discord
+        call(base, "PUT", "/api/gvg/webhook", {"url": "https://evil.example/api/webhooks/1/x"}, t)
+    assert err.value.code == 400
+    status = call(base, "PUT", "/api/gvg/webhook", {"url": HOOK}, t)
+    assert status["configured"] and "a" * 10 not in json.dumps(status)  # jeton jamais renvoyé
+    posted: list[dict[str, Any]] = []
+
+    def discord(request: httpx.Request) -> httpx.Response:
+        posted.append(json.loads(request.content))
+        return httpx.Response(204)
+
+    state.webhook_transport = httpx.MockTransport(discord)
+    assert call(base, "POST", "/api/gvg/plan/send", {}, t) == {"sent": 1}
+    assert "**Spartan** — É1 : Belian" in posted[0]["content"]
+    assert posted[0]["allowed_mentions"] == {"parse": []}  # aucune mention @everyone
+    state.webhook_transport = httpx.MockTransport(lambda r: httpx.Response(404))
+    with pytest.raises(urllib.error.HTTPError) as err:
+        call(base, "POST", "/api/gvg/plan/send", {}, t)
+    assert err.value.code == 502
+    exported = call(base, "GET", f"/api/profiles/{pid}/export", token=t)
+    assert b"webhooks" not in exported  # l'adresse ne voyage jamais dans une vitrine
+    assert call(base, "PUT", "/api/gvg/webhook", {"url": ""}, t)["configured"] is False
+
+
+def test_post_messages_respects_rate_limit(monkeypatch: pytest.MonkeyPatch) -> None:
+    import httpx
+
+    from e7showcase.publish import webhook
+
+    calls: list[str] = []
+
+    def discord(request: httpx.Request) -> httpx.Response:
+        calls.append(json.loads(request.content)["content"])
+        if len(calls) == 2:
+            return httpx.Response(429, json={"retry_after": 0.01})
+        return httpx.Response(204)
+
+    monkeypatch.setattr(webhook.time, "sleep", lambda _s: None)
+    sent = webhook.post_messages(HOOK, ["un", "deux"], transport=httpx.MockTransport(discord))
+    assert sent == 2 and calls == ["un", "deux", "deux"]
+    assert webhook.mask_webhook(HOOK).startswith("webhook 1234…5678")
+    for bad in ("http://discord.com/api/webhooks/123456789/" + "a" * 30, "https://discord.com/x"):
+        assert not webhook.valid_webhook(bad)
+    with pytest.raises(ValueError):
+        webhook.post_messages("https://evil.example", ["x"])
