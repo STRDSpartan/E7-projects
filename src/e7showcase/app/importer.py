@@ -169,12 +169,16 @@ class ScreenshotImporter:
             layouts = candidate_layouts(region_profiles(), image.width / image.height)
         return [HeroScanner(self._engine(), z, self.lang, self.sets) for z in layouts]
 
-    def _read_item(self, image: Image.Image) -> Gear | None:
-        """Infobulle d'un objet de l'inventaire : texte lu sur toute la capture."""
+    def _read_item(self, image: Image.Image) -> tuple[Gear, Image.Image | None] | None:
+        """Infobulle d'un objet de l'inventaire : texte lu sur toute la capture, et son icône."""
         from e7showcase.parsers.item_parser import parse_item_lines
+        from e7showcase.vision.item_icon import crop_item_icon
 
         lines = [line.text for line in self._engine().read_lines(image)]
-        return parse_item_lines(lines, self.lang)
+        gear = parse_item_lines(lines, self.lang)
+        if gear is None:
+            return None
+        return gear, crop_item_icon(image, self._engine().read_boxes(image))
 
     def run(
         self,
@@ -216,8 +220,9 @@ class ScreenshotImporter:
             if kind == "ignored" and (learned := learn_catalog(scanners[0], images[0], None)):
                 report.learned_sets += learned
                 kind = "catalog"
-            if kind == "ignored" and (item := self._read_item(raw)) is not None:
-                store.add_item(profile_id, item)
+            if kind == "ignored" and (found := self._read_item(raw)) is not None:
+                item, icon = found
+                store.add_item(profile_id, item, icon)
                 report.items.append(_item_label(item))
                 kind = "item"
             if kind == "ignored":

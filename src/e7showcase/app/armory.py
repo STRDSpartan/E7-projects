@@ -43,7 +43,15 @@ def armory(store: ProfileStore, profile_id: str, set_library: Path) -> dict[str,
         for hero in roster.heroes
         for slot, gear in hero.gear.items()
     ]
-    inventory = [{"id": item.id, "hero": None, **_gear(item.gear)} for item in roster.inventory]
+    inventory = [
+        {
+            "id": item.id,
+            "hero": None,
+            **_gear(item.gear),
+            "icon": _data_uri(store.item_icon_bytes(profile_id, item.id), "image/webp"),
+        }
+        for item in roster.inventory
+    ]
     sets: dict[str, dict[str, Any]] = {}
     for key, info in load("sets").items():
         if key.startswith("_"):

@@ -25,6 +25,7 @@ from e7showcase.models.hero import Hero
 from e7showcase.models.roster import InventoryItem, Roster
 
 ID_RE = re.compile(r"^[a-z0-9-]{1,60}$")
+ITEM_ID_RE = re.compile(r"^[0-9a-f]{1,32}$")
 PORTRAIT_MAX = (640, 900)
 ICON_MAX = (160, 160)
 # Icônes découpées dans la capture : les 6 pièces portées et le blason de l'artefact
@@ -135,12 +136,33 @@ class ProfileStore:
             self.icon_path(profile_id, hero_name, kind).unlink(missing_ok=True)
 
     # --- armurerie : pièces non équipées
-    def add_item(self, profile_id: str, gear: Gear) -> str:
+    def add_item(self, profile_id: str, gear: Gear, icon: Image.Image | None = None) -> str:
         roster = self.load(profile_id)
         item = InventoryItem(id=secrets.token_hex(6), gear=gear)
         roster.inventory.append(item)
         self.save(profile_id, roster)
+        if icon is not None:
+            self.save_item_icon(profile_id, item.id, icon)
         return item.id
+
+    def item_icon_path(self, profile_id: str, item_id: str) -> Path:
+        if not ITEM_ID_RE.fullmatch(item_id):
+            raise KeyError(item_id)
+        return self.path(profile_id) / "images" / f"item-{item_id}.webp"
+
+    def save_item_icon(self, profile_id: str, item_id: str, image: Image.Image) -> None:
+        img = image.convert("RGB")
+        img.thumbnail(ICON_MAX, Image.Resampling.LANCZOS)
+        target = self.item_icon_path(profile_id, item_id)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        img.save(target, "WEBP", quality=85)
+
+    def item_icon_bytes(self, profile_id: str, item_id: str) -> bytes | None:
+        try:
+            path = self.item_icon_path(profile_id, item_id)
+        except KeyError:
+            return None
+        return path.read_bytes() if path.is_file() else None
 
     def remove_item(self, profile_id: str, item_id: str) -> bool:
         roster = self.load(profile_id)
@@ -148,6 +170,8 @@ class ProfileStore:
         found = len(kept) != len(roster.inventory)
         roster.inventory = kept
         self.save(profile_id, roster)
+        if found:
+            self.item_icon_path(profile_id, item_id).unlink(missing_ok=True)
         return found
 
     def portrait_path(self, profile_id: str, hero_name: str) -> Path:

@@ -276,12 +276,20 @@ def test_armory_and_guild_api(app: Any) -> None:
     state.store.add_hero(pid, Hero(name="Kise", power=1000, gear={GearSlot.BOOTS: worn}), None)
     spare = Gear(slot=GearSlot.RING, set=GearSet.DESTRUCTION, enhance=12,
                  main=StatLine(stat=StatType.ATK_PCT, value=47))  # fmt: skip
-    item_id = state.store.add_item(pid, spare)
+    item_id = state.store.add_item(pid, spare, Image.new("RGB", (90, 90), (200, 50, 50)))
     data = call(base, "GET", f"/api/profiles/{pid}/armory", token=t)
     assert [g["hero"] for g in data["equipped"]] == ["Kise"]
+    assert data["inventory"][0]["icon"].startswith("data:image/webp;base64,")
+    # l'icône voyage dans la vitrine exportée
+    packed = base64.b64encode(call(base, "GET", f"/api/profiles/{pid}/export", token=t)).decode()
+    copy = call(base, "POST", "/api/open", {"data": packed}, t)["id"]
+    copied = state.store.load(copy).inventory[0].id
+    assert state.store.item_icon_bytes(copy, copied)
+    state.store.delete(copy)
     assert data["inventory"][0]["set"] == "destruction" and data["inventory"][0]["id"] == item_id
     assert data["sets"]["speed"]["name"] == "Vitesse"
     call(base, "DELETE", f"/api/profiles/{pid}/items/{item_id}", token=t)
+    assert state.store.item_icon_bytes(pid, item_id) is None
     assert call(base, "GET", f"/api/profiles/{pid}/armory", token=t)["inventory"] == []
     # guilde : nom, membres (profil du joueur et vitrine reçue d'un coéquipier)
     guild = call(base, "PATCH", "/api/guild", {"name": "Spartiates", "members": [pid]}, t)

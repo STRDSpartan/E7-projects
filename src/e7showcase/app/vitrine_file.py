@@ -5,6 +5,7 @@ Archive ZIP lisible par n'importe quelle installation d'E7 Showcase :
     manifest.json   {"format": "e7showcase-vitrine", "version": 1, "player", "exported_at", ...}
     profile.json    roster (format d'échange Roster, voir models/roster.py)
     images/<clé>.webp         poses des héros
+    images/item-<id>.webp     icônes des pièces non équipées (armurerie, facultatives)
     images/<clé>.<pièce>.webp icônes des pièces portées et de l'artefact (facultatives :
                               les versions précédentes de l'app les ignorent)
 
@@ -26,6 +27,7 @@ from e7showcase.app.profiles import (
     ICON_KINDS,
     ICON_MAX,
     ID_RE,
+    ITEM_ID_RE,
     ProfileStore,
     image_key,
     reencode_webp,
@@ -65,6 +67,9 @@ def export_profile(store: ProfileStore, profile_id: str) -> bytes:
                 if data := store.icon_bytes(profile_id, hero.name, kind):
                     name = f"images/{image_key(hero.name)}.{kind}.webp"
                     zf.writestr(name, data, zipfile.ZIP_STORED)
+        for item in roster.inventory:  # icônes des pièces non équipées (armurerie)
+            if data := store.item_icon_bytes(profile_id, item.id):
+                zf.writestr(f"images/item-{item.id}.webp", data, zipfile.ZIP_STORED)
     return buf.getvalue()
 
 
@@ -123,6 +128,14 @@ def import_vitrine(store: ProfileStore, data: bytes) -> str:
                         store.save_icon(profile_id, hero.name, kind, icon)
                     except (OSError, ValueError):
                         continue  # icône invalide : ignorée
+        for item in roster.inventory:
+            name = f"images/item-{item.id}.webp"
+            if name in entries and ITEM_ID_RE.fullmatch(item.id):
+                try:
+                    icon = reencode_webp(_read(zf, entries[name]), ICON_MAX)
+                    store.save_item_icon(profile_id, item.id, icon)
+                except (OSError, ValueError):
+                    continue
     return profile_id
 
 

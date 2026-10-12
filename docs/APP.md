@@ -29,7 +29,10 @@ la même application sur son ordinateur.
   pièces **non équipées** viennent de captures de l'infobulle d'un objet de l'inventaire, glissées
   comme les autres captures (`parsers/item_parser.py` lit l'emplacement, le rang, le set,
   l'amélioration, la stat principale et les stats secondaires ; la description du set est
-  ignorée). Filtres par emplacement, set, stat principale, état (de côté / portée), recherche et
+  ignorée). L'**image de l'objet** est découpée sur la capture (`vision/item_icon.py`) : sa
+  position est déduite des boîtes de texte de l'OCR (« +15 » dessiné sur l'icône, en-tête à sa
+  droite) puis resserrée sur le cadre de l'icône ; à recalibrer sur de vraies captures
+  d'infobulle. Les icônes voyagent dans le `.e7v` (`images/item-<id>.webp`). Filtres par emplacement, set, stat principale, état (de côté / portée), recherche et
   tris ; résumé des pièces de côté par set. Les pièces de côté sont rangées dans
   `Roster.inventory` (champ facultatif : les anciens profils et fichiers `.e7v` restent lisibles).
 - **GvG** : à venir.
