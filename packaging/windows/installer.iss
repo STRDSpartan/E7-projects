@@ -9,7 +9,7 @@
 ; - raccourcis menu Démarrer / Bureau, association des fichiers .e7v ;
 ; - désinstallation : les profils sont conservés, sauf si l'utilisateur demande leur suppression.
 #ifndef AppVersion
-  #define AppVersion "0.59.0"
+  #define AppVersion "0.60.0"
 #endif
 #define AppName "Zealot"
 #define AppExe "Zealot.exe"

@@ -474,6 +474,10 @@ select { cursor:pointer; }
 .wm-count { position:absolute; right:-6px; top:-6px; min-width:20px; height:20px; border-radius:10px; display:grid; place-items:center; font-size:11px; font-weight:800; color:#120c2e; background:var(--gold); }
 .wm-check { position:absolute; inset:0; display:grid; place-items:center; font-size:26px; color:var(--ok); text-shadow:0 0 8px #000; }
 .wm-player { position:sticky; top:10px; }
+/* v0.60 : panorama sans image : fond nuit, l'image de la guerre se dépose dessus */
+.wm-pano.no-bg { background:radial-gradient(80% 120% at 50% 110%, rgba(255,159,212,.12), transparent 60%), linear-gradient(180deg, #1d1a4a, #0a0c24); }
+.wm-pano.over { box-shadow:0 0 0 3px var(--gold), 0 0 30px var(--glow); }
+.wm-bg-hint { position:absolute; left:50%; bottom:14px; translate:-50% 0; color:var(--muted); font-size:13px; padding:4px 12px; border-radius:8px; background:rgba(6,8,24,.6); z-index:1; }
 /* v0.55 : historique statistique */
 .hist-list { display:grid; gap:8px; }
 .hist-row { display:grid; grid-template-columns:auto 1fr minmax(160px, 220px); gap:12px; align-items:center; padding:8px 10px; border-radius:10px; background:rgba(255,255,255,.03); }
@@ -1542,22 +1546,12 @@ function scoutedOf(g, name) {
   return g.scouted.filter((sc) => key && sc.player.trim().toLowerCase() === key);
 }
 // Panorama de la guerre : nos 3 forteresses à gauche, celles de l'adversaire à droite.
-// Fond : image choisie par le joueur (gardée sur son PC) ou panorama dessiné ci-dessous.
+// Fond : image de la guerre déposée une fois par le joueur sur le panorama (gardée sur son PC).
 const CASTLES = { ally: [[0.148, 0.526], [0.245, 0.586], [0.324, 0.565]], enemy: [[0.72, 0.539], [0.83, 0.583], [0.923, 0.557]] };  // repères posés sur le panorama de la guerre
-const PANORAMA_SVG = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 384' preserveAspectRatio='xMidYMid slice'>
-<defs><linearGradient id='s' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#1b2c5a'/><stop offset='.55' stop-color='#5b86c4'/><stop offset='1' stop-color='#c9dcf2'/></linearGradient>
-<linearGradient id='n' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#eef4fb'/><stop offset='1' stop-color='#9fb6d3'/></linearGradient>
-<linearGradient id='c' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#3a4660'/><stop offset='1' stop-color='#202838'/></linearGradient></defs>
-<rect width='2000' height='384' fill='url(#s)'/><circle cx='720' cy='-60' r='190' fill='#9fb6e0' opacity='.25'/>
-<path d='M0 250 L180 160 L320 210 L470 150 L640 220 L820 170 L1000 215 L1180 165 L1360 220 L1530 150 L1700 205 L1850 160 L2000 230 V384 H0Z' fill='#8aa3c4' opacity='.7'/>
-<path d='M0 300 L210 205 L360 250 L520 200 L700 270 L1000 240 L1300 270 L1480 200 L1650 250 L1800 205 L2000 290 V384 H0Z' fill='url(#n)'/>
-<g fill='url(#c)'>${[[290, 120], [455, 130], [640, 175], [1420, 175], [1630, 130], [1830, 130]].map(([x, y]) =>
-  `<rect x='${x - 55}' y='${y}' width='110' height='70'/><rect x='${x - 18}' y='${y - 55}' width='36' height='60'/><polygon points='${x - 22},${y - 55} ${x},${y - 95} ${x + 22},${y - 55}'/><rect x='${x - 52}' y='${y - 20}' width='18' height='24'/><rect x='${x + 34}' y='${y - 20}' width='18' height='24'/>`).join("")}</g>
-<path d='M0 330 Q500 290 1000 320 T2000 330 V384 H0Z' fill='#dfe9f5'/></svg>`);
 const shortFort = (name) => name.replace(/^(forteresse|fortress|stronghold)\s+/i, "");
 function gvgMap(page, g, send) {
   const m = g.map;
-  const bg = g.background || PANORAMA_SVG;
+  const bg = g.background || "";
   const fort = m && m.fortresses.find((f) => f.id === gvgFort);
   if (fort) return gvgFortress(page, g, send, m, fort, bg);
   if (gvgFort && gvgFort.startsWith("ally")) return gvgAllyFortress(page, g, gvgFort, bg);
@@ -1581,12 +1575,19 @@ function gvgMap(page, g, send) {
       return fortBtn("enemy", i, f.name, `${f.left ?? "?"}/${f.total ?? "?"}`, pct, () => { gvgFort = f.id; gvgPlayer = null; gvgPage("map"); });
     }),
   ];
-  const pano = el("div", { class: "wm-pano", style: `background-image:url("${bg}")` },
+  const pano = el("div", { class: "wm-pano" + (bg ? "" : " no-bg"), style: bg ? `background-image:url("${bg}")` : "" },
+    bg ? "" : el("div", { class: "wm-bg-hint" }, "Glissez ici l'image de fond de la guerre (une seule fois)"),
     el("div", { class: "wm-tint" }),
     el("div", { class: "wm-center" }, el("div", { class: "wm-vs" }, "VS"), m && m.ends_in ? el("div", { class: "wm-timer" }, "Fin de la guerre ", el("b", {}, m.ends_in)) : ""),
     el("div", { class: "wm-side ally" }, m ? m.ours.name || "Notre guilde" : g.guild || "Notre guilde"),
     el("div", { class: "wm-side enemy" }, m ? m.enemy.name || "Adversaire" : "Adversaire"),
     ...buttons);
+  // l'image de fond se dépose (ou se colle) directement sur le panorama
+  const setBg = async (f) => { try { await uploadCapture("/gvg/background", f); gvgPage("map"); } catch (e) { toast(e.message, "err"); } };
+  pano.addEventListener("dragover", (e) => { e.preventDefault(); pano.classList.add("over"); });
+  pano.addEventListener("dragleave", () => pano.classList.remove("over"));
+  pano.addEventListener("drop", (e) => { e.preventDefault(); pano.classList.remove("over"); const f = e.dataTransfer.files[0]; if (f) setBg(f); });
+  if (!bg) pasteTarget(pano.querySelector(".wm-bg-hint"), (files) => setBg(files[0]));
   page.append(pano);
   if (m) {
     const ro = m.ours.ravage || 0, re = m.enemy.ravage || 0;
@@ -1602,16 +1603,8 @@ function gvgMap(page, g, send) {
     m ? el("div", { class: "filters", style: "margin-top:8px" },
       el("button", { onclick: () => confirm("Archiver cette guerre ? Ses stats restent consultables dans l'historique, puis la carte est vidée pour la prochaine guerre.") && send("POST", "/map/archive", null, () => { toast("Guerre archivée"); gvgPage("map"); }) }, "📦 Archiver la guerre"),
       el("button", { class: "danger", onclick: () => confirm("Effacer les données de cette guerre ?") && send("DELETE", "/map", null, () => gvgPage("map")) }, "Effacer la guerre")) : "",
-    bgPicker(g, send)),
+    ""),
     gvgHistory(g, send));
-}
-// petit lien discret : l'image de fond du panorama reste au choix (fichier local)
-function bgPicker(g, send) {
-  const file = el("input", { type: "file", accept: "image/*", hidden: "" });
-  file.addEventListener("change", async () => { const f = file.files[0]; file.value = ""; if (f) { try { await uploadCapture("/gvg/background", f); gvgPage("map"); } catch (e) { toast(e.message); } } });
-  return el("div", { class: "note", style: "margin-top:8px" }, file,
-    el("button", { class: "ghost chip-btn", onclick: () => file.click() }, "🖼 Image de fond du panorama"),
-    g.background ? el("button", { class: "ghost chip-btn", onclick: () => send("DELETE", "/background", null, () => gvgPage("map")) }, "Panorama dessiné") : "");
 }
 // Historique statistique : taux de victoire de chaque composition, d'une guerre à l'autre
 function gvgHistory(g, send) {
