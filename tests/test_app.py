@@ -909,3 +909,37 @@ def test_gvg_history_win_rate_by_composition() -> None:
     assert rows[0]["team"] == ["A", "B"] and (rows[0]["wins"], rows[0]["fights"]) == (2, 3)
     assert rows[0]["rate"] == 67 and rows[0]["vs"]["Zed"] == {"wins": 2, "losses": 1}
     assert rows[1]["team"] == ["C"] and rows[1]["rate"] == 0
+
+
+def test_profile_card_and_me(app: Any) -> None:
+    from tests.test_profile_card import lines
+
+    state, base = app
+    t = state.token
+
+    class Fixture:  # moteur OCR factice : texte relevé sur une vraie fiche de profil
+        def read_boxes(self, image: Any) -> list[Any]:
+            return lines()
+
+    state._ocr = Fixture()
+    pid = call(base, "POST", "/api/profiles", {"player": "Ancien"}, t)["id"]
+    buf = io.BytesIO()
+    Image.new("RGB", (1851, 1192), (30, 60, 90)).save(buf, "PNG")
+    req = urllib.request.Request(
+        base + f"/api/profiles/{pid}/card", method="POST", data=buf.getvalue()
+    )
+    req.add_header("X-E7-Token", t)
+    with urllib.request.urlopen(req) as res:
+        assert json.loads(res.read())["player"] == "Joueur1"
+    call(base, "PUT", f"/api/profiles/{pid}/me", token=t)
+    info = next(p for p in call(base, "GET", "/api/profiles", token=t) if p["id"] == pid)
+    assert (info["player"], info["guild"], info["rank"], info["me"]) == (
+        "Joueur1",
+        "Alpha",
+        20,
+        True,
+    )
+    with urllib.request.urlopen(base + info["avatar"]) as res:  # cadre de profil découpé
+        img = Image.open(io.BytesIO(res.read()))
+        assert img.size == (192, 192) and img.mode == "RGBA"
+    assert state.store.peek(pid).server == "europe"

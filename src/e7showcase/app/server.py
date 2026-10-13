@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, unquote, urlparse
 
-from PIL import Image
+from PIL import Image, ImageDraw
 
 from e7showcase import __version__
 from e7showcase.app.armory import armory
@@ -54,8 +54,29 @@ from e7showcase.app.vitrine_file import (
     suggested_filename,
 )
 from e7showcase.assets import AssetStore
+from e7showcase.parsers.profile_card import parse_profile_card
 from e7showcase.parsers.war_map import parse_fortress, parse_war_map
 from e7showcase.vision.hero_faces import FaceMatcher
+
+CARD_HELP = (
+    "fiche de profil non reconnue : utilisez l'écran Profil du jeu montrant « Serveur … », "
+    "le pseudo et le cadre de profil"
+)
+AVATAR_SIZE = 192
+
+
+def avatar_crop(image: Image.Image, circle: tuple[float, float, float]) -> Image.Image | None:
+    """Cadre de profil découpé en disque (coins transparents), 192 px."""
+    x, y, r = circle
+    if r < 8:
+        return None
+    face = image.crop((int(x - r), int(y - r), int(x + r), int(y + r))).convert("RGBA")
+    face = face.resize((AVATAR_SIZE, AVATAR_SIZE), Image.Resampling.LANCZOS)
+    mask = Image.new("L", face.size, 0)
+    ImageDraw.Draw(mask).ellipse((1, 1, AVATAR_SIZE - 2, AVATAR_SIZE - 2), fill=255)
+    face.putalpha(mask)
+    return face
+
 
 FACES_MIN = 50  # en dessous, la reconnaissance des portraits n'a pas de quoi comparer
 
@@ -515,6 +536,30 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             if rest == "" and method == "PATCH":
                 store.rename(pid, str(self._body().get("player", "")))
                 return self._json({"id": pid})
+            if rest == "/me" and method == "PUT":  # « mon profil de joueur »
+                store.set_me(pid)
+                return self._json({"id": pid})
+            if rest == "/card" and method == "POST":  # fiche de profil du jeu (binaire)
+                try:
+                    engine = state.ocr()
+                except ImportError as exc:
+                    raise ApiError(503, "moteur de lecture des captures absent") from exc
+                try:
+                    image, lines = read_capture(self._raw(MAX_UPLOAD), engine)
+                except ValueError as exc:
+                    raise ApiError(400, str(exc)) from exc
+                card = parse_profile_card(lines)
+                if card is None:
+                    raise ApiError(400, CARD_HELP)
+                store.update_card(
+                    pid,
+                    player=card.player,
+                    server=card.server,
+                    guild=card.guild,
+                    rank=card.rank,
+                    avatar=avatar_crop(image, card.avatar),
+                )
+                return self._json({"id": pid, "player": card.player, "guild": card.guild})
             if rest == "/uploads" and method == "POST":  # une capture, en binaire (sans base64)
                 name = unquote(self.headers.get("X-File-Name") or "capture")[:120]
                 return self._json({"id": state.add_upload(name, self._raw(MAX_UPLOAD))}, 201)

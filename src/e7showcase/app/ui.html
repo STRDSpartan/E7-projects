@@ -352,6 +352,14 @@ tr.atk td:first-child { box-shadow:inset 3px 0 0 var(--ok); } tr.atk.loss td:fir
   transition:transform var(--t-med) var(--ease-spring), box-shadow var(--t-med); }
 .pavatar.recv { box-shadow:0 0 0 2px rgba(74,179,255,.5); }
 .item:hover .pavatar { transform:scale(1.08) rotate(-4deg); } .item.active .pavatar { box-shadow:0 0 0 2px var(--gold), 0 0 14px var(--glow); }
+img.pavatar.pframe { object-fit:cover; background:#0b0e15; }
+.me-badge { color:var(--gold); margin-left:6px; font-size:12px; }
+.ctx-menu { position:fixed; z-index:1000; min-width:240px; padding:6px; border-radius:12px; background:rgba(16,20,32,.98); border:1px solid rgba(232,194,106,.35); box-shadow:0 14px 40px rgba(0,0,0,.6); display:grid; gap:2px; animation:pop .14s ease-out; }
+.ctx-menu button { text-align:left; background:none !important; color:var(--text, #e8eaf0) !important; box-shadow:none !important; padding:9px 12px; border-radius:8px; font-weight:600; }
+.ctx-menu button:hover, .ctx-menu button:focus-visible { background:rgba(232,194,106,.14); transform:none; }
+.ctx-back { position:fixed; inset:0; z-index:999; background:rgba(4,6,12,.6); display:grid; place-items:center; padding:16px; backdrop-filter:blur(3px); }
+.ctx-dialog { width:min(560px, 100%); }
+@keyframes pop { from { opacity:0; transform:scale(.96); } }
 .pinfo { display:grid; min-width:0; } .pinfo b { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 input[type="checkbox"], input[type="radio"] { accent-color:var(--gold); width:16px; height:16px; cursor:pointer; }
 input[type="checkbox"] { transition:transform var(--t-fast) var(--ease-spring); } input[type="checkbox"]:active { transform:scale(.85); }
@@ -490,7 +498,7 @@ html.no-fx #fx { display:none; }
 <body>
 <canvas id="fx" aria-hidden="true"></canvas>
 <aside>
-  <div class="brand">ZEALOT<small>Compagnon Epic Seven · Shattered Spartan</small></div>
+  <div class="brand">ZEALOT<small>par Shattered Spartan</small></div>
   <div class="list" id="list"></div>
   <div class="side-actions">
     <button id="new">+ Nouveau profil</button>
@@ -556,14 +564,47 @@ async function refresh(select) {
     list.append(el("h3", {}, title));
     for (const p of group) {
       const hue = [...p.player].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);  // couleur stable par joueur
-      list.append(el("button", { class: "item" + (p.id === (select || current) ? " active" : ""), "data-id": p.id, onclick: () => selectProfile(p.id) },
-        el("span", { class: "pavatar" + (p.received ? " recv" : ""), style: `--h:${hue}`, "aria-hidden": "true" }, p.player.slice(0, 1).toUpperCase()),
-        el("span", { class: "pinfo" }, el("b", {}, p.player), el("small", {}, `${p.heroes} héros · ${p.updated_at}`))));
+      const item = el("button", { class: "item" + (p.id === (select || current) ? " active" : "") + (p.me ? " me" : ""), "data-id": p.id, onclick: () => selectProfile(p.id) },
+        p.avatar ? el("img", { class: "pavatar pframe", src: p.avatar, alt: "", "aria-hidden": "true" })
+          : el("span", { class: "pavatar" + (p.received ? " recv" : ""), style: `--h:${hue}`, "aria-hidden": "true" }, p.player.slice(0, 1).toUpperCase()),
+        el("span", { class: "pinfo" }, el("b", {}, p.player, p.me ? el("span", { class: "me-badge", title: "Mon profil de joueur" }, "★") : ""),
+          el("small", {}, [p.guild, p.rank ? `Rang ${p.rank}` : "", `${p.heroes} héros`].filter(Boolean).join(" · "))));
+      if (!p.received) item.addEventListener("contextmenu", (e) => { e.preventDefault(); profileMenu(p, e.clientX, e.clientY); });
+      list.append(item);
     }
   }
   if (select) { current = select; render(); } else if (!current && tab === "vitrine") welcome();
 }
 
+// Clic droit sur un profil : « mon profil » et mise à jour depuis la fiche de profil du jeu
+function profileMenu(p, x, y) {
+  document.querySelector(".ctx-menu")?.remove();
+  const close = () => { menu.remove(); document.removeEventListener("pointerdown", outside, true); };
+  const outside = (e) => { if (!menu.contains(e.target)) close(); };
+  const menu = el("div", { class: "ctx-menu", role: "menu" },
+    el("button", { role: "menuitem", onclick: async () => { close(); await json("PUT", `/profiles/${p.id}/me`); toast(`${p.player} est votre profil de joueur`); refresh(); } },
+      p.me ? "★ Déjà mon profil de joueur" : "★ Définir comme mon profil de joueur"),
+    el("button", { role: "menuitem", onclick: () => { close(); profileCardDialog(p); } }, "⟳ Mettre à jour le profil"));
+  document.body.append(menu);
+  const r = menu.getBoundingClientRect();
+  menu.style.left = Math.min(x, innerWidth - r.width - 8) + "px";
+  menu.style.top = Math.min(y, innerHeight - r.height - 8) + "px";
+  setTimeout(() => document.addEventListener("pointerdown", outside, true));
+  document.addEventListener("keydown", function esc(e) { if (e.key === "Escape") { close(); document.removeEventListener("keydown", esc); } });
+  menu.querySelector("button").focus();
+}
+function profileCardDialog(p) {
+  const back = el("div", { class: "ctx-back" });
+  const close = () => back.remove();
+  back.addEventListener("pointerdown", (e) => { if (e.target === back) close(); });
+  back.append(el("div", { class: "card ctx-dialog", role: "dialog", "aria-label": "Mettre à jour le profil" },
+    el("h3", {}, `Mettre à jour ${p.player}`),
+    el("p", { class: "note" }, "Capture de la fiche de profil du jeu (pseudo, serveur, guilde, rang et cadre de profil) : l'application lit ces informations et utilise le cadre de profil comme image du joueur. La capture n'est pas conservée."),
+    captureZone("Fiche de profil — glissez-la ou cliquez", `/profiles/${p.id}/card`, () => { close(); toast("Profil mis à jour"); refresh(p.id === current ? current : undefined); }),
+    el("button", { class: "ghost", style: "margin-top:8px", onclick: close }, "Fermer")));
+  document.body.append(back);
+  back.querySelector(".drop").focus();
+}
 function selectProfile(id) {
   current = id;
   if (tab !== "armory") tab = "vitrine";
@@ -661,7 +702,7 @@ document.addEventListener("paste", (e) => {
   const items = [...(e.clipboardData?.items || [])].filter((i) => i.kind === "file" && i.type.startsWith("image/"));
   if (!items.length) return;  // texte : collage normal dans les champs
   const zones = [...document.querySelectorAll("[data-paste]")].filter((z) => z.isConnected && z.offsetParent !== null);
-  const zone = zones.find((z) => z.matches(":hover")) || zones.find((z) => { const r = z.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; }) || zones[0];
+  const zone = zones.find((z) => z.closest(".ctx-back")) || zones.find((z) => z.matches(":hover")) || zones.find((z) => { const r = z.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; }) || zones[0];
   if (!zone) { toast("Aucune zone d'import ici : ouvrez un profil, l'armurerie ou l'onglet GvG pour coller une capture.", "warn"); return; }
   e.preventDefault();
   const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");

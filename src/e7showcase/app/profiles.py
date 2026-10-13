@@ -44,6 +44,14 @@ class ProfileInfo:
     heroes: int
     updated_at: str
     received: bool
+    me: bool = False
+    avatar: str | None = None  # adresse du cadre de profil (versionnée)
+    guild: str | None = None
+    rank: int | None = None
+
+
+def _int(value: object) -> int | None:
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
 
 
 class ProfileStore:
@@ -95,6 +103,10 @@ class ProfileStore:
                         heroes=len(roster.heroes),
                         updated_at=roster.updated_at.strftime("%d/%m/%Y %H:%M"),
                         received=bool(self._meta(folder.name).get("received")),
+                        me=folder.name == self.me(),
+                        avatar=self.avatar_url(folder.name),
+                        guild=roster.guild,
+                        rank=_int(self._meta(folder.name).get("rank")),
                     )
                 )
         return sorted(out, key=lambda p: p.player.casefold())
@@ -132,6 +144,55 @@ class ProfileStore:
         tmp.replace(target)
         self._rosters.pop(profile_id, None)
         self._touch()
+
+    # --- « mon profil » et fiche de profil du jeu
+    def me(self) -> str | None:
+        try:
+            data = json.loads((self.root / "me.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return None
+        pid = data.get("id") if isinstance(data, dict) else None
+        return pid if isinstance(pid, str) and ID_RE.match(pid) and self.exists(pid) else None
+
+    def set_me(self, profile_id: str) -> None:
+        (self.root / "me.json").write_text(json.dumps({"id": profile_id}), encoding="utf-8")
+        self._touch()
+
+    def avatar_url(self, profile_id: str) -> str | None:
+        target = self.path(profile_id) / "images" / "avatar.webp"
+        try:
+            return f"/media/{profile_id}/avatar.webp?v={target.stat().st_mtime_ns}"
+        except OSError:
+            return None
+
+    def update_card(
+        self,
+        profile_id: str,
+        *,
+        player: str,
+        server: str | None,
+        guild: str | None,
+        rank: int | None,
+        avatar: Image.Image | None,
+    ) -> None:
+        """Met à jour le profil depuis la fiche du jeu (pseudo, serveur, guilde, rang, cadre)."""
+        with self._lock:
+            roster = self.load(profile_id)
+            roster.player = player.strip()[:40] or roster.player
+            roster.server = server or roster.server
+            roster.guild = guild or roster.guild
+            self.save(profile_id, roster)
+            meta_path = self.path(profile_id) / "meta.json"
+            meta = dict(self._meta(profile_id))
+            if rank is not None:
+                meta["rank"] = rank
+            meta_path.write_text(json.dumps(meta), encoding="utf-8")
+            self._metas.pop(profile_id, None)
+            if avatar is not None:
+                folder = self.path(profile_id) / "images"
+                folder.mkdir(parents=True, exist_ok=True)
+                avatar.save(folder / "avatar.webp", "WEBP", quality=90)
+            self._touch(profile_id)
 
     def is_received(self, profile_id: str) -> bool:
         return bool(self._meta(profile_id).get("received"))

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "e7showcase"
-version = "0.54.0"
+version = "0.55.0"
 description = "Scanner de roster Epic Seven (client PC) et générateur de vitrines partageables sur Discord."
 readme = "README.md"
 requires-python = ">=3.11"

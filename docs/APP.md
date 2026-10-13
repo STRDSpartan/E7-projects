@@ -201,3 +201,21 @@ Partout où une capture s'importe (profil, armurerie, GvG : carte, forteresse, r
 image du presse-papiers (Win+Maj+S, Impr. écran) se colle avec **Ctrl+V** : elle part dans la
 zone d'import survolée, sinon la première visible à l'écran. Le texte se colle normalement
 dans les champs. Les captures collées sont nommées `capture-collee-<date>.png`.
+
+## Profils : clic droit (v0.55)
+
+Clic droit sur un de « Mes profils » :
+- **Définir comme mon profil de joueur** (`PUT /api/profiles/<id>/me`, fichier `profiles/me.json`), marqué ★ ;
+- **Mettre à jour le profil** : capture de la fiche Profil du jeu (fichier ou Ctrl+V,
+  `POST /api/profiles/<id>/card`). `parsers/profile_card.py` lit pseudo, serveur, guilde et rang à
+  partir de la ligne « Serveur … » ; le cadre de profil (visage du héros favori et son cadre) est
+  découpé en disque et devient l'image du joueur (`images/avatar.webp`). L'identifiant numérique et
+  la capture ne sont pas conservés.
+
+## GvG : archives et historique statistique (v0.55)
+
+« Archiver la guerre » (`POST /api/gvg/map/archive`) copie la carte, les forteresses et les attaques
+du jour dans `archives` puis vide la carte. La carte « Historique statistique » donne le taux de
+victoire de chaque composition d'attaque (héros triés), toutes guerres confondues, avec un verdict
+(fiable ≥ 70 %, mitigé, à éviter < 45 %, peu de données sous 3 combats) et la liste des guerres archivées.
+L'image de fond du panorama se choisit désormais depuis un petit bouton discret.
