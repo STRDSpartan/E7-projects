@@ -16,14 +16,16 @@ dependencies = [
   "jinja2>=3.1",
   "pillow>=10.3",
   "httpx>=0.27",
-  "rapidfuzz>=3.9",
   "platformdirs>=4.2",
   "numpy>=1.26",
 ]
 
 [project.optional-dependencies]
+# Correspondance approximative rapide (repli pur Python sans elle : e7showcase.fuzzy, cas du mobile)
+fast = ["rapidfuzz>=3.9"]
 # Capture d'écran + OCR (nécessaire uniquement pour scanner le client PC)
 scan = [
+  "rapidfuzz>=3.9",
   "mss>=9.0",
   "opencv-python-headless>=4.9",
   "rapidocr-onnxruntime>=1.3",
@@ -32,6 +34,7 @@ scan = [
 ]
 # Application de bureau (fenêtre native) : `e7showcase-app`
 app = [
+  "rapidfuzz>=3.9",
   "pywebview>=5.0",
   "opencv-python-headless>=4.9",
   "rapidocr-onnxruntime>=1.3",
@@ -41,6 +44,7 @@ render = ["playwright>=1.44"]
 # Bot Discord (slash commands)
 bot = ["discord.py>=2.3"]
 dev = [
+  "rapidfuzz>=3.9",
   "opencv-python-headless>=4.9",
   "pytest>=8.2",
   "pytest-cov>=5.0",
