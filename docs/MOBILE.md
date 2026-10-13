@@ -37,6 +37,15 @@ vérifie la construction iOS sur macOS.
 4. **Publication** : Play Store (compte Google Play, 25 $ une fois) et App Store (Apple Developer
    Program, 99 $/an, signature et TestFlight) — à créer par l'éditeur ; la CI signera ensuite.
 
+## État de la construction (CI)
+- Android : la construction Gradle tourne ; **bloquant : `pydantic-core`** (cœur binaire de
+  pydantic, écrit en Rust) n'existe ni dans le dépôt Chaquopy ni sur PyPI pour Android.
+- iOS : même blocage (`pydantic-core` sans version iOS).
+- `rapidfuzz` : réglé (repli pur Python `e7showcase.fuzzy`, rapidfuzz devenu optionnel).
+- Prochaine étape : compiler `pydantic-core` pour Android et iOS dans la CI (cibuildwheel +
+  maturin, cibles Rust `aarch64-linux-android`, `x86_64-linux-android`, `aarch64-apple-ios`,
+  `aarch64-apple-ios-sim`) et le fournir à Briefcase (`--find-links`).
+
 ## Limites connues
 - Dépendances binaires (pydantic-core, rapidfuzz, numpy, Pillow) : elles doivent exister en
   version mobile ; la CI le vérifie à chaque construction.
