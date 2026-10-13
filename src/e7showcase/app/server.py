@@ -610,6 +610,12 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 if rest == "/background" and method == "DELETE":
                     (state.war_images / "background.webp").unlink(missing_ok=True)
                     return self._json(gvg.summary() | state.background())
+                if rest == "/map/archive" and method == "POST":
+                    state.drop_war_images(gvg.archive_map())
+                    return self._json(gvg.summary())
+                if (ar := re.fullmatch(r"/archives/([0-9a-f]{1,16})", rest)) and method == "DELETE":
+                    gvg.delete_archive(ar[1])
+                    return self._json(gvg.summary())
                 if rest == "/map" and method == "DELETE":
                     state.drop_war_images(gvg.clear_map())
                     return self._json(gvg.summary())

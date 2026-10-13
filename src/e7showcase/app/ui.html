@@ -463,6 +463,14 @@ select { cursor:pointer; }
 .wm-count { position:absolute; right:-6px; top:-6px; min-width:20px; height:20px; border-radius:10px; display:grid; place-items:center; font-size:11px; font-weight:800; color:#1d1606; background:var(--gold); }
 .wm-check { position:absolute; inset:0; display:grid; place-items:center; font-size:26px; color:var(--ok); text-shadow:0 0 8px #000; }
 .wm-player { position:sticky; top:10px; }
+/* v0.55 : historique statistique */
+.hist-list { display:grid; gap:8px; }
+.hist-row { display:grid; grid-template-columns:auto 1fr minmax(160px, 220px); gap:12px; align-items:center; padding:8px 10px; border-radius:10px; background:rgba(255,255,255,.03); }
+.hist-bar { height:8px; border-radius:4px; background:rgba(255,80,80,.35); overflow:hidden; } .hist-bar span { display:block; height:100%; background:linear-gradient(90deg, #3fb868, #7be08f); }
+.hist-tag { display:inline-block; margin-top:3px; font-size:11px; font-weight:800; padding:1px 8px; border-radius:8px; }
+.hist-tag.ok { background:#1f5a34; color:#bff5cc; } .hist-tag.mid { background:#5a4a1f; color:#f5e3bf; } .hist-tag.bad { background:#5a1f1f; color:#f5bfbf; } .hist-tag.muted { background:#333a48; color:#c3c9d6; }
+.hist-war { padding:6px 0; border-top:1px solid rgba(255,255,255,.06); } .hist-war summary { cursor:pointer; }
+@media (max-width:700px) { .hist-row { grid-template-columns:1fr; } }
 /* v0.51 : nœud ancré sur le pseudo lu (l'avatar au-dessus), joueurs absents */
 .wm-node.enemy-p { translate:-50% calc(-100% + .9em); }
 .wm-node.absent { opacity:.28; }
@@ -1533,11 +1541,46 @@ function gvgMap(page, g, send) {
     el("p", { class: "note" }, m ? `Données du ${m.date} contre ${m.enemy.name || "la guilde adverse"}. Une nouvelle capture de l'écran principal met à jour les compteurs (joueurs et défenses battues conservés pour la même guerre).`
       : "Importez la capture de l'écran principal de la guerre (guildes et forteresses) : l'application en lit les informations, puis cliquez sur une forteresse adverse pour importer ses défenseurs. Les captures servent seulement à lire les données, elles ne sont pas affichées."),
     captureZone("Capture de l'écran principal de la guerre — glissez-la ou cliquez", "/gvg/map", () => gvgPage("map")),
-    m ? el("button", { class: "danger", style: "margin-top:8px", onclick: () => confirm("Effacer les données de cette guerre ?") && send("DELETE", "/map", null, () => gvgPage("map")) }, "Effacer la guerre") : ""),
-    el("div", { class: "card" }, el("h3", {}, "Image de fond"),
-      el("p", { class: "note" }, "Choisissez une fois l'image de fond du panorama (par exemple celle de la guerre dans le jeu) : elle reste sur votre ordinateur. Sans image, un panorama dessiné est utilisé. Nos forteresses sont à gauche, celles de l'adversaire à droite."),
-      captureZone("Image de fond — glissez-la ou cliquez", "/gvg/background", () => gvgPage("map")),
-      g.background ? el("button", { class: "ghost", style: "margin-top:8px", onclick: () => send("DELETE", "/background", null, () => gvgPage("map")) }, "Revenir au panorama dessiné") : ""));
+    m ? el("div", { class: "filters", style: "margin-top:8px" },
+      el("button", { onclick: () => confirm("Archiver cette guerre ? Ses stats restent consultables dans l'historique, puis la carte est vidée pour la prochaine guerre.") && send("POST", "/map/archive", null, () => { toast("Guerre archivée"); gvgPage("map"); }) }, "📦 Archiver la guerre"),
+      el("button", { class: "danger", onclick: () => confirm("Effacer les données de cette guerre ?") && send("DELETE", "/map", null, () => gvgPage("map")) }, "Effacer la guerre")) : "",
+    bgPicker(g, send)),
+    gvgHistory(g, send));
+}
+// petit lien discret : l'image de fond du panorama reste au choix (fichier local)
+function bgPicker(g, send) {
+  const file = el("input", { type: "file", accept: "image/*", hidden: "" });
+  file.addEventListener("change", async () => { const f = file.files[0]; file.value = ""; if (f) { try { await uploadCapture("/gvg/background", f); gvgPage("map"); } catch (e) { toast(e.message); } } });
+  return el("div", { class: "note", style: "margin-top:8px" }, file,
+    el("button", { class: "ghost chip-btn", onclick: () => file.click() }, "🖼 Image de fond du panorama"),
+    g.background ? el("button", { class: "ghost chip-btn", onclick: () => send("DELETE", "/background", null, () => gvgPage("map")) }, "Panorama dessiné") : "");
+}
+// Historique statistique : taux de victoire de chaque composition, d'une guerre à l'autre
+function gvgHistory(g, send) {
+  const rows = g.history || [];
+  const verdictOf = (r) => r.fights < 3 ? ["peu de données", "muted"] : r.rate >= 70 ? ["fiable", "ok"] : r.rate >= 45 ? ["mitigé", "mid"] : ["à éviter", "bad"];
+  const table = rows.length ? el("div", { class: "hist-list" }, ...rows.map((r) => {
+    const [label, cls] = verdictOf(r);
+    const vs = Object.entries(r.vs).sort((x, y) => (y[1].wins + y[1].losses) - (x[1].wins + x[1].losses)).slice(0, 4);
+    return el("div", { class: "hist-row" },
+      teamRow(r.team, "sm", 0),
+      el("div", { class: "hist-main" }, el("strong", {}, r.team.join(" · ")),
+        el("div", { class: "note" }, vs.length ? "Contre : " + vs.map(([k, v]) => `${k} (${v.wins}V/${v.losses}D)`).join(" · ") : "")),
+      el("div", { class: "hist-rate" },
+        el("div", { class: "hist-bar" }, el("span", { style: `width:${r.rate}%` })),
+        el("div", {}, el("b", {}, `${r.rate} %`), el("span", { class: "note" }, ` · ${r.wins}V / ${r.losses}D`)),
+        el("span", { class: "hist-tag " + cls }, label)));
+  })) : el("p", { class: "note" }, "Aucun combat enregistré pour l'instant : les attaques notées dans l'onglet Guerres alimentent cet historique, guerre après guerre.");
+  const archives = (g.archives || []).length ? el("div", { class: "hist-archives" }, el("h4", {}, "Guerres archivées"),
+    ...g.archives.map((a) => el("details", { class: "hist-war" },
+      el("summary", {}, el("strong", {}, `${a.date} · ${a.opponent || "?"}`),
+        el("span", { class: "note" }, ` · Ravage ${a.ours.ravage ?? "?"} – ${a.enemy.ravage ?? "?"} · ${a.wins}V / ${a.losses}D`)),
+      el("div", { class: "note" }, a.fortresses.map((f) => `${f.name} : ${f.left ?? "?"}/${f.total ?? "?"} (${f.beaten}/${f.players} battus)`).join(" · ")),
+      a.attacks.length ? el("ul", {}, ...a.attacks.map((x) => el("li", {}, `${x.result === "win" ? "✅" : "❌"} ${x.team.join(" · ")}${x.enemy_team && x.enemy_team.length ? " contre " + x.enemy_team.join(" · ") : ""}${x.enemy_player ? ` (${x.enemy_player})` : ""}`))) : "",
+      el("button", { class: "danger chip-btn", onclick: () => confirm("Supprimer cette guerre archivée ?") && send("DELETE", "/archives/" + a.id, null, () => gvgPage("map")) }, "Supprimer")))) : "";
+  return el("div", { class: "card" }, el("h3", {}, "Historique statistique"),
+    el("p", { class: "note" }, "Taux de victoire de chaque composition d'attaque, toutes guerres confondues (archivées comprises) : ce qui marche, et ce qu'il vaut mieux éviter."),
+    table, archives);
 }
 function fortressStage(bg, side, i, nodes) {
   const [x] = CASTLES[side][i] || [0.5];

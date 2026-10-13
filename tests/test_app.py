@@ -855,8 +855,15 @@ def test_gvg_war_map_and_fortress_flow(app: Any) -> None:
         assert res.headers["Content-Type"] == "image/webp"
     call(base, "DELETE", "/api/gvg/background", token=t)
     assert call(base, "GET", "/api/gvg", token=t)["background"] is None
+    g = call(base, "POST", "/api/gvg/map/archive", token=t)  # archivée puis effacée
+    assert g["map"] is None and len(g["archives"]) == 1
+    arch = g["archives"][0]
+    assert arch["opponent"] == "Omega" and arch["fortresses"][0]["beaten"] == 1
+    upload("/gvg/map")
+    call(base, "DELETE", "/api/gvg/archives/" + arch["id"], token=t)
     call(base, "DELETE", "/api/gvg/map", token=t)
-    assert call(base, "GET", "/api/gvg", token=t)["map"] is None
+    g = call(base, "GET", "/api/gvg", token=t)
+    assert g["map"] is None and g["archives"] == []
     assert not list(state.war_images.glob("*.webp"))
     for bad in ("/gvgmap/../gvg.json", "/gvgmap/abc.webp"):
         with pytest.raises(urllib.error.HTTPError) as err:
@@ -883,3 +890,22 @@ def test_gvg_report_without_faces_starts_download(app: Any) -> None:
     with urllib.request.urlopen(req) as res:
         found = json.loads(res.read())
     assert found["faces_missing"] is True and started == [True]
+
+
+def test_gvg_history_win_rate_by_composition() -> None:
+    from e7showcase.app.gvg import GvgStore
+
+    def atk(team: list[str], result: str) -> dict[str, Any]:
+        return {"team": team, "enemy_team": ["Zed"], "result": result}
+
+    data = {
+        "wars": [{"id": "w1", "attacks": [atk(["B", "A"], "win"), atk(["A", "B"], "loss")]}],
+        "archives": [
+            {"war_id": "w1", "attacks": [atk(["A", "B"], "win")]},  # déjà compté (suivi gardé)
+            {"war_id": "old", "attacks": [atk(["A", "B"], "win"), atk(["C"], "loss")]},
+        ],
+    }
+    rows = GvgStore.history(data)
+    assert rows[0]["team"] == ["A", "B"] and (rows[0]["wins"], rows[0]["fights"]) == (2, 3)
+    assert rows[0]["rate"] == 67 and rows[0]["vs"]["Zed"] == {"wins": 2, "losses": 1}
+    assert rows[1]["team"] == ["C"] and rows[1]["rate"] == 0

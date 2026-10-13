@@ -30,6 +30,7 @@ TEAMS = 2
 MAX_TEXT = 40
 RESULTS = ("win", "loss")
 MAX_SCOUTED = 200
+MAX_ARCHIVES = 200
 MAX_FORTRESSES = 6
 MAX_PLAYERS = 40
 SCOUT_STATS = (
@@ -80,6 +81,9 @@ class GvgStore:
             "wars": wars,
             "scouted": [s for s in data.get("scouted", []) if isinstance(s, dict) and s.get("id")],
             "map": data["map"] if isinstance(data.get("map"), dict) else None,
+            "archives": [
+                a for a in data.get("archives", []) if isinstance(a, dict) and a.get("id")
+            ],
         }
 
     def _write(self, data: dict[str, Any]) -> None:
@@ -305,6 +309,56 @@ class GvgStore:
             player["present"] = bool(body["present"])
         self._write(data)
 
+    def archive_map(self) -> list[str]:
+        """Archive la guerre en cours (carte, forteresses, attaques du jour) puis l'efface :
+        ses stats restent consultables et comptent dans l'historique."""
+        data = self._read()
+        m = data["map"]
+        if not m:
+            raise GvgError("aucune guerre en cours à archiver")
+        opponent = _text((m.get("enemy") or {}).get("name"))
+        war = next(
+            (w for w in data["wars"] if w["opponent"] == opponent and w["date"] == m.get("date")),
+            None,
+        )
+        attacks = list(war.get("attacks", [])) if war else []
+        wins = sum(a.get("result") == "win" for a in attacks)
+        data["archives"].insert(
+            0,
+            {
+                "id": secrets.token_hex(5),
+                "date": m.get("date") or date.today().isoformat(),
+                "war_id": war["id"] if war else None,
+                "opponent": opponent,
+                "ours": m.get("ours") or {},
+                "enemy": m.get("enemy") or {},
+                "fortresses": [
+                    {
+                        "name": f.get("name"),
+                        "left": f.get("left"),
+                        "total": f.get("total"),
+                        "players": len(f.get("players", [])),
+                        "beaten": sum(bool(p.get("beaten")) for p in f.get("players", [])),
+                    }
+                    for f in m.get("fortresses", [])
+                ],
+                "attacks": attacks,
+                "wins": wins,
+                "losses": len(attacks) - wins,
+            },
+        )
+        del data["archives"][MAX_ARCHIVES:]
+        self._write(data)
+        return self.clear_map()
+
+    def delete_archive(self, archive_id: str) -> None:
+        data = self._read()
+        kept = [a for a in data["archives"] if a.get("id") != archive_id]
+        if len(kept) == len(data["archives"]):
+            raise GvgError("guerre archivée introuvable")
+        data["archives"] = kept
+        self._write(data)
+
     def clear_map(self) -> list[str]:
         data = self._read()
         old = data["map"] or {}
@@ -367,10 +421,42 @@ class GvgStore:
             "counters": self.counters(data["wars"]),
             "scouted": data["scouted"],
             "map": data["map"],
+            "archives": data["archives"],
+            "history": self.history(data),
             "hero_names": sorted(
                 {h.get("fr") or h["en"] for h in load("heroes")["heroes"] if h.get("stars")}
             ),
         }
+
+    @staticmethod
+    def history(data: dict[str, Any]) -> list[dict[str, Any]]:
+        """Taux de victoire de chaque composition d'attaque (héros triés), toutes guerres :
+        suivi en cours et guerres archivées dont le suivi a été supprimé."""
+        live = {w["id"] for w in data["wars"]}
+        attacks = [a for w in data["wars"] for a in w.get("attacks", [])]
+        attacks += [
+            a
+            for ar in data["archives"]
+            if ar.get("war_id") not in live
+            for a in ar.get("attacks", [])
+        ]
+        table: dict[tuple[str, ...], dict[str, Any]] = {}
+        for a in attacks:
+            team = tuple(sorted(a.get("team", [])))
+            if not team:
+                continue
+            row = table.setdefault(team, {"team": list(team), "wins": 0, "losses": 0, "vs": {}})
+            won = a.get("result") == "win"
+            row["wins" if won else "losses"] += 1
+            enemy = " · ".join(sorted(a.get("enemy_team", [])))
+            if enemy:
+                vs = row["vs"].setdefault(enemy, {"wins": 0, "losses": 0})
+                vs["wins" if won else "losses"] += 1
+        out = []
+        for row in table.values():
+            fights = row["wins"] + row["losses"]
+            out.append({**row, "fights": fights, "rate": round(100 * row["wins"] / fights)})
+        return sorted(out, key=lambda r: (-r["fights"], -r["rate"]))
 
     @staticmethod
     def counters(wars: list[dict[str, Any]]) -> list[dict[str, Any]]:
