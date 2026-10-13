@@ -76,7 +76,7 @@ jobs:
           CIBW_BEFORE_BUILD: >-
             SITE=$(python -c "import sysconfig; print(sysconfig.get_paths()['purelib'])") &&
             python -m pip install --platform macosx_11_0_arm64 --only-binary=:all: --upgrade
-            --target "$SITE" "maturin>=1.9,<2" typing-extensions &&
+            --target "$SITE" "maturin>=1.9,<2" typing-extensions puccinialin &&
             cp "$SITE/bin/maturin" "$(dirname "$(command -v python)")/" &&
             maturin --version
         run: |
