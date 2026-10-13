@@ -238,7 +238,7 @@ case, sans le HUD du jeu. Sans capture, le fort s'affiche vide ; les forts alli�
 défenseurs (onglet Défenses) sur les cases dans l'ordre.
 Forts alliés (v0.64) : capture de la vue d'un de nos forts (`POST /api/gvg/ally/ally0..2`,
 `DELETE` pour effacer) ; les joueurs lus sont posés à leur position (`fort_positions` : accrochés
-aux cases connues, sinon position libre, car chaque fort a sa disposition). Un pseudo qui
+à la case libre la plus proche du fort affiché, sans doublon). Un pseudo qui
 correspond à un membre de la guilde affiche ses équipes de défense. Archiver ou effacer la guerre
 vide aussi nos forts.
 

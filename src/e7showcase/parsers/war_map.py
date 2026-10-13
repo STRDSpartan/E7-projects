@@ -185,7 +185,7 @@ FORT_SLOTS: list[tuple[float, float]] = [
 ]
 # pseudo → portrait : le portrait (sur la case) est au-dessus du pseudo, un peu à droite
 NAME_TO_SLOT = (0.02, -0.065)  # en fraction de la largeur / de la hauteur de la zone de jeu
-SLOT_SNAP = 0.03  # au-delà, le joueur garde sa position libre (autre disposition de fort)
+SLOT_SNAP = 1.0  # toujours accroché à une case libre du fort affiché (13 cases)
 FORT_RATIO = 1066 / 2000
 TITLE_BAR = 18 / 1125  # barre de titre de la fenêtre Windows en haut de la capture
 
@@ -196,9 +196,9 @@ def fort_positions(
     """Position de chaque joueur sur l'image du fort (x, y normalisés) et case occupée.
 
     La capture peut contenir la barre de titre et la barre des tâches : la zone de jeu est la
-    bande de hauteur largeur x 1066/2000 sous la barre de titre. Chaque joueur est accroché à la
-    case la plus proche (sans doublon) si elle est à moins de SLOT_SNAP ; sinon (fort à la
-    disposition différente) il garde sa position.
+    bande de hauteur largeur x 1066/2000 sous la barre de titre. Chaque joueur prend la case libre
+    la plus proche (sans doublon, paires les plus proches d'abord) ; au-delà de 13 joueurs, les
+    suivants gardent leur position.
     """
     w, h = size
     game_h = w * FORT_RATIO
