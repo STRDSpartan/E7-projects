@@ -14,11 +14,12 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-GOLD = (240, 200, 110)
-GOLD_DEEP = (176, 118, 42)
-NIGHT = (9, 10, 20)
-VIOLET = (58, 24, 92)
-EMBER = (255, 120, 60)
+# identité « nuit de sakura » : lavande lumineuse, bleu nuit, rose sakura (comme l'application)
+GOLD = (226, 214, 255)
+GOLD_DEEP = (125, 104, 240)
+NIGHT = (6, 8, 24)
+VIOLET = (40, 28, 96)
+EMBER = (255, 159, 212)
 PUBLISHER = "Shattered Spartan"
 
 
@@ -50,7 +51,7 @@ def _gradient(size: tuple[int, int], top: tuple[int, ...], bottom: tuple[int, ..
 
 
 def emblem(size: int) -> Image.Image:
-    """Écusson hexagonal sombre liseré d'or, « Z » doré fendu d'une lame et halo braise."""
+    """Écusson hexagonal bleu nuit liseré lavande, « Z » lumineux fendu d'une lame, halo sakura."""
     s = size
     img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
     # halo
@@ -88,7 +89,7 @@ def emblem(size: int) -> Image.Image:
     img.paste(gold, (0, 0), z)
     # lame : trait clair qui traverse la diagonale
     d.line(
-        [(s * 0.66, s * 0.2), (s * 0.34, s * 0.8)], fill=(255, 244, 214, 230), width=max(1, s // 48)
+        [(s * 0.66, s * 0.2), (s * 0.34, s * 0.8)], fill=(255, 214, 236, 235), width=max(1, s // 48)
     )
     return img
 
@@ -106,7 +107,7 @@ def _sparks(img: Image.Image, count: int, seed: int) -> None:
 
 
 def wizard(scale: int) -> Image.Image:
-    """Bandeau vertical de l'assistant : nuit violette, braises, écusson, nom et éditeur."""
+    """Bandeau vertical de l'assistant : nuit violette, pétales, écusson, nom et éditeur."""
     w, h = 164 * scale, 314 * scale
     img = _gradient((w, h), VIOLET, NIGHT).convert("RGBA")
     _sparks(img, 70, 7)
@@ -125,7 +126,7 @@ def wizard(scale: int) -> Image.Image:
     d.text(
         (w / 2, 290 * scale),
         f"par {PUBLISHER}",
-        fill=(190, 170, 140),
+        fill=(255, 190, 226),
         font=_font(int(9 * scale), bold=False),
         anchor="mm",
     )

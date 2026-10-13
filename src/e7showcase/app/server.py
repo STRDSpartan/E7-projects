@@ -82,6 +82,7 @@ FACES_MIN = 50  # en dessous, la reconnaissance des portraits n'a pas de quoi co
 
 log = logging.getLogger(__name__)
 UI = Path(__file__).resolve().parent / "ui.html"
+SIDEBAR_VIDEO = UI.with_name("media") / "sidebar.webm"  # fond animé du bandeau des profils
 MAX_BODY = 400 * 1024 * 1024
 MAX_UPLOAD = 40 * 1024 * 1024  # une capture
 UPLOAD_TTL = 600.0
@@ -98,7 +99,7 @@ ANIM_PAGE = Path(__file__).with_name("anim.html")
 # la page ne peut être affichée dans un cadre que par l'application elle-même
 APP_CSP = (
     "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; "
-    "img-src 'self' data: blob:; connect-src 'self'; frame-src 'self'; "
+    "img-src 'self' data: blob:; media-src 'self'; connect-src 'self'; frame-src 'self'; "
     "frame-ancestors 'self'; base-uri 'none'; form-action 'none'"
 )
 APP_HEADERS = {"Content-Security-Policy": APP_CSP, "Referrer-Policy": "no-referrer"}
@@ -388,6 +389,9 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                         raise ApiError(404, "introuvable")
                     cache = {"Cache-Control": "private, max-age=31536000, immutable"}
                     self._send(200, target.read_bytes(), "image/webp", cache)
+                elif method == "GET" and path == "/media/sidebar.webm":
+                    cache = {"Cache-Control": "private, max-age=86400"}
+                    self._send(200, SIDEBAR_VIDEO.read_bytes(), "video/webm", cache)
                 elif method == "GET" and (m := MEDIA_RE.fullmatch(path)):
                     # image d'un profil (adresse versionnée par ?v= : gardée en cache longtemps)
                     if not state.store.exists(m[1]):

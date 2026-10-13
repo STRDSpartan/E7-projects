@@ -37,3 +37,12 @@ Tout est dans `src/e7showcase/app/ui.html` (CSS en fin de `<style>`, module JS `
   mémorisé dans le navigateur (`localStorage` `e7-fx`, facultatif).
 - Seuls `transform`, `opacity` et `filter` sont animés ; la boucle de particules ne tourne
   que si les effets sont actifs et la fenêtre visible.
+
+## Identité « nuit de sakura » (v0.56)
+
+Inspirée de la vidéo de fond du bandeau des profils (`app/media/sidebar.webm`, fournie par
+l'éditeur, réencodée en VP9 360×640 sans son, ~0,9 Mo) : fond bleu nuit `--bg #060818`, accent
+principal lavande lumineuse `--gold #b9a0ff` (le nom de variable est historique), bleu `--accent
+#7fb4ff`, rose `--sakura #ff9fd4`, lanterne `--lantern #f4c980`. Les particules deviennent des
+pétales roses et des lueurs bleues. La vidéo est masquée avec « Effets visuels : désactivés » et
+`prefers-reduced-motion`. Icône et installateur (`scripts/make_icon.py`) suivent la même palette.

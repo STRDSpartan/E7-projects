@@ -943,3 +943,11 @@ def test_profile_card_and_me(app: Any) -> None:
         img = Image.open(io.BytesIO(res.read()))
         assert img.size == (192, 192) and img.mode == "RGBA"
     assert state.store.peek(pid).server == "europe"
+
+
+def test_sidebar_video_served(app: Any) -> None:
+    _, base = app
+    with urllib.request.urlopen(base + "/media/sidebar.webm") as res:
+        assert res.headers["Content-Type"] == "video/webm" and len(res.read()) > 10_000
+    with urllib.request.urlopen(base + "/") as res:
+        assert "media-src 'self'" in res.headers["Content-Security-Policy"]
