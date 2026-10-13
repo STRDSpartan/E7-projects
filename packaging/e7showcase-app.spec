@@ -1,6 +1,6 @@
-# PyInstaller : application de bureau E7 Showcase (dossier autonome, sans Python à installer).
+# PyInstaller : application de bureau Zealot (dossier autonome, sans Python à installer).
 #   pyinstaller packaging/e7showcase-app.spec --noconfirm
-# Résultat : dist/E7Showcase/E7Showcase(.exe)
+# Résultat : dist/Zealot/Zealot(.exe)
 import sys
 from pathlib import Path
 
@@ -34,7 +34,7 @@ for package in ("webview", "clr_loader", "pythonnet", "clr"):
     hiddenimports += h
 
 # Icône et informations de version (Propriétés → Détails de l'exécutable Windows)
-ICON = ROOT / "packaging" / "windows" / "build" / "e7showcase.ico"
+ICON = ROOT / "packaging" / "windows" / "build" / "zealot.ico"
 VERSION = next(
     line.split('"')[1]
     for line in (SRC / "__init__.py").read_text(encoding="utf-8").splitlines()
@@ -52,12 +52,12 @@ if sys.platform == "win32":
         ffi=FixedFileInfo(filevers=nums, prodvers=nums),
         kids=[
             StringFileInfo([StringTable("040C04B0", [
-                StringStruct("CompanyName", "E7 Showcase (projet communautaire)"),
-                StringStruct("FileDescription", "E7 Showcase — vitrines Epic Seven"),
+                StringStruct("CompanyName", "Shattered Spartan"),
+                StringStruct("FileDescription", "Zealot — compagnon Epic Seven"),
                 StringStruct("FileVersion", VERSION),
-                StringStruct("ProductName", "E7 Showcase"),
+                StringStruct("ProductName", "Zealot"),
                 StringStruct("ProductVersion", VERSION),
-                StringStruct("OriginalFilename", "E7Showcase.exe"),
+                StringStruct("OriginalFilename", "Zealot.exe"),
                 StringStruct("LegalCopyright", "MIT — projet non officiel"),
             ])]),
             VarFileInfo([VarStruct("Translation", [0x040C, 1200])]),
@@ -78,9 +78,9 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name="E7Showcase",
+    name="Zealot",
     console=False,
     icon=str(ICON) if ICON.is_file() else None,
     version=version_file,
 )
-coll = COLLECT(exe, a.binaries, a.datas, name="E7Showcase")
+coll = COLLECT(exe, a.binaries, a.datas, name="Zealot")

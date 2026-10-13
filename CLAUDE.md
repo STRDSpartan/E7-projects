@@ -1,4 +1,6 @@
-# E7 Showcase — guide pour Claude
+# Zealot (ex-E7 Showcase) — guide pour Claude
+
+Nom de l'application : **Zealot**, éditeur **Shattered Spartan** (paquet et code : `e7showcase`).
 
 **Application de bureau** (`src/e7showcase/app/`, voir `docs/APP.md`) : le joueur importe les
 captures d'écran de ses héros, l'app les reconnaît (moteur OCR `scanner/`), construit un profil

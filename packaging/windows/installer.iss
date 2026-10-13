@@ -1,4 +1,4 @@
-﻿; Installateur Windows complet d'E7 Showcase (Inno Setup 6.2+)
+﻿; Installateur Windows complet de Zealot (Inno Setup 6.2+)
 ;   python scripts\make_icon.py packaging\windows\build
 ;   pyinstaller packaging\e7showcase-app.spec --noconfirm
 ;   iscc /DAppVersion=0.2.0 packaging\windows\installer.iss
@@ -11,8 +11,8 @@
 #ifndef AppVersion
   #define AppVersion "0.54.0"
 #endif
-#define AppName "E7 Showcase"
-#define AppExe "E7Showcase.exe"
+#define AppName "Zealot"
+#define AppExe "Zealot.exe"
 #define Build "build"
 
 [Setup]
@@ -20,13 +20,15 @@ AppId={{6C1E7A2B-5D3F-4E8A-9B7C-E7510A2B3C4D}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
-AppPublisher=E7 Showcase (projet communautaire)
+AppPublisher=Shattered Spartan
 AppPublisherURL=https://github.com/STRDSpartan/E7-projects
 AppSupportURL=https://github.com/STRDSpartan/E7-projects/issues
 AppUpdatesURL=https://github.com/STRDSpartan/E7-projects/releases
-AppCopyright=© 2026 E7 Showcase — projet non officiel
+AppCopyright=© 2026 Shattered Spartan — projet non officiel
 VersionInfoVersion={#AppVersion}
 VersionInfoDescription=Installateur de {#AppName}
+VersionInfoCompany=Shattered Spartan
+VersionInfoProductName={#AppName}
 DefaultDirName={autopf}\{#AppName}
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
@@ -37,10 +39,12 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 MinVersion=10.0.17763
 OutputDir=..\..\dist
-OutputBaseFilename=E7Showcase-Setup-{#AppVersion}
-SetupIconFile={#Build}\e7showcase.ico
-WizardImageFile={#Build}\wizard.bmp
-WizardSmallImageFile={#Build}\wizard-small.bmp
+OutputBaseFilename=Zealot-Setup-{#AppVersion}
+SetupIconFile={#Build}\zealot.ico
+WizardImageFile={#Build}\wizard.bmp,{#Build}\wizard-200.bmp
+WizardSmallImageFile={#Build}\wizard-small.bmp,{#Build}\wizard-small-200.bmp
+WizardImageStretch=no
+WizardImageAlphaFormat=none
 UninstallDisplayIcon={app}\{#AppExe}
 UninstallDisplayName={#AppName}
 LicenseFile=..\..\LICENSE
@@ -57,26 +61,31 @@ Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "Créer une icône sur le Bureau"; GroupDescription: "Raccourcis :"
-Name: "assoc"; Description: "Ouvrir les fichiers de vitrine (.e7v) avec E7 Showcase"; GroupDescription: "Fichiers :"
+Name: "assoc"; Description: "Ouvrir les fichiers de vitrine (.e7v) avec Zealot"; GroupDescription: "Fichiers :"
 
 [InstallDelete]
 ; mise à jour : supprime les bibliothèques de l'ancienne version avant la copie
 Type: filesandordirs; Name: "{app}\_internal"
+; ancien nom de l'application (E7 Showcase) : exécutable, icône et raccourcis
+Type: files; Name: "{app}\E7Showcase.exe"
+Type: files; Name: "{app}\e7showcase.ico"
+Type: files; Name: "{autoprograms}\E7 Showcase.lnk"
+Type: files; Name: "{autodesktop}\E7 Showcase.lnk"
 
 [Files]
-Source: "..\..\dist\E7Showcase\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs ignoreversion
-Source: "{#Build}\e7showcase.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\dist\Zealot\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs ignoreversion
+Source: "{#Build}\zealot.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\LICENSE"; DestDir: "{app}"; DestName: "LICENCE.txt"; Flags: ignoreversion
 
 [Icons]
-Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppExe}"; IconFilename: "{app}\e7showcase.ico"; Comment: "Vitrines Epic Seven"
-Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; IconFilename: "{app}\e7showcase.ico"; Tasks: desktopicon
+Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppExe}"; IconFilename: "{app}\zealot.ico"; Comment: "Zealot — compagnon Epic Seven"
+Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; IconFilename: "{app}\zealot.ico"; Tasks: desktopicon
 
 [Registry]
 Root: HKA; Subkey: "Software\Classes\.e7v"; ValueType: string; ValueData: "E7Showcase.Vitrine"; Flags: uninsdeletevalue; Tasks: assoc
 Root: HKA; Subkey: "Software\Classes\.e7v"; ValueType: string; ValueName: "Content Type"; ValueData: "application/x-e7showcase-vitrine"; Flags: uninsdeletevalue; Tasks: assoc
-Root: HKA; Subkey: "Software\Classes\E7Showcase.Vitrine"; ValueType: string; ValueData: "Vitrine E7 Showcase"; Flags: uninsdeletekey; Tasks: assoc
-Root: HKA; Subkey: "Software\Classes\E7Showcase.Vitrine\DefaultIcon"; ValueType: string; ValueData: "{app}\e7showcase.ico"; Tasks: assoc
+Root: HKA; Subkey: "Software\Classes\E7Showcase.Vitrine"; ValueType: string; ValueData: "Vitrine Zealot"; Flags: uninsdeletekey; Tasks: assoc
+Root: HKA; Subkey: "Software\Classes\E7Showcase.Vitrine\DefaultIcon"; ValueType: string; ValueData: "{app}\zealot.ico"; Tasks: assoc
 Root: HKA; Subkey: "Software\Classes\E7Showcase.Vitrine\shell\open\command"; ValueType: string; ValueData: """{app}\{#AppExe}"" ""%1"""; Tasks: assoc
 Root: HKA; Subkey: "Software\Classes\Applications\{#AppExe}\SupportedTypes"; ValueType: string; ValueName: ".e7v"; ValueData: ""; Flags: uninsdeletekey
 
@@ -106,6 +115,8 @@ end;
 
 procedure InitializeWizard;
 begin
+  WizardForm.WelcomeLabel1.Caption := 'Bienvenue dans l''installation de Zealot';
+  WizardForm.WelcomeLabel2.Caption := 'Le compagnon Epic Seven : vitrines de héros, simulateur de combat, guilde et guerres de guilde.' + #13#10#13#10 + 'Édité par Shattered Spartan.' + #13#10#13#10 + 'Cliquez sur Suivant pour continuer.';
   DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), 'Composant Microsoft Edge WebView2 (affichage de l''application)', nil);
 end;
 

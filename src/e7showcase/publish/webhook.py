@@ -18,7 +18,7 @@ def post_images(
     images: list[Path],
     *,
     content: str = "",
-    username: str = "E7 Showcase",
+    username: str = "Zealot",
     timeout: float = 30,
 ) -> None:
     if not webhook_url:
@@ -87,7 +87,7 @@ def post_messages(
     webhook_url: str,
     messages: list[str],
     *,
-    username: str = "E7 Showcase",
+    username: str = "Zealot",
     timeout: float = 30,
     transport: httpx.BaseTransport | None = None,
 ) -> list[str]:
@@ -112,7 +112,7 @@ def sync_messages(
     messages: list[str],
     previous: list[str],
     *,
-    username: str = "E7 Showcase",
+    username: str = "Zealot",
     timeout: float = 30,
     transport: httpx.BaseTransport | None = None,
 ) -> list[str]:

@@ -1,4 +1,4 @@
-# Application de bureau E7 Showcase
+# Application de bureau Zealot (ex-E7 Showcase)
 
 Application téléchargeable : le joueur crée son **profil**, y glisse les **captures d'écran** de ses
 héros, consulte sa **vitrine** et l'**exporte** en un fichier `.e7v` que n'importe qui ouvre avec

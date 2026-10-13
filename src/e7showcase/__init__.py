@@ -1,3 +1,3 @@
-"""E7 Showcase — scanner de roster Epic Seven et générateur de vitrines Discord."""
+"""Zealot (ex-E7 Showcase) — compagnon Epic Seven : vitrines, simulateurs, guilde et GvG."""
 
 __version__ = "0.54.0"

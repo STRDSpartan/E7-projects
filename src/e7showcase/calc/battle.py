@@ -1872,7 +1872,7 @@ def shutdown_pool() -> None:
     """Arrête VRAIMENT les processus de calcul (fermeture de l'application).
 
     L'application se termine ensuite par `os._exit` : un arrêt « poli » n'aurait pas le temps
-    de prévenir les processus, qui resteraient orphelins (E7Showcase.exe en arrière-plan).
+    de prévenir les processus, qui resteraient orphelins (Zealot.exe en arrière-plan).
     Les processus encore en train de démarrer (préchauffage) sont rattrapés aussi.
     """
     import multiprocessing

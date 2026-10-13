@@ -33,7 +33,7 @@ jobs:
         run: |
           $env:E7_DATA_DIR = "$env:RUNNER_TEMP\e7data"
           $log = "$env:E7_DATA_DIR\e7showcase.log"
-          $p = Start-Process dist\E7Showcase\E7Showcase.exe -PassThru
+          $p = Start-Process dist\Zealot\Zealot.exe -PassThru
           $ok = $false
           for ($i = 0; $i -lt 45; $i++) {
             Start-Sleep -Seconds 2
@@ -52,9 +52,9 @@ jobs:
           $p.Refresh(); $null = $p.CloseMainWindow()
           $closed = $p.WaitForExit(20000)
           Get-Content $log -ErrorAction SilentlyContinue
-          $left = Get-Process -Name E7Showcase -ErrorAction SilentlyContinue
+          $left = Get-Process -Name Zealot -ErrorAction SilentlyContinue
           if (-not $closed -or $left) {
-            Get-CimInstance Win32_Process -Filter "Name='E7Showcase.exe'" | ForEach-Object { Write-Host "::error::reste : pid $($_.ProcessId) parent $($_.ParentProcessId) : $($_.CommandLine)" }
+            Get-CimInstance Win32_Process -Filter "Name='Zealot.exe'" | ForEach-Object { Write-Host "::error::reste : pid $($_.ProcessId) parent $($_.ParentProcessId) : $($_.CommandLine)" }
             $left | Stop-Process -Force -ErrorAction SilentlyContinue
             if (-not $closed) { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue }
             Write-Host "::error::le processus reste actif après la fermeture de la fenêtre"
@@ -75,13 +75,13 @@ jobs:
           }
       - name: Version portable (sans installation)
         shell: pwsh
-        run: Compress-Archive -Path dist\E7Showcase -DestinationPath dist\E7Showcase-portable.zip
+        run: Compress-Archive -Path dist\Zealot -DestinationPath dist\Zealot-portable.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: E7Showcase-Windows
+          name: Zealot-Windows
           path: |
-            dist/E7Showcase-Setup-*.exe
-            dist/E7Showcase-portable.zip
+            dist/Zealot-Setup-*.exe
+            dist/Zealot-portable.zip
       - name: Release (tags v* ou release publiée)
         if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'release'
         uses: softprops/action-gh-release@v2
@@ -89,5 +89,5 @@ jobs:
           tag_name: ${{ github.event.release.tag_name || github.ref_name }}
           body_path: docs/RELEASE_NOTES.md
           files: |
-            dist/E7Showcase-Setup-*.exe
-            dist/E7Showcase-portable.zip
+            dist/Zealot-Setup-*.exe
+            dist/Zealot-portable.zip

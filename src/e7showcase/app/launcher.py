@@ -48,7 +48,7 @@ class WindowApi:
         chosen = self._window.create_file_dialog(
             webview.SAVE_DIALOG,
             save_filename=suggested_filename(player),
-            file_types=(f"Vitrine E7 Showcase (*{SUFFIX})",),
+            file_types=(f"Vitrine Zealot (*{SUFFIX})",),
         )
         if not chosen:
             return None
@@ -171,13 +171,13 @@ def main(argv: list[str] | None = None) -> int:
         import webview
     except ImportError:
         server.shutdown()
-        _fatal("Composant d'affichage manquant (pywebview). Réinstallez E7 Showcase.")
+        _fatal("Composant d'affichage manquant (pywebview). Réinstallez Zealot.")
         return 1
 
     api = WindowApi(state)
     webview.settings["ALLOW_DOWNLOADS"] = True
     window = webview.create_window(
-        "E7 Showcase", url, js_api=api, width=1360, height=860, min_size=(960, 640), maximized=True
+        "Zealot", url, js_api=api, width=1360, height=860, min_size=(960, 640), maximized=True
     )
     api._window = window  # noqa: SLF001 - jamais exposé à JavaScript
     window.events.loaded += lambda: log.info("Fenêtre chargée [window-loaded]")
@@ -188,7 +188,7 @@ def main(argv: list[str] | None = None) -> int:
         log.exception("Fenêtre native indisponible")
         server.shutdown()
         _fatal(
-            "Impossible d'ouvrir la fenêtre d'E7 Showcase : le composant Microsoft Edge WebView2 "
+            "Impossible d'ouvrir la fenêtre de Zealot : le composant Microsoft Edge WebView2 "
             "est absent ou endommagé. Installez-le depuis "
             "https://go.microsoft.com/fwlink/p/?LinkId=2124703 puis relancez l'application."
         )
@@ -201,7 +201,7 @@ def _quit(server: Any, state: Any = None) -> None:
     """Termine VRAIMENT le processus à la fermeture de la fenêtre.
 
     Sans cela, l'arrêt normal de Python peut rester bloqué (runtime .NET de pywebview,
-    threads du moteur OCR) et laisser E7Showcase.exe tourner en arrière-plan.
+    threads du moteur OCR) et laisser Zealot.exe tourner en arrière-plan.
     Toutes les écritures de profils sont synchrones : rien n'est perdu.
     """
     if state is not None:
@@ -227,7 +227,7 @@ def _fatal(message: str) -> None:
     if sys.platform == "win32":
         import ctypes
 
-        ctypes.windll.user32.MessageBoxW(None, message, "E7 Showcase", 0x10)
+        ctypes.windll.user32.MessageBoxW(None, message, "Zealot", 0x10)
     else:
         print(message, file=sys.stderr)
 

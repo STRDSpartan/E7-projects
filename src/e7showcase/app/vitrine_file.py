@@ -1,6 +1,6 @@
 """Fichier de vitrine partageable (.e7v).
 
-Archive ZIP lisible par n'importe quelle installation d'E7 Showcase :
+Archive ZIP lisible par n'importe quelle installation de Zealot :
 
     manifest.json   {"format": "e7showcase-vitrine", "version": 1, "player", "exported_at", ...}
     profile.json    roster (format d'échange Roster, voir models/roster.py)
@@ -95,18 +95,18 @@ def import_vitrine(store: ProfileStore, data: bytes) -> str:
     try:
         zf = zipfile.ZipFile(io.BytesIO(data))
     except zipfile.BadZipFile as exc:
-        raise VitrineFileError("ce n'est pas un fichier de vitrine E7 Showcase") from exc
+        raise VitrineFileError("ce n'est pas un fichier de vitrine Zealot") from exc
     with zf:
         entries = {i.filename: i for i in zf.infolist() if not i.is_dir()}
         if len(entries) > MAX_ENTRIES or "manifest.json" not in entries:
-            raise VitrineFileError("ce n'est pas un fichier de vitrine E7 Showcase")
+            raise VitrineFileError("ce n'est pas un fichier de vitrine Zealot")
         try:
             manifest = json.loads(_read(zf, entries["manifest.json"]))
             roster = Roster.model_validate_json(_read(zf, entries["profile.json"]))
         except (KeyError, ValueError) as exc:
             raise VitrineFileError("vitrine illisible ou endommagée") from exc
         if not isinstance(manifest, dict) or manifest.get("format") != FORMAT:
-            raise VitrineFileError("ce n'est pas un fichier de vitrine E7 Showcase")
+            raise VitrineFileError("ce n'est pas un fichier de vitrine Zealot")
         if int(manifest.get("version", 0)) > VERSION:
             raise VitrineFileError("vitrine créée par une version plus récente : mettez à jour")
 

@@ -304,7 +304,7 @@ def _b64(value: Any) -> bytes:
 
 def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
     class Handler(BaseHTTPRequestHandler):
-        server_version = f"E7Showcase/{__version__}"
+        server_version = f"Zealot/{__version__}"
 
         def log_message(self, fmt: str, *args: Any) -> None:
             log.debug(fmt, *args)

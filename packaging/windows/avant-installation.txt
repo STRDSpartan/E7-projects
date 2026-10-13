@@ -1,4 +1,5 @@
-E7 Showcase — vitrines Epic Seven
+Zealot — compagnon Epic Seven
+Édité par Shattered Spartan
 
 Ce que fait l'application :
   • vous glissez les captures d'écran de vos héros (fiche « Infos de héros », liste des héros) ;

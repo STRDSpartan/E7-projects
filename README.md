@@ -1,4 +1,6 @@
-# E7 Showcase
+# Zealot (ex-E7 Showcase)
+
+_Édité par **Shattered Spartan**. Le paquet Python et la commande restent `e7showcase`._
 
 **Application de bureau** pour Epic Seven : le joueur glisse les captures d'écran de ses héros,
 l'application reconnaît chaque héros (nom, pose, stats, équipement, sets), construit son **profil
