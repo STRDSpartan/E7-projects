@@ -1,0 +1,50 @@
+name: Application mobile
+
+# Zealot mobile (BeeWare Briefcase) : APK Android de test et build iOS pour simulateur.
+# La signature (Play Store, App Store) demande les comptes développeur de l'éditeur : voir docs/MOBILE.md.
+on:
+  push:
+    branches: [main, "claude/**"]
+    paths: ["src/**", "mobile/**", "scripts/prepare_mobile.py", "scripts/make_icon.py", "pyproject.toml", ".github/workflows/mobile.yml"]
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Préparation (sources et icônes)
+        run: |
+          pip install briefcase==0.4.6 pillow numpy
+          python scripts/prepare_mobile.py
+      - name: Construction Android
+        run: |
+          briefcase create android --no-input
+          briefcase build android --no-input
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Zealot-Android
+          path: build/zealot/android/gradle/app/build/outputs/apk/debug/*.apk
+
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Préparation (sources et icônes)
+        run: |
+          pip install briefcase==0.4.6 pillow numpy
+          python scripts/prepare_mobile.py
+      - name: Construction iOS (simulateur, non signé)
+        run: |
+          briefcase create iOS --no-input
+          briefcase build iOS --no-input

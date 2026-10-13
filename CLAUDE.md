@@ -21,7 +21,7 @@ e7showcase app                    # application de bureau (fenêtre native)
 · `calc/` gear score & sets, simulateurs de dégâts/combat (`docs/SIMULATORS.md`) · `parsers/` texte OCR → modèles (purs, très testés) · `capture/` fenêtre
 + capture (Windows) · `vision/` ROI normalisées, prétraitement, OCR · `scanner/` orchestration ·
 `importers/fribbels.py` · `storage/` JSON · `assets.py` portraits locaux · `sources/e7codex.py` référentiel & sync · `render/` Jinja2 → PNG Playwright · `publish/` webhook & bot
-· `cli.py` Typer.
+· `cli.py` Typer · `mobile/` app Android/iOS (Briefcase, voir `docs/MOBILE.md`).
 Plateforme web **E7 Social** (`platform/backend` FastAPI, `platform/frontend` React) : voir
 `docs/platform/ARCHITECTURE.md`, agent `platform-engineer`, skill `platform-dev`.
 Détails : `docs/ARCHITECTURE.md` ; étapes et état du projet : `docs/PLAN.md`.

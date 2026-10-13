@@ -83,3 +83,40 @@ files = ["src"]
 # discord.py expose des décorateurs non typés
 module = "e7showcase.publish.bot"
 disallow_untyped_decorators = false
+
+# ----- Zealot mobile (Android, iOS) : BeeWare Briefcase, voir docs/MOBILE.md -----
+[tool.briefcase]
+project_name = "Zealot"
+bundle = "com.shatteredspartan"
+version = "0.66.0"
+url = "https://github.com/STRDSpartan/E7-projects"
+license.file = "LICENSE"
+author = "Shattered Spartan"
+author_email = "noreply@example.com"
+
+[tool.briefcase.app.zealot]
+formal_name = "Zealot"
+description = "Compagnon Epic Seven : vitrines, simulateurs, guilde et guerres de guilde."
+long_description = "Zealot sur mobile : le même cœur et la même interface que l'application PC."
+icon = "build/mobile-icons/zealot"
+# sources préparées par scripts/prepare_mobile.py (données de référence copiées dans le paquet)
+sources = ["build/mobile-src/e7showcase", "mobile/zealot"]
+requires = [
+  "pydantic>=2.7",
+  "jinja2>=3.1",
+  "pillow>=10.3",
+  "httpx>=0.27",
+  "rapidfuzz>=3.9",
+  "platformdirs>=4.2",
+  "numpy>=1.26",
+]
+
+[tool.briefcase.app.zealot.android]
+requires = ["toga-android~=0.5.0"]
+base_theme = "Theme.MaterialComponents.Light.DarkActionBar"
+# l'interface est servie par le serveur local de l'app (http://127.0.0.1)
+android_manifest_application_attrs_extra_content = 'android:usesCleartextTraffic="true"'
+
+[tool.briefcase.app.zealot.iOS]
+requires = ["toga-iOS~=0.5.0"]
+info."NSAppTransportSecurity".NSAllowsLocalNetworking = true

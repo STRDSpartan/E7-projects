@@ -1837,6 +1837,9 @@ def _chunk(
     return wins, draws, actions, totals
 
 
+MOBILE_PLATFORMS = ("ios", "android")
+
+
 def _pool() -> Any:
     """Processus de calcul partagés (créés au premier gros calcul, gardés ensuite)."""
     global _POOL
@@ -1846,12 +1849,17 @@ def _pool() -> Any:
         if _POOL is None:
             import atexit
             import os
+            import sys
             from concurrent.futures import ProcessPoolExecutor
 
             workers = min(CHUNKS, os.cpu_count() or 1)
-            if workers < 2:
+            # mobile (Android, iOS) : pas de sous-processus, calcul dans le processus de l'app
+            if workers < 2 or sys.platform in MOBILE_PLATFORMS or os.environ.get("E7_NO_PROCESSES"):
                 return None
-            _POOL = ProcessPoolExecutor(max_workers=workers)
+            try:
+                _POOL = ProcessPoolExecutor(max_workers=workers)
+            except (OSError, NotImplementedError, ImportError):
+                return None
             atexit.register(_POOL.shutdown, wait=False, cancel_futures=True)
         return _POOL
 
