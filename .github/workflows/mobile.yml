@@ -28,6 +28,9 @@ jobs:
         run: |
           briefcase create android --no-input
           briefcase build android --no-input
+      - name: Journaux Briefcase (en cas d'échec)
+        if: failure()
+        run: tail -n 120 logs/*.log || true
       - uses: actions/upload-artifact@v4
         with:
           name: Zealot-Android
@@ -48,3 +51,6 @@ jobs:
         run: |
           briefcase create iOS --no-input
           briefcase build iOS --no-input
+      - name: Journaux Briefcase (en cas d'échec)
+        if: failure()
+        run: tail -n 120 logs/*.log || true

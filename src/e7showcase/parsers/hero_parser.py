@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from rapidfuzz import fuzz, process
-
+from e7showcase.fuzzy import fuzz, process
 from e7showcase.models.hero import HeroStats
 from e7showcase.models.stats import StatType
 from e7showcase.parsers.stat_parser import parse_stat_block

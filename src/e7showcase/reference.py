@@ -43,7 +43,7 @@ def artifact_info(name: str | None, score_cutoff: float = 80) -> dict[str, Any] 
     """Artefact du référentiel le plus proche d'un nom (FR ou EN, tolérant au bruit OCR)."""
     if not name:
         return None
-    from rapidfuzz import fuzz, process
+    from e7showcase.fuzzy import fuzz, process
 
     arts = load("artifacts")["artifacts"]
     choices = {}

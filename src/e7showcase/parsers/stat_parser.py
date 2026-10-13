@@ -8,8 +8,7 @@ from __future__ import annotations
 
 import re
 
-from rapidfuzz import fuzz, process
-
+from e7showcase.fuzzy import fuzz, process
 from e7showcase.models.gear import StatLine
 from e7showcase.models.stats import StatType
 from e7showcase.reference import load, normalize

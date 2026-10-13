@@ -32,7 +32,7 @@ class Roster(BaseModel):
     )
 
     def find(self, name: str) -> Hero | None:
-        from rapidfuzz import fuzz, process
+        from e7showcase.fuzzy import fuzz, process
 
         if not self.heroes:
             return None

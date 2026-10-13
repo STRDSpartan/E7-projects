@@ -7,8 +7,7 @@ from __future__ import annotations
 
 import re
 
-from rapidfuzz import fuzz, process
-
+from e7showcase.fuzzy import fuzz, process
 from e7showcase.models.gear import FIXED_MAIN_STAT, Gear, GearSet, GearSlot
 from e7showcase.parsers.stat_parser import StatParseError, parse_stat_block, parse_stat_line
 from e7showcase.reference import load, normalize
