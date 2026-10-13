@@ -82,7 +82,11 @@ FACES_MIN = 50  # en dessous, la reconnaissance des portraits n'a pas de quoi co
 
 log = logging.getLogger(__name__)
 UI = Path(__file__).resolve().parent / "ui.html"
-SIDEBAR_VIDEO = UI.with_name("media") / "sidebar.webm"  # fond animé du bandeau des profils
+APP_MEDIA = {  # médias de l'application : fond animé du bandeau, logo et emblème
+    "sidebar.webm": "video/webm",
+    "logo.png": "image/png",
+    "emblem.png": "image/png",
+}
 MAX_BODY = 400 * 1024 * 1024
 MAX_UPLOAD = 40 * 1024 * 1024  # une capture
 UPLOAD_TTL = 600.0
@@ -389,9 +393,11 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                         raise ApiError(404, "introuvable")
                     cache = {"Cache-Control": "private, max-age=31536000, immutable"}
                     self._send(200, target.read_bytes(), "image/webp", cache)
-                elif method == "GET" and path == "/media/sidebar.webm":
+                elif method == "GET" and path.removeprefix("/media/") in APP_MEDIA:
+                    name = path.removeprefix("/media/")
                     cache = {"Cache-Control": "private, max-age=86400"}
-                    self._send(200, SIDEBAR_VIDEO.read_bytes(), "video/webm", cache)
+                    data = (UI.with_name("media") / name).read_bytes()
+                    self._send(200, data, APP_MEDIA[name], cache)
                 elif method == "GET" and (m := MEDIA_RE.fullmatch(path)):
                     # image d'un profil (adresse versionnée par ?v= : gardée en cache longtemps)
                     if not state.store.exists(m[1]):

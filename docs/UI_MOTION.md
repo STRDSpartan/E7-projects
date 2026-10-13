@@ -46,3 +46,9 @@ principal lavande lumineuse `--gold #b9a0ff` (le nom de variable est historique)
 #7fb4ff`, rose `--sakura #ff9fd4`, lanterne `--lantern #f4c980`. Les particules deviennent des
 pétales roses et des lueurs bleues. La vidéo est masquée avec « Effets visuels : désactivés » et
 `prefers-reduced-motion`. Icône et installateur (`scripts/make_icon.py`) suivent la même palette.
+
+## Logo (v0.57)
+
+Logo officiel fourni par l'éditeur : `packaging/branding/zealot-logo.png`. `scripts/make_icon.py`
+en tire l'icône (emblème sur pastille violette), les images de l'installateur et, avec `--app`,
+`app/media/logo.png` (écran d'accueil) et `app/media/emblem.png` (bandeau, favicon), fond rendu transparent.

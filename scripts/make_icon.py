@@ -1,18 +1,18 @@
-"""Génère l'icône et les images de l'installateur de Zealot (dessin original, aucun visuel du jeu).
+"""Icône et images de l'installateur de Zealot, tirées du logo (packaging/branding/zealot-logo.png).
 
     python scripts/make_icon.py packaging/windows/build
 Produit : zealot.ico (16 → 256 px), zealot.png, wizard.bmp (164x314) et wizard-200.bmp,
 wizard-small.bmp (55x58) et wizard-small-200.bmp (écrans à 200 %).
+    python scripts/make_icon.py --app   # logo et emblème transparents de l'application
 """
 
 from __future__ import annotations
 
-import math
 import random
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageFont
 
 # identité « nuit de sakura » : lavande lumineuse, bleu nuit, rose sakura (comme l'application)
 GOLD = (226, 214, 255)
@@ -50,47 +50,42 @@ def _gradient(size: tuple[int, int], top: tuple[int, ...], bottom: tuple[int, ..
     return img
 
 
-def emblem(size: int) -> Image.Image:
-    """Écusson hexagonal bleu nuit liseré lavande, « Z » lumineux fendu d'une lame, halo sakura."""
-    s = size
-    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
-    # halo
-    glow = Image.new("RGBA", (s, s), (0, 0, 0, 0))
-    ImageDraw.Draw(glow).ellipse((s * 0.12, s * 0.12, s * 0.88, s * 0.88), fill=(*EMBER, 110))
-    img.alpha_composite(glow.filter(ImageFilter.GaussianBlur(max(1, s // 12))))
-    d = ImageDraw.Draw(img)
-    hexa = [
-        (
-            s * 0.5 + s * 0.44 * math.cos(math.pi / 6 + i * math.pi / 3),
-            s * 0.5 + s * 0.44 * math.sin(math.pi / 6 + i * math.pi / 3),
+LOGO = Path(__file__).resolve().parents[1] / "packaging" / "branding" / "zealot-logo.png"
+LOGO_BG = (40, 21, 60)  # fond violet du logo, rendu transparent
+EMBLEM_BOX = (40, 18, 347, 292)  # ailes et auréole, sans le texte
+
+
+def keyed(img: Image.Image) -> Image.Image:
+    """Logo sur fond transparent : l'alpha croît avec l'écart à la couleur du fond."""
+    import numpy as np
+
+    rgb = np.asarray(img.convert("RGB")).astype(np.float32)
+    dist = np.sqrt(((rgb - np.array(LOGO_BG, np.float32)) ** 2).sum(axis=2))
+    alpha = np.clip((dist - 14.0) / 70.0, 0.0, 1.0)
+    out = np.dstack([rgb, alpha * 255.0]).astype(np.uint8)
+    return Image.fromarray(out, "RGBA")
+
+
+def logo() -> Image.Image:
+    return keyed(Image.open(LOGO))
+
+
+def emblem(size: int, background: bool = True) -> Image.Image:
+    """Emblème du logo (ailes et auréole), centré ; sur pastille violette pour l'icône."""
+    mark = logo().crop(EMBLEM_BOX)
+    side = max(mark.size)
+    square = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+    square.alpha_composite(mark, ((side - mark.width) // 2, (side - mark.height) // 2))
+    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    if background:
+        ImageDraw.Draw(img).rounded_rectangle(
+            (0, 0, size - 1, size - 1), radius=size // 5, fill=(*LOGO_BG, 255)
         )
-        for i in range(6)
-    ]
-    d.polygon(hexa, fill=(*NIGHT, 255), outline=GOLD, width=max(1, s // 22))
-    inner = [(s * 0.5 + (x - s * 0.5) * 0.84, s * 0.5 + (y - s * 0.5) * 0.84) for x, y in hexa]
-    d.polygon(inner, outline=(*GOLD_DEEP, 255), width=max(1, s // 64))
-    # « Z » : deux barres et une diagonale, en dégradé or
-    z = Image.new("L", (s, s), 0)
-    zd = ImageDraw.Draw(z)
-    t = s * 0.1
-    left, right, top, bottom = s * 0.29, s * 0.71, s * 0.28, s * 0.72
-    zd.rectangle((left, top, right, top + t), fill=255)
-    zd.rectangle((left, bottom - t, right, bottom), fill=255)
-    zd.polygon(
-        [
-            (right - t * 1.1, top + t),
-            (right, top + t),
-            (left + t * 1.1, bottom - t),
-            (left, bottom - t),
-        ],
-        fill=255,
-    )
-    gold = _gradient((s, s), GOLD, GOLD_DEEP).convert("RGBA")
-    img.paste(gold, (0, 0), z)
-    # lame : trait clair qui traverse la diagonale
-    d.line(
-        [(s * 0.66, s * 0.2), (s * 0.34, s * 0.8)], fill=(255, 214, 236, 235), width=max(1, s // 48)
-    )
+        inner = int(size * 0.92)
+    else:
+        inner = size
+    mark = square.resize((inner, inner), Image.Resampling.LANCZOS)
+    img.alpha_composite(mark, ((size - inner) // 2, (size - inner) // 2))
     return img
 
 
@@ -107,26 +102,19 @@ def _sparks(img: Image.Image, count: int, seed: int) -> None:
 
 
 def wizard(scale: int) -> Image.Image:
-    """Bandeau vertical de l'assistant : nuit violette, pétales, écusson, nom et éditeur."""
+    """Bandeau vertical de l'assistant : fond violet du logo, pétales, logo complet, éditeur."""
     w, h = 164 * scale, 314 * scale
-    img = _gradient((w, h), VIOLET, NIGHT).convert("RGBA")
-    _sparks(img, 70, 7)
-    mark = emblem(int(118 * scale))
-    img.alpha_composite(mark, ((w - mark.width) // 2, int(54 * scale)))
+    img = _gradient((w, h), (58, 30, 88), LOGO_BG).convert("RGBA")
+    _sparks(img, 60, 7)
+    full = logo()
+    lw = int(146 * scale)
+    full = full.resize((lw, int(full.height * lw / full.width)), Image.Resampling.LANCZOS)
+    img.alpha_composite(full, ((w - lw) // 2, int(40 * scale)))
     d = ImageDraw.Draw(img)
-    d.text((w / 2, 196 * scale), "ZEALOT", fill=GOLD, font=_font(int(26 * scale)), anchor="mm")
-    d.line([(w * 0.22, 214 * scale), (w * 0.78, 214 * scale)], fill=GOLD_DEEP, width=scale)
-    d.text(
-        (w / 2, 230 * scale),
-        "compagnon Epic Seven",
-        fill=(214, 206, 230),
-        font=_font(int(10 * scale), bold=False),
-        anchor="mm",
-    )
     d.text(
         (w / 2, 290 * scale),
         f"par {PUBLISHER}",
-        fill=(255, 190, 226),
+        fill=(236, 216, 230),
         font=_font(int(9 * scale), bold=False),
         anchor="mm",
     )
@@ -139,6 +127,14 @@ def wizard_small(scale: int) -> Image.Image:
     mark = emblem(int(52 * scale))
     img.alpha_composite(mark, ((w - mark.width) // 2, (h - mark.height) // 2))
     return img.convert("RGB")
+
+
+def app_media(out: Path) -> None:
+    """Logo et emblème transparents pour l'application (bandeau, écran d'accueil)."""
+    out.mkdir(parents=True, exist_ok=True)
+    full = logo()
+    full.crop(full.getbbox()).save(out / "logo.png", optimize=True)
+    emblem(160, background=False).save(out / "emblem.png", optimize=True)
 
 
 def main(out: Path) -> None:
@@ -156,4 +152,7 @@ def main(out: Path) -> None:
 
 
 if __name__ == "__main__":
+    if sys.argv[1:2] == ["--app"]:  # régénère src/e7showcase/app/media/{logo,emblem}.png
+        app_media(Path(__file__).resolve().parents[1] / "src" / "e7showcase" / "app" / "media")
+        sys.exit()
     main(Path(sys.argv[1] if len(sys.argv) > 1 else "packaging/windows/build"))

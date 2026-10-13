@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Zealot</title>
+<link rel="icon" href="/media/emblem.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2l12 7v14l-12 7-12-7V9z' fill='%23141925' stroke='%23e8c26a' stroke-width='2'/%3E%3Ctext x='16' y='21' font-size='12' font-family='sans-serif' font-weight='700' fill='%23e8c26a' text-anchor='middle'%3EE7%3C/text%3E%3C/svg%3E">
 <style>
 :root { --bg:#060818; --panel:#0e1230; --panel-2:#171c3e; --line:#2a2f5c; --text:#eef0ff; --muted:#9ca2cc;
@@ -207,6 +208,7 @@ dialog::backdrop { background:rgba(5,7,12,.6); backdrop-filter:blur(4px); animat
 .welcome h2 { font-size:28px; margin:8px 0; background:linear-gradient(90deg, var(--text), var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent; }
 .emblem { width:150px; height:150px; margin:0 auto; filter:drop-shadow(0 0 24px rgba(185,160,255,.25)); }
 .emblem svg { width:100%; height:100%; overflow:visible; }
+.emblem { width:220px; height:auto; margin-bottom:14px; animation:breathe 5s ease-in-out infinite; } .emblem img { width:100%; display:block; }
 .emblem .ring { transform-origin:100px 100px; } .emblem .r1 { animation:spin 40s linear infinite; } .emblem .r2 { animation:spin 26s linear infinite reverse; }
 .emblem .core { animation:breathe 4s ease-in-out infinite; transform-origin:100px 100px; }
 @keyframes spin { to { transform:rotate(360deg); } }
@@ -501,6 +503,9 @@ aside .side-actions { background:rgba(6,8,24,.55); backdrop-filter:blur(8px); }
 .brand { background:linear-gradient(100deg, #7fb4ff 0%, var(--gold) 30%, #ffd9ef 45%, var(--sakura) 60%, #7fb4ff 100%); background-size:250% 100%;
   -webkit-background-clip:text; background-clip:text; filter:drop-shadow(0 0 10px rgba(185,160,255,.45)); }
 html.no-fx .side-video { display:none; }
+.brand-row { display:flex; align-items:center; gap:4px; padding:10px 12px 4px; }
+.brand-row .brand { padding:0; }
+.brand-logo { width:52px; height:52px; flex:none; filter:drop-shadow(0 0 10px rgba(255,159,212,.45)); animation:float 4s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .side-video { display:none; } }
 html.no-fx *, html.no-fx *::before, html.no-fx *::after { animation:none !important; transition:none !important; }
 html.no-fx #fx { display:none; }
@@ -514,7 +519,7 @@ html.no-fx #fx { display:none; }
 <canvas id="fx" aria-hidden="true"></canvas>
 <aside>
   <video class="side-video" src="/media/sidebar.webm" autoplay muted loop playsinline disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
-  <div class="brand">ZEALOT<small>par Shattered Spartan</small></div>
+  <div class="brand-row"><img class="brand-logo" src="/media/emblem.png" alt=""><div class="brand">ZEALOT<small>par Shattered Spartan</small></div></div>
   <div class="list" id="list"></div>
   <div class="side-actions">
     <button id="new">+ Nouveau profil</button>
@@ -672,11 +677,7 @@ document.querySelectorAll(".topnav button").forEach((b) => b.addEventListener("c
 
 function welcome() {
   const emblem = el("div", { class: "emblem", "aria-hidden": "true" });
-  emblem.innerHTML = '<svg viewBox="0 0 200 200"><defs><linearGradient id="eg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6f0ff"/><stop offset=".5" stop-color="#b9a0ff"/><stop offset="1" stop-color="#5546c9"/></linearGradient></defs>'
-    + '<g class="ring r1"><circle cx="100" cy="100" r="92" fill="none" stroke="url(#eg)" stroke-width="1.5" stroke-dasharray="4 10"/></g>'
-    + '<g class="ring r2"><circle cx="100" cy="100" r="78" fill="none" stroke="#4ab3ff" stroke-opacity=".5" stroke-width="1" stroke-dasharray="30 8 2 8"/></g>'
-    + '<path class="core" d="M100 38l52 30v64l-52 30-52-30V68z" fill="#141925" stroke="url(#eg)" stroke-width="3"/>'
-    + '<text x="100" y="114" text-anchor="middle" font-size="40" font-weight="800" fill="url(#eg)" font-family="Segoe UI, sans-serif">E7</text></svg>';
+  emblem.append(el("img", { src: "/media/logo.png", alt: "" }));
   $("#content").replaceChildren(el("div", { class: "empty welcome" }, emblem,
     el("h2", {}, "Bienvenue"),
     el("p", {}, "Créez votre profil, puis ajoutez les captures d'écran de vos héros."),
