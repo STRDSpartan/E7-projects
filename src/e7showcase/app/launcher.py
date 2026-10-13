@@ -163,6 +163,9 @@ def main(argv: list[str] | None = None) -> int:
             log.error("Impossible d'ouvrir %s : %s", path, exc)
 
     server = start_server(state)
+    state.updater.on_quit = lambda: _quit(
+        server, state
+    )  # mise à jour : l'installateur prend le relais
     threading.Thread(target=_warm_simulator, daemon=True).start()
     if state.faces.count() < FACES_MIN:  # premier lancement : visages prêts avant la 1re GvG
         state.start_face_sync()

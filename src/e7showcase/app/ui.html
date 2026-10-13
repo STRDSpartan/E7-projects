@@ -530,7 +530,7 @@ html.no-fx #fx { display:none; }
     <button class="ghost" id="open">Ouvrir une vitrine (.e7v)</button>
     <input type="file" id="open-file" accept=".e7v" hidden>
   </div>
-  <button class="ghost fx-toggle" id="fx-toggle" aria-pressed="true">✨ Effets visuels : activés</button>
+  <button class="ghost fx-toggle" id="update-btn">🔄 Rechercher une mise à jour</button>
 </aside>
 <main id="main">
   <nav class="topnav" role="tablist" aria-label="Fonctionnalités">
@@ -1910,24 +1910,40 @@ $("#open-file").addEventListener("change", async (e) => {
 const start = new URLSearchParams(location.hash.slice(1)).get("p");
 refresh(start || undefined).then(() => { if (!start) render(); });
 
+// ===== Mise à jour de Zealot depuis GitHub =====
+(() => {
+  const btn = $("#update-btn");
+  const label = btn.textContent;
+  const poll = async () => {
+    const st = await json("GET", "/update/status");
+    if (st.state === "downloading") {
+      btn.textContent = `⬇ Téléchargement… ${st.total ? Math.round(100 * st.done / st.total) : 0} %`;
+      return setTimeout(poll, 600);
+    }
+    if (st.state === "checking") return setTimeout(poll, 600);
+    if (st.state === "installing") { btn.textContent = "⚙ Installation… Zealot va redémarrer"; toast("Installation de la mise à jour : Zealot se ferme puis redémarre tout seul."); return; }
+    btn.disabled = false; btn.textContent = label;
+    if (st.state === "uptodate") toast("Zealot est déjà à jour.");
+    if (st.state === "error") toast(`Mise à jour impossible : ${st.error}`, "err");
+  };
+  btn.addEventListener("click", async () => {
+    btn.disabled = true; btn.textContent = "🔄 Recherche…";
+    try {
+      const info = await json("GET", "/update");
+      if (!info.available) { toast(`Zealot est à jour (version ${info.current}).`); btn.disabled = false; btn.textContent = label; return; }
+      if (!confirm(`Nouvelle version ${info.latest} disponible (installée : ${info.current}).\n\nLa télécharger et l'installer maintenant ? Zealot redémarrera, vos profils sont conservés.`)) { btn.disabled = false; btn.textContent = label; return; }
+      await json("POST", "/update/install");
+      poll();
+    } catch (e) { toast(`Recherche impossible : ${e.message}`, "err"); btn.disabled = false; btn.textContent = label; }
+  });
+})();
 // ===== Esthétique et animations : transitions, apparitions, particules (docs/UI_MOTION.md) =====
 const fx = (() => {
   const root = document.documentElement, content = $("#content"), nav = $(".topnav");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-  let enabled = true;
-  try { enabled = localStorage.getItem("e7-fx") !== "off"; } catch { /* stockage indisponible */ }
+  const enabled = true;  // effets toujours actifs (sauf « réduire les animations » du système)
   const active = () => enabled && !reduced.matches;
-  const toggle = $("#fx-toggle");
-  const apply = () => {
-    root.classList.toggle("no-fx", !enabled);
-    toggle.setAttribute("aria-pressed", String(enabled));
-    toggle.textContent = `✨ Effets visuels : ${enabled ? "activés" : "désactivés"}`;
-  };
-  toggle.addEventListener("click", () => {
-    enabled = !enabled; apply();
-    try { localStorage.setItem("e7-fx", enabled ? "on" : "off"); } catch { /* sans effet */ }
-  });
-  apply();
+  try { localStorage.removeItem("e7-fx"); } catch { /* stockage indisponible */ }
 
   // indicateur doré qui glisse sous l'onglet actif
   const ink = el("span", { class: "ink" }); nav.append(ink);
@@ -2062,7 +2078,6 @@ const fx = (() => {
   addEventListener("resize", resize);
   document.addEventListener("visibilitychange", () => { last = 0; wake(); });
   reduced.addEventListener?.("change", wake);
-  toggle.addEventListener("click", () => { last = 0; wake(); });
   resize(); wake(); requestAnimationFrame(moveInk);
   return { transition, burst, burstAt };
 })();

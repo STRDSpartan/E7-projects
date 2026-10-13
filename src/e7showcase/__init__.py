@@ -1,3 +1,3 @@
 """Zealot (ex-E7 Showcase) — compagnon Epic Seven : vitrines, simulateurs, guilde et GvG."""
 
-__version__ = "0.61.0"
+__version__ = "0.62.0"

@@ -46,6 +46,7 @@ from e7showcase.app.importer import ScreenshotImporter
 from e7showcase.app.portraits import Portraits
 from e7showcase.app.profile_csv import profile_csv
 from e7showcase.app.profiles import ProfileStore
+from e7showcase.app.updater import UpdateError, Updater, check
 from e7showcase.app.viewer import profile_page
 from e7showcase.app.vitrine_file import (
     VitrineFileError,
@@ -125,6 +126,7 @@ class AppState:
     def __init__(self, data_root: Path, importer: ScreenshotImporter | None = None):
         self.store = ProfileStore(data_root / "profiles")
         self.store.recenter_icons()
+        self.updater = Updater()  # on_quit fixé par le lanceur (fermeture avant installation)
         self.assets = AssetStore(data_root / "assets")
         self.guild = GuildStore(data_root / "guild.json", self.store)
         self.gvg = GvgStore(data_root / "gvg.json", self.store, self.guild)
@@ -504,6 +506,18 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 if job is None:
                     raise ApiError(404, "import introuvable")
                 return self._json(asdict(job))
+            if path == "/update" and method == "GET":  # dernière release GitHub
+                try:
+                    info = check()
+                except UpdateError as exc:
+                    raise ApiError(502, str(exc)) from exc
+                info.pop("asset", None)
+                return self._json(info | {"status": state.updater.status})
+            if path == "/update/install" and method == "POST":
+                state.updater.install()
+                return self._json(state.updater.status, 202)
+            if path == "/update/status" and method == "GET":
+                return self._json(state.updater.status)
             if path == "/open" and method == "POST":
                 body = self._body()
                 try:

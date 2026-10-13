@@ -219,3 +219,12 @@ du jour dans `archives` puis vide la carte. La carte « Historique statistique �
 victoire de chaque composition d'attaque (héros triés), toutes guerres confondues, avec un verdict
 (fiable ≥ 70 %, mitigé, à éviter < 45 %, peu de données sous 3 combats) et la liste des guerres archivées.
 L'image de fond du panorama se choisit désormais depuis un petit bouton discret.
+
+## Mise à jour (v0.62)
+
+Bouton « 🔄 Rechercher une mise à jour » (en bas à gauche, à la place de l'ancien interrupteur des
+effets, désormais toujours actifs) : `GET /api/update` interroge la dernière release GitHub
+(`app/updater.py`) ; si elle est plus récente, `POST /api/update/install` télécharge
+`Zealot-Setup-<version>.exe` (hôtes GitHub uniquement, empreinte SHA-256 vérifiée), le lance en
+silencieux et ferme l'application ; l'installateur met à jour (profils conservés) puis relance Zealot.
+Le dépôt doit rester public pour que la recherche fonctionne sans compte.

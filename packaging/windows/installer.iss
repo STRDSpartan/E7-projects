@@ -9,7 +9,7 @@
 ; - raccourcis menu Démarrer / Bureau, association des fichiers .e7v ;
 ; - désinstallation : les profils sont conservés, sauf si l'utilisateur demande leur suppression.
 #ifndef AppVersion
-  #define AppVersion "0.61.0"
+  #define AppVersion "0.62.0"
 #endif
 #define AppName "Zealot"
 #define AppExe "Zealot.exe"
@@ -91,6 +91,8 @@ Root: HKA; Subkey: "Software\Classes\Applications\{#AppExe}\SupportedTypes"; Val
 
 [Run]
 Filename: "{app}\{#AppExe}"; Description: "Lancer {#AppName}"; Flags: nowait postinstall skipifsilent
+; mise à jour lancée depuis l'application (installation silencieuse) : Zealot redémarre tout seul
+Filename: "{app}\{#AppExe}"; Flags: nowait; Check: WizardSilent
 
 [UninstallRun]
 Filename: "{cmd}"; Parameters: "/C taskkill /IM {#AppExe} /F"; Flags: runhidden; RunOnceId: "StopApp"
