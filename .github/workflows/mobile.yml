@@ -73,6 +73,8 @@ jobs:
           # maturin (outil de construction, binaire macOS) n'existe pas pour iOS : on l'installe
           # en version macOS dans l'environnement de construction et on désactive l'isolation
           CIBW_BUILD_FRONTEND: "build; args: --no-isolation"
+          # cibuildwheel iOS restreint le PATH : on y autorise la chaîne Rust
+          CIBW_XBUILD_TOOLS: "cargo rustc rustup"
           CIBW_BEFORE_BUILD: >-
             SITE=$(python -c "import sysconfig; print(sysconfig.get_paths()['purelib'])") &&
             python -m pip install --platform macosx_11_0_arm64 --only-binary=:all: --upgrade
