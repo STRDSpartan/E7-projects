@@ -105,8 +105,10 @@ long_description = "Zealot sur mobile : le même cœur et la même interface que
 icon = "build/mobile-icons/zealot"
 # sources préparées par scripts/prepare_mobile.py (données de référence copiées dans le paquet)
 sources = ["build/mobile-src/e7showcase", "mobile/zealot"]
+# pydantic-core compilé pour Android/iOS par la CI (dossier wheels/, voir docs/MOBILE.md)
+requirement_installer_args = ["--find-links", "./wheels"]
 requires = [
-  "pydantic>=2.7",
+  "pydantic==2.14.1",
   "jinja2>=3.1",
   "pillow>=10.3",
   "httpx>=0.27",

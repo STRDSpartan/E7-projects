@@ -8,14 +8,90 @@ on:
     paths: ["src/**", "mobile/**", "scripts/prepare_mobile.py", "scripts/make_icon.py", "pyproject.toml", ".github/workflows/mobile.yml"]
   workflow_dispatch:
 
+env:
+  PYDANTIC_CORE: "2.50.1"  # version exigée par pydantic 2.14.1 (épinglé côté mobile)
+
 jobs:
+  # pydantic-core (Rust) n'est publié ni pour Android ni pour iOS : on le compile ici
+  core-android:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64_v8a
+            target: aarch64-linux-android
+          - arch: x86_64
+            target: x86_64-linux-android
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - run: rustup target add ${{ matrix.target }}
+      - name: pydantic-core pour Android (${{ matrix.arch }})
+        env:
+          CIBW_PLATFORM: android
+          CIBW_BUILD: "cp313-*"
+          CIBW_ARCHS: ${{ matrix.arch }}
+          CIBW_TEST_SKIP: "*"
+          CIBW_ENVIRONMENT: CARGO_BUILD_TARGET=${{ matrix.target }}
+        run: |
+          pip install cibuildwheel==4.3.1
+          pip download --no-binary :all: --no-deps "pydantic-core==$PYDANTIC_CORE" -d sdist
+          cibuildwheel sdist/*.tar.gz --output-dir wheelhouse
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-android-${{ matrix.arch }}
+          path: wheelhouse/*.whl
+
+  core-ios:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64_iphoneos
+            target: aarch64-apple-ios
+          - arch: arm64_iphonesimulator
+            target: aarch64-apple-ios-sim
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: rustup target add ${{ matrix.target }}
+      - name: pydantic-core pour iOS (${{ matrix.arch }})
+        env:
+          CIBW_PLATFORM: ios
+          CIBW_BUILD: "cp313-*"
+          CIBW_ARCHS: ${{ matrix.arch }}
+          CIBW_TEST_SKIP: "*"
+          CIBW_ENVIRONMENT: CARGO_BUILD_TARGET=${{ matrix.target }}
+        run: |
+          pip install cibuildwheel==4.3.1
+          pip download --no-binary :all: --no-deps "pydantic-core==$PYDANTIC_CORE" -d sdist
+          cibuildwheel sdist/*.tar.gz --output-dir wheelhouse
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-ios-${{ matrix.arch }}
+          path: wheelhouse/*.whl
+
   android:
+    needs: core-android
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: core-android-*
+          path: wheels
+          merge-multiple: true
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -37,12 +113,18 @@ jobs:
           path: build/zealot/android/gradle/app/build/outputs/apk/debug/*.apk
 
   ios:
+    needs: core-ios
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: core-ios-*
+          path: wheels
+          merge-multiple: true
       - name: Préparation (sources et icônes)
         run: |
           pip install briefcase==0.4.6 pillow numpy
