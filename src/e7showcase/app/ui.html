@@ -474,6 +474,11 @@ select { cursor:pointer; }
 .wm-count { position:absolute; right:-6px; top:-6px; min-width:20px; height:20px; border-radius:10px; display:grid; place-items:center; font-size:11px; font-weight:800; color:#120c2e; background:var(--gold); }
 .wm-check { position:absolute; inset:0; display:grid; place-items:center; font-size:26px; color:var(--ok); text-shadow:0 0 8px #000; }
 .wm-player { position:sticky; top:10px; }
+/* v0.63 : vue d'un fort sur l'image du fort, joueurs posés sur les cases */
+.wm-fortbg { aspect-ratio:2000/1066; max-height:none; background:url("/media/gvg-fort.webp") center/100% 100% no-repeat; }
+.wm-node.at-slot { translate:-50% -30%; }
+.wm-node.at-slot .wm-avatar { width:clamp(40px, 4.2vw, 64px); }
+.wm-node.at-slot .wm-pname { font-size:clamp(11px, 1.1vw, 15px); background:rgba(6,8,24,.72); }
 /* v0.60 : panorama sans image : fond nuit, l'image de la guerre se dépose dessus */
 .wm-pano.no-bg { background:radial-gradient(80% 120% at 50% 110%, rgba(255,159,212,.12), transparent 60%), linear-gradient(180deg, #1d1a4a, #0a0c24); }
 .wm-pano.over { box-shadow:0 0 0 3px var(--gold), 0 0 30px var(--glow); }
@@ -1633,10 +1638,11 @@ function gvgHistory(g, send) {
     el("p", { class: "note" }, "Taux de victoire de chaque composition d'attaque, toutes guerres confondues (archivées comprises) : ce qui marche, et ce qu'il vaut mieux éviter."),
     table, archives);
 }
-function fortressStage(bg, side, i, nodes) {
-  const [x] = CASTLES[side][i] || [0.5];
-  return el("div", { class: "wm-stage", style: `background-image:url("${bg}");background-position:${x * 100}% 30%` }, el("div", { class: "wm-stage-veil" }), ...nodes);
+// Vue d'un fort : image du fort (cases vides) et joueurs posés sur leur case
+function fortressStage(nodes) {
+  return el("div", { class: "wm-stage wm-fortbg" }, ...nodes);
 }
+const slotPos = (g, k) => { const sl = (g.fort_slots || [])[k]; return sl ? `left:${sl[0] * 100}%;top:${sl[1] * 100}%` : null; };
 function gvgAllyFortress(page, g, key, bg) {
   const i = Number(key.slice(4));
   const m = g.map, enemies = m ? m.fortresses.slice(0, 3) : [];
@@ -1649,13 +1655,14 @@ function gvgAllyFortress(page, g, key, bg) {
   const n = Math.max(members.length, 1);
   const nodes = members.map((mb, k) => {
     const ang = -Math.PI / 2 + (2 * Math.PI * k) / n, rx = members.length > 1 ? 0.32 : 0, ry = members.length > 1 ? 0.3 : 0;
-    return el("div", { class: "wm-node ally", style: `left:${(0.5 + rx * Math.cos(ang)) * 100}%;top:${(0.58 + ry * Math.sin(ang)) * 100}%` },
+    const pos = slotPos(g, k) || `left:${(0.5 + rx * Math.cos(ang)) * 100}%;top:${(0.58 + ry * Math.sin(ang)) * 100}%`;
+    return el("div", { class: "wm-node ally at-slot", style: pos },
       el("span", { class: "wm-avatar" }, el("span", { class: "wm-initial" }, mb.player.slice(0, 1).toUpperCase())),
       el("span", { class: "wm-pname" }, mb.player),
       el("span", { class: "wm-teams" }, ...mb.defense.teams.filter((t) => t.length).map((t) => teamRow(t, "xs", 0))));
   });
-  page.append(members.length ? fortressStage(bg, "ally", i, nodes)
-    : el("div", { class: "empty" }, el("h2", {}, "Aucun défenseur"), el("p", {}, `Dans l'onglet Défenses, choisissez « ${name} » comme tour pour les membres qui y défendent.`)));
+  page.append(fortressStage(nodes));
+  if (!members.length) page.append(el("p", { class: "note", style: "text-align:center" }, `Aucun défenseur placé : dans l'onglet Défenses, choisissez « ${name} » comme tour pour les membres qui y défendent.`));
 }
 function gvgFortress(page, g, send, m, f, bg) {
   const i = Math.max(0, m.fortresses.indexOf(f));
@@ -1683,15 +1690,16 @@ function gvgFortress(page, g, send, m, f, bg) {
     const nodes = f.players.map((p, k) => {
       const sc = scoutedOf(g, p.name);
       const face = sc.length ? portrait(sc[0].heroes[0].name, { size: "md", stars: false }) : el("span", { class: "wm-initial" }, p.name.slice(0, 1).toUpperCase());
-      return el("button", { class: "wm-node enemy-p" + (p.beaten ? " beaten" : "") + (p.present === false ? " absent" : "") + (k === gvgPlayer ? " selected" : ""), style: `left:${p.x * 100}%;top:${p.y * 100}%`,
+      const pos = p.slot != null ? slotPos(g, p.slot) : null;
+      return el("button", { class: "wm-node " + (pos ? "at-slot" : "enemy-p") + (p.beaten ? " beaten" : "") + (p.present === false ? " absent" : "") + (k === gvgPlayer ? " selected" : ""), style: pos || `left:${p.x * 100}%;top:${p.y * 100}%`,
         onclick: () => { gvgPlayer = k; stage.querySelectorAll(".wm-node").forEach((n, j) => n.classList.toggle("selected", j === k)); drawPlayer(); } },
         el("span", { class: "wm-avatar" }, face, sc.length ? el("span", { class: "wm-count" }, String(sc.length)) : "", p.beaten ? el("span", { class: "wm-check" }, "✓") : ""),
         el("span", { class: "wm-pname" }, p.name));
     });
-    const stage = fortressStage(bg, "enemy", i, nodes);
+    const stage = fortressStage(nodes);
     page.append(el("div", { class: "wm-split" }, stage, side));
     drawPlayer();
-  }
+  } else page.append(fortressStage([]));
   if (f.players.length) {
     page.append(el("div", { class: "card" }, el("h3", {}, "Joueurs présents dans la GvG"),
       el("p", { class: "note" }, "Décochez un pseudo mal lu ou un joueur absent : il est grisé sur la carte."),

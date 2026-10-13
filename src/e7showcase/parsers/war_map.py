@@ -164,3 +164,43 @@ def parse_fortress(lines: list[OcrLine], size: tuple[int, int]) -> list[Player]:
             continue
         out.append(Player(name=text, x=round(x, 4), y=round(y, 4)))
     return sorted(out, key=lambda p: (p.y, p.x))
+
+
+# Cases du fort (vue d'une forteresse), en coordonnées normalisées de l'image de fond du fort
+# (`app/media/gvg-fort.webp`, 2000 x 1066, sans le HUD du jeu).
+FORT_SLOTS: list[tuple[float, float]] = [
+    (390 / 2000, 297 / 1066),
+    (777 / 2000, 290 / 1066),
+    (1388 / 2000, 300 / 1066),
+    (1045 / 2000, 520 / 1066),
+    (1773 / 2000, 493 / 1066),
+    (343 / 2000, 578 / 1066),
+    (808 / 2000, 682 / 1066),
+    (1468 / 2000, 663 / 1066),
+    (578 / 2000, 820 / 1066),
+    (350 / 2000, 847 / 1066),
+    (1635 / 2000, 803 / 1066),
+    (1050 / 2000, 897 / 1066),
+    (1433 / 2000, 935 / 1066),
+]
+# pseudo → case : le portrait (sur la case) est au-dessus du pseudo, un peu à droite
+NAME_TO_SLOT = (0.02, -0.065)
+SLOT_MAX_DIST = 0.12
+
+
+def assign_slots(players: list[Player]) -> list[int | None]:
+    """Case du fort occupée par chaque joueur (la plus proche, sans doublon), ou None."""
+    dx, dy = NAME_TO_SLOT
+    pairs = sorted(
+        (((p.x + dx - sx) ** 2 + ((p.y + dy - sy) * 0.53) ** 2) ** 0.5, i, k)
+        for i, p in enumerate(players)
+        for k, (sx, sy) in enumerate(FORT_SLOTS)
+    )
+    out: list[int | None] = [None] * len(players)
+    used: set[int] = set()
+    for dist, i, k in pairs:
+        if dist > SLOT_MAX_DIST or out[i] is not None or k in used:
+            continue
+        out[i] = k
+        used.add(k)
+    return out

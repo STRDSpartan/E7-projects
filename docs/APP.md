@@ -228,3 +228,11 @@ effets, désormais toujours actifs) : `GET /api/update` interroge la dernière r
 `Zealot-Setup-<version>.exe` (hôtes GitHub uniquement, empreinte SHA-256 vérifiée), le lance en
 silencieux et ferme l'application ; l'installateur met à jour (profils conservés) puis relance Zealot.
 Le dépôt doit rester public pour que la recherche fonctionne sans compte.
+
+## Vue d'un fort (v0.63)
+
+Fond : image du fort aux 13 cases vides (`/media/gvg-fort.webp`, exception de la règle 2). Après
+lecture d'une capture de fort, `parsers/war_map.assign_slots` associe chaque pseudo à la case la
+plus proche (`FORT_SLOTS`, le portrait étant au-dessus du pseudo) ; le joueur est dessiné sur sa
+case, sans le HUD du jeu. Sans capture, le fort s'affiche vide ; les forts alliés posent leurs
+défenseurs (onglet Défenses) sur les cases dans l'ordre.

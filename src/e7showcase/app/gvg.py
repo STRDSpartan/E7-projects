@@ -23,6 +23,7 @@ from typing import Any
 from e7showcase.app.guild import GuildStore
 from e7showcase.app.jsonfile import write_json
 from e7showcase.app.profiles import ProfileStore
+from e7showcase.parsers.war_map import FORT_SLOTS
 from e7showcase.reference import load
 
 TEAM_SIZE = 3
@@ -286,7 +287,13 @@ class GvgStore:
             raise GvgError("choisissez la forteresse de cette capture (nombre de joueurs ambigu)")
         old = fort.get("image")
         fort["players"] = [
-            {"name": _text(p["name"]), "x": float(p["x"]), "y": float(p["y"]), "beaten": False}
+            {
+                "name": _text(p["name"]),
+                "x": float(p["x"]),
+                "y": float(p["y"]),
+                "slot": p["slot"] if isinstance(p.get("slot"), int) else None,
+                "beaten": False,
+            }
             for p in players[:MAX_PLAYERS]
         ]
         fort["image"] = image
@@ -422,6 +429,7 @@ class GvgStore:
             "scouted": data["scouted"],
             "map": data["map"],
             "archives": data["archives"],
+            "fort_slots": FORT_SLOTS,
             "history": self.history(data),
             "hero_names": sorted(
                 {h.get("fr") or h["en"] for h in load("heroes")["heroes"] if h.get("stars")}

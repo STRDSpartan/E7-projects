@@ -30,10 +30,10 @@ Détails : `docs/ARCHITECTURE.md` ; étapes et état du projet : `docs/PLAN.md`.
 1. **Conformité** (`docs/COMPLIANCE.md`) : jamais de lecture mémoire, d'interception réseau,
    d'injection ou de modification du client. Clics automatisés seulement dans `AssistedNavigator`
    (désactivé par défaut).
-2. **Aucun secret, capture, roster réel ou asset du jeu** dans le dépôt. **Exception unique,
-   décidée par l'éditeur** : le fond du panorama de guerre GvG (`app/media/gvg-panorama.webp`),
-   représentation de l'interface de GvG du jeu utilisée seulement comme décor de cet écran
-   (voir `docs/COMPLIANCE.md`). Toute autre image du jeu reste interdite.
+2. **Aucun secret, capture, roster réel ou asset du jeu** dans le dépôt. **Exception décidée par
+   l'éditeur** : les deux décors de l'interface GvG — panorama de guerre (`app/media/gvg-panorama.webp`)
+   et vue d'un fort aux cases vides (`app/media/gvg-fort.webp`) —, utilisés seulement comme fonds
+   de ces écrans (voir `docs/COMPLIANCE.md`). Toute autre image du jeu reste interdite.
 3. Capturer ≠ comprendre ; parseurs sans I/O ; ROI toujours normalisées.
 4. Imports lourds (`mss`, `cv2`, `rapidocr_onnxruntime`, `win32*`, `keyboard`, `playwright`,
    `discord`) **dans les fonctions**, pour que le cœur s'importe sans extras.

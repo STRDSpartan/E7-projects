@@ -65,3 +65,22 @@ def test_parse_fortress_snowy_view_without_taskbar() -> None:
     ]
     names = [p.name for p in parse_fortress(ocr, (w, h))]
     assert names == ["Joueur2", "Joueur1", "Joueur3", "ゆうしゃ"]
+
+
+def test_fortress_players_snap_to_fort_slots() -> None:
+    """Capture réelle d'un fort (anonymisée) : chaque joueur occupe la bonne case du fort."""
+    from e7showcase.parsers.war_map import assign_slots
+
+    players = parse_fortress(lines("gvg_fort_slots_ocr.json"), (2000, 1125))
+    slots = dict(zip((p.name for p in players), assign_slots(players), strict=True))
+    assert slots == {
+        "JoueurA": 1,
+        "JoueurB": 0,
+        "JoueurC": 4,
+        "JoueurD": 3,
+        "JoueurE": 5,
+        "JoueurF": 7,
+        "JoueurH": 9,
+        "JoueurI": 11,
+        "JoueurJ": 12,
+    }

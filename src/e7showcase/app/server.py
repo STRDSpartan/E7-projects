@@ -56,7 +56,7 @@ from e7showcase.app.vitrine_file import (
 )
 from e7showcase.assets import AssetStore
 from e7showcase.parsers.profile_card import parse_profile_card
-from e7showcase.parsers.war_map import parse_fortress, parse_war_map
+from e7showcase.parsers.war_map import assign_slots, parse_fortress, parse_war_map
 from e7showcase.vision.hero_faces import FaceMatcher
 
 CARD_HELP = (
@@ -88,6 +88,7 @@ APP_MEDIA = {  # médias de l'application : fond animé du bandeau, logo et embl
     "logo.png": "image/png",
     "emblem.png": "image/png",
     "gvg-panorama.webp": "image/webp",  # fond par défaut du panorama de guerre (exception règle 2)
+    "gvg-fort.webp": "image/webp",  # fond de la vue d'un fort, cases vides (exception règle 2)
 }
 MAX_BODY = 400 * 1024 * 1024
 MAX_UPLOAD = 40 * 1024 * 1024  # une capture
@@ -660,7 +661,12 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                         if not players:
                             raise ApiError(400, FORTRESS_HELP)
                         fid = parse_qs(urlparse(self.path).query).get("id", [None])[0]
-                        _, old = gvg.set_fortress(fid, [asdict(p) for p in players], None)
+                        slots = assign_slots(players)  # case du fort occupée par chaque joueur
+                        _, old = gvg.set_fortress(
+                            fid,
+                            [asdict(p) | {"slot": k} for p, k in zip(players, slots, strict=True)],
+                            None,
+                        )
                         state.drop_war_images([old] if old else [])
                     return self._json(gvg.summary())
                 if (

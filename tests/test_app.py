@@ -951,7 +951,12 @@ def test_sidebar_video_served(app: Any) -> None:
         assert res.headers["Content-Type"] == "video/webm" and len(res.read()) > 10_000
     with urllib.request.urlopen(base + "/") as res:
         assert "media-src 'self'" in res.headers["Content-Security-Policy"]
-    for name, kind in (("logo.png", "png"), ("emblem.png", "png"), ("gvg-panorama.webp", "webp")):
+    for name, kind in (
+        ("logo.png", "png"),
+        ("emblem.png", "png"),
+        ("gvg-panorama.webp", "webp"),
+        ("gvg-fort.webp", "webp"),
+    ):
         with urllib.request.urlopen(base + "/media/" + name) as res:
             assert res.headers["Content-Type"] == "image/" + kind
 
