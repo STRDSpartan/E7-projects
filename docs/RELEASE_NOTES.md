@@ -1,8 +1,12 @@
-# Zealot 0.65.0
+# Zealot 0.66.0
 
 E7 Showcase devient **Zealot**, édité par **Shattered Spartan** : nouveau nom, nouveau logo,
 nouvelle identité visuelle, mise à jour en un clic et une guerre de guilde reproduite au plus
 près du jeu. Cette version regroupe tout ce qui a été ajouté depuis la 0.48.1.
+
+## Correctif 0.66.0
+- **Ctrl+V direct** : une capture collée s'ajoute à la vitrine sans avoir à ouvrir puis fermer la
+  fenêtre de choix de fichier (le collage fonctionne aussi quand la vitrine a le focus).
 
 ## Zealot
 - Nouveau nom, logo officiel (icône du logiciel, installateur, bandeau, écran d'accueil) et

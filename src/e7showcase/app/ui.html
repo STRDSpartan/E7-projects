@@ -10,6 +10,7 @@
 :root { --bg:#060818; --panel:#0e1230; --panel-2:#171c3e; --line:#2a2f5c; --text:#eef0ff; --muted:#9ca2cc;
   --gold:#b9a0ff; --accent:#7fb4ff; --sakura:#ff9fd4; --lantern:#f4c980; --danger:#e26060; --ok:#7fe0a0; color-scheme: dark; }
 * { box-sizing: border-box; }
+body:focus { outline:none; }
 body { margin:0; background:var(--bg); color:var(--text); font:14px/1.45 "Segoe UI", system-ui, sans-serif;
   display:grid; grid-template-columns: 260px minmax(0,1fr); height:100vh; }
 aside { background:var(--panel); border-right:1px solid var(--line); display:flex; flex-direction:column; min-height:0; }
@@ -524,7 +525,7 @@ html.no-fx #fx { display:none; }
 }
 </style>
 </head>
-<body>
+<body tabindex="-1">
 <canvas id="fx" aria-hidden="true"></canvas>
 <aside>
   <video class="side-video" src="/media/sidebar.webm" autoplay muted loop playsinline disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
@@ -718,7 +719,7 @@ async function show(id) {
   const report = el("div", { class: "report", id: "report" });
   if (!p.received) kids.push(...dropZone("Glissez ici vos captures (Infos de héros, liste des héros, objets non équipés) — ou cliquez pour les choisir"));
   kids.push(report);
-  if (p.heroes.length) kids.push(el("iframe", { id: "frame", src: "/profile/" + id, title: "Vitrine" }));
+  if (p.heroes.length) { const frame = el("iframe", { id: "frame", src: "/profile/" + id, title: "Vitrine" }); relayPaste(frame); kids.push(frame); }
   else kids.push(el("div", { class: "empty" }, p.received ? "Cette vitrine ne contient aucun héros." : "Aucun héros pour l'instant : ajoutez vos captures ci-dessus."));
   $("#content").replaceChildren(...kids);
 }
@@ -730,7 +731,7 @@ function pasteTarget(zone, handle) {
   zone._paste = handle;
   if (!zone.querySelector(".paste-hint")) zone.append(el("span", { class: "paste-hint" }, " · ou collez-la avec Ctrl+V"));
 }
-document.addEventListener("paste", (e) => {
+function onPaste(e) {
   const items = [...(e.clipboardData?.items || [])].filter((i) => i.kind === "file" && i.type.startsWith("image/"));
   if (!items.length) return;  // texte : collage normal dans les champs
   const zones = [...document.querySelectorAll("[data-paste]")].filter((z) => z.isConnected && z.offsetParent !== null);
@@ -743,7 +744,18 @@ document.addEventListener("paste", (e) => {
   zone.classList.remove("pasted"); void zone.offsetWidth; zone.classList.add("pasted");
   toast(files.length > 1 ? `${files.length} captures collées` : "Capture collée", "ok");
   zone._paste(files);
-});
+}
+document.addEventListener("paste", onPaste);
+// La vitrine est une page intégrée (iframe) : quand elle a le focus (clic sur un héros, défilement),
+// le Ctrl+V lui arrive à elle ; on le relaie ici. Même origine, donc accessible.
+function relayPaste(frame) {
+  frame.addEventListener("load", () => {
+    try { frame.contentDocument.addEventListener("paste", (e) => { if (!e.defaultPrevented) onPaste(e); }); } catch { /* autre origine */ }
+  });
+}
+// La fenêtre peut s'ouvrir sans que la page ait le focus clavier (Ctrl+V perdu) : on le lui donne.
+addEventListener("load", () => window.focus());
+addEventListener("focus", () => { if (!document.activeElement || document.activeElement === document.body) document.body.focus({ preventScroll: true }); });
 function dropZone(text) {
   const input = el("input", { type: "file", accept: "image/png,image/jpeg,image/webp", multiple: "", hidden: "" });
   const drop = el("div", { class: "drop", onclick: () => input.click() }, text);

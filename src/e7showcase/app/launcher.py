@@ -184,6 +184,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     api._window = window  # noqa: SLF001 - jamais exposé à JavaScript
     window.events.loaded += lambda: log.info("Fenêtre chargée [window-loaded]")
+    window.events.loaded += lambda: _focus_webview(window)
     window.events.closed += lambda: _quit(server, state)
     try:
         webview.start()
@@ -198,6 +199,27 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     _quit(server, state)
     return 0
+
+
+def _focus_webview(window: Any) -> None:
+    """Donne le focus clavier à la page dès l'ouverture (Windows) : sans cela, WebView2 ne reçoit
+    le Ctrl+V qu'après un premier clic dans la fenêtre."""
+    native = getattr(window, "native", None)
+    for path in (("browser", "web_view"), ("browser", "webview"), ("webview",)):
+        target = native
+        for attr in path:
+            target = getattr(target, attr, None)
+        if target is not None and hasattr(target, "Focus"):
+            with contextlib.suppress(Exception):
+                invoke = getattr(target, "Invoke", None)
+                action = target.Focus
+                if invoke is not None and getattr(target, "InvokeRequired", False):
+                    from System import Action  # pythonnet (Windows)
+
+                    invoke(Action(action))
+                else:
+                    action()
+                return
 
 
 def _quit(server: Any, state: Any = None) -> None:
