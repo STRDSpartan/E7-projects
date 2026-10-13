@@ -30,7 +30,7 @@ jobs:
           briefcase build android --no-input
       - name: Journaux Briefcase (en cas d'échec)
         if: failure()
-        run: tail -n 120 logs/*.log || true
+        run: grep -nE "ERROR|error:|No matching distribution|Could not find|Failed|requires" logs/*.log | grep -v "^.*console.py" | head -80 || true
       - uses: actions/upload-artifact@v4
         with:
           name: Zealot-Android
@@ -53,4 +53,4 @@ jobs:
           briefcase build iOS --no-input
       - name: Journaux Briefcase (en cas d'échec)
         if: failure()
-        run: tail -n 120 logs/*.log || true
+        run: grep -nE "ERROR|error:|No matching distribution|Could not find|Failed|requires" logs/*.log | grep -v "^.*console.py" | head -80 || true
