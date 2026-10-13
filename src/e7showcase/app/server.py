@@ -87,6 +87,54 @@ def _on_fort(players: list[Any], size: tuple[int, int]) -> list[dict[str, Any]]:
     ]
 
 
+def publish_vitrine(state: AppState, pid: str, webhook_url: str) -> str:
+    """Publie la vitrine sur Discord : embed (cadre de profil, guilde, rang, meilleurs héros)
+    et fichier .e7v joint, que les coéquipiers ouvrent d'un double-clic dans Zealot."""
+    import httpx
+
+    from e7showcase.publish.webhook import post_with_files
+
+    roster = state.store.peek(pid)
+    best = sorted(roster.heroes, key=lambda h: -(h.power or 0))[:6]
+    powers = [h.power for h in roster.heroes if h.power]
+    lines = [
+        f"**{h.name}**" + (f" · ⚔ {h.power:,}".replace(",", " ") if h.power else "") for h in best
+    ]
+    fields = [
+        {"name": "Héros", "value": str(len(roster.heroes)), "inline": True},
+        {
+            "name": "Puissance moyenne",
+            "value": f"{round(sum(powers) / len(powers)):,}".replace(",", " ") if powers else "—",
+            "inline": True,
+        },
+    ]
+    meta = next((p for p in state.store.list() if p.id == pid), None)
+    if meta and meta.rank:
+        fields.append({"name": "Rang", "value": str(meta.rank), "inline": True})
+    if lines:
+        fields.append({"name": "Meilleurs héros", "value": "\n".join(lines), "inline": False})
+    name = suggested_filename(roster.player)
+    embed: dict[str, Any] = {
+        "title": f"Vitrine de {roster.player}",
+        "description": (f"Guilde **{roster.guild}**\n" if roster.guild else "")
+        + f"📎 Téléchargez **{name}** ci-dessous puis ouvrez-le : la vitrine s'ajoute à Zealot.",
+        "color": 0xB9A0FF,
+        "fields": fields,
+        "footer": {"text": "Zealot · par Shattered Spartan"},
+    }
+    files = [(name, export_profile(state.store, pid), "application/octet-stream")]
+    avatar = state.store.path(pid) / "images" / "avatar.webp"
+    if avatar.is_file():
+        with Image.open(avatar) as src:
+            buf = io.BytesIO()
+            src.convert("RGBA").save(buf, "PNG")
+        files.append(("avatar.png", buf.getvalue(), "image/png"))
+        embed["thumbnail"] = {"url": "attachment://avatar.png"}
+    payload: dict[str, object] = {"username": "Zealot", "embeds": [embed]}
+    with httpx.Client(timeout=60, transport=state.webhook_transport) as client:
+        return post_with_files(client, webhook_url, payload=payload, files=files)
+
+
 FACES_MIN = 50  # en dessous, la reconnaissance des portraits n'a pas de quoi comparer
 
 log = logging.getLogger(__name__)
@@ -571,6 +619,22 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             if rest == "" and method == "PATCH":
                 store.rename(pid, str(self._body().get("player", "")))
                 return self._json({"id": pid})
+            if rest == "/publish" and method == "POST":  # vitrine publiée sur Discord
+                url = state.discord.webhook()
+                if not url:
+                    raise ApiError(
+                        400,
+                        "aucun webhook Discord enregistré : renseignez-le dans GvG → Publication",
+                    )
+                try:
+                    message = publish_vitrine(state, pid, url)
+                except ValueError as exc:
+                    raise ApiError(400, str(exc)) from exc
+                except Exception as exc:  # réseau / refus de Discord
+                    from e7showcase.app.discord_settings import _describe
+
+                    raise ApiError(502, _describe(exc)) from exc
+                return self._json({"id": message})
             if rest == "/me" and method == "PUT":  # « mon profil de joueur »
                 store.set_me(pid)
                 return self._json({"id": pid})

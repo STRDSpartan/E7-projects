@@ -157,3 +157,28 @@ def _message_id(response: httpx.Response) -> str:
     except ValueError:
         return ""
     return value if re.fullmatch(r"\d{5,30}", value) else ""
+
+
+MAX_ATTACHMENTS = 24 * 1024 * 1024  # Discord refuse les envois plus lourds (webhook sans boost)
+
+
+def post_with_files(
+    client: httpx.Client,
+    webhook_url: str,
+    *,
+    payload: dict[str, object],
+    files: list[tuple[str, bytes, str]],
+) -> str:
+    """Message avec pièces jointes (embed + fichiers) ; renvoie l'id du message publié."""
+    if sum(len(data) for _, data, _ in files) > MAX_ATTACHMENTS:
+        raise ValueError("fichier trop volumineux pour Discord (25 Mo maximum)")
+    parts = {f"files[{i}]": (name, data, kind) for i, (name, data, kind) in enumerate(files)}
+    res = _call(
+        client,
+        "POST",
+        webhook_url + "?wait=true",
+        data={"payload_json": json.dumps(payload)},
+        files=parts,
+    )
+    res.raise_for_status()
+    return _message_id(res)

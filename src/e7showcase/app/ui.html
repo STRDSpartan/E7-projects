@@ -705,6 +705,12 @@ async function show(id) {
   else name.addEventListener("change", async () => { await api("PATCH", "/profiles/" + id, { player: name.value }); reloadFrame(); refresh(); });
   const bar = el("div", { class: "bar" }, el("h1", {}, name),
     p.received ? el("span", { class: "badge" }, "Vitrine reçue") : "",
+    p.received ? "" : el("button", { title: "Publie la vitrine (fichier .e7v, cadre de profil et meilleurs héros) sur le salon Discord de la guilde", onclick: async (e) => {
+      const b = e.currentTarget; b.disabled = true; const t = b.textContent; b.textContent = "Publication…";
+      try { await json("POST", `/profiles/${id}/publish`); toast("Vitrine publiée sur Discord : vos coéquipiers n'ont qu'à ouvrir le fichier .e7v."); }
+      catch (err) { toast(err.message, "err"); }
+      finally { b.disabled = false; b.textContent = t; }
+    } }, "📣 Publier sa vitrine"),
     el("button", { onclick: () => exportVitrine(id, p.player) }, "Exporter la vitrine"),
     el("button", { class: "ghost", title: "Profil, héros et armurerie dans un seul tableur", onclick: () => saveCsv("save_profile_csv", `/profiles/${id}/csv`, "vitrine.csv", "Tableur enregistré", id) }, "Exporter en tableur (.csv)"),
     el("button", { class: "danger", onclick: () => removeProfile(id, p.player) }, "Supprimer"));

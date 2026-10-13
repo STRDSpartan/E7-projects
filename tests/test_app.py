@@ -994,3 +994,25 @@ def test_gvg_ally_fort_capture(app: Any) -> None:
     assert all(0 < p["fx"] < 1 and 0 < p["fy"] < 1 for p in fort)
     g = call(base, "DELETE", "/api/gvg/ally/ally1", token=state.token)
     assert "ally1" not in g["ally_forts"]
+
+
+def test_publish_vitrine_to_discord(app: Any) -> None:
+    import httpx
+
+    state, base = app
+    t = state.token
+    sent: list[httpx.Request] = []
+
+    def handler(req: httpx.Request) -> httpx.Response:
+        sent.append(req)
+        return httpx.Response(200, json={"id": "123456789"})
+
+    state.webhook_transport = httpx.MockTransport(handler)
+    pid = call(base, "POST", "/api/profiles", {"player": "Spartan"}, t)["id"]
+    with pytest.raises(urllib.error.HTTPError) as err:  # pas encore de webhook
+        call(base, "POST", f"/api/profiles/{pid}/publish", token=t)
+    assert err.value.code == 400
+    state.discord.set_webhook("https://discord.com/api/webhooks/123456/" + "a" * 40)
+    assert call(base, "POST", f"/api/profiles/{pid}/publish", token=t)["id"] == "123456789"
+    body = sent[0].content
+    assert b"Vitrine de Spartan" in body and b".e7v" in body and b"payload_json" in body

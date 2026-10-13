@@ -241,3 +241,11 @@ Forts alliés (v0.64) : capture de la vue d'un de nos forts (`POST /api/gvg/ally
 aux cases connues, sinon position libre, car chaque fort a sa disposition). Un pseudo qui
 correspond à un membre de la guilde affiche ses équipes de défense. Archiver ou effacer la guerre
 vide aussi nos forts.
+
+## Publier sa vitrine sur Discord (v0.65)
+
+Bouton « 📣 Publier sa vitrine » (onglet Vitrine, profils non reçus) : `POST /api/profiles/<id>/publish`
+envoie au webhook enregistré (GvG → Publication) un message « Vitrine de … » avec le cadre de profil,
+la guilde, le rang, la puissance moyenne et les meilleurs héros, et le fichier `.e7v` joint. Un
+coéquipier le télécharge et l'ouvre : la vitrine s'ajoute à Zealot (association des fichiers `.e7v`).
+Le webhook n'est jamais livré avec l'application (règle 2 : un webhook est un secret).
