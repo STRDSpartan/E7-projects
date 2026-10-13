@@ -183,24 +183,47 @@ FORT_SLOTS: list[tuple[float, float]] = [
     (1050 / 2000, 897 / 1066),
     (1433 / 2000, 935 / 1066),
 ]
-# pseudo → case : le portrait (sur la case) est au-dessus du pseudo, un peu à droite
-NAME_TO_SLOT = (0.02, -0.065)
-SLOT_MAX_DIST = 0.12
+# pseudo → portrait : le portrait (sur la case) est au-dessus du pseudo, un peu à droite
+NAME_TO_SLOT = (0.02, -0.065)  # en fraction de la largeur / de la hauteur de la zone de jeu
+SLOT_SNAP = 0.03  # au-delà, le joueur garde sa position libre (autre disposition de fort)
+FORT_RATIO = 1066 / 2000
+TITLE_BAR = 18 / 1125  # barre de titre de la fenêtre Windows en haut de la capture
 
 
-def assign_slots(players: list[Player]) -> list[int | None]:
-    """Case du fort occupée par chaque joueur (la plus proche, sans doublon), ou None."""
-    dx, dy = NAME_TO_SLOT
+def fort_positions(
+    players: list[Player], size: tuple[int, int]
+) -> list[tuple[float, float, int | None]]:
+    """Position de chaque joueur sur l'image du fort (x, y normalisés) et case occupée.
+
+    La capture peut contenir la barre de titre et la barre des tâches : la zone de jeu est la
+    bande de hauteur largeur x 1066/2000 sous la barre de titre. Chaque joueur est accroché à la
+    case la plus proche (sans doublon) si elle est à moins de SLOT_SNAP ; sinon (fort à la
+    disposition différente) il garde sa position.
+    """
+    w, h = size
+    game_h = w * FORT_RATIO
+    top = TITLE_BAR * h if h / w > FORT_RATIO + 0.01 else 0.0
+    pos = [
+        (p.x + NAME_TO_SLOT[0], (p.y * h - top) / game_h + NAME_TO_SLOT[1] * h / game_h)
+        for p in players
+    ]
     pairs = sorted(
-        (((p.x + dx - sx) ** 2 + ((p.y + dy - sy) * 0.53) ** 2) ** 0.5, i, k)
-        for i, p in enumerate(players)
+        (((x - sx) ** 2 + ((y - sy) * FORT_RATIO) ** 2) ** 0.5, i, k)
+        for i, (x, y) in enumerate(pos)
         for k, (sx, sy) in enumerate(FORT_SLOTS)
     )
-    out: list[int | None] = [None] * len(players)
+    slot: list[int | None] = [None] * len(players)
     used: set[int] = set()
     for dist, i, k in pairs:
-        if dist > SLOT_MAX_DIST or out[i] is not None or k in used:
-            continue
-        out[i] = k
-        used.add(k)
-    return out
+        if dist <= SLOT_SNAP and slot[i] is None and k not in used:
+            slot[i] = k
+            used.add(k)
+    return [
+        (*(FORT_SLOTS[k] if k is not None else (round(x, 4), round(min(max(y, 0.02), 0.98), 4))), k)
+        for (x, y), k in zip(pos, slot, strict=True)
+    ]
+
+
+def assign_slots(players: list[Player], size: tuple[int, int]) -> list[int | None]:
+    """Case du fort occupée par chaque joueur, ou None (voir `fort_positions`)."""
+    return [k for _, _, k in fort_positions(players, size)]

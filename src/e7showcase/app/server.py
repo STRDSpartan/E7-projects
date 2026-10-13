@@ -56,7 +56,7 @@ from e7showcase.app.vitrine_file import (
 )
 from e7showcase.assets import AssetStore
 from e7showcase.parsers.profile_card import parse_profile_card
-from e7showcase.parsers.war_map import assign_slots, parse_fortress, parse_war_map
+from e7showcase.parsers.war_map import fort_positions, parse_fortress, parse_war_map
 from e7showcase.vision.hero_faces import FaceMatcher
 
 CARD_HELP = (
@@ -77,6 +77,14 @@ def avatar_crop(image: Image.Image, circle: tuple[float, float, float]) -> Image
     ImageDraw.Draw(mask).ellipse((1, 1, AVATAR_SIZE - 2, AVATAR_SIZE - 2), fill=255)
     face.putalpha(mask)
     return face
+
+
+def _on_fort(players: list[Any], size: tuple[int, int]) -> list[dict[str, Any]]:
+    """Joueurs lus sur une capture de fort, avec leur position sur l'image du fort et leur case."""
+    return [
+        asdict(p) | {"fx": fx, "fy": fy, "slot": k}
+        for p, (fx, fy, k) in zip(players, fort_positions(players, size), strict=True)
+    ]
 
 
 FACES_MIN = 50  # en dessous, la reconnaissance des portraits n'a pas de quoi comparer
@@ -661,12 +669,7 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                         if not players:
                             raise ApiError(400, FORTRESS_HELP)
                         fid = parse_qs(urlparse(self.path).query).get("id", [None])[0]
-                        slots = assign_slots(players)  # case du fort occupée par chaque joueur
-                        _, old = gvg.set_fortress(
-                            fid,
-                            [asdict(p) | {"slot": k} for p, k in zip(players, slots, strict=True)],
-                            None,
-                        )
+                        _, old = gvg.set_fortress(fid, _on_fort(players, image.size), None)
                         state.drop_war_images([old] if old else [])
                     return self._json(gvg.summary())
                 if (
@@ -687,6 +690,23 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 if rest == "/background" and method == "DELETE":
                     (state.war_images / "background.webp").unlink(missing_ok=True)
                     return self._json(gvg.summary() | state.background())
+                if (af := re.fullmatch(r"/ally/(ally[0-2])", rest)) and method == "POST":
+                    try:  # capture d'un de nos forts (binaire)
+                        engine = state.ocr()
+                    except ImportError as exc:
+                        raise ApiError(503, "moteur de lecture des captures absent") from exc
+                    try:
+                        image, lines = read_capture(self._raw(MAX_UPLOAD), engine)
+                    except ValueError as exc:
+                        raise ApiError(400, str(exc)) from exc
+                    players = parse_fortress(lines, image.size)
+                    if not players:
+                        raise ApiError(400, "aucun joueur lu : utilisez la vue d'un fort du jeu")
+                    gvg.set_ally_fort(af[1], _on_fort(players, image.size))
+                    return self._json(gvg.summary())
+                if (af := re.fullmatch(r"/ally/(ally[0-2])", rest)) and method == "DELETE":
+                    gvg.clear_ally_fort(af[1])
+                    return self._json(gvg.summary())
                 if rest == "/map/archive" and method == "POST":
                     state.drop_war_images(gvg.archive_map())
                     return self._json(gvg.summary())

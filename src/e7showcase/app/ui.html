@@ -1559,7 +1559,7 @@ function gvgMap(page, g, send) {
   const bg = g.background || "/media/gvg-panorama.webp";
   const fort = m && m.fortresses.find((f) => f.id === gvgFort);
   if (fort) return gvgFortress(page, g, send, m, fort, bg);
-  if (gvgFort && gvgFort.startsWith("ally")) return gvgAllyFortress(page, g, gvgFort, bg);
+  if (gvgFort && gvgFort.startsWith("ally")) return gvgAllyFortress(page, g, gvgFort, bg, send);
   gvgFort = null;
   const enemies = m ? m.fortresses.slice(0, 3) : [];
   const allyNames = enemies.length ? enemies.map((f) => f.name) : g.settings.towers.slice(0, 3);
@@ -1572,7 +1572,7 @@ function gvgMap(page, g, send) {
   };
   const buttons = [
     ...allyNames.map((name, i) => {
-      const n = defenders(name).length;
+      const n = ((g.ally_forts || {})["ally" + i] || []).length || defenders(name).length;
       return fortBtn("ally", i, name, `${n} défenseur${n > 1 ? "s" : ""}`, Math.min(100, n * 10), () => { gvgFort = "ally" + i; gvgPage("map"); });
     }),
     ...enemies.map((f, i) => {
@@ -1643,26 +1643,40 @@ function fortressStage(nodes) {
   return el("div", { class: "wm-stage wm-fortbg" }, ...nodes);
 }
 const slotPos = (g, k) => { const sl = (g.fort_slots || [])[k]; return sl ? `left:${sl[0] * 100}%;top:${sl[1] * 100}%` : null; };
-function gvgAllyFortress(page, g, key, bg) {
+const fortPos = (g, p) => (p.slot != null && slotPos(g, p.slot)) || (p.fx != null ? `left:${p.fx * 100}%;top:${p.fy * 100}%` : null);
+function gvgAllyFortress(page, g, key, bg, send) {
   const i = Number(key.slice(4));
   const m = g.map, enemies = m ? m.fortresses.slice(0, 3) : [];
   const name = (enemies.length ? enemies.map((f) => f.name) : g.settings.towers)[i] || "Forteresse";
   const members = g.members.filter((mb) => (mb.defense.tower || "").trim().toLowerCase() === name.trim().toLowerCase() && mb.defense.teams.some((t) => t.length));
+  const captured = (g.ally_forts || {})[key] || [];
+  const byName = (n) => g.members.find((mb) => mb.player.trim().toLowerCase() === n.trim().toLowerCase());
   page.append(el("div", { class: "card wm-fhead ally" },
     el("button", { class: "ghost", onclick: () => { gvgFort = null; gvgPage("map"); } }, "← Panorama"),
-    el("div", {}, el("h3", { style: "margin:0" }, `🛡 ${name}`), el("div", { class: "note" }, `Notre forteresse · ${members.length} défenseur(s) placé(s) (onglet Défenses)`)),
+    el("div", {}, el("h3", { style: "margin:0" }, `🛡 ${name}`), el("div", { class: "note" }, captured.length
+      ? `Notre forteresse · ${captured.length} défenseur(s) lus sur la capture`
+      : `Notre forteresse · ${members.length} défenseur(s) placé(s) (onglet Défenses)`)),
     el("button", { onclick: () => gvgPage("defense") }, "Organiser les défenses")));
-  const n = Math.max(members.length, 1);
-  const nodes = members.map((mb, k) => {
-    const ang = -Math.PI / 2 + (2 * Math.PI * k) / n, rx = members.length > 1 ? 0.32 : 0, ry = members.length > 1 ? 0.3 : 0;
-    const pos = slotPos(g, k) || `left:${(0.5 + rx * Math.cos(ang)) * 100}%;top:${(0.58 + ry * Math.sin(ang)) * 100}%`;
-    return el("div", { class: "wm-node ally at-slot", style: pos },
-      el("span", { class: "wm-avatar" }, el("span", { class: "wm-initial" }, mb.player.slice(0, 1).toUpperCase())),
-      el("span", { class: "wm-pname" }, mb.player),
-      el("span", { class: "wm-teams" }, ...mb.defense.teams.filter((t) => t.length).map((t) => teamRow(t, "xs", 0))));
-  });
+  const node = (label, teams, pos) => el("div", { class: "wm-node ally at-slot", style: pos },
+    el("span", { class: "wm-avatar" }, el("span", { class: "wm-initial" }, label.slice(0, 1).toUpperCase())),
+    el("span", { class: "wm-pname" }, label),
+    teams.length ? el("span", { class: "wm-teams" }, ...teams.map((t) => teamRow(t, "xs", 0))) : "");
+  let nodes;
+  if (captured.length) {  // positions lues sur la capture ; équipes du membre s'il est dans la guilde
+    nodes = captured.map((p) => { const mb = byName(p.name); return node(p.name, mb ? mb.defense.teams.filter((t) => t.length) : [], fortPos(g, p)); });
+  } else {
+    const n = Math.max(members.length, 1);
+    nodes = members.map((mb, k) => {
+      const ang = -Math.PI / 2 + (2 * Math.PI * k) / n, rx = members.length > 1 ? 0.32 : 0, ry = members.length > 1 ? 0.3 : 0;
+      return node(mb.player, mb.defense.teams.filter((t) => t.length), slotPos(g, k) || `left:${(0.5 + rx * Math.cos(ang)) * 100}%;top:${(0.58 + ry * Math.sin(ang)) * 100}%`);
+    });
+  }
   page.append(fortressStage(nodes));
-  if (!members.length) page.append(el("p", { class: "note", style: "text-align:center" }, `Aucun défenseur placé : dans l'onglet Défenses, choisissez « ${name} » comme tour pour les membres qui y défendent.`));
+  if (!captured.length && !members.length) page.append(el("p", { class: "note", style: "text-align:center" }, `Aucun défenseur : importez une capture de ce fort ci-dessous, ou choisissez « ${name} » comme tour dans l'onglet Défenses.`));
+  page.append(el("div", { class: "card" }, el("h3", {}, captured.length ? "Mettre à jour les défenseurs" : "Importer les défenseurs"),
+    el("p", { class: "note" }, "Capture de la vue de ce fort dans le jeu : l'application lit les pseudos et place chaque joueur à sa position (la capture n'est ni affichée ni conservée). Ctrl+V fonctionne aussi."),
+    captureZone("Capture du fort — glissez-la ou cliquez", `/gvg/ally/${key}`, () => gvgPage("map")),
+    captured.length ? el("button", { class: "ghost", style: "margin-top:8px", onclick: () => send("DELETE", `/ally/${key}`, null, () => gvgPage("map")) }, "Effacer les défenseurs lus") : ""));
 }
 function gvgFortress(page, g, send, m, f, bg) {
   const i = Math.max(0, m.fortresses.indexOf(f));
@@ -1690,7 +1704,7 @@ function gvgFortress(page, g, send, m, f, bg) {
     const nodes = f.players.map((p, k) => {
       const sc = scoutedOf(g, p.name);
       const face = sc.length ? portrait(sc[0].heroes[0].name, { size: "md", stars: false }) : el("span", { class: "wm-initial" }, p.name.slice(0, 1).toUpperCase());
-      const pos = p.slot != null ? slotPos(g, p.slot) : null;
+      const pos = fortPos(g, p);
       return el("button", { class: "wm-node " + (pos ? "at-slot" : "enemy-p") + (p.beaten ? " beaten" : "") + (p.present === false ? " absent" : "") + (k === gvgPlayer ? " selected" : ""), style: pos || `left:${p.x * 100}%;top:${p.y * 100}%`,
         onclick: () => { gvgPlayer = k; stage.querySelectorAll(".wm-node").forEach((n, j) => n.classList.toggle("selected", j === k)); drawPlayer(); } },
         el("span", { class: "wm-avatar" }, face, sc.length ? el("span", { class: "wm-count" }, String(sc.length)) : "", p.beaten ? el("span", { class: "wm-check" }, "✓") : ""),

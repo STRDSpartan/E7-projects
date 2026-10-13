@@ -72,7 +72,7 @@ def test_fortress_players_snap_to_fort_slots() -> None:
     from e7showcase.parsers.war_map import assign_slots
 
     players = parse_fortress(lines("gvg_fort_slots_ocr.json"), (2000, 1125))
-    slots = dict(zip((p.name for p in players), assign_slots(players), strict=True))
+    slots = dict(zip((p.name for p in players), assign_slots(players, (2000, 1125)), strict=True))
     assert slots == {
         "JoueurA": 1,
         "JoueurB": 0,
@@ -84,3 +84,16 @@ def test_fortress_players_snap_to_fort_slots() -> None:
         "JoueurI": 11,
         "JoueurJ": 12,
     }
+
+
+def test_fort_with_other_layout_keeps_free_positions() -> None:
+    """Autre fort (disposition différente) : les joueurs hors des cases connues gardent leur
+    position, mappée sur l'image du fort (barre de titre retirée)."""
+    from e7showcase.parsers.war_map import fort_positions
+
+    players = parse_fortress(lines("gvg_fort_free_ocr.json"), (2000, 1125))
+    pos = {p.name: v for p, v in zip(players, fort_positions(players, (2000, 1125)), strict=True)}
+    assert len(pos) == 8
+    assert pos["AllieD"][2] == 3 and pos["AllieF"][2] == 6  # donjon et case proche : accrochés
+    x, y, slot = pos["AllieA"]
+    assert slot is None and abs(x - 0.657) < 0.01 and abs(y - 0.206) < 0.01

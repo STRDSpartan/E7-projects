@@ -85,6 +85,7 @@ class GvgStore:
             "archives": [
                 a for a in data.get("archives", []) if isinstance(a, dict) and a.get("id")
             ],
+            "ally_forts": data["ally_forts"] if isinstance(data.get("ally_forts"), dict) else {},
         }
 
     def _write(self, data: dict[str, Any]) -> None:
@@ -292,6 +293,8 @@ class GvgStore:
                 "x": float(p["x"]),
                 "y": float(p["y"]),
                 "slot": p["slot"] if isinstance(p.get("slot"), int) else None,
+                "fx": float(p.get("fx", p["x"])),
+                "fy": float(p.get("fy", p["y"])),
                 "beaten": False,
             }
             for p in players[:MAX_PLAYERS]
@@ -299,6 +302,27 @@ class GvgStore:
         fort["image"] = image
         self._write(data)
         return str(fort["id"]), old if old != image else None
+
+    def set_ally_fort(self, key: str, players: list[dict[str, Any]]) -> None:
+        """Joueurs de notre fort `ally0`..`ally2`, lus sur une capture (positions sur le fort)."""
+        if key not in ("ally0", "ally1", "ally2"):
+            raise GvgError("fort allié inconnu")
+        data = self._read()
+        data["ally_forts"][key] = [
+            {
+                "name": _text(p["name"]),
+                "slot": p["slot"] if isinstance(p.get("slot"), int) else None,
+                "fx": float(p["fx"]),
+                "fy": float(p["fy"]),
+            }
+            for p in players[:MAX_PLAYERS]
+        ]
+        self._write(data)
+
+    def clear_ally_fort(self, key: str) -> None:
+        data = self._read()
+        data["ally_forts"].pop(key, None)
+        self._write(data)
 
     def update_player(self, fortress_id: str, index: int, body: dict[str, Any]) -> None:
         data = self._read()
@@ -370,6 +394,7 @@ class GvgStore:
         data = self._read()
         old = data["map"] or {}
         data["map"] = None
+        data["ally_forts"] = {}  # nouvelle guerre : nos forts sont à relire aussi
         self._write(data)
         return [
             i for i in [old.get("image"), *(f.get("image") for f in old.get("fortresses", []))] if i
@@ -430,6 +455,7 @@ class GvgStore:
             "map": data["map"],
             "archives": data["archives"],
             "fort_slots": FORT_SLOTS,
+            "ally_forts": data["ally_forts"],
             "history": self.history(data),
             "hero_names": sorted(
                 {h.get("fr") or h["en"] for h in load("heroes")["heroes"] if h.get("stars")}

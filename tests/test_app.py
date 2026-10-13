@@ -972,3 +972,25 @@ def test_center_icon_moves_item_to_the_middle() -> None:
     assert box is not None
     left, right = box[0], out.size[0] - box[2]
     assert abs(left - right) <= 1
+
+
+def test_gvg_ally_fort_capture(app: Any) -> None:
+    from tests.test_war_map import lines
+
+    state, base = app
+
+    class Fixture:  # moteur OCR factice : capture réelle d'un fort (anonymisée)
+        def read_boxes(self, image: Any) -> list[Any]:
+            return lines("gvg_fort_free_ocr.json")
+
+    state._ocr = Fixture()
+    buf = io.BytesIO()
+    Image.new("RGB", (2000, 1125), (20, 30, 40)).save(buf, "PNG")
+    req = urllib.request.Request(base + "/api/gvg/ally/ally1", method="POST", data=buf.getvalue())
+    req.add_header("X-E7-Token", state.token)
+    with urllib.request.urlopen(req) as res:
+        fort = json.loads(res.read())["ally_forts"]["ally1"]
+    assert len(fort) == 8 and {p["slot"] for p in fort} >= {3, 6}
+    assert all(0 < p["fx"] < 1 and 0 < p["fy"] < 1 for p in fort)
+    g = call(base, "DELETE", "/api/gvg/ally/ally1", token=state.token)
+    assert "ally1" not in g["ally_forts"]
