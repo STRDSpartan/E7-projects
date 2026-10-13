@@ -1,37 +1,41 @@
-# E7 Showcase 0.48.1
+# Zealot 0.65.0
 
-La guerre de guilde passe un cap : carte de la guerre reproduite depuis vos captures, lecture
-des écrans de fin de combat et simulations contre les vraies stats adverses.
+E7 Showcase devient **Zealot**, édité par **Shattered Spartan** : nouveau nom, nouveau logo,
+nouvelle identité visuelle, mise à jour en un clic et une guerre de guilde reproduite au plus
+près du jeu. Cette version regroupe tout ce qui a été ajouté depuis la 0.48.1.
 
-## Nouveautés GvG
-- **Carte de la guerre** (GvG → Carte) : importez la capture de l'écran principal de la
-  guerre, l'application lit les deux guildes (nom, serveur, Ravage, tickets, membres), le temps
-  restant et les forteresses (défenses restantes). La carte est reproduite avec des forteresses
-  cliquables ; la guerre rejoint automatiquement le suivi des guerres.
-- **Forteresses** : importez la capture d'une forteresse, ses défenseurs apparaissent à leur
-  place (la forteresse est reconnue d'après le nombre de joueurs). Pour chaque joueur : pseudo
-  corrigeable, case « défense battue », ses défenses relevées et la simulation contre elles.
-- **Relevés** (GvG → Relevés) : déposez l'écran de fin de combat après une victoire ;
-  l'application lit les stats de la défense battue et reconnaît les héros à leur portrait
-  (noms à vérifier proposés, corrigeables). Testez vos équipes contre cette défense avec ses
-  vraies stats et enregistrez-la pour plus tard.
-  La reconnaissance des portraits télécharge une fois les visages des héros (environ 4 Mo).
-  Vérifié sur trois écrans réels : toutes les stats justes, tous les héros aux stats visibles
-  reconnus sur les captures PC.
+## Zealot
+- Nouveau nom, logo officiel (icône du logiciel, installateur, bandeau, écran d'accueil) et
+  installateur entièrement redessiné.
+- Identité « nuit de sakura » sur toute l'application et la vitrine : bleu nuit, lavande, bleu
+  lumineux et rose sakura, pétales animés, vidéo de fond dans le bandeau des profils.
+- **Rechercher une mise à jour** (en bas à gauche) : Zealot vérifie la dernière version publiée
+  sur GitHub, la télécharge, contrôle son intégrité et l'installe, puis redémarre tout seul.
+- La mise à jour depuis E7 Showcase conserve vos profils, vitrines, guilde et données GvG.
 
-## Simulateur
-- Équipes face à face autour d'un « VS », portraits des héros choisis.
-- Bandeau animé du vainqueur à la fin de chaque simulation (« Combat serré » si l'écart est
-  faible) et rejeu animé du combat type, aussi dans le simulateur principal.
+## Profils et vitrine
+- **Clic droit sur un profil** : « Définir comme mon profil de joueur » et « Mettre à jour le
+  profil » depuis la capture de la fiche Profil du jeu (pseudo, serveur, guilde, rang ; le cadre
+  de profil devient l'image du joueur).
+- **Publier sa vitrine** sur le salon Discord de la guilde (webhook enregistré dans
+  GvG → Publication) : cadre de profil, guilde, rang, meilleurs héros et fichier .e7v joint, que
+  vos coéquipiers ouvrent pour ajouter la vitrine à Zealot.
+- La vitrine occupe toute la largeur ; fiche détaillée des héros au nouveau thème, icônes
+  d'objet recentrées.
+- Coller une capture avec **Ctrl+V** partout où l'on peut en déposer une.
 
-## Interface
-- Pastilles colorées des profils dans la barre latérale, cases à cocher dorées.
+## Guerre de guilde
+- **Panorama de guerre** : nos forteresses à gauche, celles de l'adversaire à droite, boutons
+  nommés sur chaque fort (fini les boutons qui fuyaient le curseur).
+- **Vue d'un fort** sur le décor du fort : importez la capture d'un fort, allié ou ennemi, et
+  chaque joueur est placé sur sa case (le HUD du jeu n'est pas repris). Liste des joueurs
+  présents pour écarter un pseudo mal lu.
+- **Archiver la guerre** et **Historique statistique** : taux de victoire de chaque composition
+  d'attaque, guerre après guerre (fiable, mitigé, à éviter).
+- **Relevés** : équipe adverse à gauche, alliée à droite ; noms des héros remplis
+  automatiquement (visages des héros téléchargés au premier lancement).
 
 ## À savoir
-- Vos captures de guerre restent sur votre ordinateur (dossier de données de l'application).
-- Testé sur des captures PC en français ; signalez-nous tout écran mal lu (autre langue,
-  autre résolution).
-- Vos profils, vitrines, guilde et données GvG sont conservés.
-
-_Version précédente publiée : 0.44.0 (onglets, armurerie, guilde, GvG, exports, habillage,
-rapidité)._
+- Les captures servent seulement à lire les données : elles ne sont ni affichées ni conservées.
+- Les pseudos en caractères japonais (katakana) ne sont pas encore lus.
+- Discord limite les pièces jointes à 25 Mo.
