@@ -123,6 +123,7 @@ ANIM_CSP = (
 class AppState:
     def __init__(self, data_root: Path, importer: ScreenshotImporter | None = None):
         self.store = ProfileStore(data_root / "profiles")
+        self.store.recenter_icons()
         self.assets = AssetStore(data_root / "assets")
         self.guild = GuildStore(data_root / "guild.json", self.store)
         self.gvg = GvgStore(data_root / "gvg.json", self.store, self.guild)

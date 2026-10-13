@@ -954,3 +954,16 @@ def test_sidebar_video_served(app: Any) -> None:
     for name in ("logo.png", "emblem.png"):
         with urllib.request.urlopen(base + "/media/" + name) as res:
             assert res.headers["Content-Type"] == "image/png"
+
+
+def test_center_icon_moves_item_to_the_middle() -> None:
+    from e7showcase.app.profiles import center_icon
+
+    img = Image.new("RGB", (100, 60), (10, 12, 20))  # objet collé à gauche, marge à droite
+    img.paste((220, 80, 60), (4, 8, 48, 52))
+    out = center_icon(img)
+    assert out.size[0] == out.size[1]
+    box = Image.eval(out.convert("L"), lambda v: 255 if v > 60 else 0).getbbox()
+    assert box is not None
+    left, right = box[0], out.size[0] - box[2]
+    assert abs(left - right) <= 1

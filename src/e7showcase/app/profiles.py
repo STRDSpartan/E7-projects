@@ -17,6 +17,7 @@ import shutil
 import threading
 from dataclasses import dataclass
 from pathlib import Path
+from typing import cast
 
 from PIL import Image
 
@@ -48,6 +49,42 @@ class ProfileInfo:
     avatar: str | None = None  # adresse du cadre de profil (versionnée)
     guild: str | None = None
     rank: int | None = None
+
+
+def center_icon(image: Image.Image) -> Image.Image:
+    """Recadre l'objet sur son contenu (le fond sombre de la capture autour est retiré) et le
+    centre dans un carré : la découpe de la capture laisse souvent une marge à droite."""
+    rgb = image.convert("RGB")
+    w, h = rgb.size
+    if w < 8 or h < 8:
+        return rgb
+    px = rgb.load()
+    assert px is not None
+    border = [
+        cast(tuple[int, int, int], px[x, y])
+        for x in (0, w - 1)
+        for y in range(0, h, max(1, h // 8))
+    ]
+    bg = (
+        sorted(c[0] for c in border)[len(border) // 2],
+        sorted(c[1] for c in border)[len(border) // 2],
+        sorted(c[2] for c in border)[len(border) // 2],
+    )
+    diff = Image.eval(
+        Image.merge(
+            "RGB",
+            [ch.point(lambda v, b=b: abs(v - b)) for ch, b in zip(rgb.split(), bg, strict=True)],
+        ).convert("L"),
+        lambda v: 255 if v > 38 else 0,
+    )
+    box = diff.getbbox()
+    if box is None or (box[2] - box[0]) * (box[3] - box[1]) < w * h * 0.12:
+        return rgb  # rien de net à recentrer
+    content = rgb.crop(box)
+    side = max(content.size)
+    out = Image.new("RGB", (side, side), bg)
+    out.paste(content, ((side - content.width) // 2, (side - content.height) // 2))
+    return out
 
 
 def _int(value: object) -> int | None:
@@ -298,12 +335,32 @@ class ProfileStore:
         return self.path(profile_id) / "images" / f"{image_key(hero_name)}.{kind}.webp"
 
     def save_icon(self, profile_id: str, hero_name: str, kind: str, image: Image.Image) -> None:
-        img = image.convert("RGB")
+        img = center_icon(image.convert("RGB"))
         img.thumbnail(ICON_MAX, Image.Resampling.LANCZOS)
         target = self.icon_path(profile_id, hero_name, kind)
         target.parent.mkdir(parents=True, exist_ok=True)
         img.save(target, "WEBP", quality=85)
         self._touch()
+
+    def recenter_icons(self) -> int:
+        """Une fois : recentre les icônes d'objet enregistrées avant le recentrage automatique."""
+        marker = self.root / ".icons-centered"
+        if marker.exists() or not self.root.is_dir():
+            return 0
+        done = 0
+        for path in self.root.glob("*/images/*.webp"):
+            if path.stem.rsplit(".", 1)[-1] not in ICON_KINDS:
+                continue
+            try:
+                with Image.open(path) as src:
+                    img = center_icon(src.convert("RGB"))
+                img.save(path, "WEBP", quality=85)
+                done += 1
+            except OSError:
+                continue
+        marker.write_text("1", encoding="utf-8")
+        self._touch()
+        return done
 
     def icon_bytes(self, profile_id: str, hero_name: str, kind: str) -> bytes | None:
         path = self.icon_path(profile_id, hero_name, kind)
