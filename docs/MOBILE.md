@@ -38,13 +38,14 @@ vérifie la construction iOS sur macOS.
    Program, 99 $/an, signature et TestFlight) — à créer par l'éditeur ; la CI signera ensuite.
 
 ## État de la construction (CI)
-- Android : la construction Gradle tourne ; **bloquant : `pydantic-core`** (cœur binaire de
-  pydantic, écrit en Rust) n'existe ni dans le dépôt Chaquopy ni sur PyPI pour Android.
-- iOS : même blocage (`pydantic-core` sans version iOS).
-- `rapidfuzz` : réglé (repli pur Python `e7showcase.fuzzy`, rapidfuzz devenu optionnel).
-- Prochaine étape : compiler `pydantic-core` pour Android et iOS dans la CI (cibuildwheel +
-  maturin, cibles Rust `aarch64-linux-android`, `x86_64-linux-android`, `aarch64-apple-ios`,
-  `aarch64-apple-ios-sim`) et le fournir à Briefcase (`--find-links`).
+- **Android : construit.** `pydantic-core` est compilé par la CI pour arm64-v8a et x86_64
+  (cibuildwheel, jobs `core-android`), puis Briefcase produit l'APK de test (artefact
+  « Zealot-Android » de l'exécution « Application mobile »). Python 3.13, pydantic 2.14.1.
+- **iOS : en cours.** La compilation de `pydantic-core` échoue : l'outil de construction
+  `maturin` n'a pas de version iOS et cibuildwheel tente de l'installer pour iOS. Piste :
+  compiler directement avec maturin sur macOS (`--target aarch64-apple-ios[-sim]`) contre le
+  paquet Python iOS de BeeWare (`PYO3_CROSS_LIB_DIR`).
+- `rapidfuzz` : repli pur Python (`e7showcase.fuzzy`), rapidfuzz optionnel.
 
 ## Limites connues
 - Dépendances binaires (pydantic-core, rapidfuzz, numpy, Pillow) : elles doivent exister en
