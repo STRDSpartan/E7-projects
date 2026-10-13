@@ -40,6 +40,13 @@ le texte des stats lu sur une capture (aucune image, aucun pseudo).
 interface et utilise son bouton d'export « WebP animé transparent », comme un joueur le ferait.
 Un export par héros, mis en cache dans le dossier local ; jamais d'export en masse.
 
+## Exception : fond du panorama de guerre (décision de l'éditeur, v0.61)
+Le décor du panorama de l'écran principal de GvG est livré avec l'application
+(`src/e7showcase/app/media/gvg-panorama.webp`). Il sert uniquement de fond à l'écran GvG, pour
+représenter l'interface du jeu sur laquelle la guilde gère ses batailles ; il n'est réutilisé nulle
+part ailleurs. Le joueur peut le remplacer en déposant une autre image sur le panorama. Aucune
+autre image du jeu n'est committée. Si Smilegate le demande, ce fichier sera retiré.
+
 ## Données personnelles
 - Le roster reste **local** ; rien n'est envoyé sans commande explicite (`share`, `export`).
 - Les captures peuvent contenir le pseudo et l'UID : elles restent dans le dossier de données

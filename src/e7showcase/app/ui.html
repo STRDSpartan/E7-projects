@@ -1546,12 +1546,12 @@ function scoutedOf(g, name) {
   return g.scouted.filter((sc) => key && sc.player.trim().toLowerCase() === key);
 }
 // Panorama de la guerre : nos 3 forteresses à gauche, celles de l'adversaire à droite.
-// Fond : image de la guerre déposée une fois par le joueur sur le panorama (gardée sur son PC).
+// Fond : panorama de la guerre livré avec l'application ; une image déposée sur le panorama le remplace.
 const CASTLES = { ally: [[0.148, 0.526], [0.245, 0.586], [0.324, 0.565]], enemy: [[0.72, 0.539], [0.83, 0.583], [0.923, 0.557]] };  // repères posés sur le panorama de la guerre
 const shortFort = (name) => name.replace(/^(forteresse|fortress|stronghold)\s+/i, "");
 function gvgMap(page, g, send) {
   const m = g.map;
-  const bg = g.background || "";
+  const bg = g.background || "/media/gvg-panorama.webp";
   const fort = m && m.fortresses.find((f) => f.id === gvgFort);
   if (fort) return gvgFortress(page, g, send, m, fort, bg);
   if (gvgFort && gvgFort.startsWith("ally")) return gvgAllyFortress(page, g, gvgFort, bg);

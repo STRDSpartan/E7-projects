@@ -187,7 +187,7 @@ l'adversaire ; elles listent les membres placés sur cette tour dans l'onglet D�
 l'adversaire à droite (défenses restantes), un bouton nommé sur chaque château, le Ravage des
 deux guildes en dessous. Fond : image choisie une fois par le joueur (`POST`/`DELETE
 /api/gvg/background`, gardée dans `<données>/gvg_map/background.webp`, servie par
-`/gvgmap/background.webp`) déposée une fois sur le panorama (glisser ou Ctrl+V), sinon fond nuit uni ; aucune image du jeu n'est livrée.
+`/gvgmap/background.webp`) déposée sur le panorama (glisser ou Ctrl+V) ; par défaut, le panorama de guerre livré avec l'application (`/media/gvg-panorama.webp`, exception de la règle 2, voir `docs/COMPLIANCE.md`).
 Portraits, cadres cosmétiques et décor de la capture sont ignorés : seuls pseudo et position sont gardés. Une liste « Joueurs présents » permet de décocher un pseudo mal lu ou un absent (`present: false`, grisé). Dans une forteresse adverse, les joueurs sont placés comme dans le jeu. Un joueur : pseudo
 corrigeable, case « défense battue » (`PATCH /api/gvg/map/fortress/fN/players/<i>`), ses
 défenses relevées (Relevés, même pseudo) avec le test de vos équipes, et un raccourci pour lire

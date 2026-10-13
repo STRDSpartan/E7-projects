@@ -86,6 +86,7 @@ APP_MEDIA = {  # médias de l'application : fond animé du bandeau, logo et embl
     "sidebar.webm": "video/webm",
     "logo.png": "image/png",
     "emblem.png": "image/png",
+    "gvg-panorama.webp": "image/webp",  # fond par défaut du panorama de guerre (exception règle 2)
 }
 MAX_BODY = 400 * 1024 * 1024
 MAX_UPLOAD = 40 * 1024 * 1024  # une capture
