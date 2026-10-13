@@ -41,10 +41,11 @@ vérifie la construction iOS sur macOS.
 - **Android : construit.** `pydantic-core` est compilé par la CI pour arm64-v8a et x86_64
   (cibuildwheel, jobs `core-android`), puis Briefcase produit l'APK de test (artefact
   « Zealot-Android » de l'exécution « Application mobile »). Python 3.13, pydantic 2.14.1.
-- **iOS : en cours.** La compilation de `pydantic-core` échoue : l'outil de construction
-  `maturin` n'a pas de version iOS et cibuildwheel tente de l'installer pour iOS. Piste :
-  compiler directement avec maturin sur macOS (`--target aarch64-apple-ios[-sim]`) contre le
-  paquet Python iOS de BeeWare (`PYO3_CROSS_LIB_DIR`).
+- **iOS : construit (simulateur).** `pydantic-core` est compilé pour iPhone et simulateur
+  (jobs `core-ios`, cibuildwheel) : maturin et puccinialin en version macOS installés dans
+  l'environnement de construction (`--no-isolation`), chaîne Rust autorisée par
+  `CIBW_XBUILD_TOOLS`. L'app iOS est ensuite construite par Briefcase. Installer sur un vrai
+  iPhone demande la signature (compte Apple Developer).
 - `rapidfuzz` : repli pur Python (`e7showcase.fuzzy`), rapidfuzz optionnel.
 
 ## Limites connues
