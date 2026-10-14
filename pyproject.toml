@@ -118,6 +118,10 @@ requires = [
 
 [tool.briefcase.app.zealot.android]
 requires = ["toga-android~=0.5.0"]
+# barres système aux couleurs de Zealot (bleu nuit) au lieu du vert par défaut
+primary_color = "#060818"
+primary_color_dark = "#060818"
+accent_color = "#b9a0ff"
 # l'interface est servie par le serveur local de l'app (http://127.0.0.1)
 android_manifest_application_attrs_extra_content = 'android:usesCleartextTraffic="true"'
 

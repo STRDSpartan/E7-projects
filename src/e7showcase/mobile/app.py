@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
 import os
 from pathlib import Path
@@ -21,6 +22,14 @@ def start_backend(data: Path) -> tuple[Any, str]:
     return server, url
 
 
+def hide_android_action_bar(app: Any) -> None:
+    """Android : retire la barre de titre native (verte) au-dessus de l'interface Zealot."""
+    with contextlib.suppress(Exception):  # autre plateforme ou API indisponible
+        bar = app._impl.native.getSupportActionBar()  # noqa: SLF001 - activité Android de Toga
+        if bar is not None:
+            bar.hide()
+
+
 def main() -> Any:
     import toga
 
@@ -35,6 +44,7 @@ def main() -> Any:
             self.main_window = toga.MainWindow(title=self.formal_name)
             self.main_window.content = toga.WebView(url=url, style=toga.style.Pack(flex=1))
             self.main_window.show()
+            hide_android_action_bar(self)
 
         def on_exit(self) -> bool:
             server = getattr(self, "server", None)
