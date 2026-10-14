@@ -8,6 +8,9 @@ on:
     paths: ["src/**", "mobile/**", "scripts/prepare_mobile.py", "scripts/make_icon.py", "pyproject.toml", ".github/workflows/mobile.yml"]
   workflow_dispatch:
 
+permissions:
+  contents: write  # publication de l'APK de test en pré-version « android-test »
+
 env:
   PYDANTIC_CORE: "2.50.1"  # version exigée par pydantic 2.14.1 (épinglé côté mobile)
 
@@ -122,6 +125,20 @@ jobs:
         with:
           name: Zealot-Android
           path: build/zealot/android/gradle/app/build/outputs/apk/debug/*.apk
+      # lien de téléchargement stable pour tester sur téléphone (pré-version, jamais « latest » :
+      # le bouton de mise à jour de l'app PC ne la voit pas)
+      - name: APK de test en pré-version « android-test »
+        run: cp build/zealot/android/gradle/app/build/outputs/apk/debug/*.apk Zealot-Android-test.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-test
+          name: Zealot Android (version de test)
+          prerelease: true
+          make_latest: false
+          body: |
+            APK de test de Zealot pour Android, reconstruit automatiquement.
+            Sur le téléphone : télécharger Zealot-Android-test.apk, l'ouvrir et autoriser l'installation.
+          files: Zealot-Android-test.apk
 
   ios:
     needs: core-ios
