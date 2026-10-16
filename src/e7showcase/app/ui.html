@@ -268,6 +268,8 @@ ol.steps li::before { content:counter(st); flex:none; width:24px; height:24px; b
 .hp-empty:hover { transform:none; }
 .hteam { display:inline-flex; gap:6px; align-items:center; flex-wrap:wrap; }
 .hchip { display:inline-flex; align-items:center; gap:8px; }
+.hta-chips { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; } .hta-chips .hchip { padding:4px 10px; }
+.page textarea { width:100%; box-sizing:border-box; font:inherit; color:inherit; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:8px 12px; margin:6px 0; resize:vertical; }
 .member-cell { display:flex; align-items:center; gap:10px; }
 .avatar { width:32px; height:32px; border-radius:50%; display:grid; place-items:center; flex:none; font-weight:800; color:#120c2e;
   background:linear-gradient(135deg, #f6f0ff, var(--gold) 50%, #5546c9); box-shadow:0 0 0 2px rgba(185,160,255,.25); }
@@ -580,6 +582,7 @@ html.no-fx #fx { display:none; }
     <button role="tab" data-tab="guild"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg><span class="tl" data-short="Guilde">Guilde</span></button>
     <button role="tab" data-tab="armory"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12l-2 6H8zM8 9l-2 12h12L16 9"/></svg><span class="tl" data-short="Armurerie">Armurerie</span></button>
     <button role="tab" data-tab="gvg"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V8l4-4 4 4 4-4 4 4v12zM9 20v-5h6v5"/></svg><span class="tl" data-short="GvG">GvG</span></button>
+    <button role="tab" data-tab="hta"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M6 20V10l6-6 6 6v10M10 20v-5h4v5"/></svg><span class="tl" data-short="HTA">Héritage</span></button>
   </nav>
   <div id="content"></div>
 </main>
@@ -686,7 +689,7 @@ function toast(text, kind = "ok") {
   box.append(node);
   setTimeout(close, kind === "err" ? 9000 : Math.min(12000, 4000 + String(text).length * 30));
 }
-const TAB_ORDER = ["vitrine", "sim", "guild", "armory", "gvg"];
+const TAB_ORDER = ["vitrine", "sim", "guild", "armory", "gvg", "hta"];
 function setTab(name) {
   if (name === tab) return;
   const dir = TAB_ORDER.indexOf(name) > TAB_ORDER.indexOf(tab) ? "r" : "l";
@@ -711,6 +714,7 @@ function renderPage() {
   if (tab === "sim") return simulators();
   if (tab === "guild") return guildPage();
   if (tab === "gvg") return gvgPage();
+  if (tab === "hta") return htaPage();
   if (tab === "armory") return current ? armoryPage(current) : pickFirst("l'armurerie");
   return current ? show(current) : welcome();
 }
@@ -1304,6 +1308,214 @@ async function gvgPage(sub = gvgSub) {
   else gvgCounters(page, g);
   page.prepend(status);
   $("#content").replaceChildren(bar, page);
+}
+
+// Héritage des temps anciens (HTA) : préparation de saison, répartition des éléments, boss, rôles, reliques
+let htaSub = "prep", htaMember = null;
+async function htaPage(sub = htaSub) {
+  htaSub = sub;
+  let h;
+  try { h = await json("GET", "/hta"); } catch (e) { $("#content").replaceChildren(el("p", { class: "note" }, e.message)); return; }
+  const tabs = el("div", { class: "tabs" }, ...[["prep", "Enrôlement"], ["guild", "Guilde"], ["bosses", "Boss"], ["roles", "Rôles"], ["relics", "Reliques"]].map(([k, t]) =>
+    el("button", { "aria-pressed": String(sub === k), onclick: () => htaPage(k) }, t)));
+  const bar = el("div", { class: "bar" }, el("h1", {}, "Héritage des temps anciens" + (h.guild ? ` — ${h.guild}` : "")), tabs);
+  const page = el("div", { class: "page" });
+  const status = el("p", { class: "note", role: "status" });
+  const send = async (method, path, body, after) => {
+    try { await json(method, "/hta" + path, body); status.textContent = "Enregistré."; status.style.color = "var(--ok)"; htaPage(); if (after) after(); }
+    catch (e) { status.textContent = e.message; status.style.color = "var(--danger)"; }
+  };
+  if (!h.members.length) {
+    page.append(el("div", { class: "empty" }, el("h2", {}, "Aucun membre"),
+      el("p", {}, "Ajoutez d'abord les membres dans l'onglet Guilde : leurs rosters servent à préparer l'enrôlement et les équipes de boss."),
+      el("button", { onclick: () => setTab("guild") }, "Ouvrir l'onglet Guilde")));
+  } else if (sub === "prep") htaPrep(page, h, send);
+  else if (sub === "guild") htaGuild(page, h, send);
+  else if (sub === "bosses") htaBosses(page, h, send);
+  else if (sub === "roles") htaRoles(page, h, send);
+  else htaRelics(page, h, send);
+  page.prepend(status);
+  $("#content").replaceChildren(bar, page);
+}
+const htaOptions = (h, keys, value, empty) => [el("option", { value: "" }, empty), ...keys.map((k) => { const o = el("option", { value: k }, h.elements[k]); if (k === value) o.selected = true; return o; })];
+function htaMemberSelect(h) {
+  if (!h.members.some((m) => m.id === htaMember)) htaMember = (h.members.find((m) => m.id === current) || h.members[0]).id;
+  const sel = el("select", { "aria-label": "Membre", onchange: () => { htaMember = sel.value; htaPage(); } },
+    ...h.members.map((m) => { const o = el("option", { value: m.id }, m.player); if (m.id === htaMember) o.selected = true; return o; }));
+  return sel;
+}
+function htaPrep(page, h, send) {
+  const pick = htaMemberSelect(h);
+  const m = h.members.find((x) => x.id === htaMember);
+  const element = el("select", { "aria-label": "Élément principal" }, ...htaOptions(h, ["fire", "earth", "ice"], m.element, "Élément principal…"));
+  const specialty = el("select", { "aria-label": "Spécialité" }, ...htaOptions(h, ["light", "dark"], m.specialty, "Spécialité (aucune)"));
+  const used = el("input", { type: "number", min: "0", max: "99", value: String(m.withdrawals_used), "aria-label": "Retraits utilisés", style: "width:90px" });
+  const left = h.season.withdrawals != null ? `${Math.max(0, h.season.withdrawals - m.withdrawals_used)} retrait(s) restant(s) sur ${h.season.withdrawals}` : "Nombre de retraits autorisés : à renseigner dans l'onglet Guilde";
+  page.append(el("div", { class: "card" }, el("h3", {}, "Plan du membre"),
+    el("p", { class: "note" }, "Conseil des guides : un seul élément principal (feu, terre ou glace) monté au niveau 10, et des spécialistes lumière/ténèbres pour les boss de fin d'étage."),
+    el("div", { class: "filters" }, pick, element, specialty, el("label", {}, "Retraits utilisés ", used),
+      el("button", { onclick: () => send("PUT", `/members/${m.id}`, { element: element.value, specialty: specialty.value, withdrawals_used: used.value }) }, "Enregistrer")),
+    el("p", { class: "note" }, left)));
+  // héros enrôlés : saisie, suggestions et lecture d'une capture
+  const enlisted = new Set(m.enlisted);
+  const list = el("div", { class: "hta-chips" });
+  const drawChips = () => list.replaceChildren(...[...enlisted].map((n) => el("button", { class: "ghost hchip", title: "Retirer", onclick: () => { enlisted.delete(n); drawChips(); } }, portrait(n, { size: "xs" }), " " + n + " ✕")),
+    enlisted.size ? "" : el("span", { class: "note" }, "Aucun héros enrôlé."));
+  const names = el("datalist", { id: "hta-roster" }, ...m.roster.map((n) => el("option", { value: n })));
+  const add = el("input", { list: "hta-roster", placeholder: "Ajouter un héros du roster…", "aria-label": "Héros à enrôler" });
+  add.addEventListener("change", () => { if (m.roster.includes(add.value)) { enlisted.add(add.value); add.value = ""; drawChips(); } });
+  const file = el("input", { type: "file", accept: "image/*", hidden: "" });
+  const ocrMsg = el("span", { class: "note", role: "status" });
+  file.addEventListener("change", async () => {
+    const f = file.files[0]; file.value = ""; if (!f) return;
+    ocrMsg.textContent = "Lecture de la capture…";
+    try { const r = await uploadCapture(`/hta/enlisted/${m.id}`, f); r.heroes.forEach((n) => enlisted.add(n)); drawChips(); ocrMsg.textContent = `${r.heroes.length} héros reconnu(s) : vérifiez puis enregistrez.`; }
+    catch (e) { ocrMsg.textContent = e.message; }
+  });
+  drawChips();
+  page.append(el("div", { class: "card" }, el("h3", {}, `Héros enrôlés (${m.enlisted.length})`), list,
+    el("div", { class: "filters" }, add, names, el("button", { class: "ghost", onclick: () => file.click() }, "Lire une capture de l'écran d'enrôlement"), file,
+      el("button", { onclick: () => send("PUT", `/members/${m.id}`, { enlisted: [...enlisted] }) }, "Enregistrer l'enrôlement")), ocrMsg));
+  // préparateur : héros conseillés
+  const box = el("div", { class: "card" }, el("h3", {}, "Héros conseillés"));
+  const filter = el("select", { "aria-label": "Élément" }, el("option", { value: "" }, "Élément du plan"), ...Object.entries(h.elements).map(([k, v]) => el("option", { value: k }, v)));
+  const out = el("div", { style: "overflow:auto" });
+  const draw = async () => {
+    const rows = await json("GET", `/hta/suggest/${m.id}` + (filter.value ? `?element=${filter.value}` : ""));
+    if (!rows.length) { out.replaceChildren(el("p", { class: "note" }, m.element || filter.value ? "Aucun héros de cet élément dans le roster." : "Choisissez un élément principal (ou un élément ci-dessus) pour voir les héros conseillés.")); return; }
+    out.replaceChildren(el("table", { class: "members" }, el("thead", {}, el("tr", {}, ...["Héros", "Élément", "Rôle HTA", "Solo", "Puissance", "Score éq.", "Vitesse", "PV", ""].map((t) => el("th", {}, t)))),
+      el("tbody", {}, ...rows.map((r) => el("tr", {},
+        el("td", {}, el("span", { class: "hchip" }, portrait(r.name, { size: "xs" }), " " + r.name)), el("td", {}, h.elements[r.element] || "—"),
+        el("td", { title: r.auto ? "Déduit des compétences (modifiable dans l'onglet Rôles)" : "Choisi par la guilde" }, h.roles[r.role] + (r.auto ? "" : " ✎")),
+        el("td", {}, r.solo ? "★" : ""), el("td", {}, r.power ? fmtN(r.power) : "—"), el("td", {}, r.gear_score ?? "—"), el("td", {}, r.spd ?? "—"), el("td", {}, r.hp ? fmtN(r.hp) : "—"),
+        el("td", {}, enlisted.has(r.name) ? "✓" : el("button", { class: "ghost", onclick: () => { enlisted.add(r.name); drawChips(); } }, "Enrôler")))))));
+  };
+  filter.addEventListener("change", () => draw().catch((e) => out.replaceChildren(el("p", { class: "note" }, e.message))));
+  box.append(el("p", { class: "note" }, "Ordre des guides : double attaque, DPS, support, soin ; les héros « solo » (★) d'abord, puis la puissance."), el("div", { class: "filters" }, filter), out);
+  page.append(box);
+  draw().catch((e) => out.replaceChildren(el("p", { class: "note" }, e.message)));
+}
+function htaGuild(page, h, send) {
+  const s = h.season;
+  const num = (v, label, w = "90px") => el("input", { type: "number", min: "0", value: v ?? "", "aria-label": label, style: `width:${w}` });
+  const number = num(s.number, "Saison"), floor = num(s.floor, "Étage"), provisions = num(s.provisions, "Rations du jour"), withdrawals = num(s.withdrawals, "Retraits autorisés");
+  const closes = el("input", { type: "date", value: s.exchange_closes, "aria-label": "Fermeture du bureau de change" });
+  const killed = el("input", { value: s.bosses_killed.join(", "), placeholder: "Boss vaincus, séparés par des virgules", "aria-label": "Boss vaincus", style: "min-width:260px" });
+  const notice = el("textarea", { rows: "3", maxlength: "1000", placeholder: "Consigne de la guilde (publiée sur Discord)", "aria-label": "Consigne" }, s.notice);
+  const days = s.exchange_closes ? Math.ceil((new Date(s.exchange_closes) - new Date(new Date().toDateString())) / 864e5) : null;
+  page.append(el("div", { class: "stat-tiles" },
+    el("div", { class: "tile" }, el("b", {}, s.number ?? "—"), el("span", {}, "Saison")),
+    el("div", { class: "tile" }, el("b", {}, s.floor ?? "—"), el("span", {}, "Étage atteint")),
+    el("div", { class: "tile" }, el("b", {}, String(s.bosses_killed.length)), el("span", {}, "Boss vaincus")),
+    el("div", { class: "tile" }, el("b", {}, days == null ? "—" : days < 0 ? "fermé" : `${days} j`), el("span", {}, "Bureau de change"))),
+  el("div", { class: "card" }, el("h3", {}, "Saison"),
+    el("p", { class: "note" }, "Tout est saisi par la guilde : Zealot ne lit rien dans le jeu."),
+    el("div", { class: "filters" }, el("label", {}, "Saison ", number), el("label", {}, "Étage ", floor), el("label", {}, "Rations ", provisions), el("label", {}, "Retraits autorisés ", withdrawals), el("label", {}, "Bureau de change jusqu'au ", closes)),
+    el("div", { class: "filters" }, killed), notice,
+    el("div", { class: "filters" },
+      el("button", { onclick: () => send("PATCH", "/season", { number: number.value, floor: floor.value, provisions: provisions.value, withdrawals: withdrawals.value, exchange_closes: closes.value, notice: notice.value, bosses_killed: killed.value.split(",") }) }, "Enregistrer"),
+      el("button", { class: "ghost", onclick: () => confirm("Nouvelle saison : les enrôlements, retraits et boss vaincus sont remis à zéro. Continuer ?") && send("POST", "/season/new", {}) }, "Nouvelle saison"))));
+  const c = h.coverage;
+  page.append(el("div", { class: "card" }, el("h3", {}, "Répartition des éléments"),
+    c.missing.length ? el("p", { class: "note", style: "color:var(--danger)" }, "⚠ Personne en : " + c.missing.map((e) => h.elements[e]).join(", ")) : el("p", { class: "note", style: "color:var(--ok)" }, "Tous les éléments sont couverts."),
+    c.undecided.length ? el("p", { class: "note" }, "Sans élément choisi : " + c.undecided.join(", ")) : "",
+    el("div", { style: "overflow:auto" }, el("table", { class: "members" }, el("thead", {}, el("tr", {}, ...["Membre", "Élément", "Spécialité", "Retraits", "Enrôlés", ""].map((t) => el("th", {}, t)))),
+      el("tbody", {}, ...h.members.map((m) => el("tr", {}, el("td", {}, m.player), el("td", {}, h.elements[m.element] || "—"), el("td", {}, h.elements[m.specialty] || "—"),
+        el("td", {}, h.season.withdrawals != null ? `${m.withdrawals_used}/${h.season.withdrawals}` : String(m.withdrawals_used)), el("td", {}, String(m.enlisted.length)),
+        el("td", {}, el("button", { class: "ghost", onclick: () => { htaMember = m.id; htaPage("prep"); } }, "Préparer")))))))));
+  const msg = el("p", { class: "note", role: "status" });
+  const preview = el("pre", { class: "note", style: "white-space:pre-wrap;max-height:240px;overflow:auto" });
+  page.append(el("div", { class: "card" }, el("h3", {}, "Publier le plan HTA sur Discord"),
+    el("p", { class: "note" }, "Saison, consigne, répartition des éléments, équipes de boss et reliques prioritaires, dans le salon du webhook enregistré (onglet GvG → Défenses)."),
+    el("div", { class: "filters" },
+      el("button", { class: "ghost", onclick: async () => { try { preview.textContent = (await json("GET", "/hta/report")).messages.join("\n"); } catch (e) { msg.textContent = e.message; } } }, "Aperçu"),
+      el("button", { onclick: async () => {
+        if (!confirm("Publier le plan HTA sur Discord ?")) return;
+        try { const r = await json("POST", "/hta/send"); msg.textContent = `Publié (${r.sent} message${r.sent > 1 ? "s" : ""}).`; msg.style.color = "var(--ok)"; }
+        catch (e) { msg.textContent = e.message; msg.style.color = "var(--danger)"; }
+      } }, "Envoyer sur Discord")), msg, preview));
+}
+function htaBosses(page, h, send) {
+  const players = Object.fromEntries(h.members.map((m) => [m.id, m]));
+  const form = (b = {}) => {
+    const name = el("input", { value: b.name || "", maxlength: "40", placeholder: "Nom du boss", "aria-label": "Nom du boss" });
+    const floor = el("input", { type: "number", min: "1", max: "10", value: b.floor ?? "", placeholder: "Étage", "aria-label": "Étage", style: "width:80px" });
+    const element = el("select", { "aria-label": "Élément du boss" }, ...htaOptions(h, Object.keys(h.elements), b.element, "Élément…"));
+    const hp = el("input", { type: "number", min: "0", value: b.hp ?? "", placeholder: "PV", "aria-label": "PV du boss", style: "width:120px" });
+    const def = el("input", { type: "number", min: "0", value: b.def ?? "", placeholder: "Défense", "aria-label": "Défense du boss", style: "width:100px" });
+    const mech = el("textarea", { rows: "2", maxlength: "200", placeholder: "Mécaniques à retenir", "aria-label": "Mécaniques" }, b.mechanics || "");
+    const member = el("select", { "aria-label": "Membre" }, el("option", { value: "" }, "Membre…"), ...h.members.map((m) => { const o = el("option", { value: m.id }, m.player); if (m.id === b.member) o.selected = true; return o; }));
+    const team = [0, 1, 2, 3].map((i) => el("input", { list: "hta-boss-roster", value: (b.team || [])[i] || "", placeholder: `Héros ${i + 1}`, "aria-label": `Héros ${i + 1}` }));
+    const roster = el("datalist", { id: "hta-boss-roster" });
+    const fill = () => roster.replaceChildren(...((players[member.value] || {}).roster || []).map((n) => el("option", { value: n })));
+    member.addEventListener("change", fill); fill();
+    const body = () => ({ name: name.value, floor: floor.value, element: element.value, hp: hp.value, def: def.value, mechanics: mech.value, member: member.value, team: member.value ? team.map((t) => t.value) : [] });
+    return { body, nodes: [el("div", { class: "filters" }, name, floor, element, hp, def), mech, el("div", { class: "filters" }, member, ...team, roster)] };
+  };
+  const fresh = form();
+  page.append(el("div", { class: "card" }, el("h3", {}, "Nouvelle fiche de boss"),
+    el("p", { class: "note" }, "Structure conseillée : 1 ou 2 doubles attaquants, 1 support, 1 soigneur ou 2ᵉ DPS, et une place selon le boss. PV et défense servent à estimer les dégâts de l'équipe."),
+    ...fresh.nodes, el("button", { onclick: () => send("POST", "/bosses", fresh.body()) }, "Ajouter")));
+  for (const b of h.bosses) {
+    const f = form(b);
+    const out = el("div");
+    page.append(el("div", { class: "card" }, el("h3", {}, b.name + (b.floor ? ` — étage ${b.floor}` : "") + (b.element ? ` · ${h.elements[b.element]}` : "")),
+      b.team && b.team.length ? el("div", { class: "hchip" }, teamRow(b.team, "sm", 0), el("span", {}, `${b.team.join(", ")} — ${(players[b.member] || {}).player || "?"}`)) : "",
+      ...f.nodes,
+      el("div", { class: "filters" },
+        el("button", { onclick: () => send("PATCH", `/bosses/${b.id}`, f.body()) }, "Enregistrer"),
+        el("button", { class: "ghost", onclick: async () => {
+          try {
+            const r = await json("GET", `/hta/bosses/${b.id}/estimate`);
+            out.replaceChildren(el("table", { class: "res" }, el("thead", {}, el("tr", {}, ...["Héros", "Compétence", "Dégâts moyens"].map((t) => el("th", {}, t)))),
+              el("tbody", {}, ...r.rows.map((x) => el("tr", {}, el("td", {}, x.hero), el("td", {}, x.skill || "—"), el("td", {}, x.expected != null ? fmtN(x.expected) : "inconnu"))))),
+              el("p", { class: "note" }, `Total par tour d'équipe : ${fmtN(r.total)}` + (r.rounds ? ` · environ ${r.rounds} tour(s) d'équipe pour vaincre le boss` : "") + " (estimation hors buffs, débuffs et mécaniques du boss)."));
+          } catch (e) { out.replaceChildren(el("p", { class: "note" }, e.message)); }
+        } }, "Estimer les dégâts"),
+        el("button", { class: "ghost", onclick: () => confirm(`Supprimer la fiche ${b.name} ?`) && send("DELETE", `/bosses/${b.id}`) }, "Supprimer")), out));
+  }
+}
+function htaRoles(page, h, send) {
+  const all = [...new Set(h.members.flatMap((m) => m.roster))].sort();
+  const names = el("datalist", { id: "hta-all-heroes" }, ...all.map((n) => el("option", { value: n })));
+  const hero = el("input", { list: "hta-all-heroes", placeholder: "Héros", "aria-label": "Héros" });
+  const role = el("select", { "aria-label": "Rôle HTA" }, el("option", { value: "" }, "Rôle déduit"), ...Object.entries(h.roles).map(([k, v]) => el("option", { value: k }, v)));
+  const solo = el("input", { type: "checkbox" });
+  const note = el("input", { maxlength: "120", placeholder: "Note (facultatif)", "aria-label": "Note" });
+  const file = el("input", { type: "file", accept: ".json,application/json", hidden: "" });
+  file.addEventListener("change", async () => {
+    const f = file.files[0]; file.value = ""; if (!f) return;
+    try { send("POST", "/tiers/import", JSON.parse(await f.text())); } catch { toast("fichier de rôles illisible", "err"); }
+  });
+  const exportTiers = async () => {
+    const data = JSON.stringify(await json("GET", "/hta/tiers/export"), null, 1);
+    const a = el("a", { href: URL.createObjectURL(new Blob([data], { type: "application/json" })), download: "roles-hta.json" });
+    document.body.append(a); a.click(); a.remove();
+  };
+  page.append(el("div", { class: "card" }, el("h3", {}, "Rôles HTA de la guilde"),
+    el("p", { class: "note" }, "Le rôle de chaque héros est déduit de ses compétences (attaque double, soin des alliés, buffs et protections). Corrigez-le ici et marquez les héros capables de jouer seuls (★ solo) ; partagez ensuite le fichier avec la guilde."),
+    el("div", { class: "filters" }, hero, names, role, el("label", {}, solo, " ★ Solo"), note,
+      el("button", { onclick: () => send("PUT", "/tiers", { hero: hero.value, role: role.value, solo: solo.checked, note: note.value }) }, "Enregistrer")),
+    el("div", { class: "filters" }, el("button", { class: "ghost", onclick: () => exportTiers().catch((e) => toast(e.message, "err")) }, "Exporter les rôles (.json)"),
+      el("button", { class: "ghost", onclick: () => file.click() }, "Importer les rôles d'un membre"), file)));
+  const rows = Object.entries(h.tiers).sort();
+  page.append(el("div", { class: "card" }, el("h3", {}, `Corrections enregistrées (${rows.length})`),
+    rows.length ? el("table", { class: "members" }, el("thead", {}, el("tr", {}, ...["Héros", "Rôle", "Solo", "Note", ""].map((t) => el("th", {}, t)))),
+      el("tbody", {}, ...rows.map(([n, t]) => el("tr", {}, el("td", {}, n), el("td", {}, t.role ? h.roles[t.role] : "déduit"), el("td", {}, t.solo ? "★" : ""), el("td", {}, t.note || ""),
+        el("td", {}, el("button", { class: "ghost", onclick: () => send("PUT", "/tiers", { hero: n }) }, "Retirer"))))))
+      : el("p", { class: "note" }, "Aucune correction : tous les rôles sont déduits des compétences.")));
+}
+function htaRelics(page, h, send) {
+  const name = el("input", { maxlength: "40", placeholder: "Nom de la relique", "aria-label": "Relique" });
+  const prio = el("select", { "aria-label": "Priorité" }, ...[["1", "Prioritaire"], ["2", "Utile"], ["3", "À éviter"]].map(([v, t]) => { const o = el("option", { value: v }, t); if (v === "2") o.selected = true; return o; }));
+  const note = el("input", { maxlength: "120", placeholder: "Effet ou conseil", "aria-label": "Note" });
+  page.append(el("div", { class: "card" }, el("h3", {}, "Mémo des reliques"),
+    el("p", { class: "note" }, "Notez les reliques rencontrées et leur priorité : les reliques prioritaires sont publiées avec le plan HTA."),
+    el("div", { class: "filters" }, name, prio, note, el("button", { onclick: () => send("POST", "/relics", { name: name.value, priority: prio.value, note: note.value }) }, "Ajouter"))));
+  const label = { 1: "Prioritaire", 2: "Utile", 3: "À éviter" };
+  if (h.relics.length) page.append(el("div", { class: "card" }, el("table", { class: "members" }, el("thead", {}, el("tr", {}, ...["Relique", "Priorité", "Note", ""].map((t) => el("th", {}, t)))),
+    el("tbody", {}, ...h.relics.map((r) => el("tr", {}, el("td", {}, r.name), el("td", {}, label[r.priority] || "—"), el("td", {}, r.note || ""),
+      el("td", {}, el("button", { class: "ghost", onclick: () => send("DELETE", `/relics/${r.id}`) }, "Supprimer"))))))));
 }
 
 // Portraits de héros : visage dans un cadre aux couleurs de l'élément, étoiles et classe.

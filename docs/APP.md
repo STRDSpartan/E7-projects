@@ -105,6 +105,7 @@ la même application sur son ordinateur.
 | `ui.html` | interface (HTML/JS sans dépendance) |
 | `armory.py` | armurerie : pièces portées et non équipées d'un profil, blasons des sets (API `/api/profiles/<id>/armory`, `DELETE …/items/<id>`) |
 | `gvg.py` | guerre de guilde : défenses, guerres, attaques, contres (API `/api/gvg`, `PUT /defense/<membre>`, `POST /wars`, `POST /wars/<id>/attacks`, `PATCH /settings`) |
+| `hta.py` | Héritage des temps anciens : saison, répartition des éléments, enrôlement, rôles HTA, boss, reliques (API `/api/hta`, voir la section HTA) |
 | `guild.py` | guilde locale (API `/api/guild` : `GET`, `PATCH` nom et membres ; `/api/open` avec `guild: true` ajoute la vitrine ouverte) |
 | `simulator.py` | simulateurs de dégâts et de combat (API `/api/sim/*`, voir `docs/SIMULATORS.md`) |
 | `anim.html` | modèle animé du héros dans la fiche : rendu en direct depuis les fichiers publics d'E7 Codex (lecteur Spine du site), dans un cadre isolé (`sandbox`, CSP limitée à e7codex.com) sans accès à l'application ; la pose de la capture reste affichée hors ligne |
@@ -249,3 +250,30 @@ envoie au webhook enregistré (GvG → Publication) un message « Vitrine de …
 la guilde, le rang, la puissance moyenne et les meilleurs héros, et le fichier `.e7v` joint. Un
 coéquipier le télécharge et l'ouvre : la vitrine s'ajoute à Zealot (association des fichiers `.e7v`).
 Le webhook n'est jamais livré avec l'application (règle 2 : un webhook est un secret).
+
+## Héritage des temps anciens (onglet « Héritage »)
+Préparation de l'exploration de guilde saisonnière (recherche : `docs/research/HTA.md`). Toutes
+les données sont saisies par les joueurs ou lues sur une capture importée, et gardées dans
+`<données>/hta.json`. Zealot ne lit ni la carte ni les rations dans le jeu.
+- **Enrôlement** : plan du membre (élément principal feu/terre/glace, spécialité
+  lumière/ténèbres, retraits utilisés). Les héros conseillés sont ceux du roster de l'élément,
+  classés par colonne solo, puis par rôle (double attaque > DPS > support > soin), puis par
+  puissance. Les héros enrôlés peuvent être saisis ou lus sur une capture de l'écran
+  d'enrôlement (`parsers/enlisted.py` : seuls les noms du roster sont reconnus, à vérifier
+  avant d'enregistrer).
+- **Guilde** : tableau de bord de la saison (étage, boss vaincus, rations, retraits autorisés,
+  fermeture du bureau de change, consigne). Répartition des éléments, avec une alerte sur les
+  éléments que personne ne joue. Publication du plan sur Discord, par le webhook de l'onglet
+  GvG, en messages texte.
+- **Boss** : fiche par boss (étage, élément, PV, défense, mécaniques, équipe de 4 héros d'un
+  membre). L'estimation des dégâts prend la meilleure compétence de chaque héros
+  (`calc/damage`), hors buffs, débuffs et mécaniques du boss.
+- **Rôles** : le rôle HTA est déduit des compétences (`hta.guess_role` : effet `dual` → double
+  attaque ; prêtre, résurrection ou soin des alliés → soin ; chevalier ou au moins deux types
+  de buffs ou protections sur les alliés → support ; sinon DPS). La guilde le corrige et marque
+  les héros « solo ». Les corrections s'exportent et s'importent dans un fichier
+  `roles-hta.json`.
+- **Reliques** : mémo des reliques avec une priorité. Les reliques prioritaires sont publiées
+  avec le plan.
+
+Le fichier `hta.json` est local : les formats `Roster` et `.e7v` ne changent pas.

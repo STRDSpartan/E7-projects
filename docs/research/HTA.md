@@ -1,6 +1,6 @@
 # Héritage des temps anciens (HTA / Ancient Inheritance) — recherche et pistes pour Zealot
 
-État : note de recherche (octobre 2026). Rien n'est implémenté.
+État : note de recherche (octobre 2026). Les priorités P1 à P4 sont implémentées dans l'onglet « Héritage » (voir `docs/APP.md`).
 
 ## 1. Ce qu'est le contenu
 
