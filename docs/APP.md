@@ -255,7 +255,7 @@ Le webhook n'est jamais livré avec l'application (règle 2 : un webhook est un 
 Préparation de l'exploration de guilde saisonnière (recherche : `docs/research/HTA.md`). Toutes
 les données sont saisies par les joueurs ou lues sur une capture importée, et gardées dans
 `<données>/hta.json`. Zealot ne lit ni la carte ni les rations dans le jeu.
-- **Enrôlement** : plan du membre (élément principal feu/terre/glace, spécialité
+- **Enrôlement** : plan du membre (élément principal feu/glace/terre, spécialité
   lumière/ténèbres, retraits utilisés). Les héros conseillés sont ceux du roster de l'élément,
   classés par colonne solo, puis par rôle (double attaque > DPS > support > soin), puis par
   puissance. Les héros enrôlés peuvent être saisis ou lus sur une capture de l'écran

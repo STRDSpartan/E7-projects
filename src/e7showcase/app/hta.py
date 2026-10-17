@@ -4,7 +4,7 @@
 
 - saison : numéro, étage atteint, boss vaincus, rations du jour, retraits autorisés, date de
   fermeture du bureau de change. Tout est saisi par les joueurs, rien n'est lu dans le jeu ;
-- répartition : pour chaque membre de la guilde, son élément principal (feu, terre ou glace),
+- répartition : pour chaque membre de la guilde, son élément principal (feu, glace ou terre),
   sa spécialité lumière/ténèbres, ses retraits utilisés et ses héros enrôlés ;
 - rôles : rôle HTA d'un héros (double attaque, DPS, support, soin) et colonne « solo ». Le rôle
   est déduit des compétences (`skills.json`), et la guilde peut le corriger ; ces corrections
@@ -31,13 +31,13 @@ from e7showcase.app.profiles import ProfileStore
 from e7showcase.models.hero import Hero
 from e7showcase.reference import hero_info
 
-ELEMENTS = ("fire", "earth", "ice", "light", "dark")
-PRIMARY = ("fire", "earth", "ice")  # élément principal conseillé, monté au niveau 10
+ELEMENTS = ("fire", "ice", "earth", "light", "dark")  # ordre du jeu
+PRIMARY = ("fire", "ice", "earth")  # élément principal conseillé, monté au niveau 10
 SPECIALTIES = ("light", "dark")  # spécialistes des boss de fin d'étage
 ELEMENT_FR = {
     "fire": "Feu",
-    "earth": "Terre",
     "ice": "Glace",
+    "earth": "Terre",
     "light": "Lumière",
     "dark": "Ténèbres",
 }
@@ -214,7 +214,7 @@ class HtaStore:
         if "element" in body:
             element = _text(body["element"])
             if element and element not in PRIMARY:
-                raise HtaError("élément principal attendu : feu, terre ou glace")
+                raise HtaError("élément principal attendu : feu, glace ou terre")
             plan["element"] = element
         if "specialty" in body:
             specialty = _text(body["specialty"])

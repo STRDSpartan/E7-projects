@@ -290,7 +290,8 @@ footer { color: var(--muted); font-size: 12px; text-align: center; padding: 18px
 
   // Filtres
   const present = (f) => [...new Set(heroes.flatMap(f).filter(Boolean))];
-  for (const key of present((h) => [h.element_key])) {
+  const found = present((h) => [h.element_key]);  // ordre du jeu : feu, glace, terre, lumière, ténèbres
+  for (const key of [...Object.keys(DATA.elements).filter((k) => found.includes(k)), ...found.filter((k) => !(k in DATA.elements))]) {
     const info = DATA.elements[key] || { label: key, color: "#9aa4b2" };
     $("elements").append(el("button", {
       class: "chip", type: "button", "aria-pressed": "false",

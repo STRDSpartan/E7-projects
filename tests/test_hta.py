@@ -48,7 +48,7 @@ def test_member_plan_coverage_and_suggestions(tmp_path: Path) -> None:
     s = hta.summary()
     member = s["members"][0]
     assert member["enlisted"] == ["Ras", "Kise"] and member["element"] == "fire"
-    assert s["coverage"]["missing"] == ["earth", "ice", "light"]
+    assert s["coverage"]["missing"] == ["ice", "earth", "light"]
     names = [r["name"] for r in hta.suggestions(pid)]
     assert names == ["Ras", "Cecilia", "Achates"]  # éléments du plan, rôle puis puissance
     assert [r["name"] for r in hta.suggestions(pid, "ice")] == ["Kise"]

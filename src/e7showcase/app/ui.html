@@ -1347,12 +1347,12 @@ function htaMemberSelect(h) {
 function htaPrep(page, h, send) {
   const pick = htaMemberSelect(h);
   const m = h.members.find((x) => x.id === htaMember);
-  const element = el("select", { "aria-label": "Élément principal" }, ...htaOptions(h, ["fire", "earth", "ice"], m.element, "Élément principal…"));
+  const element = el("select", { "aria-label": "Élément principal" }, ...htaOptions(h, ["fire", "ice", "earth"], m.element, "Élément principal…"));
   const specialty = el("select", { "aria-label": "Spécialité" }, ...htaOptions(h, ["light", "dark"], m.specialty, "Spécialité (aucune)"));
   const used = el("input", { type: "number", min: "0", max: "99", value: String(m.withdrawals_used), "aria-label": "Retraits utilisés", style: "width:90px" });
   const left = h.season.withdrawals != null ? `${Math.max(0, h.season.withdrawals - m.withdrawals_used)} retrait(s) restant(s) sur ${h.season.withdrawals}` : "Nombre de retraits autorisés : à renseigner dans l'onglet Guilde";
   page.append(el("div", { class: "card" }, el("h3", {}, "Plan du membre"),
-    el("p", { class: "note" }, "Conseil des guides : un seul élément principal (feu, terre ou glace) monté au niveau 10, et des spécialistes lumière/ténèbres pour les boss de fin d'étage."),
+    el("p", { class: "note" }, "Conseil des guides : un seul élément principal (feu, glace ou terre) monté au niveau 10, et des spécialistes lumière/ténèbres pour les boss de fin d'étage."),
     el("div", { class: "filters" }, pick, element, specialty, el("label", {}, "Retraits utilisés ", used),
       el("button", { onclick: () => send("PUT", `/members/${m.id}`, { element: element.value, specialty: specialty.value, withdrawals_used: used.value }) }, "Enregistrer")),
     el("p", { class: "note" }, left)));
