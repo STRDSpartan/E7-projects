@@ -1,3 +1,24 @@
+# Zealot 0.67.0
+
+## Héritage des temps anciens (nouvel onglet « Héritage »)
+- **Enrôlement** : plan de chaque membre (élément principal feu/terre/glace, spécialité
+  lumière/ténèbres, retraits utilisés). Les héros conseillés sont tirés du roster et classés
+  héros « solo » d'abord, puis double attaque, DPS, support et soin.
+- **Lecture d'une capture** de l'écran d'enrôlement : les héros du roster reconnus sont
+  proposés, à vérifier avant d'enregistrer.
+- **Guilde** : tableau de bord de saison (étage, boss vaincus, rations, retraits, fermeture du
+  bureau de change, consigne) et répartition des éléments, avec une alerte sur les éléments
+  que personne ne joue.
+- **Boss** : fiche par boss (mécaniques, équipe de 4 héros) et estimation des dégâts de
+  l'équipe.
+- **Rôles** : rôle HTA déduit des compétences, corrigeable par la guilde et partageable
+  (export et import d'un fichier `roles-hta.json`).
+- **Reliques** : mémo des reliques avec une priorité.
+- **Discord** : publication du plan HTA sur le salon de la guilde.
+
+## Mobile
+- Portage Android et iOS (même cœur, même interface, version tactile), avec un APK de test.
+
 # Zealot 0.66.0
 
 E7 Showcase devient **Zealot**, édité par **Shattered Spartan** : nouveau nom, nouveau logo,

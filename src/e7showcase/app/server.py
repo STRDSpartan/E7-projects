@@ -42,6 +42,7 @@ from e7showcase.app.gvg import (
     war_report,
     wars_csv,
 )
+from e7showcase.app.hta import HtaError, HtaStore, hta_report
 from e7showcase.app.importer import ScreenshotImporter
 from e7showcase.app.portraits import Portraits
 from e7showcase.app.profile_csv import profile_csv
@@ -187,6 +188,7 @@ class AppState:
         self.assets = AssetStore(data_root / "assets")
         self.guild = GuildStore(data_root / "guild.json", self.store)
         self.gvg = GvgStore(data_root / "gvg.json", self.store, self.guild)
+        self.hta = HtaStore(data_root / "hta.json", self.store, self.guild)
         self.portraits = Portraits(self.assets, self.store)
         self.discord = DiscordSettings(data_root / "discord.json")
         self.webhook_transport: Any = None  # tests : transport httpx simulé
@@ -323,6 +325,8 @@ class AppState:
             return list(defense_plan(self.gvg.summary())["messages"])
         if key == "counters":
             return counters_report(self.gvg.summary())
+        if key == "hta":
+            return hta_report(self.hta.summary())
         return war_report(self.gvg.summary(), key.removeprefix("war:"))
 
     def start_import(self, profile_id: str, files: list[tuple[str, bytes]]) -> ImportJob:
@@ -523,6 +527,8 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
                 raise ApiError(404, "introuvable")
             if path == "/gvg" or path.startswith("/gvg/"):
                 return self._gvg(method, path[4:])
+            if path == "/hta" or path.startswith("/hta/"):
+                return self._hta(method, path[4:])
             if path == "/portraits" and method == "POST":
                 body = self._body()
                 names, pids = body.get("names"), body.get("profiles")
@@ -858,6 +864,74 @@ def make_handler(state: AppState) -> type[BaseHTTPRequestHandler]:
             except (GvgError, ValueError, TypeError) as exc:
                 raise ApiError(400, str(exc)) from exc
             return self._json(gvg.summary())
+
+        def _hta(self, method: str, rest: str) -> None:
+            """Héritage des temps anciens : saison, répartition, rôles, boss et reliques."""
+            hta = state.hta
+            try:
+                if rest == "" and method == "GET":
+                    return self._json(hta.summary())
+                if (s := re.fullmatch(r"/suggest/([a-z0-9-]+)", rest)) and method == "GET":
+                    element = parse_qs(urlparse(self.path).query).get("element", [""])[0]
+                    return self._json(hta.suggestions(s[1], element[:10] or None))
+                if (b := re.fullmatch(r"/bosses/([0-9a-f]{1,16})/estimate", rest)) and (
+                    method == "GET"
+                ):
+                    return self._json(hta.estimate(b[1]))
+                if rest == "/tiers/export" and method == "GET":
+                    return self._json(hta.export_tiers())
+                if rest == "/report" and method == "GET":
+                    return self._json({"messages": hta_report(hta.summary())})
+                if rest == "/send" and method == "POST":
+                    return self._json(self._send_plan("hta"))
+                if (e := re.fullmatch(r"/enlisted/([a-z0-9-]+)", rest)) and method == "POST":
+                    return self._json(self._read_enlisted(e[1]))
+                if rest == "/season" and method == "PATCH":
+                    hta.update_season(self._body())
+                elif rest == "/season/new" and method == "POST":
+                    hta.new_season(self._body().get("number"))
+                elif (m := re.fullmatch(r"/members/([a-z0-9-]+)", rest)) and method == "PUT":
+                    hta.set_member(m[1], self._body())
+                elif rest == "/tiers" and method == "PUT":
+                    hta.set_tier(self._body())
+                elif rest == "/tiers/import" and method == "POST":
+                    hta.import_tiers(self._body())
+                elif rest == "/bosses" and method == "POST":
+                    hta.add_boss(self._body())
+                elif (b := re.fullmatch(r"/bosses/([0-9a-f]{1,16})", rest)) and method == "PATCH":
+                    hta.update_boss(b[1], self._body())
+                elif b and method == "DELETE":
+                    hta.delete_boss(b[1])
+                elif rest == "/relics" and method == "POST":
+                    hta.add_relic(self._body())
+                elif (r := re.fullmatch(r"/relics/([0-9a-f]{1,16})", rest)) and method == "DELETE":
+                    hta.delete_relic(r[1])
+                else:
+                    raise ApiError(404, "introuvable")
+            except (HtaError, ValueError, TypeError) as exc:
+                raise ApiError(400, str(exc)) from exc
+            return self._json(hta.summary())
+
+        def _read_enlisted(self, member: str) -> dict[str, Any]:
+            """Héros enrôlés lus sur une capture (proposés au joueur, pas enregistrés)."""
+            from e7showcase.parsers.enlisted import match_enlisted
+
+            if not state.store.exists(member):
+                raise ApiError(404, "membre introuvable")
+            data = self._raw(MAX_UPLOAD)
+            try:
+                engine = state.ocr()
+            except ImportError as exc:
+                raise ApiError(503, "moteur de lecture des captures absent") from exc
+            _, lines = read_capture(data, engine)
+            roster = [h.name for h in state.store.peek(member).heroes]
+            heroes = match_enlisted(lines, roster)
+            if not heroes:
+                raise ApiError(
+                    400,
+                    "aucun héros du roster reconnu : utilisez l'écran des héros enrôlés de l'HTA",
+                )
+            return {"heroes": heroes}
 
         def do_GET(self) -> None:  # noqa: N802
             self._dispatch("GET")

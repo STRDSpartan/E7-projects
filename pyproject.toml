@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "e7showcase"
-version = "0.66.0"
+version = "0.67.0"
 description = "Scanner de roster Epic Seven (client PC) et générateur de vitrines partageables sur Discord."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -92,7 +92,7 @@ disallow_untyped_decorators = false
 [tool.briefcase]
 project_name = "Zealot"
 bundle = "com.shatteredspartan"
-version = "0.66.0"
+version = "0.67.0"
 url = "https://github.com/STRDSpartan/E7-projects"
 license.file = "LICENSE"
 author = "Shattered Spartan"
